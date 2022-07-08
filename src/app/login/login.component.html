@@ -1,0 +1,6 @@
+<h1>Log in</h1>
+<input type="text" [(ngModel)]="username">
+<p>{{ username }}</p>
+<input type="password" [(ngModel)]="password">
+<p>{{ password }}</p>
+<button (click)="login(username, password)">login</button>

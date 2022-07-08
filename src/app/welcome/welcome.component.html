@@ -1,0 +1,7 @@
+<div *ngIf="loginService.logged">
+	<h1>Welcome!</h1>
+	<h3>Logged with:</h3>
+	<h5>profile: {{ loginService.getProfile() }}</h5>
+	<h5>session ID: {{ loginService.getSession() }}</h5>
+	<button (click)="loginService.logout()">logout</button>
+</div>
