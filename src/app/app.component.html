@@ -1,12 +1,22 @@
+
+<header>
+	<img src="https://img.icons8.com/color/80/000000/ambulance.png"/>
+</header>
+
 <nav>
+	<a [routerLink]="['']">menu</a> <!--TODO!-->
 	<a [routerLink]="['']">home</a>
-	<a [routerLink]="['/login']">login</a>
+	<a [routerLink]="['/login']" *ngIf="!loginService.logged">login</a>
 	<a [routerLink]="['/welcome']" *ngIf="loginService.logged">welcome</a>
+	<a [routerLink]="['']" *ngIf="loginService.logged" (click)="loginService.logout()">logout</a>
 </nav>
-<main>
-	<router-outlet></router-outlet>
-</main>
 
 
+<router-outlet></router-outlet>
+
+
+<footer>
+	<p>A very beautiful footer!</p>
+</footer>
 
 

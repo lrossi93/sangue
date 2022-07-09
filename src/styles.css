@@ -1,1 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+	width: 100%;
+	margin: 0%;
+}
+
+header{
+	display: flex;
+	flex: wrap;
+	background-color: blueviolet;
+	position: sticky;
+	text-justify: center;
+}
+
+nav{
+	display: flex;
+	flex: wrap;
+	justify-content: space-evenly;
+	background-color: violet;
+	position: sticky;
+	top: 0;
+	width: 100%;
+	padding: 15px;
+}
+
+section{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+article{
+	padding: 10px;
+	margin: 10px;
+	background-color: aqua;
+	flex: 200px;
+}
+
+footer{
+	background-color: blue;
+	display: flex;
+	flex-wrap: wrap;
+}
