@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,6 @@ export class LoginService {
   password!: string | null;
   id_session!: string | null;
   id_profile!: string | null;
-  url: string = 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/session.php';
   logged: boolean = false;
 
   //constructor
@@ -34,7 +34,7 @@ export class LoginService {
 
   check(){
     this.http.post<String[]>(
-      this.url,
+      environment.basePath + 'session.php',
       {
         request: "check",
         id_session: localStorage.getItem("id_session")
@@ -56,7 +56,7 @@ export class LoginService {
   
   login(username: string, password: string){
     this.http.post<String[]>(
-      this.url, {
+      environment.basePath + 'session.php', {
       request: 'login',
       sangue_username: username,
       sangue_password: password
@@ -79,7 +79,7 @@ export class LoginService {
 
   logout(){
     this.http.post<String[]>(
-      this.url, {
+      environment.basePath + 'session.php', {
       request: 'logout',
       id_session: localStorage.getItem("id_session"),
       sangue_username: localStorage.getItem("sangue_username")

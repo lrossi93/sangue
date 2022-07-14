@@ -8,6 +8,7 @@
 	<a [routerLink]="['']">home</a>
 	<a [routerLink]="['/login']" *ngIf="!loginService.logged">login</a>
 	<a [routerLink]="['/welcome']" *ngIf="loginService.logged">welcome</a>
+	<a [routerLink]="['/pharma-registry']" *ngIf="loginService.logged">registry</a>
 	<a [routerLink]="['']" *ngIf="loginService.logged" (click)="loginService.logout()">logout</a>
 </nav>
 
