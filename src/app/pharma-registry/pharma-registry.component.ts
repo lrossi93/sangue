@@ -11,10 +11,22 @@ import { HttpClient } from '@angular/common/http';
 export class PharmaRegistryComponent implements OnInit {
   products: any;
 
+  pharmaRegistryGridConfig = [
+    { headerName: 'ID', field: 'id'},
+    { headerName: 'Code', field: 'cod'},
+    { headerName: 'Description', field: 'des'}
+  ]
+
+  //parameters for the setProduct()
+  id = '';
+  cod = '';
+  des = '';
+
   constructor(public loginService: LoginService, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loginService.check();
+    this.listProducts();
   }
 
   listProducts(): void{
@@ -38,10 +50,9 @@ export class PharmaRegistryComponent implements OnInit {
     });
   }
 
-  //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   setProduct(id: string, cod: string, des: string): void{
-    let path = environment.basePath + 'anag.php?request=setProduct&id_session=' + localStorage.getItem('id_session') + '&id='+id+'&cod='+cod+'&des=description';
-    console.log(path);
+    console.log(id + ', ' + cod + ', ' + des);
+    
     this.http.post<String[]>(
       environment.basePath + 'anag.php', {
         request: 'setProduct',
@@ -51,12 +62,14 @@ export class PharmaRegistryComponent implements OnInit {
         des: des
       }
     ).subscribe(res => {
-      console.log("WS response: " + res[0].toString());
+      console.log("WS response: " + res);
       if(res[0] == "KO"){
         alert(res[1].toString());
       }
       else{
         console.log("Result: " + res[0]);
+        console.log("Product ID: " + res[1]);
+        //quando va a buon fine, res[1] è l'ID dell'oggetto caricato o aggiornato
       }
     });
   }

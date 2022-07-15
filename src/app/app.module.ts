@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HomeComponent } from './home/home.component';
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.compo
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AgGridModule//.withComponents(null)
   ],
   providers: [],
   bootstrap: [AppComponent]

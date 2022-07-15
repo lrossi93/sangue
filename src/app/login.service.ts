@@ -72,7 +72,6 @@ export class LoginService {
         localStorage.setItem("id_profile", res[2].toString());
         localStorage.setItem("sangue_username", username);
         this.logged = true;
-        //this.router.navigate(['/welcome']);
       }
     })
   }

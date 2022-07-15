@@ -1,8 +1,20 @@
 <h1>Pharmaceutical registry</h1>
 <div *ngIf="loginService.getProfile() == '200'">
 	<p>User logged with profile {{ loginService.getProfile() }}.</p>
-	<p>listProducts output: {{ this.products }}</p>
-	<p *ngFor="let product of products">{{ product.id }}, {{ product.cod }}, {{ product.des }}</p>
 	<button (click)="listProducts()">get products</button>
-	<button (click)="setProduct('123', 'code', 'a very beautiful description')">setProduct</button>
+	
+	<ag-grid-angular 
+		style="width: 700px; height: 200px;"
+		class="ag-theme-balham"
+		[rowData]="products"
+		[columnDefs]="pharmaRegistryGridConfig">
+	</ag-grid-angular>
+	<input type="text" placeholder="id" [ngModel]="id">
+	<p>{{ id }}</p>
+	<input type="text" placeholder="code" [ngModel]="cod">
+	<p>{{ cod }}</p>
+	<input type="text" placeholder="description" [ngModel]="des">
+	<p>{{ des }}</p>
+	<button (click)="setProduct(id, cod, des)">setProduct</button>
 </div>
+
