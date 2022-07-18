@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit {
   password = '';
   id_session!: string | null;
   id_profile!: string | null;
-  url: string = 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/session.php';
   logged: boolean = false;
   private loginService: LoginService;
   router: Router;

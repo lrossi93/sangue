@@ -50,16 +50,16 @@ export class PharmaRegistryComponent implements OnInit {
     });
   }
 
-  setProduct(id: string, cod: string, des: string): void{
-    console.log(id + ', ' + cod + ', ' + des);
+  setProduct(): void{
+    console.log(this.id + ', ' + this.cod + ', ' + this.des);
     
     this.http.post<String[]>(
       environment.basePath + 'anag.php', {
         request: 'setProduct',
         id_session: localStorage.getItem('id_session'),
-        id: id,
-        cod: cod,
-        des: des
+        id: this.id,
+        cod: this.cod,
+        des: this.des
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -69,7 +69,8 @@ export class PharmaRegistryComponent implements OnInit {
       else{
         console.log("Result: " + res[0]);
         console.log("Product ID: " + res[1]);
-        //quando va a buon fine, res[1] è l'ID dell'oggetto caricato o aggiornato
+        //call listProducts() to update current products
+        this.listProducts();
       }
     });
   }

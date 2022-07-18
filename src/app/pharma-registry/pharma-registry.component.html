@@ -9,12 +9,13 @@
 		[rowData]="products"
 		[columnDefs]="pharmaRegistryGridConfig">
 	</ag-grid-angular>
-	<input type="text" placeholder="id" [ngModel]="id">
+	<input type="text" placeholder="id" [(ngModel)]="this.id">
 	<p>{{ id }}</p>
-	<input type="text" placeholder="code" [ngModel]="cod">
+	<input type="text" placeholder="code" [(ngModel)]="this.cod">
 	<p>{{ cod }}</p>
-	<input type="text" placeholder="description" [ngModel]="des">
+	<input type="text" placeholder="description" [(ngModel)]="this.des">
 	<p>{{ des }}</p>
-	<button (click)="setProduct(id, cod, des)">setProduct</button>
+
+	<button (click)="setProduct()">setProduct</button>
 </div>
 
