@@ -17,7 +17,12 @@
 
 
 <footer>
-	<p>A very beautiful footer!</p>
+	<p *ngIf="loginService.logged">
+		User logged with profile {{ loginService.getProfile() }}.
+	</p>
+	<p *ngIf="!loginService.logged">
+		You're not logged! <a [routerLink]="['/login']">Log in</a>
+	</p>	
 </footer>
 
 

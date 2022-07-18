@@ -8,6 +8,7 @@ import { LoginService } from './login.service';
 })
 export class AppComponent {
   title = 'sangue';
+  
   constructor(public loginService: LoginService){ }
 
   check(){

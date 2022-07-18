@@ -1,21 +1,60 @@
 <h1>Pharmaceutical registry</h1>
 <div *ngIf="loginService.getProfile() == '200'">
-	<p>User logged with profile {{ loginService.getProfile() }}.</p>
-	<button (click)="listProducts()">get products</button>
 	
 	<ag-grid-angular 
 		style="width: 700px; height: 200px;"
 		class="ag-theme-balham"
 		[rowData]="products"
-		[columnDefs]="pharmaRegistryGridConfig">
+		[columnDefs]="pharmaRegistryGridConfig"
+		[defaultColDef]="defaultColDef"
+		[pagination]="true">
 	</ag-grid-angular>
-	<input type="text" placeholder="id" [(ngModel)]="this.id">
-	<p>{{ id }}</p>
-	<input type="text" placeholder="code" [(ngModel)]="this.cod">
-	<p>{{ cod }}</p>
-	<input type="text" placeholder="description" [(ngModel)]="this.des">
-	<p>{{ des }}</p>
+	<button (click)="listProducts()">Update products</button>
 
-	<button (click)="setProduct()">setProduct</button>
+	<p>
+		<button (click)="activateAdd()">add</button>
+		<button (click)="activateSet()">set</button>
+		<button (click)="activateRm()">remove</button>
+	</p>
+
+	<div *ngIf="isSetOn">
+		<h3>Edit an existing product</h3>
+		<p>
+			<input type="text" placeholder="id" [(ngModel)]="id">
+		</p>
+		<p>
+			<input type="text" placeholder="code" [(ngModel)]="cod">
+		</p>
+		<p>
+			<input type="text" placeholder="description" [(ngModel)]="des">
+		</p>
+
+		<button (click)="setProduct(false)">setProduct</button>
+	</div>
+
+	<div *ngIf="isAddOn">
+		<h3>Add a new product</h3>
+		<p>
+			<input type="text" placeholder="new code" [(ngModel)]="cod">
+		</p>
+		<p>
+			<input type="text" placeholder="new description" [(ngModel)]="des">
+		</p>
+
+		<button (click)="addProduct()">addProduct</button>
+	</div>
+
+	<div *ngIf="isRmOn">
+		<h3>Delete an existing product</h3>
+		<p>
+			<input type="text" placeholder="id to be removed" [(ngModel)]="id">
+		</p>
+
+		<button (click)="rmProduct()">rmProduct</button>
+	</div>
+
+	
+	
+	
 </div>
 
