@@ -17,7 +17,7 @@ export class PharmaRegistryComponent implements OnInit {
   pharmaRegistryGridConfig = [
     { headerName: 'ID', field: 'id'},
     { headerName: 'Code', field: 'cod'},
-    { headerName: 'Description', field: 'des'}
+    { headerName: 'Description', field: 'des', editable: true }
   ];
 
   defaultColDef = {

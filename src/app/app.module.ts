@@ -11,6 +11,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { HomeComponent } from './home/home.component';
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { ForecastComponent } from './forecast/forecast.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AgGridModule } from 'ag-grid-angular';
     LoginComponent,
     WelcomeComponent,
     HomeComponent,
-    PharmaRegistryComponent
+    PharmaRegistryComponent,
+    ForecastComponent
   ],
   imports: [
     BrowserModule,

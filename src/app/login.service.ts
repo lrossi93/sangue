@@ -27,6 +27,28 @@ export class LoginService {
     return localStorage.getItem("id_profile");
   }
 
+  getUserType(){
+    let userType;
+    switch(localStorage.getItem('id_profile')){
+      case "200":
+        userType = "admin";
+        break;
+      case "210":
+        userType = "A.S.L. Customer";
+        break;
+      case "220":
+        userType = "A.S.L. Novara";
+        break;
+      case "230":
+        userType = "Provider";
+        break;
+      default:
+        userType = "none";
+        break;
+    }
+    return userType;
+  }
+
   isLogged(){
     this.check();
     return this.logged;
