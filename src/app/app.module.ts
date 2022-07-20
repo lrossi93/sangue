@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { ForecastComponent } from './forecast/forecast.component';
+import { ButtonCellComponent } from './button-cell/button-cell.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ForecastComponent } from './forecast/forecast.component';
     WelcomeComponent,
     HomeComponent,
     PharmaRegistryComponent,
-    ForecastComponent
+    ForecastComponent,
+    ButtonCellComponent
   ],
   imports: [
     BrowserModule,

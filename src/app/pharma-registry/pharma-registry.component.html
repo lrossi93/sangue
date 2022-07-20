@@ -6,7 +6,8 @@
 		class="ag-theme-balham"
 		[rowData]="products"
 		[columnDefs]="pharmaRegistryGridConfig"
-		[defaultColDef]="defaultColDef">
+		[defaultColDef]="defaultColDef"
+		[gridOptions]="gridOptions">
 	</ag-grid-angular>
 	<button (click)="listProducts()">Update products</button>
 

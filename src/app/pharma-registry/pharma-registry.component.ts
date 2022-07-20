@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Environment } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, Environment } from 'ag-grid-community';
+import { ButtonCellComponent } from '../button-cell/button-cell.component';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -16,9 +17,24 @@ export class PharmaRegistryComponent implements OnInit {
   //agGrid configuration
   pharmaRegistryGridConfig = [
     { headerName: 'ID', field: 'id'},
-    { headerName: 'Code', field: 'cod'},
-    { headerName: 'Description', field: 'des', editable: true }
+    { headerName: 'Code', field: 'cod', editable: true},
+    { headerName: 'Description', field: 'des', editable: true},
+    { headerName: '', cellRenderer: ButtonCellComponent}
   ];
+
+  gridOptions = {
+    /*onCellClicked: (event: CellClickedEvent) => {
+      console.log(event);
+    },*/
+    onCellValueChanged: (event: CellValueChangedEvent) => {
+      console.log("Changed from " + event.oldValue + " to " + event.newValue);
+      console.log("ID: " + event.data.id + "; COD: " + event.data.cod + "; DES: " + event.data.des);
+      this.id = event.data.id;
+      this.cod = event.data.cod;
+      this.des = event.data.des;
+      this.setProduct(false); //edit product from grid
+    }
+  }
 
   defaultColDef = {
     sortable: true,
@@ -44,7 +60,7 @@ export class PharmaRegistryComponent implements OnInit {
 
   listProducts(): void{
     let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
-    console.log(path);
+    
     this.http.get<String[]>(
       path,
       {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-forecast',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ForecastComponent implements OnInit {
 
-  constructor() { }
+  constructor(private loginService: LoginService) { }
 
   ngOnInit(): void {
+    this.loginService.check();
   }
 
 }
