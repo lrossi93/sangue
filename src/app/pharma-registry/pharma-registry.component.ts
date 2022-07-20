@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CellClickedEvent, CellValueChangedEvent, Environment } from 'ag-grid-community';
 import { ButtonCellComponent } from '../button-cell/button-cell.component';
+import { PharmaRegistryService } from '../pharma-registry.service';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -51,7 +52,11 @@ export class PharmaRegistryComponent implements OnInit {
   isSetOn = false;
   isRmOn = false;
 
-  constructor(public loginService: LoginService, private http: HttpClient) { }
+  constructor(
+    public loginService: LoginService, 
+    private http: HttpClient,
+    private pharmaRegistryService: PharmaRegistryService
+  ) { }
 
   ngOnInit(): void {
     this.loginService.check();
@@ -77,7 +82,12 @@ export class PharmaRegistryComponent implements OnInit {
       }
     });
   }
+/*
+  listProducts() {
+    this.products = this.pharmaRegistryService.getProducts();
+  }
 
+*/
   setProduct(isAdding: boolean): void{
     if(!isAdding && parseInt(this.id) < 1){
       alert("Invalid ID!");
@@ -112,15 +122,20 @@ export class PharmaRegistryComponent implements OnInit {
       }
     });
   }
-
+  /*
+  setProduct(isAdding: boolean){
+    this.pharmaRegistryService.setProduct(this.id, this.cod, this.des, isAdding);
+    this.clearVars();
+  }
+  */
   addProduct(): void{
     this.id = "-1";
     let isAdding = true;
     this.setProduct(isAdding);
   }
 
-  rmProduct(): void{
-    if(this.id == "" || parseInt(this.id) < 1){
+  rmProduct(id: string): void{
+    if(id == "" || parseInt(id) < 1){
       alert("Invalid ID!");
       return;
     }
@@ -129,7 +144,7 @@ export class PharmaRegistryComponent implements OnInit {
       this.url, {
         request: 'rmProduct',
         id_session: localStorage.getItem('id_session'),
-        id: this.id
+        id: id
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -145,7 +160,12 @@ export class PharmaRegistryComponent implements OnInit {
       }
     });
   }
-
+/*
+  rmProduct(){
+    this.pharmaRegistryService.rmProduct(this.id);
+    this.listProducts();
+  }
+*/
   activateAdd(){
     this.isSetOn = false;
     this.isRmOn = false;

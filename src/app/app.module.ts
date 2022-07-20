@@ -13,6 +13,7 @@ import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.compo
 import { AgGridModule } from 'ag-grid-angular';
 import { ForecastComponent } from './forecast/forecast.component';
 import { ButtonCellComponent } from './button-cell/button-cell.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ButtonCellComponent } from './button-cell/button-cell.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    AgGridModule//.withComponents(null)
+    AgGridModule,
+    BrowserAnimationsModule//.withComponents(null)
   ],
   providers: [],
   bootstrap: [AppComponent]

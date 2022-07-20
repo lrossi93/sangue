@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
-import { CellClickedEvent, ICellRendererParams } from 'ag-grid-community';
+import { ICellRendererParams } from 'ag-grid-community';
+import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.component';
 
 @Component({
   selector: 'app-button-cell',
   template: `
-    <button (click)="buttonClicked($event)">delete</button>
+    <button (click)="onClickDeleteProduct($event)">delete</button>
   `
 })
 export class ButtonCellComponent implements ICellRendererAngularComp {
   data: any;
-  constructor() { }
+  constructor(private pharmaRegistryComponent: PharmaRegistryComponent) { }
 
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
@@ -21,7 +22,7 @@ export class ButtonCellComponent implements ICellRendererAngularComp {
     return false;
   }
 
-  buttonClicked(event: any){
-    console.log("ID: " + this.data.id);
+  onClickDeleteProduct(event: any){
+    this.pharmaRegistryComponent.rmProduct(this.data.id);
   }
 }

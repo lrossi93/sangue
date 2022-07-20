@@ -9,8 +9,8 @@ export class PharmaRegistryService {
   url = environment.basePath + 'anag.php'
 
   constructor(private http: HttpClient, ) { }
-
-  getProducts(): any {
+/*
+  getProducts(): void {
     let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
     
     this.http.get<String[]>(
@@ -22,14 +22,15 @@ export class PharmaRegistryService {
       console.log(res);
       if(res[0] == "KO"){
         alert("Error retrieving products!");
+        return null;
       }
       else{
-        console.log(res[1]); 
-        this.products = res[1];
+        console.log(res[1]);
+        return res[1]; 
       }
     });
   }
-
+*/
   setProduct(id: string, cod: string, des: string, isAdding: boolean): void{
     if(!isAdding && parseInt(id) < 1){
       alert("Invalid ID!");
@@ -58,20 +59,18 @@ export class PharmaRegistryService {
       else{
         console.log("Result: " + res[0]);
         console.log("Product with ID " + res[1] + "successfully set!");
-        //call listProducts() to update current products
-        this.listProducts();
       }
     });
   }
 
-  addProduct(): void{
-    this.id = "-1";
+  addProduct(cod: string, des: string): void{
+    let id = "-1";
     let isAdding = true;
-    this.setProduct(isAdding);
+    this.setProduct(id, cod, des, isAdding);
   }
 
   rmProduct(id: string): void{
-    if(this.id == "" || parseInt(this.id) < 1){
+    if(id == "" || parseInt(id) < 1){
       alert("Invalid ID!");
       return;
     }
@@ -80,7 +79,7 @@ export class PharmaRegistryService {
       this.url, {
         request: 'rmProduct',
         id_session: localStorage.getItem('id_session'),
-        id: this.id
+        id: id
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
