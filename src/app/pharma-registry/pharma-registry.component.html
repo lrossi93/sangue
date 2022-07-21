@@ -1,45 +1,16 @@
 <h1>Pharmaceutical registry</h1>
 <div *ngIf="loginService.getProfile() == '200'">
 	
+	<button (click)="openDialog()">Add product</button>
+
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"
 		class="ag-theme-balham"
 		[rowData]="products"
 		[columnDefs]="pharmaRegistryGridConfig"
 		[defaultColDef]="defaultColDef"
-		[gridOptions]="gridOptions">
+		[gridOptions]="gridOptions"
+		[enableCellChangeFlash]="true">
 	</ag-grid-angular>
-
-	<p>
-		<button (click)="activateAdd()">add</button>
-		<button (click)="activateSet()">set</button>
-	</p>
-
-	<div *ngIf="isSetOn">
-		<h3>Edit an existing product</h3>
-		<p>
-			<input type="text" placeholder="id" [(ngModel)]="id">
-		</p>
-		<p>
-			<input type="text" placeholder="code" [(ngModel)]="cod">
-		</p>
-		<p>
-			<input type="text" placeholder="description" [(ngModel)]="des">
-		</p>
-
-		<button (click)="setProduct(false)">setProduct</button>
-	</div>
-
-	<div *ngIf="isAddOn">
-		<h3>Add a new product</h3>
-		<p>
-			<input type="text" placeholder="new code" [(ngModel)]="cod">
-		</p>
-		<p>
-			<input type="text" placeholder="new description" [(ngModel)]="des">
-		</p>
-
-		<button (click)="addProduct()">addProduct</button>
-	</div>	
 </div>
 

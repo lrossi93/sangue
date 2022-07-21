@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CellClickedEvent, CellValueChangedEvent, Environment } from 'ag-grid-community';
+import { CellValueChangedEvent } from 'ag-grid-community';
 import { ButtonCellComponent } from '../button-cell/button-cell.component';
-import { PharmaRegistryService } from '../pharma-registry.service';
+//import { PharmaRegistryService } from '../pharma-registry.service';
+import { MatDialog } from '@angular/material/dialog'
+import { AddProductComponent } from '../add-product/add-product.component';
 
 @Component({
   selector: 'app-pharma-registry',
   templateUrl: './pharma-registry.component.html',
   styleUrls: ['./pharma-registry.component.css']
 })
+@Injectable({providedIn: 'root'})
 export class PharmaRegistryComponent implements OnInit {
   products: any;
   url = environment.basePath + 'anag.php';
@@ -34,7 +37,7 @@ export class PharmaRegistryComponent implements OnInit {
       this.cod = event.data.cod;
       this.des = event.data.des;
       this.setProduct(false); //edit product from grid
-    }
+    },
   }
 
   defaultColDef = {
@@ -52,10 +55,13 @@ export class PharmaRegistryComponent implements OnInit {
   isSetOn = false;
   isRmOn = false;
 
+  //dialog reference
+  dialogRef: any;
+
   constructor(
     public loginService: LoginService, 
     private http: HttpClient,
-    private pharmaRegistryService: PharmaRegistryService
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -114,7 +120,7 @@ export class PharmaRegistryComponent implements OnInit {
         alert(res[1].toString());
       }
       else{
-        console.log("Result: " + res[0]);
+        //console.log("Result: " + res[0]);
         console.log("Product with ID " + res[1] + "successfully set!");
         //call listProducts() to update current products
         this.listProducts();
@@ -132,6 +138,12 @@ export class PharmaRegistryComponent implements OnInit {
     this.id = "-1";
     let isAdding = true;
     this.setProduct(isAdding);
+  }
+
+  addProductParams(cod: string, des: string){
+    this.cod = cod;
+    this.des = des;
+    this.addProduct();
   }
 
   rmProduct(id: string): void{
@@ -166,6 +178,8 @@ export class PharmaRegistryComponent implements OnInit {
     this.listProducts();
   }
 */
+
+/*
   activateAdd(){
     this.isSetOn = false;
     this.isRmOn = false;
@@ -186,10 +200,23 @@ export class PharmaRegistryComponent implements OnInit {
     this.isRmOn = true;
     this.clearVars();
   }
-
+*/
   clearVars(){
     this.id = '';
     this.cod = '';
     this.des = '';
+  }
+
+  openDialog(){
+    this.dialogRef = this.dialog.open(AddProductComponent);
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.listProducts();  
+    });
+  }
+
+  closeDialog(){
+    this.dialog.closeAll();
+    console.log("closeDialog");
+    this.listProducts();
   }
 }

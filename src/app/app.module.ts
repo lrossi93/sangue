@@ -14,6 +14,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ForecastComponent } from './forecast/forecast.component';
 import { ButtonCellComponent } from './button-cell/button-cell.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AddProductComponent } from './add-product/add-product.component'
 
 @NgModule({
   declarations: [
@@ -24,7 +26,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     PharmaRegistryComponent,
     ForecastComponent,
-    ButtonCellComponent
+    ButtonCellComponent,
+    AddProductComponent
+  ],
+  providers: [
+    AddProductComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,9 +38,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     HttpClientModule,
     AgGridModule,
-    BrowserAnimationsModule//.withComponents(null)
+    BrowserAnimationsModule,
+    MatDialogModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
