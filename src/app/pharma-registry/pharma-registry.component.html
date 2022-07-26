@@ -2,15 +2,17 @@
 <div *ngIf="loginService.getProfile() == '200'">
 	
 	<button (click)="openDialog()">Add product</button>
+	<button (click)="addLocally(0, '000', 'descrizione')">addLocally</button>
 
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"
 		class="ag-theme-balham"
-		[rowData]="products"
+		[rowData]="this.products"
 		[columnDefs]="pharmaRegistryGridConfig"
 		[defaultColDef]="defaultColDef"
 		[gridOptions]="gridOptions"
-		[enableCellChangeFlash]="true">
+		[enableCellChangeFlash]="true"
+		(gridReady)="onGridReady($event)">
 	</ag-grid-angular>
 </div>
 

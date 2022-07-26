@@ -95,7 +95,7 @@ export class LoginService {
         localStorage.setItem("sangue_username", username);
         this.logged = true;
       }
-    })
+    });
   }
 
   logout(){

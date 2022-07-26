@@ -1,4 +1,4 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { APP_ID, Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,7 @@ import { ButtonCellComponent } from '../button-cell/button-cell.component';
 //import { PharmaRegistryService } from '../pharma-registry.service';
 import { MatDialog } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -16,6 +17,7 @@ import { AddProductComponent } from '../add-product/add-product.component';
 @Injectable({providedIn: 'root'})
 export class PharmaRegistryComponent implements OnInit {
   products: any;
+  api: any;
   url = environment.basePath + 'anag.php';
 
   //agGrid configuration
@@ -50,13 +52,9 @@ export class PharmaRegistryComponent implements OnInit {
   cod = '';
   des = '';
 
-  //flags for displaying corresponding divs
-  isAddOn = true;
-  isSetOn = false;
-  isRmOn = false;
-
   //dialog reference
   dialogRef: any;
+  columnApi: any;
 
   constructor(
     public loginService: LoginService, 
@@ -88,12 +86,7 @@ export class PharmaRegistryComponent implements OnInit {
       }
     });
   }
-/*
-  listProducts() {
-    this.products = this.pharmaRegistryService.getProducts();
-  }
 
-*/
   setProduct(isAdding: boolean): void{
     if(!isAdding && parseInt(this.id) < 1){
       alert("Invalid ID!");
@@ -120,20 +113,19 @@ export class PharmaRegistryComponent implements OnInit {
         alert(res[1].toString());
       }
       else{
-        //console.log("Result: " + res[0]);
         console.log("Product with ID " + res[1] + "successfully set!");
-        //call listProducts() to update current products
-        this.listProducts();
+        if(isAdding){
+          console.log(this.products);
+          this.addLocally(parseInt(res[1].toString()), this.cod, this.des);
+        }
+        else{
+          this.setLocally(parseInt(res[1].toString()), this.cod, this.des);
+        }
         this.clearVars();
       }
     });
   }
-  /*
-  setProduct(isAdding: boolean){
-    this.pharmaRegistryService.setProduct(this.id, this.cod, this.des, isAdding);
-    this.clearVars();
-  }
-  */
+
   addProduct(): void{
     this.id = "-1";
     let isAdding = true;
@@ -164,10 +156,9 @@ export class PharmaRegistryComponent implements OnInit {
         alert(res[1].toString());
       }
       else{
-        console.log("Removing product with ID " + res[0]);
-        console.log("Product with ID " + res[1] + "successfully removed!");
-        //call listProducts() to update current products
-        this.listProducts();
+        console.log("Product with ID " + res[1] + " removed from database.");
+        this.rmLocally(parseInt(res[1].toString()));
+        console.log("Product with ID " + res[1] + " removed locally.");
         this.clearVars();
       }
     });
@@ -179,28 +170,6 @@ export class PharmaRegistryComponent implements OnInit {
   }
 */
 
-/*
-  activateAdd(){
-    this.isSetOn = false;
-    this.isRmOn = false;
-    this.isAddOn = true;
-    this.clearVars();
-  }
-
-  activateSet(){
-    this.isRmOn = false;
-    this.isAddOn = false;
-    this.isSetOn = true;
-    this.clearVars();
-  }
-
-  activateRm(){
-    this.isAddOn = false;
-    this.isSetOn = false;
-    this.isRmOn = true;
-    this.clearVars();
-  }
-*/
   clearVars(){
     this.id = '';
     this.cod = '';
@@ -210,13 +179,72 @@ export class PharmaRegistryComponent implements OnInit {
   openDialog(){
     this.dialogRef = this.dialog.open(AddProductComponent);
     this.dialogRef.afterClosed().subscribe(() => {
-      this.listProducts();  
+      this.listProducts();
+      this.api.setRowData(this.products);
     });
   }
 
   closeDialog(){
     this.dialog.closeAll();
-    console.log("closeDialog");
-    this.listProducts();
+    this.api.setRowData(this.products);
   }
+
+  addLocally(id: number, cod: string, des: string){
+    let newProduct = {
+      id: id,
+      cod: cod,
+      des: des
+    };
+    this.products.push(newProduct);
+    console.log(this.products);
+    //this.api.refreshCells();
+    this.api.setRowData(this.products);
+    //this.api.setFocusedCell(this.products.length);
+    this.api.ensureIndexVisible(this.products.length - 1);
+    this.api.refreshCells();
+  }
+
+  setLocally(id: number, cod: string, des: string){
+    for(let i = 0; i < this.products.length; ++i){
+      if(id == this.products[i].id){
+        this.products[i].cod = cod;
+        this.products[i].des = des;
+        return;
+      }
+    }
+    this.api.refreshCells();
+    //this.api.setRowData(this.products);
+  }
+
+  rmLocally(id: number){
+    let visibleIndex = 0;
+    for(let i = 0; i < this.products.length; ++i){
+      if(id == this.products[i].id){
+        this.products.splice(i, 1);
+        this.api.setRowData(this.products);
+        console.log("i: " + i);
+        console.log("p.len: " + this.products.length);
+        if(i <= this.products.length){
+          console.log("ensuring visible");
+          this.api.ensureIndexVisible(i - 1);
+        }
+        if(i == 0){
+          this.api.ensureIndexVisible(0);
+        }
+        return;
+      }
+    }
+  }
+
+  onGridReady(params: any) {
+    this.api = params.api;
+  }
+
+  bringFocusBack() {
+    let cell = this.api.getFocusedCell();
+
+    if ( cell ) {
+       this.api.setFocusedCell(cell.rowIndex, cell.column);
+    }
+ }
 }

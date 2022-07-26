@@ -7,8 +7,8 @@
 	<a [routerLink]="['']">home</a>
 	<a [routerLink]="['/login']" *ngIf="!loginService.logged">login</a>
 	<a [routerLink]="['/welcome']" *ngIf="loginService.logged">welcome</a>
-	<a [routerLink]="['/pharma-registry']" *ngIf="loginService.getProfile() == '200'">registry</a>
-	<a [routerLink]="['/forecast']" *ngIf="loginService.getProfile() == '210'">forecast</a>
+	<a [routerLink]="['/pharma-registry']" *ngIf="loginService.logged && loginService.getProfile() == '200'">registry</a>
+	<a [routerLink]="['/forecast']" *ngIf="loginService.logged && loginService.getProfile() == '210'">forecast</a>
 	<a [routerLink]="['']" *ngIf="loginService.logged" (click)="loginService.logout()">logout</a>
 </nav>
 
