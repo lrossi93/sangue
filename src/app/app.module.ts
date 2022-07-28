@@ -15,7 +15,9 @@ import { ForecastComponent } from './forecast/forecast.component';
 import { ButtonCellComponent } from './button-cell/button-cell.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AddProductComponent } from './add-product/add-product.component'
+import { AddProductComponent } from './add-product/add-product.component';
+import { AreYouSureProductComponent } from './are-you-sure-product/are-you-sure-product.component';
+import { AreYouSureForecastComponent } from './are-you-sure-forecast/are-you-sure-forecast.component'
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { AddProductComponent } from './add-product/add-product.component'
     PharmaRegistryComponent,
     ForecastComponent,
     ButtonCellComponent,
-    AddProductComponent
+    AddProductComponent,
+    AreYouSureProductComponent,
+    AreYouSureForecastComponent
   ],
   providers: [
     AddProductComponent,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.component';
@@ -6,7 +6,7 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
 @Component({
   selector: 'app-button-cell',
   template: `
-    <button (click)="onClickDeleteProduct($event)">delete</button>
+    <button (click)="onClickOpenDialog($event)">delete</button>
   `
 })
 export class ButtonCellComponent implements ICellRendererAngularComp {
@@ -22,7 +22,8 @@ export class ButtonCellComponent implements ICellRendererAngularComp {
     return false;
   }
 
-  onClickDeleteProduct(event: any){
+  onClickOpenDialog(event: any){
     this.pharmaRegistryComponent.rmProduct(this.data.id);
+    //createDialog
   }
 }
