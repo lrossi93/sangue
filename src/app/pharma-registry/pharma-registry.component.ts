@@ -202,6 +202,7 @@ export class PharmaRegistryComponent implements OnInit {
       if(id == this.products[i].id){
         this.products.splice(i, 1);
         this.api.setRowData(this.products);
+        //
         console.log("length: " + this.products.length + ", index: " + i);
         //se non ho elementi, non ho niente da focalizzare
         if(this.products.length == 0){
