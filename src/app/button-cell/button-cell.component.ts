@@ -23,7 +23,9 @@ export class ButtonCellComponent implements ICellRendererAngularComp {
   }
 
   onClickOpenDialog(event: any){
-    this.pharmaRegistryComponent.rmProduct(this.data.id);
-    //createDialog
+    //this.pharmaRegistryComponent.rmProduct(this.data.id);
+    console.log("buttonCellComponent: ID: " + this.data.id);
+    this.pharmaRegistryComponent.setId(this.data.id);
+    this.pharmaRegistryComponent.openAreYouSureDialog();
   }
 }

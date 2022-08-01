@@ -1,1 +1,6 @@
-<p>are-you-sure-forecast works!</p>
+<h3 mat-dialog-title>Delete forecast with ID {{ id }}?</h3>
+
+<div mat-dialog-actions>
+	<button mat-button (click)="onSubmit()">Delete</button>
+	<button mat-button mat-dialog-close>Cancel</button>
+</div>

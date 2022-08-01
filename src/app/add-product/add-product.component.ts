@@ -1,6 +1,12 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { Component, Inject, Injectable, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.component';
 //import { PharmaRegistryService } from '../pharma-registry.service';
+
+export interface AddProductData{
+  cod: string,
+  des: string
+}
 
 @Component({
   selector: 'app-add-product',
@@ -13,14 +19,17 @@ export class AddProductComponent implements OnInit {
   des = '';
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: AddProductData,
     private pharmaRegistryComponent: PharmaRegistryComponent,
     /*private pharmaRegistryService: PharmaRegistryService*/) { }
 
   ngOnInit(): void {
     //#TODO
+    this.cod = this.data.cod;
+    this.des = this.data.des;
   }
 
-  onSubmit(){
+  onSubmit() {
     this.pharmaRegistryComponent.addProductParams(this.cod, this.des);
     this.pharmaRegistryComponent.closeDialog();
   }

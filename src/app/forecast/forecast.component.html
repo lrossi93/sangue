@@ -1,9 +1,9 @@
 <div *ngIf="loginService.getProfile() == '210'">
-	<p>forecast works!</p>
-	<button (click)="listForecasts()">listForecasts()</button>
-	<button (click)="setForecast('3', '2020', 'username', '009', '11', 'una bellissima nota')">setForecast()</button>
-	<button (click)="addForecast('2020', 'sangueasl', '009', '12', 'noteeeeeee')">addForecast()</button>
-	<button (click)="rmForecast('3')">remove</button>
+	<h1>Forecast registry</h1>
+	<!--button (click)="listForecasts()">listForecasts()</button-->
+	<!--button (click)="setForecast('3', '2020', 'username', '009', '11', 'una bellissima nota')">setForecast()</button-->
+	<button (click)="openDialog()">Add forecast</button>
+	<!--button (click)="rmForecast('3')">remove</button-->
 	<input type="text" placeholder="year" [ngModel]="this.year">
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"
