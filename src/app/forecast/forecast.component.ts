@@ -120,7 +120,20 @@ export class ForecastComponent implements OnInit {
   }
 
   addForecast(anno: string, username: string, id_prd: string, qta: string, note: string){
-    this.forecastService.addForecast(anno, username, id_prd, qta, note);
+    this.id = this.forecastService.addForecast(anno, username, id_prd, qta, note);
+    let newForecast = {
+      id: this.id,
+      anno: anno,
+      username: username,
+      id_prd: id_prd,
+      qta: qta,
+      note: note
+    }
+    this.addLocally(newForecast);
+  }
+
+  addLocally(newForecast: any){
+    this.forecasts.push(newForecast);
   }
 
   rmForecast(id: string){

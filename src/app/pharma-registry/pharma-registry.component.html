@@ -1,9 +1,14 @@
-<h1>Pharmaceutical registry</h1>
 <div *ngIf="loginService.getProfile() == '200'">
-	
-	<button (click)="openDialog()">Add product</button>
-	<button (click)="addLocally(0, '000', 'descrizione')">addLocally</button>
-
+	<h1>Pharmaceutical registry</h1>
+	<button 
+		mat-button
+		mat-raised-button 
+		color="primary" 
+		(click)="openAddProductDialog()"
+		style="width: 100%;"
+		>
+			Add product
+	</button>
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"
 		class="ag-theme-balham"
@@ -12,7 +17,7 @@
 		[defaultColDef]="defaultColDef"
 		[gridOptions]="gridOptions"
 		[enableCellChangeFlash]="true"
-		(gridReady)="onGridReady($event)">
+		[animateRows]="true"
+		[rowSelection]="'multiple'">
 	</ag-grid-angular>
 </div>
-

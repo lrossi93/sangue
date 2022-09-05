@@ -1,7 +1,5 @@
-import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.component';
-//import { PharmaRegistryService } from '../pharma-registry.service';
+import { Component, Injectable, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 export interface AddProductData{
   cod: string,
@@ -15,22 +13,24 @@ export interface AddProductData{
 })
 @Injectable({providedIn: 'root'})
 export class AddProductComponent implements OnInit {
+
   cod = '';
   des = '';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AddProductData,
-    private pharmaRegistryComponent: PharmaRegistryComponent,
-    /*private pharmaRegistryService: PharmaRegistryService*/) { }
+    private dialogRef: MatDialogRef<AddProductComponent>
+  ) { }
 
   ngOnInit(): void {
-    //#TODO
-    this.cod = this.data.cod;
-    this.des = this.data.des;
   }
 
-  onSubmit() {
-    this.pharmaRegistryComponent.addProductParams(this.cod, this.des);
-    this.pharmaRegistryComponent.closeDialog();
+  onSubmit(): void {
+    console.log(this.cod);
+    console.log(this.des);
+    this.dialogRef.close({cod: this.cod, des: this.des, isSubmitted: true});
+  }
+
+  ngOnDestroy(): void {
+    this.dialogRef.close({cod: this.cod, des: this.des, isSubmitted: false});
   }
 }

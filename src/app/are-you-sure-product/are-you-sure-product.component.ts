@@ -1,7 +1,5 @@
 import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AreYouSureData } from 'src/environments/environment';
-import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-are-you-sure-product',
@@ -11,22 +9,25 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
 @Injectable({providedIn: 'root'})
 export class AreYouSureProductComponent implements OnInit {
 
-  id = '';
-
+  id!: number;
+  isSubmitted: boolean = false;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AreYouSureData,
-    private pharmaRegistryComponent: PharmaRegistryComponent
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: {id: number, isSubmitted: boolean},
+    private dialogRef: MatDialogRef<AreYouSureProductComponent>
+  ) {
+    this.id = this.data.id;
+    this.isSubmitted = false;
+   }
 
   ngOnInit(): void {
-    this.id = this.data.id;
   }
 
   onSubmit(){
-    //this.id = this.pharmaRegistryComponent.id;
-    console.log("Deleting product with ID: " + this.data.id);
-    this.pharmaRegistryComponent.rmProduct(this.data.id);
-    this.pharmaRegistryComponent.closeDialog();
+    this.data.isSubmitted = true;
+    this.dialogRef.close({id: this.id, isSubmitted: this.isSubmitted});
+  }
+  ngOnDestroy(): void {
+    this.dialogRef.close({id: this.id, isSubmitted: this.isSubmitted});
   }
 
 }

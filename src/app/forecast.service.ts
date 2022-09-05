@@ -49,11 +49,11 @@ export class ForecastService {
     qta: string,
     note: string,
     isAdding: boolean
-  ){
+  ): any{
     if(!isAdding && parseInt(id) < 1){
       alert("Invalid ID!");
       id = "";
-      return;
+      return null;
     }
 
     if(
@@ -64,7 +64,7 @@ export class ForecastService {
       qta == ""
     ){
       alert("\"note\" is the only acceptable empty parameter.");
-      return;
+      return null;
     }
 
     this.http.post<String[]>(
@@ -82,10 +82,12 @@ export class ForecastService {
       console.log("WS response: " + res);
       if(res[0] == "KO"){
         alert("setForecast() error: " + res[1].toString());
+        return null;
       }
       else{
         console.log("Result: " + res[0]);
         console.log("Product with ID " + res[1] + "successfully set!");
+        return res[1];
       }
     });
   }
@@ -96,10 +98,10 @@ export class ForecastService {
     id_prd: string,
     qta: string,
     note: string,
-  ){
+  ): any{
     let id = "-1";
     let isAdding = true;
-    this.setForecast(id, anno, username, id_prd, qta, note, isAdding);
+    return this.setForecast(id, anno, username, id_prd, qta, note, isAdding);
   }
   
   //POST

@@ -1,1 +1,24 @@
-<p>add-forecast works!</p>
+<h3 mat-dialog-title>Add a new forecast</h3>
+
+<div mat-dialog-content>
+	<p>
+		<input type="text" placeholder="new year" [(ngModel)]="anno">
+	</p>
+    <p>
+		<input type="text" placeholder="new username" [(ngModel)]="username">
+	</p>
+	<p>
+		<input type="text" placeholder="new product id" [(ngModel)]="id_prd">
+	</p>
+    <p>
+		<input type="text" placeholder="new quantity" [(ngModel)]="qta">
+	</p>
+    <p>
+		<input type="text" placeholder="new notes" [(ngModel)]="note">
+	</p>
+</div>
+
+<div mat-dialog-actions>
+	<button mat-button (click)="onSubmit()">submit</button>
+	<button mat-button mat-dialog-close>cancel</button>
+</div>

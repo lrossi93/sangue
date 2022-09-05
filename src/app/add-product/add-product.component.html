@@ -2,14 +2,14 @@
 
 <div mat-dialog-content>
 	<p>
-		<input type="text" placeholder="new code" [(ngModel)]="cod">
+		<input type="text" placeholder="New code" [(ngModel)]="cod">
 	</p>
 	<p>
-		<input type="text" placeholder="new description" [(ngModel)]="des">
+		<input type="text" placeholder="New description" [(ngModel)]="des">
 	</p>
 </div>
 
 <div mat-dialog-actions>
-	<button mat-button (click)="onSubmit()">submit</button>
-	<button mat-button mat-dialog-close>cancel</button>
+	<button mat-raised-button (click)="onSubmit()">Submit</button>
+	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
 </div>

@@ -87,7 +87,8 @@ export class PharmaRegistryService {
         alert(res[1].toString());
       }
       else{
-        console.log("Removing product with ID " + res[0]);
+        console.log("rmProduct result: " + res[0]);
+        console.log("Removing product with ID " + res[1]);
         console.log("Product with ID " + res[1] + "successfully removed!");
       }
     });

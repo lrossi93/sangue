@@ -26,11 +26,15 @@ export class AddForecastComponent implements OnInit {
   note = '';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AddForecastData,
+    @Inject(MAT_DIALOG_DATA)
+    public data: AddForecastData,
     private forecastComponent: ForecastComponent
-  ) { }
+  ) {
+    console.log("AddForecastComp: ID: " + this.data.anno);
+   }
 
   ngOnInit(): void {
+    console.log("AddForecastComp: ID: " + this.data.anno);
     this.anno = this.data.anno;
     this.username = this.data.username;
     this.id_prd = this.data.id_prd;

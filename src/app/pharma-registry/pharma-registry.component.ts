@@ -1,14 +1,13 @@
-import { APP_ID, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CellValueChangedEvent } from 'ag-grid-community';
 import { ButtonCellComponent } from '../button-cell/button-cell.component';
-//import { PharmaRegistryService } from '../pharma-registry.service';
-import { MatDialog } from '@angular/material/dialog'
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
-import { AgGridAngular } from 'ag-grid-angular';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -17,46 +16,27 @@ import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure
 })
 @Injectable({providedIn: 'root'})
 export class PharmaRegistryComponent implements OnInit {
-  products: any;
-  api: any;
+  products: any = [];
   url = environment.basePath + 'anag.php';
 
+  //sample param for dialog
+  dialogData: string = "";
+
   //agGrid configuration
-  pharmaRegistryGridConfig = [
-    { headerName: 'ID', field: 'id'},
-    { headerName: 'Code', field: 'cod', editable: true},
-    { headerName: 'Description', field: 'des', editable: true},
-    { headerName: '', cellRenderer: ButtonCellComponent}
-  ];
+  pharmaRegistryGridConfig: any;
+  gridOptions: any;
+  defaultColDef: any;
 
-  gridOptions = {
-    /*onCellClicked: (event: CellClickedEvent) => {
-      console.log(event);
-    },*/
-    onCellValueChanged: (event: CellValueChangedEvent) => {
-      console.log("Changed from " + event.oldValue + " to " + event.newValue);
-      console.log("ID: " + event.data.id + "; COD: " + event.data.cod + "; DES: " + event.data.des);
-      this.id = event.data.id;
-      this.cod = event.data.cod;
-      this.des = event.data.des;
-      this.setProduct(false); //edit product from grid
-    },
-    onGridReady: (params: any) => {
-      console.log("================grid is ready====================");
-      this.api = params.api;
-      params.api.setRowData(this.products);
-    }
-  }
-
-  defaultColDef = {
-    sortable: true,
-    filter: true,
-  };
+  //agGrid API handle
+  @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
   //parameters for the [set|add|rm]Product()
   id = '';
   cod = '';
   des = '';
+
+
+  api: any;
 
   setId(id: string){
     this.id = id;
@@ -74,18 +54,75 @@ export class PharmaRegistryComponent implements OnInit {
   dialogRef: any;
   columnApi: any;
 
+
+  
+
+  /*
+  
+    CONSTRUCTOR
+
+  */
   constructor(
     public loginService: LoginService, 
     private http: HttpClient,
-    private dialog: MatDialog,
-  ) { }
+    private dialog: MatDialog)
+  { 
+
+    //columnDef
+    this.pharmaRegistryGridConfig = [
+      { 
+        headerName: 'ID', 
+        field: 'id',
+        editable: false
+      },
+      { 
+        headerName: 'Code', 
+        field: 'cod', 
+        editable: true
+      },
+      { 
+        headerName: 'Description', 
+        field: 'des', 
+        editable: true
+      },
+      { 
+        headerName: 'Action', 
+        cellRenderer: ButtonCellComponent
+      }
+    ];
+
+    //gridOptions
+    this.gridOptions = {
+      onCellValueChanged: (event: CellValueChangedEvent) => {
+        console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        console.log("ID: " + event.data.id + "; COD: " + event.data.cod + "; DES: " + event.data.des);
+        this.id = event.data.id;
+        this.cod = event.data.cod;
+        this.des = event.data.des;
+        this.setProduct(false); //edit product from grid
+      }
+    }
+
+    //defaultColDef
+    this.defaultColDef = {
+      sortable: true,
+      filter: true,
+    };
+  }
 
   ngOnInit(): void {
     this.loginService.check();
     this.listProducts();
+    setTimeout(
+      () => {
+        this.api = this.agGrid.api;
+        console.log(this.api);
+      }, 300);
   }
 
   listProducts(): void{
+    this.logAPI();
+    
     let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
     
     this.http.get<String[]>(
@@ -105,7 +142,12 @@ export class PharmaRegistryComponent implements OnInit {
     });
   }
 
+  logAPI(){
+    console.log(this.api);
+  }
+
   setProduct(isAdding: boolean): void{
+    this.logAPI();
     if(!isAdding && parseInt(this.id) < 1){
       alert("Invalid ID!");
       this.id = "";
@@ -133,7 +175,6 @@ export class PharmaRegistryComponent implements OnInit {
       else{
         console.log("Product with ID " + res[1] + "successfully set!");
         if(isAdding){
-          //console.log(this.products);
           this.addLocally(parseInt(res[1].toString()), this.cod, this.des);
         }
         else{
@@ -145,12 +186,14 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   addProduct(): void{
+    this.logAPI();
     this.id = "-1";
     let isAdding = true;
     this.setProduct(isAdding);
   }
 
   addLocally(id: number, cod: string, des: string){
+    this.logAPI();
     let newProduct = {
       id: id,
       cod: cod,
@@ -158,19 +201,20 @@ export class PharmaRegistryComponent implements OnInit {
     };
     this.products.push(newProduct);
     console.log(this.products);
-    //this.gridOptions.onGridReady();
-    this.api.setRowData(this.products);
+    this.updateGrid();
     this.api.ensureIndexVisible(this.products.length - 1);
-    //this.api.refreshCells();
+    this.api.refreshCells();
   }
 
   addProductParams(cod: string, des: string){
+    this.logAPI();
     this.cod = cod;
     this.des = des;
     this.addProduct();
   }
 
   rmProduct(id: string): void{
+    this.logAPI();
     if(id == "" || parseInt(id) < 1){
       alert("Invalid ID!");
       return;
@@ -197,30 +241,26 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   rmLocally(id: number){
+    //this.logAPI();
     let visible = 0;
     for(let i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id){
         this.products.splice(i, 1);
-        this.api.setRowData(this.products);
-        //
-        console.log("length: " + this.products.length + ", index: " + i);
-        //se non ho elementi, non ho niente da focalizzare
         if(this.products.length == 0){
           //no-op
         }
         else{
-          if(i == this.products.length){
-            visible = i - 1;
+          //if it was the last index, make the current last index visible
+          if(i == this.products.length - 1){
+            visible = this.products.length - 1;
           }
+          //if it was not the last index, make the current i index visible
           else{
             visible = i;
           }
         }
-        //this.gridOptions.onGridReady();
-        //this.api.refreshCells();
-        //this.api.setRowData(this.products);
-        //this.api.ensureIndexVisible(visible);
-        //this.api.refreshCells();
+        this.updateGrid();
+        this.api.ensureIndexVisible(visible);
         return;
       }
     }
@@ -238,27 +278,26 @@ export class PharmaRegistryComponent implements OnInit {
     this.des = '';
   }
 
-  openDialog(){
+  openAddProductDialog(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+      cod: this.cod, 
+      des: this.des
+    }
+
     this.dialogRef = this.dialog.open(
       AddProductComponent, 
-      {
-        data: 
-        {
-          cod: this.cod, 
-          des: this.des
-        }
-      }
+      dialogConfig
     );
-    this.dialogRef.afterClosed().subscribe(() => {
-      this.listProducts();
-      this.api.setRowData(this.products);
-    });
-  }
 
-  closeDialog(){
-    this.dialog.closeAll();
-    this.listProducts();
-    //this.api.setRowData(this.products);
+    this.dialogRef.afterClosed().subscribe( (result: {cod: string, des: string, isSubmitted: boolean}) => {
+      if(result.isSubmitted){
+        this.addProductParams(result.cod, result.des);
+        this.updateGrid();
+      }
+    });
   }
 
   openAreYouSureDialog(){
@@ -266,29 +305,42 @@ export class PharmaRegistryComponent implements OnInit {
       AreYouSureProductComponent,
       {
         data:{
-          id: this.id
+          id: this.id,
+          isSubmitted: false
         }
-      });
-    this.dialogRef.afterClosed().subscribe(() =>{
-      this.listProducts();
-      //this.api.setRowData(this.products);
+      },
+    );
+    this.dialogRef.afterClosed().subscribe((result: { id: string; isSubmitted: boolean }) =>{
+      if(result.isSubmitted){
+        this.rmProduct(result.id);
+        this.updateGrid();
+      }
     });
   }
 
   setLocally(id: number, cod: string, des: string){
+    this.logAPI();
     for(let i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id){
+        console.log(this.products[i].id + '->' + id);
+        console.log(this.products[i].cod + '->' + cod);
+        console.log(this.products[i].des + '->' + des);
         this.products[i].cod = cod;
         this.products[i].des = des;
+        this.updateGrid();
         return;
       }
     }
-    //this.api.refreshCells();
-    //this.api.setRowData(this.products);
   }
 
-  onGridReady(params: any) {
-    this.api = params.api;
+  clearSelection() {
+    this.api.deselectAll();
   }
 
+  updateGrid(){
+    console.log(this.api);
+    this.api.setRowData(this.products);
+  }
 }
+
+
