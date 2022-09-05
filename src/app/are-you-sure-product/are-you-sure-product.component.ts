@@ -24,10 +24,7 @@ export class AreYouSureProductComponent implements OnInit {
 
   onSubmit(){
     this.data.isSubmitted = true;
-    this.dialogRef.close({id: this.id, isSubmitted: this.isSubmitted});
+    console.log("onSubmit: " + this.data.isSubmitted);
+    this.dialogRef.close({id: this.id, isSubmitted: this.data.isSubmitted});
   }
-  ngOnDestroy(): void {
-    this.dialogRef.close({id: this.id, isSubmitted: this.isSubmitted});
-  }
-
 }

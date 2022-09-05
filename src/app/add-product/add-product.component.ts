@@ -16,6 +16,7 @@ export class AddProductComponent implements OnInit {
 
   cod = '';
   des = '';
+  isSubmitted: boolean = false;
 
   constructor(
     private dialogRef: MatDialogRef<AddProductComponent>
@@ -27,10 +28,7 @@ export class AddProductComponent implements OnInit {
   onSubmit(): void {
     console.log(this.cod);
     console.log(this.des);
-    this.dialogRef.close({cod: this.cod, des: this.des, isSubmitted: true});
-  }
-
-  ngOnDestroy(): void {
-    this.dialogRef.close({cod: this.cod, des: this.des, isSubmitted: false});
+    this.isSubmitted = true;
+    this.dialogRef.close({cod: this.cod, des: this.des, isSubmitted: this.isSubmitted});
   }
 }

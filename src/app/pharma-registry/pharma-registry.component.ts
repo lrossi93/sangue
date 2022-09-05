@@ -121,7 +121,7 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   listProducts(): void{
-    this.logAPI();
+    
     
     let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
     
@@ -147,7 +147,7 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   setProduct(isAdding: boolean): void{
-    this.logAPI();
+    
     if(!isAdding && parseInt(this.id) < 1){
       alert("Invalid ID!");
       this.id = "";
@@ -186,14 +186,12 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   addProduct(): void{
-    this.logAPI();
     this.id = "-1";
     let isAdding = true;
     this.setProduct(isAdding);
   }
 
   addLocally(id: number, cod: string, des: string){
-    this.logAPI();
     let newProduct = {
       id: id,
       cod: cod,
@@ -207,14 +205,12 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   addProductParams(cod: string, des: string){
-    this.logAPI();
     this.cod = cod;
     this.des = des;
     this.addProduct();
   }
 
   rmProduct(id: string): void{
-    this.logAPI();
     if(id == "" || parseInt(id) < 1){
       alert("Invalid ID!");
       return;
@@ -241,7 +237,6 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   rmLocally(id: number){
-    //this.logAPI();
     let visible = 0;
     for(let i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id){
@@ -293,7 +288,7 @@ export class PharmaRegistryComponent implements OnInit {
     );
 
     this.dialogRef.afterClosed().subscribe( (result: {cod: string, des: string, isSubmitted: boolean}) => {
-      if(result.isSubmitted){
+      if(result !== undefined && result.isSubmitted){
         this.addProductParams(result.cod, result.des);
         this.updateGrid();
       }
@@ -311,7 +306,7 @@ export class PharmaRegistryComponent implements OnInit {
       },
     );
     this.dialogRef.afterClosed().subscribe((result: { id: string; isSubmitted: boolean }) =>{
-      if(result.isSubmitted){
+      if(result !== undefined && result.isSubmitted){        
         this.rmProduct(result.id);
         this.updateGrid();
       }
@@ -319,7 +314,6 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   setLocally(id: number, cod: string, des: string){
-    this.logAPI();
     for(let i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id){
         console.log(this.products[i].id + '->' + id);

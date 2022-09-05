@@ -23,8 +23,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { DialogBoxComponent } from './dialog-box/dialog-box.component';
-import { SamplePRegistryComponent } from './sample-p-registry/sample-p-registry.component';
 import { MatInputComponent } from './mat-input/mat-input.component';
 
 @NgModule({
@@ -41,8 +39,6 @@ import { MatInputComponent } from './mat-input/mat-input.component';
     AreYouSureProductComponent,
     AreYouSureForecastComponent,
     AddForecastComponent,
-    DialogBoxComponent,
-    SamplePRegistryComponent,
     MatInputComponent
   ],
   providers: [
