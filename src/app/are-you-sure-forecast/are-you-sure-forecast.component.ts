@@ -1,7 +1,5 @@
-import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AreYouSureData } from 'src/environments/environment';
-import { ForecastComponent } from '../forecast/forecast.component';
+import { Component, Inject, Injectable } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-are-you-sure-forecast',
@@ -9,22 +7,25 @@ import { ForecastComponent } from '../forecast/forecast.component';
   styleUrls: ['./are-you-sure-forecast.component.css']
 })
 @Injectable({providedIn: 'root'})
-export class AreYouSureForecastComponent implements OnInit {
+export class AreYouSureForecastComponent {
 
-  id = '';
+  id!: number;
+  isSubmitted: boolean = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AreYouSureData,
-    private forecastComponent: ForecastComponent
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: {id: number},
+    private dialogRef: MatDialogRef<AreYouSureForecastComponent>
+    ) { 
+      this.id = this.data.id
+    }
 
-  ngOnInit(): void {
-    this.id = this.data.id;
-  }
-
-  onSubmit() {
-    console.log("Deleting forecast with ID: " + this.data.id);
-    this.forecastComponent.rmForecast(this.data.id);
-    this.forecastComponent.closeDialog();    
+  onSubmit() {   
+    this.isSubmitted = true;
+    this.dialogRef.close(
+      {
+        id: this.id,
+        isSubmitted: this.isSubmitted
+      }
+    );
   }
 }

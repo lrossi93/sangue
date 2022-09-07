@@ -1,10 +1,5 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-
-export interface AddProductData{
-  cod: string,
-  des: string
-}
 
 @Component({
   selector: 'app-add-product',
@@ -12,18 +7,13 @@ export interface AddProductData{
   styleUrls: ['./add-product.component.css']
 })
 @Injectable({providedIn: 'root'})
-export class AddProductComponent implements OnInit {
+export class AddProductComponent{
 
   cod = '';
   des = '';
   isSubmitted: boolean = false;
 
-  constructor(
-    private dialogRef: MatDialogRef<AddProductComponent>
-  ) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private dialogRef: MatDialogRef<AddProductComponent>) { }
 
   onSubmit(): void {
     console.log(this.cod);

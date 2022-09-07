@@ -2,23 +2,23 @@
 
 <div mat-dialog-content>
 	<p>
-		<input type="text" placeholder="new year" [(ngModel)]="anno">
-	</p>
-    <p>
-		<input type="text" placeholder="new username" [(ngModel)]="username">
+		<input type="text" placeholder="New year" [(ngModel)]="anno">
 	</p>
 	<p>
-		<input type="text" placeholder="new product id" [(ngModel)]="id_prd">
+		<input type="text" placeholder="New username" [(ngModel)]="username">
+	</p>
+	<p>
+		<input type="text" placeholder="New product id" [(ngModel)]="id_prd">
 	</p>
     <p>
-		<input type="text" placeholder="new quantity" [(ngModel)]="qta">
+		<input type="text" placeholder="New quantity" [(ngModel)]="qta">
 	</p>
     <p>
-		<input type="text" placeholder="new notes" [(ngModel)]="note">
+		<input type="text" placeholder="New notes" [(ngModel)]="note">
 	</p>
 </div>
 
 <div mat-dialog-actions>
-	<button mat-button (click)="onSubmit()">submit</button>
-	<button mat-button mat-dialog-close>cancel</button>
+	<button mat-raised-button (click)="onSubmit()">Submit</button>
+	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
 </div>

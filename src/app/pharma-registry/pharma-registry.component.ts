@@ -30,7 +30,7 @@ export class PharmaRegistryComponent implements OnInit {
   //agGrid API handle
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
-  //parameters for the [set|add|rm]Product()
+  //parameters for [set|add|rm]Product()
   id = '';
   cod = '';
   des = '';
@@ -121,10 +121,7 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   listProducts(): void{
-    
-    
     let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
-    
     this.http.get<String[]>(
       path,
       {
@@ -147,7 +144,6 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   setProduct(isAdding: boolean): void{
-    
     if(!isAdding && parseInt(this.id) < 1){
       alert("Invalid ID!");
       this.id = "";
@@ -246,7 +242,7 @@ export class PharmaRegistryComponent implements OnInit {
         }
         else{
           //if it was the last index, make the current last index visible
-          if(i == this.products.length - 1){
+          if(i == this.products.length){
             visible = this.products.length - 1;
           }
           //if it was not the last index, make the current i index visible
@@ -300,8 +296,7 @@ export class PharmaRegistryComponent implements OnInit {
       AreYouSureProductComponent,
       {
         data:{
-          id: this.id,
-          isSubmitted: false
+          id: this.id
         }
       },
     );

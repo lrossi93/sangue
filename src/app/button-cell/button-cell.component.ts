@@ -6,7 +6,7 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
 @Component({
   selector: 'app-button-cell',
   template: `
-    <button (click)="onClickOpenDialog($event)">delete</button>
+    <button (click)="onClickOpenDialog($event)">Delete</button>
   `
 })
 export class ButtonCellComponent implements ICellRendererAngularComp {
@@ -23,8 +23,6 @@ export class ButtonCellComponent implements ICellRendererAngularComp {
   }
 
   onClickOpenDialog(event: any){
-    //this.pharmaRegistryComponent.rmProduct(this.data.id);
-    console.log("buttonCellComponent: ID: " + this.data.id);
     this.pharmaRegistryComponent.setId(this.data.id);
     this.pharmaRegistryComponent.openAreYouSureDialog();
   }

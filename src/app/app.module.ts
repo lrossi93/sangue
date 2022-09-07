@@ -24,6 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatInputComponent } from './mat-input/mat-input.component';
+import { ButtonDeleteForecastComponent } from './button-delete-forecast/button-delete-forecast.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatInputComponent } from './mat-input/mat-input.component';
     AreYouSureProductComponent,
     AreYouSureForecastComponent,
     AddForecastComponent,
-    MatInputComponent
+    MatInputComponent,
+    ButtonDeleteForecastComponent
   ],
   providers: [
     AddProductComponent,
