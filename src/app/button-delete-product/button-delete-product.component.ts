@@ -9,7 +9,7 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
     <button (click)="onClickOpenDialog($event)">Delete</button>
   `
 })
-export class ButtonCellComponent implements ICellRendererAngularComp {
+export class ButtonDeleteProductComponent implements ICellRendererAngularComp {
   data: any;
   constructor(private pharmaRegistryComponent: PharmaRegistryComponent) { }
 

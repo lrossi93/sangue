@@ -3,11 +3,11 @@ import { LoginService } from '../login.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CellValueChangedEvent } from 'ag-grid-community';
-import { ButtonCellComponent } from '../button-cell/button-cell.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
 import { AgGridAngular } from 'ag-grid-angular';
+import { ButtonDeleteProductComponent } from '../button-delete-product/button-delete-product.component';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -87,7 +87,7 @@ export class PharmaRegistryComponent implements OnInit {
       },
       { 
         headerName: 'Action', 
-        cellRenderer: ButtonCellComponent
+        cellRenderer: ButtonDeleteProductComponent
       }
     ];
 

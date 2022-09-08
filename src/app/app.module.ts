@@ -12,7 +12,6 @@ import { HomeComponent } from './home/home.component';
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { ForecastComponent } from './forecast/forecast.component';
-import { ButtonCellComponent } from './button-cell/button-cell.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddProductComponent } from './add-product/add-product.component';
@@ -25,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatInputComponent } from './mat-input/mat-input.component';
 import { ButtonDeleteForecastComponent } from './button-delete-forecast/button-delete-forecast.component';
+import { ButtonDeleteProductComponent } from './button-delete-product/button-delete-product.component';
 
 @NgModule({
   declarations: [
@@ -35,13 +35,13 @@ import { ButtonDeleteForecastComponent } from './button-delete-forecast/button-d
     HomeComponent,
     PharmaRegistryComponent,
     ForecastComponent,
-    ButtonCellComponent,
     AddProductComponent,
     AreYouSureProductComponent,
     AreYouSureForecastComponent,
     AddForecastComponent,
     MatInputComponent,
-    ButtonDeleteForecastComponent
+    ButtonDeleteForecastComponent,
+    ButtonDeleteProductComponent
   ],
   providers: [
     AddProductComponent,

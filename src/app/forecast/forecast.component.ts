@@ -115,7 +115,7 @@ export class ForecastComponent implements OnInit {
   ngOnInit(): void {
     this.loginService.check();
     this.year = new Date().getFullYear().toString();
-    this.listForecasts();
+    this.listForecasts(this.year);
     setTimeout(
       () => {
         this.api = this.agGrid.api;
@@ -131,9 +131,9 @@ export class ForecastComponent implements OnInit {
     this.id = id;
   }
 
-  listForecasts(): void {
+  listForecasts(year: string): void {
     
-    this.forecasts = this.forecastService.listForecasts(this.year);
+    this.forecasts = this.forecastService.listForecasts(year);
     if(this.forecasts == null){
       //alert("Received null instead of array of forecasts");
       console.log("null array of forecasts");
@@ -199,7 +199,7 @@ export class ForecastComponent implements OnInit {
 
   rmForecast(id: string){
     this.forecastService.rmForecast(id);
-    this.listForecasts();
+    this.listForecasts(this.year);
   }
 
   rmLocally(id: string){
@@ -284,7 +284,7 @@ export class ForecastComponent implements OnInit {
 
   closeDialog(){
     this.dialog.closeAll();
-    this.listForecasts();
+    this.listForecasts(this.year);
     this.api.setRowData(this.forecasts);
   }
 
