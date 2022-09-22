@@ -13,14 +13,13 @@ export class ForecastService {
   constructor(
     private loginService: LoginService,
     private http: HttpClient,
-    ) { 
-      //this.forecast = this.listForecasts('2020');
-    }
+    ) { }
 
   
   //GET
-  listForecasts(year: string): any{
+  listForecasts(year: string, result: any): any{
     let path = this.url + '?request=listForecasts&id_session='+localStorage.getItem('id_session') + '&year=' + year;
+    console.log(path);
     
     this.http.get<String[]>(
       path,
@@ -35,6 +34,9 @@ export class ForecastService {
       }
       else{
         console.log(res[1]); 
+        result = res[1];
+        console.log('result ' + result);
+        
         return res[1];
       }
     });
@@ -43,11 +45,13 @@ export class ForecastService {
   //POST
   setForecast(
     id: string,
-    anno: string,
+    anno: number,
     username: string,
     id_prd: string,
-    qta: string,
+    qta: number,
     note: string,
+    qta_approvata: number,
+    costo_unitario: number,
     isAdding: boolean
   ): any{
     if(!isAdding && parseInt(id) < 1){
@@ -55,13 +59,13 @@ export class ForecastService {
       id = "";
       return null;
     }
-
+// TODO rivedere questo controllo
     if(
       id == "" || 
-      anno == "" || 
+      anno.toString() == "" || 
       username == "" || 
       id_prd == "" ||
-      qta == ""
+      qta.toString() == ""
     ){
       alert("\"note\" is the only acceptable empty parameter.");
       return null;
@@ -76,7 +80,9 @@ export class ForecastService {
         username: username,
         id_prd: id_prd,
         qta: qta,
-        note: note
+        note: note,
+        qta_approvata: qta_approvata,
+        costo_unitario: costo_unitario
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -93,15 +99,17 @@ export class ForecastService {
   }
   //POST
   addForecast(
-    anno: string,
+    anno: number,
     username: string,
     id_prd: string,
-    qta: string,
+    qta: number,
     note: string,
+    qta_approvata: number,
+    costo_unitario: number,
   ): any{
     let id = "-1";
     let isAdding = true;
-    return this.setForecast(id, anno, username, id_prd, qta, note, isAdding);
+    return this.setForecast(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario, isAdding);
   }
   
   //POST

@@ -8,14 +8,18 @@ import { MatDialogRef} from '@angular/material/dialog';
 @Injectable({providedIn: 'root'})
 export class AddForecastComponent{
 
-  anno = '';
+  anno!: number;
   username = '';
   id_prd = ''; 
-  qta = '';
+  qta!: number;
   note = '';
+  qta_approvata: number = 0;
+  costo_unitario: number = 0;
   isSubmitted: boolean = false;
 
-  constructor(private dialogRef: MatDialogRef<AddForecastComponent>) { }
+  constructor(private dialogRef: MatDialogRef<AddForecastComponent>) {
+    this.anno = new Date().getFullYear();
+  }
 
   onSubmit() {
     this.isSubmitted = true;
@@ -26,6 +30,8 @@ export class AddForecastComponent{
         id_prd: this.id_prd,
         qta: this.qta,
         note: this.note,
+        qta_approvata: this.qta_approvata,
+        costo_unitario: this.costo_unitario,
         isSubmitted: this.isSubmitted
       }
     );

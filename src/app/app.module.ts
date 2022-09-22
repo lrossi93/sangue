@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -25,6 +24,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatInputComponent } from './mat-input/mat-input.component';
 import { ButtonDeleteForecastComponent } from './button-delete-forecast/button-delete-forecast.component';
 import { ButtonDeleteProductComponent } from './button-delete-product/button-delete-product.component';
+import { DropdownProductsForecastComponent } from './dropdown-products-forecast/dropdown-products-forecast.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdown-users-forecast.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,9 @@ import { ButtonDeleteProductComponent } from './button-delete-product/button-del
     AddForecastComponent,
     MatInputComponent,
     ButtonDeleteForecastComponent,
-    ButtonDeleteProductComponent
+    ButtonDeleteProductComponent,
+    DropdownProductsForecastComponent,
+    DropdownUsersForecastComponent,
   ],
   providers: [
     AddProductComponent,
@@ -61,7 +66,9 @@ import { ButtonDeleteProductComponent } from './button-delete-product/button-del
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent]
 })

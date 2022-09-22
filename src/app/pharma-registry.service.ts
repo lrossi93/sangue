@@ -8,9 +8,11 @@ import { environment } from 'src/environments/environment';
 export class PharmaRegistryService {
   url = environment.basePath + 'anag.php'
 
-  constructor(private http: HttpClient, ) { }
-/*
-  getProducts(): void {
+  constructor(
+    private http: HttpClient, 
+  ) { }
+
+  getProducts(): any[] {
     let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
     
     this.http.get<String[]>(
@@ -29,8 +31,9 @@ export class PharmaRegistryService {
         return res[1]; 
       }
     });
+    return [];
   }
-*/
+
   setProduct(id: string, cod: string, des: string, isAdding: boolean): void{
     if(!isAdding && parseInt(id) < 1){
       alert("Invalid ID!");

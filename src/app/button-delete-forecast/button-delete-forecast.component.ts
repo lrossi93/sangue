@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { ForecastComponent } from '../forecast/forecast.component';
@@ -6,7 +6,7 @@ import { ForecastComponent } from '../forecast/forecast.component';
 @Component({
   selector: 'app-button-delete-forecast',
   template: `
-    <button (click)="onClickOpenDialog($event)">Delete</button>
+    <button mat-raised-button color="primary" style="width: 100%;" (click)="onClickOpenDialog($event)">Delete</button>
   `,
   styleUrls: ['./button-delete-forecast.component.css']
 })

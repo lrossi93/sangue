@@ -9,6 +9,7 @@ import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ButtonDeleteForecastComponent } from '../button-delete-forecast/button-delete-forecast.component';
+import { DropdownProductsForecastComponent } from '../dropdown-products-forecast/dropdown-products-forecast.component';
 
 @Component({
   selector: 'app-forecast',
@@ -23,17 +24,146 @@ export class ForecastComponent implements OnInit {
   
   //parameters for [set|add|rm]Forecast()
   id = '';
-  anno = '';
+  anno!: number;
   username = '';
   id_prd = '';
-  qta = '';
+  qta!: number;
   note = '';
-  year: string = '';
+  qta_approvata!: number;
+  costo_unitario!: number;
+  year: string = new Date().getFullYear().toString();
   
-
   //agGrid configuration
   api: any;
   forecastGridConfig: any;
+  
+  //sangueasl column definition
+  gridConfigUser210: any = [
+    { 
+      headerName: 'ID', 
+      field: 'id'
+    },
+    { 
+      headerName: 'Year', 
+      field: 'anno', 
+      editable: true
+    },
+    { 
+      headerName: 'Username', 
+      field: 'username', 
+      editable: true
+    },
+    /*
+    { 
+      headerName: 'Product ID', 
+      field: 'id_prd', 
+      editable: true
+    },
+    */
+    { 
+      headerName: 'Product name', 
+      field: 'id_prd', 
+      cellRenderer: DropdownProductsForecastComponent
+      /*cellEditorPopup: true,
+      cellEditorSelector: () => {
+        return {
+          component: 'agRichSelectCellEditor',
+          params: {
+            values: [
+              'a',
+              'b'
+            ]
+          },
+          popup: true
+        }
+      }*/
+      /*
+      cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+            values: ['English', 'Spanish', 'French', 'Portuguese', '(other)'],
+        }
+      */
+    },
+    { 
+      headerName: 'Quantity', 
+      field: 'qta', 
+      editable: true
+    },
+    { 
+      headerName: 'Notes', 
+      field: 'note', 
+      editable: true
+    },
+    { 
+      headerName: 'Quantità approvata', 
+      field: 'qta_approvata', 
+      editable: false
+    },
+    { 
+      headerName: 'Costo unitario', 
+      field: 'costo_unitario', 
+      editable: false
+    },
+    { 
+      headerName: 'Action', 
+      cellRenderer: ButtonDeleteForecastComponent,
+      autoHeight: true
+    }
+  ];
+
+  //sangueaslno column definition
+  gridConfigUser220: any = [
+    { 
+      headerName: 'ID', 
+      field: 'id'
+    },
+    { 
+      headerName: 'Year', 
+      field: 'anno', 
+      editable: false
+    },
+    { 
+      headerName: 'Username', 
+      field: 'username', 
+      editable: false
+    },
+    { 
+      headerName: 'Product ID', 
+      field: 'id_prd', 
+      editable: false
+    },
+    { 
+      headerName: 'Product name', 
+      field: 'id_prd', 
+      cellRenderer: DropdownProductsForecastComponent,
+      editable: false
+    },
+    { 
+      headerName: 'Quantity', 
+      field: 'qta', 
+      editable: false
+    },
+    { 
+      headerName: 'Notes', 
+      field: 'note', 
+      editable: false
+    },
+    { 
+      headerName: 'Quantità approvata', 
+      field: 'qta_approvata', 
+      editable: true
+    },
+    { 
+      headerName: 'Costo unitario', 
+      field: 'costo_unitario', 
+      editable: true
+    },
+    { 
+      headerName: 'Action', 
+      cellRenderer: ButtonDeleteForecastComponent,
+      autoHeight: true
+    }
+  ];
   gridOptions: any;
   defaultColDef: any;
 
@@ -51,44 +181,18 @@ export class ForecastComponent implements OnInit {
     private forecastService: ForecastService,
     private dialog: MatDialog,
     ) { 
-
+      console.log('profile: ' + loginService.getProfile());
+      
       //columnDef
-      this.forecastGridConfig = [
-        { 
-          headerName: 'ID', 
-          field: 'id'
-        },
-        { 
-          headerName: 'Year', 
-          field: 'anno', 
-          editable: true
-        },
-        { 
-          headerName: 'Username', 
-          field: 'username', 
-          editable: true
-        },
-        { 
-          headerName: 'Product ID', 
-          field: 'id_prd', 
-          editable: true
-        },
-        { 
-          headerName: 'Quantity', 
-          field: 'qta', 
-          editable: true
-        },
-        { 
-          headerName: 'Notes', 
-          field: 'note', 
-          editable: true
-        },
-        { 
-          headerName: 'Action', 
-          cellRenderer: ButtonDeleteForecastComponent
-        }
-      ];
-
+      switch(loginService.getProfile()){
+        case '210':
+          this.forecastGridConfig = this.gridConfigUser210;
+          break;
+        case '220':
+          this.forecastGridConfig = this.gridConfigUser220;
+          break;
+      }
+      
       //gridOptions
       this.gridOptions = {
         onCellValueChanged: (event: CellValueChangedEvent) => {
@@ -100,8 +204,11 @@ export class ForecastComponent implements OnInit {
             event.data.username,
             event.data.id_prd,
             event.data.qta,
-            event.data.note
-          ); //edit forecast from grid
+            event.data.note,
+            event.data.qta_approvata,
+            event.data.costo_unitario
+          );
+          this.updateGrid();
         }
       }
 
@@ -114,8 +221,19 @@ export class ForecastComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.check();
-    this.year = new Date().getFullYear().toString();
+
+    //columnDef
+    switch(this.loginService.getProfile()){
+      case '210':
+        this.forecastGridConfig = this.gridConfigUser210;
+        break;
+      case '220':
+        this.forecastGridConfig = this.gridConfigUser220;
+        break;
+    }
+
     this.listForecasts(this.year);
+
     setTimeout(
       () => {
         this.api = this.agGrid.api;
@@ -131,13 +249,11 @@ export class ForecastComponent implements OnInit {
     this.id = id;
   }
 
-  listForecasts(year: string): void {
+  listForecasts(year: string): void {    
+    //this.forecasts = this.forecastService.listForecasts(this.year);
     
-    this.forecasts = this.forecastService.listForecasts(year);
     if(this.forecasts == null){
-      //alert("Received null instead of array of forecasts");
       console.log("null array of forecasts");
-      
     }
     
     let path = this.url + '?request=listForecasts&id_session='+localStorage.getItem('id_session') + '&year=' + this.year;
@@ -152,20 +268,19 @@ export class ForecastComponent implements OnInit {
       if(res[0] == "KO"){
         alert("Error retrieving forecasts!");
       }
-      else{
-        console.log(res[1]); 
+      else{ 
         this.forecasts = res[1];
       }
     });
   }
 
-  setForecast(id: string, anno: string, username: string, id_prd: string, qta: string, note: string){
+  setForecast(id: string, anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
     let isAdding = false;
-    this.forecastService.setForecast(id, anno, username, id_prd, qta, note, isAdding);
-    this.setLocally(id, anno, username, id_prd, qta, note);
+    this.forecastService.setForecast(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario, isAdding);
+    this.setLocally(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
   }
 
-  setLocally(id: string, anno: string, username: string, id_prd: string, qta: string, note: string){
+  setLocally(id: string, anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
     for(let i = 0; i < this.forecasts.length; ++i){
       if(id == this.forecasts[i].id){
         this.forecasts[i].anno = anno;
@@ -173,21 +288,25 @@ export class ForecastComponent implements OnInit {
         this.forecasts[i].id_prd = id_prd;
         this.forecasts[i].qta = qta;
         this.forecasts[i].note = note;
+        this.forecasts[i].qta_approvata = qta_approvata;
+        this.forecasts[i].costo_unitario = costo_unitario;
         this.updateGrid();
         return;
       }
     }
   }
 
-  addForecast(anno: string, username: string, id_prd: string, qta: string, note: string){
-    this.id = this.forecastService.addForecast(anno, username, id_prd, qta, note);
+  addForecast(anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
+    this.id = this.forecastService.addForecast(anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
     let newForecast = {
       id: this.id,
       anno: anno,
       username: username,
       id_prd: id_prd,
       qta: qta,
-      note: note
+      note: note,
+      qta_approvata: qta_approvata,
+      costo_unitario: costo_unitario
     }
     this.addLocally(newForecast);
   }
@@ -246,11 +365,13 @@ export class ForecastComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(
       (result: {
-        anno: string,
+        anno: number,
         username: string,
         id_prd: string,
-        qta: string,
+        qta: number,
         note: string,
+        qta_approvata: number,
+        costo_unitario: number,
         isSubmitted: boolean
     }) => {
       if(result !== undefined && result.isSubmitted){
@@ -259,7 +380,9 @@ export class ForecastComponent implements OnInit {
           result.username,
           result.id_prd,
           result.qta,
-          result.note
+          result.note,
+          result.qta_approvata,
+          result.costo_unitario
         );
         this.updateGrid();
       }
