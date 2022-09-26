@@ -1,19 +1,19 @@
-<!--form>
-    <mat-form-field>
-      <input 
-        type="text" 
-        [matAutocomplete]="auto" 
-        [formControl]="formControl"
-        aria-label=""
-        placeholder="Product name"
-        matInput>
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option 
-          *ngFor="let option of filteredOptions | async" 
-          [value]="option"
-          (onSelectionChange)='onOptionSelected(option)'>
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-  </form-->
+<form>
+  <mat-form-field>
+    <input 
+      type="text" 
+      [matAutocomplete]="auto" 
+      [formControl]="formControl"
+      value={{this.userName}}
+      matInput>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option 
+        *ngFor="let option of filteredOptions | async" 
+        [value]="option"
+        (onSelectionChange)='onOptionSelected($event)'
+        >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

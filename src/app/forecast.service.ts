@@ -85,15 +85,15 @@ export class ForecastService {
         costo_unitario: costo_unitario
       }
     ).subscribe(res => {
-      console.log("WS response: " + res);
+      //console.log("WS response: " + res);
       if(res[0] == "KO"){
         alert("setForecast() error: " + res[1].toString());
         return null;
       }
       else{
-        console.log("Result: " + res[0]);
-        console.log("Product with ID " + res[1] + "successfully set!");
-        return res[1];
+        //console.log("Result: " + res[0]);
+        //console.log("Product with ID " + res[1] + "successfully set!");
+        return res[1].toString();
       }
     });
   }
@@ -131,7 +131,7 @@ export class ForecastService {
         alert(res[1].toString());
       }
       else{
-        console.log("Removing product with ID " + res[0]);
+        //console.log("Removing product with ID " + res[0]);
         console.log("Product with ID " + res[1] + "successfully removed!");
       }
     });

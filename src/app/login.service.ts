@@ -27,6 +27,10 @@ export class LoginService {
     return localStorage.getItem("id_profile");
   }
 
+  getUserCode(){
+    return localStorage.getItem('id_profile');
+  }
+
   getUserType(){
     let userType;
     switch(localStorage.getItem('id_profile')){

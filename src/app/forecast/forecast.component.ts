@@ -10,6 +10,7 @@ import { LoginService } from '../login.service';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ButtonDeleteForecastComponent } from '../button-delete-forecast/button-delete-forecast.component';
 import { DropdownProductsForecastComponent } from '../dropdown-products-forecast/dropdown-products-forecast.component';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-forecast',
@@ -64,25 +65,6 @@ export class ForecastComponent implements OnInit {
       headerName: 'Product name', 
       field: 'id_prd', 
       cellRenderer: DropdownProductsForecastComponent
-      /*cellEditorPopup: true,
-      cellEditorSelector: () => {
-        return {
-          component: 'agRichSelectCellEditor',
-          params: {
-            values: [
-              'a',
-              'b'
-            ]
-          },
-          popup: true
-        }
-      }*/
-      /*
-      cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {
-            values: ['English', 'Spanish', 'French', 'Portuguese', '(other)'],
-        }
-      */
     },
     { 
       headerName: 'Quantity', 
@@ -100,7 +82,7 @@ export class ForecastComponent implements OnInit {
       editable: false
     },
     { 
-      headerName: 'Costo unitario', 
+      headerName: 'Costo unitario (€)', 
       field: 'costo_unitario', 
       editable: false
     },
@@ -127,11 +109,13 @@ export class ForecastComponent implements OnInit {
       field: 'username', 
       editable: false
     },
+    /*
     { 
       headerName: 'Product ID', 
       field: 'id_prd', 
       editable: false
     },
+    */
     { 
       headerName: 'Product name', 
       field: 'id_prd', 
@@ -154,7 +138,7 @@ export class ForecastComponent implements OnInit {
       editable: true
     },
     { 
-      headerName: 'Costo unitario', 
+      headerName: 'Costo unitario (€)', 
       field: 'costo_unitario', 
       editable: true
     },
@@ -180,9 +164,12 @@ export class ForecastComponent implements OnInit {
     public loginService: LoginService,
     private forecastService: ForecastService,
     private dialog: MatDialog,
+    private usersService: UsersService,
     ) { 
-      console.log('profile: ' + loginService.getProfile());
+      //console.log('profile: ' + loginService.getProfile());
       
+      usersService.listUsers();
+
       //columnDef
       switch(loginService.getProfile()){
         case '210':
@@ -196,8 +183,8 @@ export class ForecastComponent implements OnInit {
       //gridOptions
       this.gridOptions = {
         onCellValueChanged: (event: CellValueChangedEvent) => {
-          console.log("Changed from " + event.oldValue + " to " + event.newValue);
-          console.log("event.data.toString(): " + event.data.toString());
+          //console.log("Changed from " + event.oldValue + " to " + event.newValue);
+          //console.log("event.data.toString(): " + event.data.toString());
           this.setForecast(
             event.data.id,
             event.data.anno,
@@ -298,6 +285,7 @@ export class ForecastComponent implements OnInit {
 
   addForecast(anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
     this.id = this.forecastService.addForecast(anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
+    console.log("new forecast id: " + this.id)
     let newForecast = {
       id: this.id,
       anno: anno,

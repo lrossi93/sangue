@@ -8,6 +8,7 @@ import { PharmaRegistryService } from '../pharma-registry.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs';
 import { ForecastService } from '../forecast.service';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-dropdown-products-forecast',
@@ -18,6 +19,7 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
 
   pharmaRegistryUrl: string = environment.basePath + 'anag.php';
   forecastsUrl: string = environment.basePath + 'forecasts.php';
+  loginService!: LoginService;
 
   data: any;
   value: any;
@@ -25,26 +27,33 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   productNames: string[] = [];
   productName: string = '';
 
-  localForecast!: Forecast;
-
-
   //sample array
   options: string[] = [];//['Delhi', 'Mumbai', 'Banglore'];
   filteredOptions: Observable<string[]> | undefined;
-  formControl: FormControl;
+  formControl!: FormControl;
 
   constructor(
+    loginService: LoginService,
     private pharmaRegistryService: PharmaRegistryService,
     private forecastService: ForecastService,
     private http: HttpClient,
   ) { 
+    
     //retrieve product names
     this.getProducts();
-    this.options = this.productNames;
-    //sample control
-    this.formControl = new FormControl();
-    console.log('assigned product name: ' + this.productName);
     
+    this.options = this.productNames;
+    this.loginService = loginService;
+
+    //adapt dropdown to user type
+    switch(loginService.getUserCode()){
+      case "210":
+        this.formControl = new FormControl({value: this.productName, disabled: false});
+        break;
+      case "220":
+        this.formControl = new FormControl({value: this.productName, disabled: true});
+        break;
+    }
   }
 
   ngOnInit(): void {
@@ -59,7 +68,6 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
     this.value = params.value; //product id
-    console.log('[[[VALUE]]]: ' + this.value);
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -103,10 +111,8 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   }
 
   assignProductName(): void {
-    console.log('assignProductName: ');
     for(let i = 0; i < this.products.length; ++i){
       if(this.data.id_prd == this.products[i].id){
-        console.log(this.products[i].des);
         this.productName = this.products[i].des;
         return;
       }
@@ -116,7 +122,7 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   onOptionSelected(event: any) {
     if(event.source._selected){
       let productId = this.getProductId(event);
-      console.log('product id: ' + productId);
+      //console.log('product id: ' + productId);
   
         //perform call to update db
         this.forecastService.setForecast(
