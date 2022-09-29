@@ -6,7 +6,7 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
 @Component({
   selector: 'app-button-cell',
   template: `
-    <button (click)="onClickOpenDialog($event)">Delete</button>
+    <button style="width: 100%" (click)="onClickOpenDialog($event)">Delete</button>
   `
 })
 export class ButtonDeleteProductComponent implements ICellRendererAngularComp {

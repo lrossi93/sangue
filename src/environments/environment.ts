@@ -12,11 +12,11 @@ export interface AreYouSureData {
 }
 
 export interface Product {
-  id: number;
+  id: string;
   cod: string;
   des: string;
   unita: number;
-  confezionamento: number;
+  confezionamento: string;
   multiplo_confezionamento: number;
   multiplo_imballo: number;
   attivo: boolean;
@@ -24,17 +24,24 @@ export interface Product {
   min_ord: number;
   valido_da: string;
   valido_a: string;
+  isSubmitted: boolean;
 }
 
 export interface Forecast {
-  id: number;
+  id: string;
   anno: number;
   username: string;
   id_prd: string;
   qta: number;
   note: string;
   qta_approvata: number;
-  costo_unitario: number
+  costo_unitario: number;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  client: string;
 }
 
 /*

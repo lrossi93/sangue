@@ -28,6 +28,8 @@ import { DropdownProductsForecastComponent } from './dropdown-products-forecast/
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdown-users-forecast.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdo
     ButtonDeleteProductComponent,
     DropdownProductsForecastComponent,
     DropdownUsersForecastComponent,
+
   ],
   providers: [
     AddProductComponent,
@@ -69,6 +72,8 @@ import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdo
     MatButtonModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
+    MatSelectModule
   ],
   bootstrap: [AppComponent]
 })

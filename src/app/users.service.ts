@@ -11,8 +11,8 @@ export class UsersService {
     private http: HttpClient
   ) { }
 
-  listUsers(): any[] {
-    let path = this.url + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+localStorage.getItem('id_profile');
+  listUsers(userlevel: string | null): any[] {
+    let path = this.url + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
     
     console.log(path);
 

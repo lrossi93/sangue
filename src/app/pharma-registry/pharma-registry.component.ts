@@ -1,6 +1,6 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
-import { environment } from 'src/environments/environment';
+import { environment, Product } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CellValueChangedEvent } from 'ag-grid-community';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
@@ -31,10 +31,18 @@ export class PharmaRegistryComponent implements OnInit {
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
   //parameters for [set|add|rm]Product()
-  id = '';
-  cod = '';
-  des = '';
-
+  id!: string;
+  cod!: string;
+  des!: string;
+  unita!: number;
+  confezionamento!: string;
+  multiplo_confezionamento!: number;
+  multiplo_imballo!: number;
+  attivo!: boolean;
+  extra!: boolean;
+  min_ord!: number;
+  valido_da!: string;
+  valido_a!: string;
 
   api: any;
 
@@ -86,6 +94,51 @@ export class PharmaRegistryComponent implements OnInit {
         editable: true
       },
       { 
+        headerName: 'Unità', 
+        field: 'unita', 
+        editable: true
+      },
+      { 
+        headerName: 'Confezionamento', 
+        field: 'confezionamento', 
+        editable: true
+      },
+      { 
+        headerName: 'Multiplo Confezionamento', 
+        field: 'multiplo_confezionamento', 
+        editable: true
+      },
+      { 
+        headerName: 'Multiplo Imballo', 
+        field: 'multiplo_imballo', 
+        editable: true
+      },
+      { 
+        headerName: 'Attivo', 
+        field: 'attivo', 
+        editable: true
+      },
+      { 
+        headerName: 'Extra', 
+        field: 'extra', 
+        editable: true
+      },
+      { 
+        headerName: 'Ordine minimo', 
+        field: 'min_ord', 
+        editable: true
+      },
+      { 
+        headerName: 'Valido da', 
+        field: 'valido_da', 
+        editable: true
+      },
+      { 
+        headerName: 'Valido fino a', 
+        field: 'valido_a', 
+        editable: true
+      },
+      { 
         headerName: 'Action', 
         cellRenderer: ButtonDeleteProductComponent
       }
@@ -99,6 +152,15 @@ export class PharmaRegistryComponent implements OnInit {
         this.id = event.data.id;
         this.cod = event.data.cod;
         this.des = event.data.des;
+        this.unita = event.data.unita;
+        this.confezionamento = event.data.confezionamento;
+        this.multiplo_confezionamento = event.data.multiplo_confezionamento;
+        this.multiplo_imballo = event.data.multiplo_imballo;
+        this.attivo = event.data.attivo;
+        this.extra = event.data.extra;
+        this.min_ord = event.data.min_ord;
+        this.valido_da = event.data.valido_da;
+        this.valido_a = event.data.valido_a;
         this.setProduct(false); //edit product from grid
       }
     }
@@ -161,7 +223,16 @@ export class PharmaRegistryComponent implements OnInit {
         id_session: localStorage.getItem('id_session'),
         id: this.id,
         cod: this.cod,
-        des: this.des
+        des: this.des,
+        unita: this.unita,
+        confezionamento: this.confezionamento,
+        multiplo_confezionamento: this.multiplo_confezionamento,
+        multiplo_imballo: this.multiplo_imballo,
+        attivo: this.attivo,
+        extra: this.extra,
+        min_ord: this.min_ord,
+        valido_da: this.valido_da,
+        valido_a: this.valido_a
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -171,10 +242,36 @@ export class PharmaRegistryComponent implements OnInit {
       else{
         console.log("Product with ID " + res[1] + "successfully set!");
         if(isAdding){
-          this.addLocally(parseInt(res[1].toString()), this.cod, this.des);
+          this.addLocally(
+            res[1].toString(), 
+            this.cod, 
+            this.des,
+            this.unita,
+            this.confezionamento,
+            this.multiplo_confezionamento,
+            this.multiplo_imballo,
+            this.attivo,
+            this.extra,
+            this.min_ord,
+            this.valido_da,
+            this.valido_a
+          );
         }
         else{
-          this.setLocally(parseInt(res[1].toString()), this.cod, this.des);
+          this.setLocally(
+            parseInt(res[1].toString()), 
+            this.cod, 
+            this.des,
+            this.unita,
+            this.confezionamento,
+            this.multiplo_confezionamento,
+            this.multiplo_imballo,
+            this.attivo,
+            this.extra,
+            this.min_ord,
+            this.valido_da,
+            this.valido_a
+            );
         }
         this.clearVars();
       }
@@ -187,11 +284,33 @@ export class PharmaRegistryComponent implements OnInit {
     this.setProduct(isAdding);
   }
 
-  addLocally(id: number, cod: string, des: string){
+  addLocally(
+    id: string, 
+    cod: string, 
+    des: string,
+    unita: number,
+    confezionamento: string,
+    multiplo_confezionamento: number,
+    multiplo_imballo: number,
+    attivo: boolean,
+    extra: boolean,
+    min_ord: number,
+    valido_da: string,
+    valido_a: string
+  ){
     let newProduct = {
       id: id,
       cod: cod,
-      des: des
+      des: des,
+      unita: unita,
+      confezionamento: confezionamento,
+      multiplo_confezionamento: multiplo_confezionamento,
+      multiplo_imballo: multiplo_imballo,
+      attivo: attivo,
+      extra: extra,
+      min_ord: min_ord,
+      valido_da: valido_da,
+      valido_a: valido_a
     };
     this.products.push(newProduct);
     console.log(this.products);
@@ -200,9 +319,30 @@ export class PharmaRegistryComponent implements OnInit {
     this.api.refreshCells();
   }
 
-  addProductParams(cod: string, des: string){
+  addProductParams(
+    cod: string, 
+    des: string,
+    unita: number,
+    confezionamento: string,
+    multiplo_confezionamento: number,
+    multiplo_imballo: number,
+    attivo: boolean,
+    extra: boolean,
+    min_ord: number,
+    valido_da: string,
+    valido_a: string
+  ){
     this.cod = cod;
     this.des = des;
+    this.unita = unita;
+    this.confezionamento = confezionamento;
+    this.multiplo_confezionamento = multiplo_confezionamento;
+    this.multiplo_imballo = multiplo_imballo;
+    this.attivo = attivo;
+    this.extra = extra;
+    this.min_ord = min_ord;
+    this.valido_da = valido_da;
+    this.valido_a = valido_a;
     this.addProduct();
   }
 
@@ -272,10 +412,20 @@ export class PharmaRegistryComponent implements OnInit {
   openAddProductDialog(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
+    //dialogConfig.width = "80%";
 
     dialogConfig.data = {
       cod: this.cod, 
-      des: this.des
+      des: this.des,
+      unita: this.unita,
+      confezionamento: this.confezionamento,
+      multiplo_confezionamento: this.multiplo_confezionamento,
+      multiplo_imballo: this.multiplo_imballo,
+      attivo: this.attivo,
+      extra: this.extra,
+      min_ord: this.min_ord,
+      valido_da: this.valido_da,
+      valido_a: this.valido_a
     }
 
     this.dialogRef = this.dialog.open(
@@ -283,9 +433,21 @@ export class PharmaRegistryComponent implements OnInit {
       dialogConfig
     );
 
-    this.dialogRef.afterClosed().subscribe( (result: {cod: string, des: string, isSubmitted: boolean}) => {
+    this.dialogRef.afterClosed().subscribe( (result: Product) => {
       if(result !== undefined && result.isSubmitted){
-        this.addProductParams(result.cod, result.des);
+        this.addProductParams(
+          result.cod,
+          result.des,
+          result.unita,
+          result.confezionamento,
+          result.multiplo_confezionamento,
+          result.multiplo_imballo,
+          result.attivo,
+          result.extra,
+          result.min_ord,
+          result.valido_da,
+          result.valido_a
+        );
         this.updateGrid();
       }
     });
@@ -308,7 +470,20 @@ export class PharmaRegistryComponent implements OnInit {
     });
   }
 
-  setLocally(id: number, cod: string, des: string){
+  setLocally(
+    id: number, 
+    cod: string, 
+    des: string,
+    unita: number,
+    confezionamento: string,
+    multiplo_confezionamento: number,
+    multiplo_imballo: number,
+    attivo: boolean,
+    extra: boolean,
+    min_ord: number,
+    valido_da: string,
+    valido_a: string
+  ){
     for(let i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id){
         console.log(this.products[i].id + '->' + id);
@@ -316,6 +491,15 @@ export class PharmaRegistryComponent implements OnInit {
         console.log(this.products[i].des + '->' + des);
         this.products[i].cod = cod;
         this.products[i].des = des;
+        this.products[i].unita = unita;
+        this.products[i].confezionamento = confezionamento;
+        this.products[i].multiplo_confezionamento = multiplo_confezionamento;
+        this.products[i].multiplo_imballo = multiplo_imballo;
+        this.products[i].attivo = attivo;
+        this.products[i].extra = extra;
+        this.products[i].min_ord = min_ord;
+        this.products[i].valido_da = valido_da;
+        this.products[i].valido_a = valido_a;
         this.updateGrid();
         return;
       }

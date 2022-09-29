@@ -11,6 +11,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ButtonDeleteForecastComponent } from '../button-delete-forecast/button-delete-forecast.component';
 import { DropdownProductsForecastComponent } from '../dropdown-products-forecast/dropdown-products-forecast.component';
 import { UsersService } from '../users.service';
+import { DropdownUsersForecastComponent } from '../dropdown-users-forecast/dropdown-users-forecast.component';
 
 @Component({
   selector: 'app-forecast',
@@ -52,7 +53,7 @@ export class ForecastComponent implements OnInit {
     { 
       headerName: 'Username', 
       field: 'username', 
-      editable: true
+      editable: false
     },
     /*
     { 
@@ -108,6 +109,12 @@ export class ForecastComponent implements OnInit {
       headerName: 'Username', 
       field: 'username', 
       editable: false
+    },
+    /*
+    { 
+      headerName: 'Username', 
+      field: 'username',
+      cellRenderer: DropdownUsersForecastComponent
     },
     /*
     { 
@@ -168,7 +175,7 @@ export class ForecastComponent implements OnInit {
     ) { 
       //console.log('profile: ' + loginService.getProfile());
       
-      usersService.listUsers();
+      //usersService.listUsers();
 
       //columnDef
       switch(loginService.getProfile()){
@@ -251,7 +258,7 @@ export class ForecastComponent implements OnInit {
         responseType: "json"
       }
     ).subscribe(res => {
-      console.log(res);
+      //console.log(res);
       if(res[0] == "KO"){
         alert("Error retrieving forecasts!");
       }

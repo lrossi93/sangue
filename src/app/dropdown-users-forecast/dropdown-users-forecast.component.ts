@@ -37,7 +37,9 @@ export class DropdownUsersForecastComponent implements OnInit {
     private http: HttpClient
   ) { 
     //retrieve users
-    this.getUsers();
+    console.log("getting users...");
+    
+    this.getUsers("210");
 
     this.options = this.userNames;
     this.loginService = loginService;
@@ -72,8 +74,8 @@ export class DropdownUsersForecastComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  getUsers(): void {
-    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+localStorage.getItem('id_profile');
+  getUsers(userlevel: string): void {
+    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
     
     console.log(path);
 
@@ -130,5 +132,16 @@ export class DropdownUsersForecastComponent implements OnInit {
         return;
       }
     }
+  }
+
+  logData(){
+    console.log('id: ' + this.data.id);
+    console.log('anno: ' + this.data.anno);
+    console.log('username: ' + this.data.username);
+    console.log('id_prd: ' + this.data.id_prd);
+    console.log('qta: ' + this.data.qta);
+    console.log('note: ' + this.data.note);
+    console.log('qta_approvata: ' + this.data.qta_approvata);
+    console.log('costo_unitario: ' + this.data.costo_unitario);
   }
 }

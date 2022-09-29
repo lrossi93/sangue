@@ -2,14 +2,105 @@
 
 <div mat-dialog-content>
 	<p>
-		<input type="text" placeholder="New code" [(ngModel)]="cod">
+		<mat-form-field>
+			<input
+			placeholder="Codice"
+			[formControl]="cod"
+			matInput>
+		</mat-form-field>
+		{{cod.value}}
 	</p>
 	<p>
-		<input type="text" placeholder="New description" [(ngModel)]="des">
+		<mat-form-field>
+			<input
+			placeholder="Descrizione"
+			[formControl]="des"
+			matInput>
+		</mat-form-field>
+		{{des.value}}
 	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Unità"
+			[formControl]="unita"
+			matInput>
+		</mat-form-field>
+		{{unita.value}}
+	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Confezionamento"
+			[formControl]="confezionamento"
+			matInput>
+		</mat-form-field>
+		{{confezionamento.value}}
+	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Multiplo confezionamento"
+			[formControl]="multiplo_confezionamento"
+			matInput>
+		</mat-form-field>
+		{{multiplo_confezionamento.value}}
+	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Multiplo imballo"
+			[formControl]="multiplo_imballo"
+			matInput>
+		</mat-form-field>
+		{{multiplo_imballo.value}}
+	</p>
+	<p>
+		<mat-checkbox 
+			labelPosition="before"
+			(click)="toggleAttivo()">
+			Attivo
+    	</mat-checkbox>
+	</p>
+	<p>
+		<mat-checkbox 
+			labelPosition="before"
+			(click)="toggleExtra()">
+			Extra
+    	</mat-checkbox>
+	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Ordine minimo"
+			[formControl]="min_ord"
+			matInput>
+		</mat-form-field>
+		{{min_ord.value}}
+	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Valido da"
+			[formControl]="valido_da"
+			matInput>
+		</mat-form-field>
+		{{valido_da.value}}
+	</p>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Valido fino a"
+			[formControl]="valido_a"
+			matInput>
+		</mat-form-field>
+		{{valido_a.value}}
+	</p>
+
 </div>
 
 <div mat-dialog-actions>
 	<button mat-raised-button (click)="onSubmit()">Submit</button>
 	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
+	<!--button mat-raised-button color="secondary" (click)="getData()">getData</button-->
 </div>

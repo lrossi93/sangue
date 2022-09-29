@@ -3,7 +3,7 @@ import { Component, OnInit} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { environment, Forecast } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs';

@@ -2,23 +2,64 @@
 
 <div mat-dialog-content>
 	<p>
-		<input type="text" placeholder="New year" [(ngModel)]="anno">
+		<mat-form-field>
+			<input
+			placeholder="Anno"
+			[formControl]="anno"
+			matInput>
+		</mat-form-field>
+	</p>
+	<p *ngIf="loginService.getUserCode()=='220'"><!--autocompletamento?-->
+		<mat-form-field>
+			<mat-label>ASL Cliente</mat-label>
+			<mat-select [(value)]="selectedUsername">
+			<mat-option *ngFor="let user of users" value="{{user.client}}">{{user.client}}</mat-option>
+			</mat-select>
+		</mat-form-field>
 	</p>
 	<p>
-		<input type="text" placeholder="New username" [(ngModel)]="username">
+		<mat-form-field>
+			<input
+			placeholder="ID Prodotto"
+			[formControl]="id_prd"
+			matInput>
+		</mat-form-field>
 	</p>
 	<p>
-		<input type="text" placeholder="New product id" [(ngModel)]="id_prd">
+		<mat-form-field>
+			<input
+			placeholder="Quantità"
+			[formControl]="qta"
+			matInput>
+		</mat-form-field>
 	</p>
-    <p>
-		<input type="text" placeholder="New quantity" [(ngModel)]="qta">
+	<p>
+		<mat-form-field>
+			<textarea
+			placeholder="Note"
+			[formControl]="note"
+			matInput></textarea>
+		</mat-form-field>
 	</p>
-    <p>
-		<input type="text" placeholder="New notes" [(ngModel)]="note">
+	<p>
+		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
+			<input
+			placeholder="Quantità approvata"
+			[formControl]="qta_approvata"
+			matInput>
+		</mat-form-field>
+	</p>
+	<p>
+		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
+			<input
+			placeholder="Costo unitario"
+			[formControl]="costo_unitario"
+			matInput>
+		</mat-form-field>
 	</p>
 </div>
 
-<div mat-dialog-actions>
+<div mat-form-actions>
 	<button mat-raised-button (click)="onSubmit()">Submit</button>
 	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
 </div>
