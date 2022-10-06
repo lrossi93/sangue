@@ -30,6 +30,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdown-users-forecast.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatAutocompleteModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule
   ],
   bootstrap: [AppComponent]
 })

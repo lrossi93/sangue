@@ -22,6 +22,7 @@ import { DropdownUsersForecastComponent } from '../dropdown-users-forecast/dropd
 export class ForecastComponent implements OnInit {
   forecasts: any = [];
   url = environment.basePath + 'forecast.php';
+  pharmaRegistryUrl = environment.basePath + 'anag.php';
   dialogRef: any;
   
   //parameters for [set|add|rm]Forecast()
@@ -39,7 +40,7 @@ export class ForecastComponent implements OnInit {
   api: any;
   forecastGridConfig: any;
   
-  //sangueasl column definition
+  //sangueasl column definition (ASL cliente)
   gridConfigUser210: any = [
     { 
       headerName: 'ID', 
@@ -50,9 +51,18 @@ export class ForecastComponent implements OnInit {
       field: 'anno', 
       editable: true
     },
+    /*
     { 
-      headerName: 'Username', 
-      field: 'username', 
+      headerName: 'User ID', 
+      field: 'username', //questo è l'id di un utente
+      editable: false
+    },
+    */
+   //#TODO: questo qui sotto è necessario?
+    {
+      headerName: 'Utente',
+      field: 'username', //prende l'id dell'utente (forecast.username) e ritorna il nome utente (user.username) 
+      cellRenderer: DropdownUsersForecastComponent,
       editable: false
     },
     /*
@@ -94,7 +104,7 @@ export class ForecastComponent implements OnInit {
     }
   ];
 
-  //sangueaslno column definition
+  //sangueaslno column definition (ASL fornitore) #TODO
   gridConfigUser220: any = [
     { 
       headerName: 'ID', 
@@ -105,24 +115,19 @@ export class ForecastComponent implements OnInit {
       field: 'anno', 
       editable: false
     },
+    /*
     { 
-      headerName: 'Username', 
+      headerName: 'User ID', 
       field: 'username', 
       editable: false
     },
-    /*
+    */
     { 
-      headerName: 'Username', 
+      headerName: 'Utente', 
       field: 'username',
-      cellRenderer: DropdownUsersForecastComponent
-    },
-    /*
-    { 
-      headerName: 'Product ID', 
-      field: 'id_prd', 
+      cellRenderer: DropdownUsersForecastComponent,
       editable: false
     },
-    */
     { 
       headerName: 'Product name', 
       field: 'id_prd', 
@@ -160,6 +165,10 @@ export class ForecastComponent implements OnInit {
 
   //agGrid API handle
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
+
+  //for dialog autocomplete
+  users: any = [];
+  products: any = [];
 
 /*
 
@@ -227,11 +236,13 @@ export class ForecastComponent implements OnInit {
     }
 
     this.listForecasts(this.year);
+    this.listUsers("210");
+    this.listProducts();
 
     setTimeout(
       () => {
         this.api = this.agGrid.api;
-        console.log(this.api);
+        this.logAPI();
       }, 300);
   }
 
@@ -292,7 +303,7 @@ export class ForecastComponent implements OnInit {
 
   addForecast(anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
     this.id = this.forecastService.addForecast(anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
-    console.log("new forecast id: " + this.id)
+    console.log("new forecast id: " + this.id);
     let newForecast = {
       id: this.id,
       anno: anno,
@@ -307,6 +318,9 @@ export class ForecastComponent implements OnInit {
   }
 
   addLocally(newForecast: any){
+    //#TODO: check the ID is put in the grid
+    console.log(newForecast);
+    
     this.forecasts.push(newForecast);
     this.updateGrid();
   }
@@ -344,13 +358,14 @@ export class ForecastComponent implements OnInit {
   openAddForecastDialog(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
-
     dialogConfig.data = {
       anno: this.anno,
       username: this.username,
       id_prd: this.id_prd,
       qta: this.qta,
-      note: this.note
+      note: this.note,
+      users: this.users,        //array of users
+      products: this.products   //array of products
     }
 
     this.dialogRef = this.dialog.open(
@@ -409,5 +424,40 @@ export class ForecastComponent implements OnInit {
   updateGrid(){
     console.log(this.api);
     this.api.setRowData(this.forecasts);
+  }
+
+  listUsers(userlevel: string): void{
+    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
+    this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    ).subscribe(res => {
+      if(res[0] == "KO"){
+        alert("Error retrieving products!");
+      }
+      else{
+        this.users = res[1];
+        console.log("users: " + this.users);
+      }
+    });
+  }
+
+  listProducts(): void{
+    let path = this.pharmaRegistryUrl + '?request=listProducts&id_session='+localStorage.getItem('id_session');
+    this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    ).subscribe(res => {
+      if(res[0] == "KO"){
+        alert("Error retrieving products!");
+      }
+      else{
+        this.products = res[1];
+      }
+    });
   }
 }

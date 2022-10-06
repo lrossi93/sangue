@@ -19,7 +19,7 @@ header{
 nav{
 	display: flex;
 	flex: wrap;
-	justify-content: space-evenly;
+	justify-content: left;
 	background-color: violet;
 	position: sticky;
 	top: 0;

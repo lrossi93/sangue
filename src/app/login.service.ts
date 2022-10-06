@@ -31,6 +31,10 @@ export class LoginService {
     return localStorage.getItem('id_profile');
   }
 
+  getUsername(){
+    return localStorage.getItem('sangue_username');
+  }
+
   getUserType(){
     let userType;
     switch(localStorage.getItem('id_profile')){

@@ -4,12 +4,44 @@
 </header>
 
 <nav>
-	<a [routerLink]="['']">home</a>
-	<a [routerLink]="['/login']" *ngIf="!loginService.logged">login</a>
-	<a [routerLink]="['/welcome']" *ngIf="loginService.logged">welcome</a>
-	<a [routerLink]="['/pharma-registry']" *ngIf="loginService.logged && loginService.getProfile() == '200'">registry</a>
-	<a [routerLink]="['/forecast']" *ngIf="loginService.logged && loginService.getProfile() == '210' || loginService.getProfile() == '220'">forecast</a>
-	<a [routerLink]="['']" *ngIf="loginService.logged" (click)="loginService.logout()">logout</a>
+	<button mat-button [matMenuTriggerFor]="menu">Menu</button>
+	<mat-menu #menu="matMenu">
+		<button 
+		mat-menu-item
+		[routerLink]="['']">
+			Home
+		</button>
+		<button 
+		mat-menu-item 
+		*ngIf="!loginService.logged"
+		[routerLink]="['/login']">
+			Login
+		</button>
+		<button 
+		mat-menu-item 
+		*ngIf="loginService.logged" 
+		[routerLink]="['/welcome']">
+			Welcome
+		</button>
+		<button
+		mat-menu-item 
+		*ngIf="loginService.logged && loginService.getProfile() == '200'"
+		[routerLink]="['/pharma-registry']">
+			Registry
+		</button>
+		<button 
+		mat-menu-item *ngIf="loginService.logged && loginService.getProfile() == '210' || loginService.getProfile() == '220'"
+		[routerLink]="['/forecast']">
+			Forecast
+		</button>
+		<button 
+		mat-menu-item 
+		*ngIf="loginService.logged" 
+		(click)="loginService.logout()"
+		[routerLink]="['']">
+			Logout
+		</button>
+	</mat-menu>	
 </nav>
 
 

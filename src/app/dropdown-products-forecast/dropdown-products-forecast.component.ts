@@ -34,7 +34,6 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
 
   constructor(
     loginService: LoginService,
-    private pharmaRegistryService: PharmaRegistryService,
     private forecastService: ForecastService,
     private http: HttpClient,
   ) { 

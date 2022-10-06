@@ -9,25 +9,44 @@
 			matInput>
 		</mat-form-field>
 	</p>
-	<p *ngIf="loginService.getUserCode()=='220'"><!--autocompletamento?-->
+	<!--autocomplete dropdown for USERS-->
+	<form *ngIf="loginService.getUserCode()=='220'">
 		<mat-form-field>
-			<mat-label>ASL Cliente</mat-label>
-			<mat-select [(value)]="selectedUsername">
-			<mat-option *ngFor="let user of users" value="{{user.client}}">{{user.client}}</mat-option>
-			</mat-select>
+			<input 
+			type="text"
+			placeholder="Utente"
+			matInput
+			[formControl]="userFormControl"
+			[matAutocomplete]="auto">
+			<mat-autocomplete #auto="matAutocomplete">
+			<mat-option *ngFor="let optionU of filteredUsers | async" [value]="optionU" (onSelectionChange)='onUserSelected($event)'>
+				{{ optionU }}
+			</mat-option>
+			</mat-autocomplete>
 		</mat-form-field>
-	</p>
+	</form>
+
+	<!--autocomplete dropdown for PRODUCTS-->
+	<form>
+		<mat-form-field>
+			<input 
+			type="text"
+			placeholder="Prodotto"
+			matInput
+			[formControl]="productFormControl"
+			[matAutocomplete]="auto">
+			<mat-autocomplete #auto="matAutocomplete">
+			<mat-option *ngFor="let optionP of filteredProducts | async" [value]="optionP" (onSelectionChange)='onProductSelected($event)'>
+				{{ optionP }}
+			</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+	</form>
+	
 	<p>
 		<mat-form-field>
 			<input
-			placeholder="ID Prodotto"
-			[formControl]="id_prd"
-			matInput>
-		</mat-form-field>
-	</p>
-	<p>
-		<mat-form-field>
-			<input
+			type="number"
 			placeholder="Quantità"
 			[formControl]="qta"
 			matInput>
@@ -44,6 +63,7 @@
 	<p>
 		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
 			<input
+			type="number"
 			placeholder="Quantità approvata"
 			[formControl]="qta_approvata"
 			matInput>
@@ -52,6 +72,7 @@
 	<p>
 		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
 			<input
+			type="number"
 			placeholder="Costo unitario"
 			[formControl]="costo_unitario"
 			matInput>

@@ -1,18 +1,20 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { map, Observable, startWith } from 'rxjs';
+import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs';
 import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
-import { PharmaRegistryService } from '../pharma-registry.service';
 
 @Component({
   selector: 'app-dropdown-users-forecast',
   templateUrl: './dropdown-users-forecast.component.html',
   styleUrls: ['./dropdown-users-forecast.component.css']
 })
-export class DropdownUsersForecastComponent implements OnInit {
+export class DropdownUsersForecastComponent implements ICellRendererAngularComp, OnInit {
 
   pharmaRegistryUrl: string = environment.basePath + 'anag.php';
   forecastsUrl: string = environment.basePath + 'forecasts.php';
@@ -20,37 +22,36 @@ export class DropdownUsersForecastComponent implements OnInit {
 
   data: any;
   value: any;
-
   users: any = [];
   userNames: string[] = [];
   userName: string = '';
 
-  //data for autocomplete
-  options: string[] = [];
+  //sample array
+  options: string[] = [];//['Delhi', 'Mumbai', 'Banglore'];
   filteredOptions: Observable<string[]> | undefined;
   formControl!: FormControl;
 
+
+  //constructor is called when cells are hidden and then re-displayed
   constructor(
     loginService: LoginService,
-    private pharmaRegistryService: PharmaRegistryService,
     private forecastService: ForecastService,
-    private http: HttpClient
+    private http: HttpClient,
   ) { 
-    //retrieve users
-    console.log("getting users...");
     
-    this.getUsers("210");
-
+    //retrieve product names
+    this.getUsers('210');
+    
     this.options = this.userNames;
     this.loginService = loginService;
 
     //adapt dropdown to user type
     switch(loginService.getUserCode()){
       case "210":
-        this.formControl = new FormControl({value: this.userName, disabled: false});
+        this.formControl = new FormControl({value: this.userName, disabled: true});
         break;
       case "220":
-        this.formControl = new FormControl({value: this.userName, disabled: true});
+        this.formControl = new FormControl({value: this.userName, disabled: false});
         break;
     }
   }
@@ -63,50 +64,73 @@ export class DropdownUsersForecastComponent implements OnInit {
       map(value => this._filter(value))
     );
   }
-  
+
+  agInit(params: ICellRendererParams<any, any>): void {
+    this.data = params.data;
+    this.value = params.value; //user id
+  }
+
+  refresh(params: ICellRendererParams<any, any>): boolean {
+    //default return
+    return false;
+  }
+
   //this method has to be called into ngOnInit, as it must be called anytime
   //the code is compiled
   private _filter(value: string){
     //we take a string value and turn it to lower case
     const filterValue = value.toLowerCase();
+    
     //then we cycle on the "options" array and, if one element includes the string
     //typed so far, we return it
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  getUsers(userlevel: string): void {
-    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
-    
-    console.log(path);
+  getUserNames(): void {
+    for(let i = 0; i < this.users.length; ++i){
+      this.userNames.push(this.users[i].client);
+    }
+  }
 
+  getUsers(userlevel: string): void{
+    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
+    //console.log(path);
+    
     this.http.get<String[]>(
       path,
       {
         responseType: "json"
       }
     ).subscribe(res => {
-      console.log(res);
       if(res[0] == "KO"){
         alert("Error retrieving products!");
       }
       else{
-        console.log('>>>>>users: ' + res[1]);
-        this.users = res[1]; 
+        this.users = res[1];
+        this.getUserNames();
+        this.assignUserName();
       }
     });
   }
 
+  assignUserName(): void {
+    for(let i = 0; i < this.users.length; ++i){
+      if(this.data.username == this.users[i].id){
+        this.userName = this.users[i].client;
+        return;
+      }
+    }
+  }
+
   onOptionSelected(event: any) {
     if(event.source._selected){
-      let productId = this.getUserId(event);
-      //console.log('product id: ' + productId);
-  
+      let userId = this.getUserId(event);
         //perform call to update db
         this.forecastService.setForecast(
           this.data.id,
           this.data.anno,
-          this.data.username,
-          productId,
+          userId,
+          this.data.id_prd,
           this.data.qta,
           this.data.note,
           this.data.qta_approvata,
@@ -116,20 +140,10 @@ export class DropdownUsersForecastComponent implements OnInit {
     }
   }
 
-  //TODO fix this because users may have other fields
   getUserId(event: any){
     for(let i = 0; i < this.users.length; ++i){
-      if(this.users[i].des == event.source.value){
+      if(this.users[i].client == event.source.value){
         return this.users[i].id;
-      }
-    }
-  }
-
-  assignUserName(): void {
-    for(let i = 0; i < this.users.length; ++i){
-      if(this.data.id_prd == this.users[i].id){
-        this.userName = this.users[i].des;
-        return;
       }
     }
   }
