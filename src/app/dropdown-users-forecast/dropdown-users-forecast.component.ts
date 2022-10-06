@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit} from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { environment } from 'src/environments/environment';
@@ -29,7 +29,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
   //sample array
   options: string[] = [];//['Delhi', 'Mumbai', 'Banglore'];
   filteredOptions: Observable<string[]> | undefined;
-  formControl!: FormControl;
+  formControl!: UntypedFormControl;
 
 
   //constructor is called when cells are hidden and then re-displayed
@@ -48,10 +48,10 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
     //adapt dropdown to user type
     switch(loginService.getUserCode()){
       case "210":
-        this.formControl = new FormControl({value: this.userName, disabled: true});
+        this.formControl = new UntypedFormControl({value: this.userName, disabled: true});
         break;
       case "220":
-        this.formControl = new FormControl({value: this.userName, disabled: false});
+        this.formControl = new UntypedFormControl({value: this.userName, disabled: false});
         break;
     }
   }

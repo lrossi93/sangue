@@ -1,5 +1,5 @@
 import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -20,23 +20,23 @@ export class AddForecastComponent implements OnInit{
   loginService!: LoginService; 
 
   //fields to return to caller
-  anno!: FormControl;  
-  qta!: FormControl;
-  note!: FormControl;
-  qta_approvata!: FormControl;
-  costo_unitario!: FormControl;
+  anno!: UntypedFormControl;  
+  qta!: UntypedFormControl;
+  note!: UntypedFormControl;
+  qta_approvata!: UntypedFormControl;
+  costo_unitario!: UntypedFormControl;
   
   //BEGIN: autocomplete - users
   users: any = [];
   filteredUsers!: Observable<string[]>;
-  userFormControl!: FormControl;
+  userFormControl!: UntypedFormControl;
   userNames: any = [];
   //END: autocomplete - users
 
   //BEGIN: autocomplete - products
   products: any = [];
   filteredProducts!: Observable<string[]>;
-  productFormControl!: FormControl;
+  productFormControl!: UntypedFormControl;
   productNames: any = [];
   //END: autocomplete - products
 
@@ -53,7 +53,7 @@ export class AddForecastComponent implements OnInit{
     },
     loginService: LoginService,
     private dialogRef: MatDialogRef<AddForecastComponent>,
-    private _builder: FormBuilder,
+    private _builder: UntypedFormBuilder,
   ) {
       this.loginService = loginService;
       this.anno = _builder.control(new Date().getFullYear(), Validators.required);

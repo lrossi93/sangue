@@ -1,5 +1,5 @@
 import { Component, Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -10,23 +10,23 @@ import { MatDialogRef } from '@angular/material/dialog';
 @Injectable({providedIn: 'root'})
 export class AddProductComponent{
 
-  cod!: FormControl;
-  des!: FormControl;
-  unita!: FormControl;
-  confezionamento!: FormControl;
-  multiplo_confezionamento!: FormControl;
-  multiplo_imballo!: FormControl;
-  attivo!: FormControl;
-  extra!: FormControl;
-  min_ord!: FormControl;
-  valido_da!: FormControl;
-  valido_a!: FormControl;
+  cod!: UntypedFormControl;
+  des!: UntypedFormControl;
+  unita!: UntypedFormControl;
+  confezionamento!: UntypedFormControl;
+  multiplo_confezionamento!: UntypedFormControl;
+  multiplo_imballo!: UntypedFormControl;
+  attivo!: UntypedFormControl;
+  extra!: UntypedFormControl;
+  min_ord!: UntypedFormControl;
+  valido_da!: UntypedFormControl;
+  valido_a!: UntypedFormControl;
   isSubmitted: boolean = false;
   
-  formBuilder!: FormBuilder;
+  formBuilder!: UntypedFormBuilder;
   constructor(
     private dialogRef: MatDialogRef<AddProductComponent>,
-    private _builder: FormBuilder
+    private _builder: UntypedFormBuilder
   ) { 
     //formBuilder configuration
     this.cod = _builder.control('', Validators.required);
@@ -77,8 +77,8 @@ export class AddProductComponent{
   }
 
   //DateRangePicker
-  range = new FormGroup({
-    start: new FormControl('', Validators.required),
-    end: new FormControl('', Validators.required),
+  range = new UntypedFormGroup({
+    start: new UntypedFormControl('', Validators.required),
+    end: new UntypedFormControl('', Validators.required),
   });
 }

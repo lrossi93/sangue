@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit} from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { environment } from 'src/environments/environment';
@@ -30,7 +30,7 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   //sample array
   options: string[] = [];//['Delhi', 'Mumbai', 'Banglore'];
   filteredOptions: Observable<string[]> | undefined;
-  formControl!: FormControl;
+  formControl!: UntypedFormControl;
 
   constructor(
     loginService: LoginService,
@@ -47,10 +47,10 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
     //adapt dropdown to user type
     switch(loginService.getUserCode()){
       case "210":
-        this.formControl = new FormControl({value: this.productName, disabled: false});
+        this.formControl = new UntypedFormControl({value: this.productName, disabled: false});
         break;
       case "220":
-        this.formControl = new FormControl({value: this.productName, disabled: true});
+        this.formControl = new UntypedFormControl({value: this.productName, disabled: true});
         break;
     }
   }
