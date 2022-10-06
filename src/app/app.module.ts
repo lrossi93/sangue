@@ -31,6 +31,9 @@ import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdo
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule} from '@angular/material/menu';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDateRangePicker } from '@angular/material/datepicker'
+
 
 @NgModule({
   declarations: [
@@ -50,13 +53,16 @@ import { MatMenuModule} from '@angular/material/menu';
     ButtonDeleteProductComponent,
     DropdownProductsForecastComponent,
     DropdownUsersForecastComponent,
-
   ],
   providers: [
     AddProductComponent,
     AreYouSureProductComponent,
     AddForecastComponent,
-    AreYouSureForecastComponent
+    AreYouSureForecastComponent,
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'it-IT'
+    }
   ],
   imports: [
     BrowserModule,
@@ -75,7 +81,8 @@ import { MatMenuModule} from '@angular/material/menu';
     ReactiveFormsModule,
     MatCheckboxModule,
     MatSelectModule,
-    MatMenuModule
+    MatMenuModule,
+    MatNativeDateModule,
   ],
   bootstrap: [AppComponent]
 })

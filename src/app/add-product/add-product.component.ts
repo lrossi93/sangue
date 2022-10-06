@@ -1,5 +1,5 @@
 import { Component, Injectable } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -75,4 +75,10 @@ export class AddProductComponent{
       " extra: " + this.extra.value
     );
   }
+
+  //DateRangePicker
+  range = new FormGroup({
+    start: new FormControl('', Validators.required),
+    end: new FormControl('', Validators.required),
+  });
 }

@@ -97,6 +97,19 @@
 		{{valido_a.value}}
 	</p>
 
+	<mat-form-field appearance="fill">
+		<mat-label>Validità</mat-label>
+		<mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+		  <input matStartDate formControlName="start" placeholder="Inizio validità">
+		  <input matEndDate formControlName="end" placeholder="Fine validità">
+		</mat-date-range-input>
+		<mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+		<mat-date-range-picker #picker> </mat-date-range-picker>  
+	</mat-form-field>
+	  
+	  <p>Selected range: {{range.value | json}}</p>
+
 </div>
 
 <div mat-dialog-actions>

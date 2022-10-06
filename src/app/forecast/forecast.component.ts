@@ -385,16 +385,29 @@ export class ForecastComponent implements OnInit {
         isSubmitted: boolean
     }) => {
       if(result !== undefined && result.isSubmitted){
-        this.addForecast(
-          result.anno,
-          result.username,
-          result.id_prd,
-          result.qta,
-          result.note,
-          result.qta_approvata,
-          result.costo_unitario
-        );
-        this.updateGrid();
+        console.log(result);
+        if(
+          result.anno == null ||
+          result.anno.toString() == '' ||
+          result.username == '' ||
+          result.id_prd === undefined ||
+          result.qta.toString() == '' 
+        ){
+          alert("All Forecast core fields must have a value before submission! Submission aborted.");
+          return;
+        }
+        else{
+          this.addForecast(
+            result.anno,
+            result.username,
+            result.id_prd,
+            result.qta,
+            result.note,
+            result.qta_approvata,
+            result.costo_unitario
+          );
+          this.updateGrid();
+        }
       }
     });
   }
@@ -439,7 +452,6 @@ export class ForecastComponent implements OnInit {
       }
       else{
         this.users = res[1];
-        console.log("users: " + this.users);
       }
     });
   }
