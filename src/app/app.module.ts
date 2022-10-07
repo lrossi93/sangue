@@ -34,7 +34,9 @@ import { MatMenuModule} from '@angular/material/menu';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CellDatepickerComponent } from './cell-datepicker/cell-datepicker.component';
-import { CellCheckboxComponent } from './cell-checkbox/cell-checkbox.component'
+import { CellCheckboxComponent } from './cell-checkbox/cell-checkbox.component';
+import { OrdersComponent } from './orders/orders.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 
 
 @NgModule({
@@ -57,6 +59,8 @@ import { CellCheckboxComponent } from './cell-checkbox/cell-checkbox.component'
     DropdownUsersForecastComponent,
     CellDatepickerComponent,
     CellCheckboxComponent,
+    OrdersComponent,
+    PageNotFoundComponent,
   ],
   providers: [
     AddProductComponent,

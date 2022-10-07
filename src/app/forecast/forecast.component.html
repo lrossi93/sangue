@@ -1,4 +1,4 @@
-<div *ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'">
+<div *ngIf="loginService.logged && (loginService.getProfile() == '210' || loginService.getProfile() == '220')">
 	<h1>Forecast registry</h1>
 	<button mat-raised-button color="primary" style="width: 100%;" (click)="openAddForecastDialog()">Add forecast</button>
 	<input type="text" placeholder="year" [(ngModel)]="year" style="width: 40%;">

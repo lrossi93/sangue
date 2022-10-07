@@ -35,6 +35,12 @@
 			Forecast
 		</button>
 		<button 
+		mat-menu-item
+		*ngIf="loginService.logged"
+		[routerLink]="['/orders']">
+			Orders
+		</button>
+		<button 
 		mat-menu-item 
 		*ngIf="loginService.logged" 
 		(click)="loginService.logout()"
