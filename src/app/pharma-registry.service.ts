@@ -34,7 +34,21 @@ export class PharmaRegistryService {
     return [];
   }
 
-  setProduct(id: string, cod: string, des: string, isAdding: boolean): void{
+  setProduct(
+    id: string, 
+    cod: string, 
+    des: string, 
+    unita: number, 
+    confezionamento: string, 
+    multiplo_confezionamento: number, 
+    multiplo_imballo: number,
+    attivo: boolean,
+    extra: boolean,
+    min_ord: number,
+    valido_da: string,
+    valido_a: string,
+    isAdding: boolean
+  ): void{
     if(!isAdding && parseInt(id) < 1){
       alert("Invalid ID!");
       id = "";
@@ -42,7 +56,7 @@ export class PharmaRegistryService {
     }
 
     if(id == "" || cod == "" || des == ""){
-      alert("Empty parameters are invalid.");
+      alert("Empty core parameters are invalid.");
       return;
     }
 
@@ -52,7 +66,16 @@ export class PharmaRegistryService {
         id_session: localStorage.getItem('id_session'),
         id: id,
         cod: cod,
-        des: des
+        des: des,
+        unita: unita,
+        confezionamento: confezionamento,
+        multiplo_confezionamento: multiplo_confezionamento,
+        multiplo_imballo: multiplo_imballo,
+        attivo: attivo,
+        extra: extra,
+        min_ord: min_ord,
+        valido_da,
+        valido_a
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -66,10 +89,36 @@ export class PharmaRegistryService {
     });
   }
 
-  addProduct(cod: string, des: string): void{
+  addProduct(
+    cod: string, 
+    des: string,
+    unita: number, 
+    confezionamento: string, 
+    multiplo_confezionamento: number, 
+    multiplo_imballo: number,
+    attivo: boolean,
+    extra: boolean,
+    min_ord: number,
+    valido_da: string,
+    valido_a: string,  
+  ): void{
     let id = "-1";
     let isAdding = true;
-    this.setProduct(id, cod, des, isAdding);
+    this.setProduct(
+      id, 
+      cod, 
+      des, 
+      unita, 
+      confezionamento, 
+      multiplo_confezionamento, 
+      multiplo_imballo, 
+      attivo, 
+      extra, 
+      min_ord, 
+      valido_da, 
+      valido_a, 
+      isAdding
+    );
   }
 
   rmProduct(id: string): void{

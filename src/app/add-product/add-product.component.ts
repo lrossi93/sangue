@@ -22,6 +22,12 @@ export class AddProductComponent{
   valido_da!: UntypedFormControl;
   valido_a!: UntypedFormControl;
   isSubmitted: boolean = false;
+
+  //DateRangePicker
+  range = new UntypedFormGroup({
+    start: new UntypedFormControl('', Validators.required),
+    end: new UntypedFormControl('', Validators.required),
+  });
   
   formBuilder!: UntypedFormBuilder;
   constructor(
@@ -54,8 +60,8 @@ export class AddProductComponent{
       attivo: this.attivo.value ? 1 : 0,
       extra: this.extra.value ? 1 : 0,
       min_ord: this.min_ord.value,
-      valido_da: this.valido_da.value,
-      valido_a: this.valido_a.value,
+      valido_da: this.range.controls['start'].value,
+      valido_a: this.range.controls['end'].value,
       isSubmitted: this.isSubmitted});
   }
 
@@ -76,9 +82,5 @@ export class AddProductComponent{
     );
   }
 
-  //DateRangePicker
-  range = new UntypedFormGroup({
-    start: new UntypedFormControl('', Validators.required),
-    end: new UntypedFormControl('', Validators.required),
-  });
+  
 }

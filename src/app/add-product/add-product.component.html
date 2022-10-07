@@ -1,119 +1,87 @@
 <h3 mat-dialog-title>Add a new product</h3>
 
 <div mat-dialog-content>
-	<p>
-		<mat-form-field>
-			<input
+	<mat-form-field>
+		<input
+			type="number"
 			placeholder="Codice"
 			[formControl]="cod"
 			matInput>
-		</mat-form-field>
-		{{cod.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
+	</mat-form-field>
+	<br>
+	<mat-form-field>
+		<input
+			type="text"
 			placeholder="Descrizione"
 			[formControl]="des"
 			matInput>
-		</mat-form-field>
-		{{des.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
+	</mat-form-field>
+	<br>
+	<mat-form-field>
+		<input
+			type="number"
 			placeholder="Unità"
 			[formControl]="unita"
 			matInput>
-		</mat-form-field>
-		{{unita.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
-			placeholder="Confezionamento"
+	</mat-form-field>
+	<br>
+	<mat-form-field>
+		<input
+			type="text"
+			placeholder="Confezionamento (es. flacone)"
 			[formControl]="confezionamento"
 			matInput>
-		</mat-form-field>
-		{{confezionamento.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
+	</mat-form-field>
+	<br>
+	<mat-form-field>
+		<input
+			type="number"
 			placeholder="Multiplo confezionamento"
 			[formControl]="multiplo_confezionamento"
 			matInput>
-		</mat-form-field>
-		{{multiplo_confezionamento.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
+	</mat-form-field>
+	<br>
+	<mat-form-field>
+		<input
+			type="number"
 			placeholder="Multiplo imballo"
 			[formControl]="multiplo_imballo"
 			matInput>
-		</mat-form-field>
-		{{multiplo_imballo.value}}
-	</p>
-	<p>
-		<mat-checkbox 
-			labelPosition="before"
-			(click)="toggleAttivo()">
-			Attivo
-    	</mat-checkbox>
-	</p>
-	<p>
-		<mat-checkbox 
-			labelPosition="before"
-			(click)="toggleExtra()">
-			Extra
-    	</mat-checkbox>
-	</p>
-	<p>
-		<mat-form-field>
-			<input
+	</mat-form-field>
+	<br>
+	<mat-checkbox 
+		labelPosition="before"
+		(click)="toggleAttivo()">
+		Attivo
+	</mat-checkbox>
+	<br>
+	<mat-checkbox 
+		labelPosition="before"
+		(click)="toggleExtra()">
+		Extra
+	</mat-checkbox>
+	<br>
+	<mat-form-field>
+		<input
+			type="number"
 			placeholder="Ordine minimo"
 			[formControl]="min_ord"
 			matInput>
-		</mat-form-field>
-		{{min_ord.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
-			placeholder="Valido da"
-			[formControl]="valido_da"
-			matInput>
-		</mat-form-field>
-		{{valido_da.value}}
-	</p>
-	<p>
-		<mat-form-field>
-			<input
-			placeholder="Valido fino a"
-			[formControl]="valido_a"
-			matInput>
-		</mat-form-field>
-		{{valido_a.value}}
-	</p>
-
+	</mat-form-field>
+	<br>
 	<mat-form-field appearance="fill">
 		<mat-label>Validità</mat-label>
 		<mat-date-range-input [formGroup]="range" [rangePicker]="picker">
 		  <input matStartDate formControlName="start" placeholder="Inizio validità">
 		  <input matEndDate formControlName="end" placeholder="Fine validità">
 		</mat-date-range-input>
-		<mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+		<mat-hint>Inizio validità – Fine validità</mat-hint>
 		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 		<mat-date-range-picker #picker> </mat-date-range-picker>  
 	</mat-form-field>
-	  
-	  <p>Selected range: {{range.value | json}}</p>
-
 </div>
 
 <div mat-dialog-actions>
 	<button mat-raised-button (click)="onSubmit()">Submit</button>
 	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
-	<!--button mat-raised-button color="secondary" (click)="getData()">getData</button-->
 </div>

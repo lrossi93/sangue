@@ -32,7 +32,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule} from '@angular/material/menu';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDateRangePicker } from '@angular/material/datepicker'
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CellDatepickerComponent } from './cell-datepicker/cell-datepicker.component';
+import { CellCheckboxComponent } from './cell-checkbox/cell-checkbox.component'
 
 
 @NgModule({
@@ -53,6 +55,8 @@ import { MatDateRangePicker } from '@angular/material/datepicker'
     ButtonDeleteProductComponent,
     DropdownProductsForecastComponent,
     DropdownUsersForecastComponent,
+    CellDatepickerComponent,
+    CellCheckboxComponent,
   ],
   providers: [
     AddProductComponent,
@@ -83,6 +87,7 @@ import { MatDateRangePicker } from '@angular/material/datepicker'
     MatSelectModule,
     MatMenuModule,
     MatNativeDateModule,
+    MatDatepickerModule
   ],
   bootstrap: [AppComponent]
 })

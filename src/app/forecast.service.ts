@@ -59,7 +59,6 @@ export class ForecastService {
       id = "";
       return null;
     }
-// TODO rivedere questo controllo
     if(
       id == "" || 
       anno.toString() == "" || 
