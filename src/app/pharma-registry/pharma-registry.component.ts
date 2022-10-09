@@ -8,8 +8,6 @@ import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ButtonDeleteProductComponent } from '../button-delete-product/button-delete-product.component';
-import { DatePipe, formatDate } from '@angular/common';
-import { CellDatepickerComponent } from '../cell-datepicker/cell-datepicker.component';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 
 @Component({

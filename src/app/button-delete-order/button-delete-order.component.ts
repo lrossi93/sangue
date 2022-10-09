@@ -1,38 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { ForecastComponent } from '../forecast/forecast.component';
 
 @Component({
-  selector: 'app-button-delete-forecast',
+  selector: 'app-button-delete-order',
   template: `
-    <button color="primary" style="width: 100%;" (click)="onClickOpenDialog($event)">Delete</button>
-  `,
-  styleUrls: ['./button-delete-forecast.component.css']
+  <button color="primary" style="width: 100%;" (click)="openDeleteOrderDialog()">Elimina</button>
+`,
+  styleUrls: ['./button-delete-order.component.css']
 })
-export class ButtonDeleteForecastComponent implements ICellRendererAngularComp {
-  
-  data: any;
-  
-  constructor(private forecastComponent: ForecastComponent) { }
+export class ButtonDeleteOrderComponent implements OnInit, ICellRendererAngularComp {
 
+  data: any;
+
+  constructor() { }
+  
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
-    //default return
     return false;
   }
 
-  onClickOpenDialog(event: any){
-    this.forecastComponent.setId(this.data.id);
-    this.forecastComponent.openAreYouSureDialog();
+  ngOnInit(): void {
   }
 
-  //TODO
-/*
-  openAreYouSureDialog(){
+  openDeleteOrderDialog() {
+    console.log("openDeleteOrderDialog()");
+    //TODO
+    /*
     this.dialogRef = this.dialog.open(
       AreYouSureForecastComponent,
       {
@@ -46,6 +43,6 @@ export class ButtonDeleteForecastComponent implements ICellRendererAngularComp {
         this.updateGrid();
       }
     });
+    */
   }
-*/
 }

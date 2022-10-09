@@ -33,10 +33,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule} from '@angular/material/menu';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { CellDatepickerComponent } from './cell-datepicker/cell-datepicker.component';
 import { CellCheckboxComponent } from './cell-checkbox/cell-checkbox.component';
 import { OrdersComponent } from './orders/orders.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ButtonEditOrderComponent } from './button-edit-order/button-edit-order.component';
+import { ButtonDeleteOrderComponent } from './button-delete-order/button-delete-order.component';
+import { EditOrderComponent } from './edit-order/edit-order.component';
+import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component'
 
 
 @NgModule({
@@ -57,10 +60,13 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     ButtonDeleteProductComponent,
     DropdownProductsForecastComponent,
     DropdownUsersForecastComponent,
-    CellDatepickerComponent,
     CellCheckboxComponent,
     OrdersComponent,
     PageNotFoundComponent,
+    ButtonEditOrderComponent,
+    ButtonDeleteOrderComponent,
+    EditOrderComponent,
+    EditOrderDialogComponent,
   ],
   providers: [
     AddProductComponent,

@@ -57,6 +57,7 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
         );
         console.log("Attivooooooooo");
         break;
+
       case "Extra":
         this.pharmaRegistryService.setProduct(
           this.data.id,
@@ -74,6 +75,26 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
           this.data.isAdding,
         );
         console.log("Extraaaaaaaaaa");
+        break;
+
+      case "Urgente":
+        //#TODO: set the value of the field b_urgente in an Order
+        console.log("Urgente");
+        break;
+      
+      //TODO: CAREFUL!!! this is the b_extra field of an Order!!!
+      //TODO: CAREFUL!!! this is the b_extra field of an Order!!!
+      //TODO: CAREFUL!!! this is the b_extra field of an Order!!!
+      case "Extra":
+        //#TODO: set the value of the field b_urgente in an Order
+        //if product, do something
+        //if order, do something else
+        console.log("Extra");
+        break;
+
+      case "Validato":
+        //#TODO: set the value of the field b_validato in an Order
+        console.log("Validato");
         break;
     }
   }

@@ -1,0 +1,77 @@
+<h2>Order with id: {{ data.order.id }}</h2>
+<h3>Placed by user {{ data.order.username }}</h3>
+<form>
+    <mat-form-field>
+        <input
+        placeholder="Anno"
+        [formControl]="annoFormControl"
+        matInput>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+        placeholder="Data ordine"
+        [formControl]="dOrdineFormControl"
+        matInput>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field>
+        <input
+        placeholder="Numero d'ordine"
+        [formControl]="nOrdineFormControl"
+        matInput>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+        placeholder="Urgente"
+        [formControl]="urgenteFormControl"
+        matInput>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field>
+        <input
+        placeholder="Extra"
+        [formControl]="extraFormControl"
+        matInput>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+        placeholder="Validato"
+        [formControl]="validatoFormControl"
+        matInput>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field>
+        <input
+        placeholder="Data validazione"
+        [formControl]="dValidatoFormControl"
+        matInput>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+        placeholder="Note"
+        [formControl]="noteFormControl"
+        matInput>
+    </mat-form-field>
+</form>
+
+<!--show order rows if any-->
+<div *ngIf="data.orderRows.length > 0">
+    <h2>Dettagli</h2>
+    <div *ngFor="let orderRow in orderRows">
+        <form>
+            <h3>Articolo {{ orderRow.id }}</h3>
+            <input type="text"
+            [ngModel]="orderRow.qta"> <!--TODO-->
+        </form>
+    </div>
+</div>

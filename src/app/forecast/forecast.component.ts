@@ -8,11 +8,8 @@ import { AreYouSureForecastComponent } from '../are-you-sure-forecast/are-you-su
 import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ButtonDeleteForecastComponent } from '../button-delete-forecast/button-delete-forecast.component';
-import { DropdownProductsForecastComponent } from '../dropdown-products-forecast/dropdown-products-forecast.component';
 import { UsersService } from '../users.service';
-import { DropdownUsersForecastComponent } from '../dropdown-users-forecast/dropdown-users-forecast.component';
-
+import { defaultColDef, gridConfigForecast210, gridConfigForecast220 } from 'src/environments/grid-configs'
 @Component({
   selector: 'app-forecast',
   templateUrl: './forecast.component.html',
@@ -41,127 +38,12 @@ export class ForecastComponent implements OnInit {
   forecastGridConfig: any;
   
   //sangueasl column definition (ASL cliente)
-  gridConfigUser210: any = [
-    { 
-      headerName: 'ID', 
-      field: 'id'
-    },
-    { 
-      headerName: 'Year', 
-      field: 'anno', 
-      editable: true
-    },
-    /*
-    { 
-      headerName: 'User ID', 
-      field: 'username', //questo è l'id di un utente
-      editable: false
-    },
-    */
-   //#TODO: questo qui sotto è necessario?
-    {
-      headerName: 'Utente',
-      field: 'username', //prende l'id dell'utente (forecast.username) e ritorna il nome utente (user.username) 
-      cellRenderer: DropdownUsersForecastComponent,
-      editable: false
-    },
-    /*
-    { 
-      headerName: 'Product ID', 
-      field: 'id_prd', 
-      editable: true
-    },
-    */
-    { 
-      headerName: 'Product name', 
-      field: 'id_prd', 
-      cellRenderer: DropdownProductsForecastComponent
-    },
-    { 
-      headerName: 'Quantity', 
-      field: 'qta', 
-      editable: true
-    },
-    { 
-      headerName: 'Notes', 
-      field: 'note', 
-      editable: true
-    },
-    { 
-      headerName: 'Quantità approvata', 
-      field: 'qta_approvata', 
-      editable: false
-    },
-    { 
-      headerName: 'Costo unitario (€)', 
-      field: 'costo_unitario', 
-      editable: false
-    },
-    { 
-      headerName: 'Action', 
-      cellRenderer: ButtonDeleteForecastComponent,
-      autoHeight: true
-    }
-  ];
+  gridConfigUser210: any = gridConfigForecast210;
 
-  //sangueaslno column definition (ASL fornitore) #TODO
-  gridConfigUser220: any = [
-    { 
-      headerName: 'ID', 
-      field: 'id'
-    },
-    { 
-      headerName: 'Year', 
-      field: 'anno', 
-      editable: false
-    },
-    /*
-    { 
-      headerName: 'User ID', 
-      field: 'username', 
-      editable: false
-    },
-    */
-    { 
-      headerName: 'Utente', 
-      field: 'username',
-      cellRenderer: DropdownUsersForecastComponent,
-      editable: false
-    },
-    { 
-      headerName: 'Product name', 
-      field: 'id_prd', 
-      cellRenderer: DropdownProductsForecastComponent,
-      editable: false
-    },
-    { 
-      headerName: 'Quantity', 
-      field: 'qta', 
-      editable: false
-    },
-    { 
-      headerName: 'Notes', 
-      field: 'note', 
-      editable: false
-    },
-    { 
-      headerName: 'Quantità approvata', 
-      field: 'qta_approvata', 
-      editable: true
-    },
-    { 
-      headerName: 'Costo unitario (€)', 
-      field: 'costo_unitario', 
-      editable: true
-    },
-    { 
-      headerName: 'Action', 
-      cellRenderer: ButtonDeleteForecastComponent,
-      autoHeight: true
-    }
-  ];
+  //sangueaslno column definition (ASL fornitore)
+  gridConfigUser220: any = gridConfigForecast220;
   gridOptions: any;
-  defaultColDef: any;
+  defaultColDef: any = defaultColDef;
 
   //agGrid API handle
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
@@ -214,12 +96,6 @@ export class ForecastComponent implements OnInit {
           this.updateGrid();
         }
       }
-
-      //defaultColDef
-      this.defaultColDef = {
-        sortable: true,
-        filter: true,
-      };
     }
 
   ngOnInit(): void {
