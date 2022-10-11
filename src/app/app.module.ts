@@ -39,7 +39,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ButtonEditOrderComponent } from './button-edit-order/button-edit-order.component';
 import { ButtonDeleteOrderComponent } from './button-delete-order/button-delete-order.component';
 import { EditOrderComponent } from './edit-order/edit-order.component';
-import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component'
+import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component';
+import { DatepickerProductsDialogComponent } from './datepicker-products-dialog/datepicker-products-dialog.component'
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.
     ButtonDeleteOrderComponent,
     EditOrderComponent,
     EditOrderDialogComponent,
+    DatepickerProductsDialogComponent,
   ],
   providers: [
     AddProductComponent,

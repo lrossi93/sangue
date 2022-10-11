@@ -1,0 +1,18 @@
+<div mat-dialog-content>
+    <h2>Edit date</h2>
+    <mat-form-field appearance="fill">
+        <mat-label>Edit date</mat-label>
+        <input 
+            matInput 
+            [matDatepicker]="picker" 
+            [value]="date.value"
+            (dateChange)="onDateChange($event)">
+        <!--mat-hint>MM/DD/YYYY</mat-hint-->
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div mat-dialog-actions>
+        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+        <button mat-raised-button mat-dialog-close>Cancel</button>
+    </div>
+</div>

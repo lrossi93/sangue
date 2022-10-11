@@ -50,7 +50,28 @@ export class OrdersComponent implements OnInit {
       note: "Note bellissime 3333"
     }
   ];
-  orderRows: any = [];
+  orderRows: any = [
+    {
+      id: "1",
+      id_ordine: "2",
+      username: "sangueasl2",
+      n_riga: 1,
+      id_prd: "3",
+      qta: 5,
+      qta_validata: 5,
+      note: "note sull'orderRow con id: 2"
+    },
+    {
+      id: "2",
+      id_ordine: "2",
+      username: "sangueasl2",
+      n_riga: 2,
+      id_prd: "5",
+      qta: 7,
+      qta_validata: 7,
+      note: "note sull'orderRow con id: 2"
+    }
+  ];
   year: any;
   dialogRef: any;
 
@@ -68,11 +89,12 @@ export class OrdersComponent implements OnInit {
 
   constructor(
     loginService: LoginService,
-    ordersService: OrdersService
+    ordersService: OrdersService,
   ) { 
     this.loginService = loginService;
     this.ordersService = ordersService;
-    //this.ordersService.listOrders("");
+    this.ordersService.listOrders("2022");
+    this.ordersService.listOrderRows("1");
   }
 
   ngOnInit(): void {
@@ -98,6 +120,8 @@ export class OrdersComponent implements OnInit {
     console.log("listOrders: year: " + year);
     this.ordersService.listOrders(year);
     this.orders = this.ordersService.orders;
+    console.log("Printing retrieved orders:");
+    console.log(this.orders);
     this.updateGrid();
   }
 

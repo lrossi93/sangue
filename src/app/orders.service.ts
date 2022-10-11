@@ -8,7 +8,7 @@ import { LoginService } from './login.service';
 })
 export class OrdersService {
   
-  url = environment.basePath + 'orders.php';
+  url = environment.basePath + 'order.php';
   orders: any = [];
   orderRows: any = [];
   lastOrderId: string = "";
@@ -27,7 +27,7 @@ export class OrdersService {
 
   */
   listOrders(year: string): any {
-    let path = this.url + '?request=listOrder&id_session=' + this.loginService.getSession() + '&year=' + year;
+    let path = this.url + '?request=listOrders&id_session=' + this.loginService.getSession() + '&year=' + year;
     console.log(path);
     
     this.http.get<String[]>(
@@ -139,7 +139,7 @@ export class OrdersService {
 
   */
   listOrderRows(id_order: string): any {
-    let path = this.url + '?request=listOrderRow&id_session=' + this.loginService.getSession() + '&id_order=' + id_order;
+    let path = this.url + '?request=listOrderRows&id_session=' + this.loginService.getSession() + '&id_order=' + id_order;
     console.log(path);
     
     this.http.get<String[]>(

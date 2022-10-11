@@ -64,14 +64,14 @@
     </mat-form-field>
 </form>
 
-<!--show order rows if any-->
-<div *ngIf="data.orderRows.length > 0">
+<!--TODO: show order rows if any-->
+<!--div *ngIf="true">
     <h2>Dettagli</h2>
     <div *ngFor="let orderRow in orderRows">
         <form>
             <h3>Articolo {{ orderRow.id }}</h3>
             <input type="text"
-            [ngModel]="orderRow.qta"> <!--TODO-->
+            [ngModel]="orderRow.qta">
         </form>
     </div>
-</div>
+</div-->

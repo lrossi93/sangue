@@ -2,13 +2,14 @@ import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment, Product } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CellValueChangedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ButtonDeleteProductComponent } from '../button-delete-product/button-delete-product.component';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
+import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -134,7 +135,7 @@ export class PharmaRegistryComponent implements OnInit {
       { 
         headerName: 'Valido da', 
         field: 'valido_da', 
-        editable: true,
+        editable: false,
         cellRenderer: (params: { value: string | number | Date; }) => {
           return new Date(params.value).toLocaleDateString('it-IT');
         }
@@ -142,8 +143,10 @@ export class PharmaRegistryComponent implements OnInit {
       { 
         headerName: 'Valido fino a', 
         field: 'valido_a', 
-        editable: true,
+        editable: false,
         cellRenderer: (params: { value: string | number | Date; }) => {
+          //console.log("before conversion: " + params.value);
+          //console.log("after conversion: " + new Date(params.value).toLocaleDateString('it-IT'));         
           return new Date(params.value).toLocaleDateString('it-IT');
         }
       },
@@ -155,6 +158,14 @@ export class PharmaRegistryComponent implements OnInit {
 
     //gridOptions
     this.gridOptions = {
+      onCellClicked: (event: CellClickedEvent) => {
+        if(event.colDef.headerName == "Valido da" || event.colDef.headerName == "Valido fino a") {
+          console.log(event);
+          //open dialog and pass date parameter to it
+          this.openEditDateDialog(event);
+        }
+      },
+
       onCellValueChanged: (event: CellValueChangedEvent) => {
         console.log('onCellValueChanged\n\n\n\n');
         console.log(event);
@@ -168,16 +179,12 @@ export class PharmaRegistryComponent implements OnInit {
         this.multiplo_imballo = event.data.multiplo_imballo;
         this.attivo = event.data.attivo;
         this.extra = event.data.extra;
-        this.min_ord = event.data.min_ord;
-
-        //check the dates are not null before assigning them
-        //let validoDa = new DatePipe('it-IT').transform(new Date(event.data.valido_da), 'YYYY-MM-DD');
-        
+        this.min_ord = event.data.min_ord;     
 
         //the new date written as is by the user:
-        console.log("data scritta dall'utente: " + new Date(event.data.valido_da).toISOString());
+        //console.log("data scritta dall'utente: " + event.data.valido_da)//.toISOString());
         //convert it to american format YYYY-MM-DD
-        console.log("data in formato IT: " + new Date(event.data.valido_da).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10));
+        //console.log("data in formato IT: " + this.fromItLocaleToISO(event.data.valido_da))//new Date(event.data.valido_da).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10));
         //save it as string in valido_da
 
         //salvo le date in formato italiano sulle variabili locali
@@ -240,8 +247,7 @@ export class PharmaRegistryComponent implements OnInit {
       alert("Empty parameters are invalid.");
       return;
     }
-    console.log('[[[valido a before post]]]: ' + this.valido_a.toString());
-    
+
     this.http.post<String[]>(
       this.url, {
         request: 'setProduct',
@@ -256,9 +262,9 @@ export class PharmaRegistryComponent implements OnInit {
         attivo: this.attivo,
         extra: this.extra,
         min_ord: this.min_ord,
-        //salvo le date su DB in formato americano
-        valido_da: this.valido_da,//this.fromItLocaleToISO(this.valido_da),
-        valido_a: this.valido_a//this.fromItLocaleToISO(this.valido_a)
+        //salvo le date su DB in formato americano, e so che arrivano così dal datepicker
+        valido_da: this.valido_da,
+        valido_a: this.valido_a
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -279,12 +285,14 @@ export class PharmaRegistryComponent implements OnInit {
             this.attivo,
             this.extra,
             this.min_ord,
-            //aggiungo le date localmente in formato italiano
-            new Date(this.valido_da).toLocaleDateString('it-IT'),
-            new Date(this.valido_a).toLocaleDateString('it-IT')
+            //aggiungo le date localmente in formato US, vengono convertite automaticamente dalla grid nel rendering
+            this.valido_da,
+            this.valido_a
           );
         }
         else{
+          //console.log(new Date(this.valido_da).toLocaleDateString('it-IT'));
+          
           this.setLocally(
             parseInt(res[1].toString()), 
             this.cod, 
@@ -296,13 +304,53 @@ export class PharmaRegistryComponent implements OnInit {
             this.attivo,
             this.extra,
             this.min_ord,
-            new Date(this.valido_da).toLocaleDateString('it-IT'),
-            new Date(this.valido_a).toLocaleDateString('it-IT')
-            );
+            this.valido_da,
+            this.valido_a
+          );
         }
         this.clearVars();
       }
     });
+  }
+
+  /*
+  formatDate(date: string): string {
+    let formattedDate!: string;
+    let splittedDate = date.split("-", 3);
+    formattedDate = splittedDate[2] + "/" + splittedDate[1] + "/" + splittedDate[0];
+    console.log(formattedDate)
+    return formattedDate;
+  }
+  */
+
+  setProductParams(
+    id: string,
+    cod: string,
+    des: string,
+    unita: number,
+    confezionamento: string,
+    multiplo_confezionamento: number,
+    multiplo_imballo: number,
+    attivo: boolean,
+    extra: boolean,
+    min_ord: number,
+    valido_da: string,
+    valido_a: string
+  ) {
+    this.id = id;
+    this.cod = cod;
+    this.des = des;
+    this.unita = unita;
+    this.confezionamento = confezionamento;
+    this.multiplo_confezionamento = multiplo_confezionamento;
+    this.multiplo_imballo = multiplo_imballo;
+    this.attivo = attivo;
+    this.extra = extra;
+    this.min_ord = min_ord;
+    this.valido_da = valido_da;
+    this.valido_a = valido_a;
+    let isAdding = false;
+    this.setProduct(isAdding);
   }
 
   addProduct(): void{
@@ -497,6 +545,75 @@ export class PharmaRegistryComponent implements OnInit {
     });
   }
 
+  openEditDateDialog(event: CellClickedEvent) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+    switch(event.colDef.headerName){
+      case "Valido da":
+        dialogConfig.data = {
+          date: event.data.valido_da,
+          isValidoDa: true,
+          isValidoA: false
+        }
+        break;
+
+      case "Valido fino a":
+        dialogConfig.data = {
+          date: event.data.valido_a,
+          isValidoDa: false,
+          isValidoA: true
+        }
+        break;
+    }
+
+    this.dialogRef = this.dialog.open(
+      DatepickerProductsDialogComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe( (result: {date: string, isValidoDa: boolean, isValidoA: boolean, isSubmitted: boolean}) => {
+      if(result !== undefined && result.isSubmitted){
+        console.log(result);
+        
+        if(result.isValidoDa){
+          this.setProductParams(
+            event.data.id,
+            event.data.cod,
+            event.data.des,
+            event.data.unita,
+            event.data.confezionamento,
+            event.data.multiplo_confezionamento,
+            event.data.multiplo_imballo,
+            event.data.attivo,
+            event.data.extra,
+            event.data.min_ord,
+            result.date,
+            event.data.valido_a
+          );
+        }
+        else if(result.isValidoA) {
+          this.setProductParams(
+            event.data.id,
+            event.data.cod,
+            event.data.des,
+            event.data.unita,
+            event.data.confezionamento,
+            event.data.multiplo_confezionamento,
+            event.data.multiplo_imballo,
+            event.data.attivo,
+            event.data.extra,
+            event.data.min_ord,
+            event.data.valido_da,
+            result.date
+          );
+        }
+        
+        this.updateGrid();
+      }
+    });
+  }
+
   setLocally(
     id: number, 
     cod: string, 
@@ -522,8 +639,6 @@ export class PharmaRegistryComponent implements OnInit {
         this.products[i].attivo = attivo;
         this.products[i].extra = extra;
         this.products[i].min_ord = min_ord;
-        console.log('valido da: ' + valido_da);
-        console.log('valido a: ' + valido_a);
         this.products[i].valido_da = valido_da;
         this.products[i].valido_a = valido_a;
         this.updateGrid();
