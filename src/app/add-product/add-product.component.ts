@@ -60,9 +60,29 @@ export class AddProductComponent{
       attivo: this.attivo.value ? 1 : 0,
       extra: this.extra.value ? 1 : 0,
       min_ord: this.min_ord.value,
-      valido_da: this.range.controls['start'].value,
-      valido_a: this.range.controls['end'].value,
+      valido_da: this.formatDate(this.range.controls['start'].value.toLocaleString('it-IT').split(",", 2)[0]),
+      valido_a: this.formatDate(this.range.controls['end'].value.toLocaleString('it-IT').split(",", 2)[0]),
       isSubmitted: this.isSubmitted});
+  }
+
+  //date: full value of the date Y-M-D in string format
+  formatDate(date: string): string {
+    let formattedDate!: string;
+    let splittedDate = date.split("/", 3);
+    
+    let day = splittedDate[0];
+    let month = splittedDate[1];
+    let year = splittedDate[2];
+
+    //prepare date to be saved on db
+    if(day.length == 1){
+      day = "0" + day;
+    }
+    if(month.length == 1){
+      month = "0" + month;
+    }
+    formattedDate = year + "-" + month + "-" + day;
+    return formattedDate;
   }
 
   toggleAttivo(): void {
@@ -81,6 +101,4 @@ export class AddProductComponent{
       " extra: " + this.extra.value
     );
   }
-
-  
 }
