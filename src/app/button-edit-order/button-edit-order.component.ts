@@ -1,9 +1,12 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Order, OrderRow } from 'src/environments/environment';
+import { environment, Order, OrderRow } from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
+import { LoginService } from '../login.service';
+import { OrdersService } from '../orders.service';
 
 @Component({
   selector: 'app-button-edit-order',
@@ -11,7 +14,7 @@ import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog
   styleUrls: ['./button-edit-order.component.css']
 })
 export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularComp {
-
+  url = environment.basePath + "order.php";
   data: any;
   currentOrder: Order = {
     id: '',
@@ -25,18 +28,24 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     d_validato: 'string', //data di validazione dell'ordine
     note: ''
   };
-  orderRows: OrderRow[] | undefined;
+  orderRows: any = [];
   dialogRef: any;
   dialog: MatDialog;
+  ordersService!: OrdersService;
 
   constructor(
-    dialog: MatDialog
+    dialog: MatDialog,
+    ordersService: OrdersService,
+    private http: HttpClient,
+    private loginService: LoginService
   ) { 
     this.dialog = dialog;
+    this.ordersService = ordersService; 
   }
   
   agInit(params: ICellRendererParams<any, any>): void {
-    this.data = params.data;   
+    this.data = params.data;
+    this.listOrderRows(this.data.id);
   }
   
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -47,19 +56,39 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     //this.assignOrderData();
   }
 
-  openEditOrderDialog(event: any) {
-    console.log("openEditOrderDialog()");
+  //usarla sempre perchè asincrona...
+  listOrderRows(id: string) {
+    let path = this.url + '?request=listOrderRows&id_session=' + this.loginService.getSession() + '&id_order=' + id;
+    console.log(path);
+    
+    this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    ).subscribe(res => {
+      if(res[0] == "KO"){
+        alert("Error retrieving orders!");
+        return null;
+      }
+      else{ 
+        this.orderRows = res[1];
+        return this.orderRows;
+      }
+    });
+  }
 
-    console.log(this.data);
-    
+  openEditOrderDialog(event: any) {  
     this.assignOrderData();
-    
+        
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       order: this.currentOrder,
       orderRows: this.orderRows //array di orderRows 
     }
+    dialogConfig.width = "60%";
+    dialogConfig.minWidth = "60%";
         
     this.dialogRef = this.dialog.open(
       EditOrderDialogComponent, 

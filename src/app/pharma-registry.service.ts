@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class PharmaRegistryService {
   url = environment.basePath + 'anag.php'
+  products: any = [];
 
   constructor(
     private http: HttpClient, 
@@ -28,6 +29,7 @@ export class PharmaRegistryService {
       }
       else{
         console.log(res[1]);
+        this.products = res[1];
         return res[1]; 
       }
     });

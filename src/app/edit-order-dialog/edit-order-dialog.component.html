@@ -1,77 +1,20 @@
-<h2>Order with id: {{ data.order.id }}</h2>
-<h3>Placed by user {{ data.order.username }}</h3>
-<form>
-    <mat-form-field>
-        <input
-        placeholder="Anno"
-        [formControl]="annoFormControl"
-        matInput>
-    </mat-form-field>
-
-    <mat-form-field>
-        <input
-        placeholder="Data ordine"
-        [formControl]="dOrdineFormControl"
-        matInput>
-    </mat-form-field>
-
-    <br>
-
-    <mat-form-field>
-        <input
-        placeholder="Numero d'ordine"
-        [formControl]="nOrdineFormControl"
-        matInput>
-    </mat-form-field>
-
-    <mat-form-field>
-        <input
-        placeholder="Urgente"
-        [formControl]="urgenteFormControl"
-        matInput>
-    </mat-form-field>
-
-    <br>
-
-    <mat-form-field>
-        <input
-        placeholder="Extra"
-        [formControl]="extraFormControl"
-        matInput>
-    </mat-form-field>
-
-    <mat-form-field>
-        <input
-        placeholder="Validato"
-        [formControl]="validatoFormControl"
-        matInput>
-    </mat-form-field>
-
-    <br>
-
-    <mat-form-field>
-        <input
-        placeholder="Data validazione"
-        [formControl]="dValidatoFormControl"
-        matInput>
-    </mat-form-field>
-
-    <mat-form-field>
-        <input
-        placeholder="Note"
-        [formControl]="noteFormControl"
-        matInput>
-    </mat-form-field>
-</form>
-
-<!--TODO: show order rows if any-->
-<!--div *ngIf="true">
-    <h2>Dettagli</h2>
-    <div *ngFor="let orderRow in orderRows">
-        <form>
-            <h3>Articolo {{ orderRow.id }}</h3>
-            <input type="text"
-            [ngModel]="orderRow.qta">
-        </form>
-    </div>
-</div-->
+<h2 style="text-align: center;">Order {{ data.order.id }} placed by user {{ data.order.username }}</h2>
+<mat-dialog-content class="typography">
+    <mat-card *ngFor="let orderRow of orderRows" style="margin-bottom: 20px;">
+        <mat-card-title>ID: {{ orderRow.id }}</mat-card-title>
+        <h5><b>Product ID:</b> {{ orderRow.id_prd }}</h5>
+        <h5><b>Row number:</b> {{ orderRow.n_riga }}</h5>
+        <h5><b>Quantity:</b> {{ orderRow.qta }}</h5>
+        <h5><b>Approved quantity:</b> {{ orderRow.qta_validata }}</h5>
+        <h5><b>Notes:</b> {{ orderRow.note }}</h5>
+        <div mat-dialog-actions align="center">
+            <button mat-raised-button color="primary" (click)="openEditOrderRowDialog(orderRow.id, false)">Edit</button>
+            <button mat-raised-button color="warn" (click)="openAreYouSureOrderRowDialog(orderRow.id)">Delete</button>
+        </div>
+    </mat-card> 
+</mat-dialog-content>
+<div mat-dialog-actions align="center">
+    <button mat-raised-button (click)="openEditOrderRowDialog('', true)">Add line</button>
+    <button mat-raised-button color="warn" (click)="openAreYouSureOrderDialog(data.order.id)">Delete order</button>
+    <button mat-raised-button color="primary" matDialogClose="true">Cancel</button>
+</div>

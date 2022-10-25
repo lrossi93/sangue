@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class UsersService {
   url = environment.basePath + 'anag.php';
+  users: any = [];
   constructor(
     private http: HttpClient
   ) { }
@@ -28,7 +29,9 @@ export class UsersService {
         return null;
       }
       else{
-        console.log('>>>>>users: ' + res[1]);
+        //console.log('>>>>>users: ' + res[1]);
+        this.users = res[1];
+        console.log(this.users);
         return res[1]; 
       }
     });

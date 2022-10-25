@@ -1,9 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AgGridAngular } from 'ag-grid-angular';
-import { Order, OrderRow } from 'src/environments/environment';
+import { Order, OrderRow, User } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders } from 'src/environments/grid-configs';
+import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
+import { PharmaRegistryService } from '../pharma-registry.service';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-orders',
@@ -12,71 +16,17 @@ import { OrdersService } from '../orders.service';
 })
 export class OrdersComponent implements OnInit {
   order!: Order; //sample general purpose order
-  orders: any = [
-    {
-      id: "1",
-      anno: "2020",
-      username: "sangueasl",
-      d_ordine: "20/02/2020",
-      n_ordine: 12,
-      b_urgente: false,
-      b_extra: true,
-      b_validato: true,
-      d_validato: "21/02/2020",
-      note: "Note bellissime 1"
-    },
-    {
-      id: "2",
-      anno: "2021",
-      username: "sangueasl2",
-      d_ordine: "21/03/2020",
-      n_ordine: 13,
-      b_urgente: true,
-      b_extra: false,
-      b_validato: false,
-      d_validato: "22/03/2020",
-      note: "Note bellissime 2"
-    },
-    {
-      id: "3",
-      anno: "2022",
-      username: "sangueaslno",
-      d_ordine: "23/04/2020",
-      n_ordine: 14,
-      b_urgente: false,
-      b_extra: true,
-      b_validato: false,
-      d_validato: "24/04/2020",
-      note: "Note bellissime 3333"
-    }
-  ];
-  orderRows: any = [
-    {
-      id: "1",
-      id_ordine: "2",
-      username: "sangueasl2",
-      n_riga: 1,
-      id_prd: "3",
-      qta: 5,
-      qta_validata: 5,
-      note: "note sull'orderRow con id: 2"
-    },
-    {
-      id: "2",
-      id_ordine: "2",
-      username: "sangueasl2",
-      n_riga: 2,
-      id_prd: "5",
-      qta: 7,
-      qta_validata: 7,
-      note: "note sull'orderRow con id: 2"
-    }
-  ];
-  year: any;
+  orders: any = [];
+  orderRows: any = [];
+
+  year: string = "2022";
   dialogRef: any;
+  dialog: any;
 
   loginService!: LoginService;
   ordersService!: OrdersService;
+  usersService!: UsersService;
+  pharmaRegistryService!: PharmaRegistryService;
 
   //agGrid config
   ordersGridConfig: any = gridConfigOrders;
@@ -90,15 +40,24 @@ export class OrdersComponent implements OnInit {
   constructor(
     loginService: LoginService,
     ordersService: OrdersService,
+    usersService: UsersService,
+    pharmaRegistryService: PharmaRegistryService,
+    dialog: MatDialog,
   ) { 
     this.loginService = loginService;
     this.ordersService = ordersService;
-    this.ordersService.listOrders("2022");
-    this.ordersService.listOrderRows("1");
+    this.usersService = usersService;
+    this.pharmaRegistryService = pharmaRegistryService;
+    this.pharmaRegistryService.getProducts();
+    this.usersService.listUsers("210"); //get all customer asl users
+    this.dialog = dialog;
+    this.ordersService.listOrders("");
+    this.orders = this.ordersService.orders;
+    console.log(this.orders);
+    console.log(this.pharmaRegistryService.products);
   }
 
   ngOnInit(): void {
-
     //initialize Ag-Grid API
     setTimeout(
       () => {
@@ -117,11 +76,8 @@ export class OrdersComponent implements OnInit {
 
   */  
   listOrders(year: string) {
-    console.log("listOrders: year: " + year);
     this.ordersService.listOrders(year);
     this.orders = this.ordersService.orders;
-    console.log("Printing retrieved orders:");
-    console.log(this.orders);
     this.updateGrid();
   }
 
@@ -187,7 +143,7 @@ export class OrdersComponent implements OnInit {
 
   */
   listOrderRows(orderId: string) {
-    console.log("listOrders: orderId: " + orderId);
+    //console.log("listOrders: orderId: " + orderId);
     this.ordersService.listOrderRows(orderId);
     this.orderRows = this.ordersService.orderRows;
   }
@@ -223,6 +179,27 @@ export class OrdersComponent implements OnInit {
   //TODO: dialog for adding a new order
   openAddOrderDialog() {
     console.log("openAddOrderDialog()");
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      users: this.usersService.users,
+      products: this.pharmaRegistryService.products
+    }
+    dialogConfig.width = "95%";
+    dialogConfig.maxHeight = "500px";
+        
+    this.dialogRef = this.dialog.open(
+      AddOrderDialogComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        console.log("submitted!");
+      }
+    });
+    
   }
 
   //TODO: dialog for editing an existing order

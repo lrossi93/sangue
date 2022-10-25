@@ -41,6 +41,13 @@ import { ButtonDeleteOrderComponent } from './button-delete-order/button-delete-
 import { EditOrderComponent } from './edit-order/edit-order.component';
 import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component';
 import { DatepickerProductsDialogComponent } from './datepicker-products-dialog/datepicker-products-dialog.component'
+import { CommonModule } from '@angular/common';
+import {MatCardModule} from '@angular/material/card';
+import { AreYouSureOrderRowComponent } from './are-you-sure-order-row/are-you-sure-order-row.component';
+import { AreYouSureOrderComponent } from './are-you-sure-order/are-you-sure-order.component';
+import { AddOrderRowComponent } from './add-order-row/add-order-row.component';
+import { EditOrderRowComponent } from './edit-order-row/edit-order-row.component';
+import { AddOrderDialogComponent } from './add-order-dialog/add-order-dialog.component';
 
 
 @NgModule({
@@ -69,6 +76,11 @@ import { DatepickerProductsDialogComponent } from './datepicker-products-dialog/
     EditOrderComponent,
     EditOrderDialogComponent,
     DatepickerProductsDialogComponent,
+    AreYouSureOrderRowComponent,
+    AreYouSureOrderComponent,
+    AddOrderRowComponent,
+    EditOrderRowComponent,
+    AddOrderDialogComponent,
   ],
   providers: [
     AddProductComponent,
@@ -99,7 +111,9 @@ import { DatepickerProductsDialogComponent } from './datepicker-products-dialog/
     MatSelectModule,
     MatMenuModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    CommonModule,
+    MatCardModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Order, OrderRow } from 'src/environments/environment';
+import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
+import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
+import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
+import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.component';
+import { OrdersService } from '../orders.service';
 
 @Component({
   selector: 'app-edit-order-dialog',
@@ -9,6 +14,7 @@ import { Order, OrderRow } from 'src/environments/environment';
   styleUrls: ['./edit-order-dialog.component.css']
 })
 export class EditOrderDialogComponent implements OnInit {
+
   annoFormControl!: UntypedFormControl;
   dOrdineFormControl!: UntypedFormControl;
   nOrdineFormControl!: UntypedFormControl;
@@ -18,12 +24,21 @@ export class EditOrderDialogComponent implements OnInit {
   dValidatoFormControl!: UntypedFormControl;
   noteFormControl!: UntypedFormControl;
 
+  order!: Order;
+  orderRows: OrderRow[] = [];
+
+  dialogRef!: any;
+  dialog!: MatDialog;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       order: Order,
       orderRows: OrderRow[]
     },
-    private _builder: UntypedFormBuilder
+    private _builder: UntypedFormBuilder,
+    dialog: MatDialog,
+    private thisDialogRef: MatDialogRef<AreYouSureOrderComponent>,
+    private ordersService: OrdersService
   ) { 
     this.annoFormControl = _builder.control(data.order.anno, Validators.required);
     this.dOrdineFormControl = _builder.control(data.order.d_ordine, Validators.required);
@@ -33,9 +48,141 @@ export class EditOrderDialogComponent implements OnInit {
     this.validatoFormControl = _builder.control(data.order.b_validato, Validators.required);
     this.dValidatoFormControl = _builder.control(data.order.d_validato, Validators.required);
     this.noteFormControl = _builder.control(data.order.note); //not required
+    this.order = data.order;
+    this.orderRows = data.orderRows;
+    this.dialog = dialog;
   }
 
   ngOnInit(): void {
   }
 
+  deleteOrderRowById(id: string) {
+    for(let i = 0; i < this.orderRows.length; ++i){
+      if(this.orderRows[i].id == id){
+        this.orderRows.splice(i, 1);
+        this.ordersService.rmOrderRow(id);
+        return;
+      }
+    }
+  }
+
+  getOrderRowById(id: string): OrderRow | undefined {
+    for(let i = 0; i < this.orderRows.length; ++i){
+      if(id == this.orderRows[i].id){
+        return this.orderRows[i];
+      }
+    }
+    return undefined;
+  }
+
+  //OK
+  openAreYouSureOrderRowDialog(id: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { id: id }
+        
+    this.dialogRef = this.dialog.open(
+      AreYouSureOrderRowComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        this.deleteOrderRowById(id);
+      }
+    });
+  }
+
+  //works both for adding and for editing an orderRow
+  openEditOrderRowDialog(id: string, isAdding: boolean) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    console.log(this.data.order.id);
+    
+    //if id is not specified, create a new orderRow
+    if(id == "") {
+      let newOrderRow = {
+        id: "",
+        id_ordine: this.data.order.id,
+        username: "",
+        n_riga: "",
+        id_prd: "",
+        qta: 0,
+        qta_validata: 0,
+        note: ""
+      }
+      dialogConfig.data = {
+        orderRow: newOrderRow
+      }
+    }
+    else {
+      dialogConfig.data = {
+        orderRow: this.getOrderRowById(id) 
+      }
+    }
+          
+    this.dialogRef = this.dialog.open(
+      EditOrderRowComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { orderRow: OrderRow, isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        console.log(result);
+        if(isAdding)
+          console.log("isAdding");
+        //se isAdding == true, non serve un orderRowId, altrimenti è già stato impostato
+        this.ordersService
+          .setOrderRowPromise(result.orderRow, isAdding)
+          .subscribe(
+            (data: any) => {
+              console.log(data);
+            }
+          );
+      }
+    });
+  }
+
+  openAddOrderRowDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      order: this.data.order,
+      orderRows: this.orderRows //array di orderRows 
+    }
+        
+    this.dialogRef = this.dialog.open(
+      AddOrderRowComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        console.log(result);
+      }
+    });
+  }
+
+  openAreYouSureOrderDialog(id: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { id: id }
+        
+    this.dialogRef = this.dialog.open(
+      AreYouSureOrderComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        console.log("removing order with id: " + id);
+        //this.ordersService.rmOrder(id)
+        this.thisDialogRef.close();
+      }
+    });
+  }
 }

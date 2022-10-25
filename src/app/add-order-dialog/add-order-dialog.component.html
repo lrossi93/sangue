@@ -1,0 +1,163 @@
+<h2 mat-dialog-title>New order creation</h2>
+<!--mat-dialog-content-->
+    <!--mat-form-field>
+        <input
+        placeholder="Year"
+        type="number"
+        [formControl]="anno"
+        matInput>
+    </mat-form-field-->
+    
+    <!--mat-form-field *ngIf="loginService.getUserCode() == '220'">
+        <input
+        placeholder="Username"
+        type="text"
+        [formControl]="username"
+        matInput>
+    </mat-form-field-->
+
+    <!--autocomplete dropdown for USERS-->
+    <mat-form-field *ngIf="loginService.getUserCode()=='220'">
+        <input 
+        type="text"
+        placeholder="User"
+        matInput
+        [formControl]="userFormControl"
+        [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)'>
+            {{ option }}
+        </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+   
+    <mat-form-field>
+        <input 
+        matInput 
+        placeholder="Order date"
+        [matDatepicker]="pickerOrderDate" 
+        [value]="d_ordine.value"
+        [formControl]="d_ordine"
+        (dateChange)="onOrderDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="pickerOrderDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerOrderDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+        placeholder="Order number"
+        type="number"
+        [formControl]="n_ordine"
+        matInput>
+    </mat-form-field>
+
+    <mat-checkbox 
+        labelPosition="before"
+        (click)="toggleUrgente()">
+        Urgente
+    </mat-checkbox>
+    
+    <mat-checkbox 
+        labelPosition="before"
+        (click)="toggleExtra()">
+        Extra
+    </mat-checkbox>
+    
+    <!--sangueaslno only-->
+    <mat-checkbox *ngIf="loginService.getUserCode() == '220'"
+        labelPosition="before"
+        (click)="toggleValidato()">
+        Validated
+    </mat-checkbox>
+    
+    <!--sangueaslno only-->
+    <mat-form-field *ngIf="loginService.getUserCode() == '220' && b_validato.value">
+        <input 
+        matInput 
+        placeholder="Validation date"
+        [matDatepicker]="picker" 
+        [value]="d_validato.value"
+        [formControl]="d_validato"
+        (dateChange)="onValidationDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    
+    <mat-form-field>
+        <input 
+        matInput
+        type="text"
+        placeholder="Notes"
+        [formControl]="note">
+    </mat-form-field>
+    <hr>
+    <h2 mat-dialog-title *ngIf="orderRowFormControls.length > 0">OrderRows</h2>
+    <div *ngFor="let orderRow of orderRowFormControls">
+        <h3 mat-card-title align="center"> Row {{ orderRow.id }} </h3>
+        <!--mat-form-field
+            style="margin: 20px">
+            <input
+            placeholder="Product ID"
+            type="number"
+            [formControl]="orderRow.id_prd"
+            matInput>
+        </mat-form-field-->
+
+        <!--autocomplete dropdown for PRODUCTS-->
+        <mat-form-field>
+            <input 
+            type="text"
+            placeholder="Product"
+            matInput
+            [formControl]="orderRow.productFormControl"
+            [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of orderRow.filteredProducts | async" [value]="option" (onSelectionChange)='onProductSelected($event)'>
+                {{ option }}
+            </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field style="margin: 20px">
+            <input
+            placeholder="Quantity"
+            type="number"
+            [formControl]="orderRow.qta"
+            matInput>
+        </mat-form-field>
+
+        <!--sangueaslno only-->
+        <mat-form-field *ngIf="loginService.getUserCode() == '220'"    
+            style="margin: 20px">
+            <input
+            placeholder="Validated quantity"
+            type="number"
+            [formControl]="orderRow.qta_validata"
+            matInput>
+        </mat-form-field>
+
+        <!--sangueaslno only-->
+        <mat-checkbox *ngIf="loginService.getUserCode() == '220'"
+            labelPosition="before"
+            (click)="toggleQtaValidata(orderRow.id)">
+            Validated
+        </mat-checkbox>
+
+        <mat-form-field style="margin: 20px">
+            <input
+            placeholder="Notes"
+            type="text"
+            [formControl]="orderRow.note"
+            matInput>
+        </mat-form-field>
+        
+        <br>
+        <button mat-raised-button color="warn" style="width: 100%" (click)="deleteRow(orderRow.id)">Delete row</button>
+        <hr>
+    </div>
+<!--/mat-dialog-content-->
+<div mat-dialog-actions align="center">
+    <button mat-raised-button color="accent" (click)="addRow()">Add row</button>
+    <button mat-raised-button color="primary" (click)="onSubmit($event)">Submit</button>
+    <button mat-raised-button color="secondary" mat-dialog-close="true">Cancel</button>
+</div>

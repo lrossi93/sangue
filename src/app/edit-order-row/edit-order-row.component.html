@@ -1,0 +1,58 @@
+<h3 mat-dialog-title>Add/create order row</h3>
+
+<div mat-dialog-content>
+	<p>
+		<mat-form-field>
+			<input
+			placeholder="Username"
+			[formControl]="username"
+			matInput>
+		</mat-form-field>
+	</p>
+    <p>
+		<mat-form-field>
+			<input
+			placeholder="Numero riga"
+			[formControl]="n_riga"
+			matInput>
+		</mat-form-field>
+	</p>
+    <p>
+		<mat-form-field>
+			<input
+			placeholder="ID Prodotto"
+			[formControl]="id_prd"
+			matInput>
+		</mat-form-field>
+	</p>
+    <p>
+		<mat-form-field>
+			<input
+			placeholder="Quantità"
+            type="number"
+			[formControl]="qta"
+			matInput>
+		</mat-form-field>
+	</p>
+    <p>
+		<mat-form-field>
+			<input
+			placeholder="Quantità validata"
+			[formControl]="qta_validata"
+			matInput>
+		</mat-form-field>
+	</p>
+    <p>
+		<mat-form-field>
+			<input
+            type="textarea"
+			placeholder="Note"
+			[formControl]="note"
+			matInput>
+		</mat-form-field>
+	</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button (click)="onSubmit()">Submit</button>
+    <button mat-raised-button matDialogClose="true" color="primary">Cancel</button>
+</div>

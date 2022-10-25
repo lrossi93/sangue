@@ -67,6 +67,9 @@ export class AddProductComponent{
 
   //date: full value of the date Y-M-D in string format
   formatDate(date: string): string {
+    if(date == "")
+      return "";
+    
     let formattedDate!: string;
     let splittedDate = date.split("/", 3);
     
