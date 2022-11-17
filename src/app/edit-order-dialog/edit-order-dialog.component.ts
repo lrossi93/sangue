@@ -69,13 +69,13 @@ export class EditOrderDialogComponent implements OnInit {
   getOrderRowById(id: string): OrderRow | undefined {
     for(let i = 0; i < this.orderRows.length; ++i){
       if(id == this.orderRows[i].id){
+        console.log(this.orderRows[i]);
         return this.orderRows[i];
       }
     }
     return undefined;
   }
 
-  //OK
   openAreYouSureOrderRowDialog(id: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
@@ -117,6 +117,12 @@ export class EditOrderDialogComponent implements OnInit {
       }
     }
     else {
+      console.log("orderRowID: " + id);
+      console.log(this.data.order.username);
+      console.log(this.getOrderRowById(id));
+      let editedOrderRow = this.getOrderRowById(id);
+      editedOrderRow!.username = this.data.order.username;   
+   
       dialogConfig.data = {
         orderRow: this.getOrderRowById(id) 
       }

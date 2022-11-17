@@ -1,5 +1,5 @@
 <div *ngIf="loginService.getProfile() == '200'">
-	<h1>Pharmaceutical registry</h1>
+	<h1>{{ 'Pharmaceutical registry' | translate }}</h1>
 	<button 
 		mat-button
 		mat-raised-button 
@@ -7,7 +7,7 @@
 		(click)="openAddProductDialog()"
 		style="width: 100%; height: 100%;"
 		>
-			Add product
+			{{ 'Add product' | translate }}
 	</button>
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"

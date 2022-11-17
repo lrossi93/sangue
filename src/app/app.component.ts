@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { LoginService } from './login.service';
 
 @Component({
@@ -6,11 +7,23 @@ import { LoginService } from './login.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'sangue';
   
-  constructor(public loginService: LoginService){ }
+  constructor(
+    public loginService: LoginService,
+    public translate: TranslateService
+  ){
+    translate.addLangs(['en', 'it']);
+    translate.setDefaultLang('it');
+  }
 
+  /*
+  
+    LOGIN SERVICE FUNCTIONS
+  
+  */
   check(){
     this.loginService.check();
   }
@@ -21,5 +34,14 @@ export class AppComponent {
 
   logout(){
     this.loginService.logout();
+  }
+
+  /*
+  
+    LANGUAGE FUNCTIONS
+
+  */
+  switchLanguage(lang: string) {
+    this.translate.use(lang)
   }
 }

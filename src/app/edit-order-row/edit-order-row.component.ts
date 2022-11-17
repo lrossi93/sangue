@@ -32,13 +32,14 @@ export class EditOrderRowComponent implements OnInit {
   ) {
     this.orderRow = data.orderRow;
     //if(this.loginService.getUserCode() == "220")
-      this.username = _builder.control(data.orderRow.username, Validators.required);
+    console.log("username: " + data.orderRow.username);
     
+    this.username = _builder.control(data.orderRow.username, Validators.required);
     this.n_riga = _builder.control(data.orderRow.n_riga);
     this.id_prd = _builder.control(data.orderRow.id_prd, Validators.required);
     this.qta = _builder.control(data.orderRow.qta, Validators.required);
     //if(this.loginService.getUserCode() == "210")
-      this.qta_validata = _builder.control(data.orderRow.qta_validata, Validators.required);
+    this.qta_validata = _builder.control(data.orderRow.qta_validata, Validators.required);
     this.note = _builder.control(data.orderRow.note);
    }
 

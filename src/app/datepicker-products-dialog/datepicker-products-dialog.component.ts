@@ -16,7 +16,9 @@ export class DatepickerProductsDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: {
       date: string, 
       isValidoDa: boolean, 
-      isValidoA: boolean
+      isValidoA: boolean,
+      isOrderDate: boolean,
+      isValidationDate: boolean,
     },
     private dialogRef: MatDialogRef<DatepickerProductsDialogComponent>
   ) {
@@ -53,13 +55,16 @@ export class DatepickerProductsDialogComponent {
 
   onSubmit() {
     this.isSubmitted = true;
-    console.log(this.date.value);
+    console.log("date: " + this.date.value);
+    console.log("formatted date: " + this.formattedDate);
     
     this.dialogRef.close(
       {
         date: this.formattedDate,
         isValidoDa: this.data.isValidoDa,
         isValidoA: this.data.isValidoA,
+        isOrderDate: this.data.isOrderDate,
+        isValidationDate: this.data.isValidationDate,
         isSubmitted: this.isSubmitted
       }
     )

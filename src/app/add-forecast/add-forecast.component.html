@@ -1,10 +1,10 @@
-<h3 mat-dialog-title>Add a new forecast</h3>
+<h3 mat-dialog-title>{{ 'Add a new forecast' | translate }}</h3>
 
 <div mat-dialog-content>
 	<p>
 		<mat-form-field>
 			<input
-			placeholder="Anno"
+			placeholder="{{ 'Year' | translate }}"
 			[formControl]="anno"
 			matInput>
 		</mat-form-field>
@@ -14,7 +14,7 @@
 		<mat-form-field>
 			<input 
 			type="text"
-			placeholder="Utente"
+			placeholder="{{ 'User' | translate }}"
 			matInput
 			[formControl]="userFormControl"
 			[matAutocomplete]="auto">
@@ -31,7 +31,7 @@
 		<mat-form-field>
 			<input 
 			type="text"
-			placeholder="Prodotto"
+			placeholder="{{ 'Product' | translate }}"
 			matInput
 			[formControl]="productFormControl"
 			[matAutocomplete]="auto">
@@ -47,7 +47,7 @@
 		<mat-form-field>
 			<input
 			type="number"
-			placeholder="Quantità"
+			placeholder="{{ 'Quantity' | translate }}"
 			[formControl]="qta"
 			matInput>
 		</mat-form-field>
@@ -55,7 +55,7 @@
 	<p>
 		<mat-form-field>
 			<textarea
-			placeholder="Note"
+			placeholder="{{ 'Notes' | translate }}"
 			[formControl]="note"
 			matInput></textarea>
 		</mat-form-field>
@@ -64,7 +64,7 @@
 		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
 			<input
 			type="number"
-			placeholder="Quantità approvata"
+			placeholder="{{ 'Approved quantity' | translate }}"
 			[formControl]="qta_approvata"
 			matInput>
 		</mat-form-field>
@@ -73,7 +73,7 @@
 		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
 			<input
 			type="number"
-			placeholder="Costo unitario"
+			placeholder="{{ 'Cost per unit' | translate }}"
 			[formControl]="costo_unitario"
 			matInput>
 		</mat-form-field>
@@ -81,6 +81,6 @@
 </div>
 
 <div mat-form-actions>
-	<button mat-raised-button (click)="onSubmit()">Submit</button>
-	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
+	<button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
+	<button mat-raised-button mat-dialog-close color="primary">{{ 'Cancel' | translate }}</button>
 </div>

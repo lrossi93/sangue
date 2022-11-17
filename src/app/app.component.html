@@ -4,48 +4,48 @@
 </header>
 
 <nav>
-	<button mat-button [matMenuTriggerFor]="menu">Menu</button>
+	<button mat-button [matMenuTriggerFor]="menu"> {{ 'Menu' | translate }}</button>
 	<mat-menu #menu="matMenu">
 		<button 
 		mat-menu-item
 		[routerLink]="['']">
-			Home
+			{{ 'Home' | translate }}
 		</button>
 		<button 
 		mat-menu-item 
 		*ngIf="!loginService.logged"
 		[routerLink]="['/login']">
-			Login
+			{{ 'Login' | translate }}
 		</button>
 		<button 
 		mat-menu-item 
 		*ngIf="loginService.logged" 
 		[routerLink]="['/welcome']">
-			Welcome
+			{{ 'Welcome' | translate }}
 		</button>
 		<button
 		mat-menu-item 
 		*ngIf="loginService.logged && loginService.getProfile() == '200'"
 		[routerLink]="['/pharma-registry']">
-			Registry
+			{{ 'Registry' | translate }}
 		</button>
 		<button 
 		mat-menu-item *ngIf="loginService.logged && loginService.getProfile() == '210' || loginService.getProfile() == '220'"
 		[routerLink]="['/forecast']">
-			Forecast
+			{{ 'Forecast' | translate }}
 		</button>
 		<button 
 		mat-menu-item
-		*ngIf="loginService.logged"
+		*ngIf="loginService.logged && loginService.getProfile() == '210' || loginService.getProfile() == '220'"
 		[routerLink]="['/orders']">
-			Orders
+			{{ 'Orders' | translate }}
 		</button>
 		<button 
 		mat-menu-item 
 		*ngIf="loginService.logged" 
 		(click)="loginService.logout()"
 		[routerLink]="['']">
-			Logout
+			{{ 'Logout' | translate }}
 		</button>
 	</mat-menu>	
 </nav>
@@ -56,10 +56,10 @@
 
 <footer>
 	<p *ngIf="loginService.logged">
-		Logged as <b>{{ loginService.getUserType() }}</b>.
+		{{ 'Logged as' | translate }} <b>{{ loginService.getUserType() }}</b>.
 	</p>
 	<p *ngIf="!loginService.logged">
-		You're not logged! <a [routerLink]="['/login']">Log in</a>
+		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
 	</p>	
 </footer>
 

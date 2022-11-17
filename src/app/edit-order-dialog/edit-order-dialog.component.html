@@ -1,20 +1,20 @@
-<h2 style="text-align: center;">Order {{ data.order.id }} placed by user {{ data.order.username }}</h2>
+<h2 style="text-align: center;">{{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ data.order.username }}</h2>
 <mat-dialog-content class="typography">
     <mat-card *ngFor="let orderRow of orderRows" style="margin-bottom: 20px;">
         <mat-card-title>ID: {{ orderRow.id }}</mat-card-title>
-        <h5><b>Product ID:</b> {{ orderRow.id_prd }}</h5>
-        <h5><b>Row number:</b> {{ orderRow.n_riga }}</h5>
-        <h5><b>Quantity:</b> {{ orderRow.qta }}</h5>
-        <h5><b>Approved quantity:</b> {{ orderRow.qta_validata }}</h5>
-        <h5><b>Notes:</b> {{ orderRow.note }}</h5>
+        <h5><b>{{ 'Product ID' | translate }}:</b> {{ orderRow.id_prd }}</h5>
+        <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
+        <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
+        <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
+        <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
         <div mat-dialog-actions align="center">
-            <button mat-raised-button color="primary" (click)="openEditOrderRowDialog(orderRow.id, false)">Edit</button>
-            <button mat-raised-button color="warn" (click)="openAreYouSureOrderRowDialog(orderRow.id)">Delete</button>
+            <button mat-raised-button color="primary" (click)="openEditOrderRowDialog(orderRow.id, false)">{{ 'Edit' | translate }}</button>
+            <button mat-raised-button color="warn" (click)="openAreYouSureOrderRowDialog(orderRow.id)">{{ 'Delete' | translate }}</button>
         </div>
     </mat-card> 
 </mat-dialog-content>
 <div mat-dialog-actions align="center">
-    <button mat-raised-button (click)="openEditOrderRowDialog('', true)">Add line</button>
-    <button mat-raised-button color="warn" (click)="openAreYouSureOrderDialog(data.order.id)">Delete order</button>
-    <button mat-raised-button color="primary" matDialogClose="true">Cancel</button>
+    <button mat-raised-button (click)="openEditOrderRowDialog('', true)">{{ 'Add row'  | translate }}</button>
+    <button mat-raised-button color="warn" (click)="openAreYouSureOrderDialog(data.order.id)">{{ 'Delete order' | translate }}</button>
+    <button mat-raised-button color="primary" matDialogClose="true">{{ 'Cancel' | translate }}</button>
 </div>

@@ -29,7 +29,7 @@ export class OrdersService {
   */
   listOrders(year: string): any {
     let path = this.url + '?request=listOrders&id_session=' + this.loginService.getSession() + '&year=' + year;
-    console.log(path);
+    //console.log(path);
     
     this.http.get<String[]>(
       path,
@@ -48,6 +48,17 @@ export class OrdersService {
         return this.orders;
       }
     });
+  }
+
+  listOrdersPromise(year: string): Observable<any> {
+    let path = this.url + '?request=listOrders&id_session=' + this.loginService.getSession() + '&year=' + year;
+    //console.log(path);
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    )
   }
 
   setOrder(
@@ -186,26 +197,31 @@ export class OrdersService {
   */
   listOrderRows(id_order: string): any {
     let path = this.url + '?request=listOrderRows&id_session=' + this.loginService.getSession() + '&id_order=' + id_order;
-    console.log(path);
-    
     this.http.get<String[]>(
       path,
       {
         responseType: "json"
       }
     ).subscribe(res => {
-      //console.log(res);
       if(res[0] == "KO"){
         alert("Error retrieving orders!");
         return null;
       }
-      else{
-        //console.log(res[1]);   
+      else{   
         this.orderRows = res[1];
-        //console.log(this.orderRows);
         return this.orderRows;
       }
     });
+  }
+
+  listOrderRowsPromise(id_order: string): Observable<any> {
+    let path = this.url + '?request=listOrderRows&id_session=' + this.loginService.getSession() + '&id_order=' + id_order;
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    )
   }
 
   setOrderRow(
@@ -277,7 +293,7 @@ export class OrdersService {
       return this.http.post<String[]>(
         this.url, 
         {
-          request: 'setOrder',
+          request: 'setOrderRow',
           id_session: this.loginService.getSession(),
           id: orderRow.id,
           id_ordine: orderRow.id_ordine,
@@ -295,7 +311,7 @@ export class OrdersService {
       return this.http.post<String[]>(
         this.url, 
         {
-          request: 'setOrder',
+          request: 'setOrderRow',
           id_session: this.loginService.getSession(),
           id: '-1',
           id_ordine: orderRow.id_ordine,

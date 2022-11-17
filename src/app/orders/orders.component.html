@@ -1,8 +1,8 @@
-<div *ngIf="loginService.logged">
-    <h1>Orders</h1>
-    <button mat-raised-button color="primary" style="width: 100%;" (click)="openAddOrderDialog()">Nuovo ordine</button>
+<div *ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'">
+    <h1>{{ 'Orders' | translate }}</h1>
+    <button mat-raised-button color="primary" style="width: 100%;" (click)="openAddOrderDialog()">{{ 'Add order' | translate }}</button>
 	<input type="text" placeholder="Anno di riferimento" [(ngModel)]="year" style="width: 45%;">
-	<button (click)="listOrders(year)" style="width: 50%;">Elenco ordini</button>
+	<button (click)="listOrders(year)" style="width: 50%;">{{ 'List orders' | translate }}</button>
 	
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"

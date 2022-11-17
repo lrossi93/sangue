@@ -10,6 +10,8 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ButtonDeleteProductComponent } from '../button-delete-product/button-delete-product.component';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
+import { env } from 'process';
+import { pharmaRegistryGridConfig } from 'src/environments/grid-configs';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -79,82 +81,7 @@ export class PharmaRegistryComponent implements OnInit {
   { 
 
     //columnDef
-    this.pharmaRegistryGridConfig = [
-      { 
-        headerName: 'ID', 
-        field: 'id',
-        editable: false
-      },
-      { 
-        headerName: 'Code', 
-        field: 'cod', 
-        editable: true
-      },
-      { 
-        headerName: 'Description', 
-        field: 'des', 
-        editable: true
-      },
-      { 
-        headerName: 'Unità', 
-        field: 'unita', 
-        editable: true
-      },
-      { 
-        headerName: 'Confezionamento', 
-        field: 'confezionamento', 
-        editable: true
-      },
-      { 
-        headerName: 'Multiplo Confezionamento', 
-        field: 'multiplo_confezionamento', 
-        editable: true
-      },
-      { 
-        headerName: 'Multiplo Imballo', 
-        field: 'multiplo_imballo', 
-        editable: true
-      },
-      { 
-        headerName: 'Attivo', 
-        field: 'attivo', 
-        editable: false,
-        cellRenderer: CellCheckboxComponent
-      },
-      { 
-        headerName: 'Extra', 
-        field: 'extra', 
-        editable: false,
-        cellRenderer: CellCheckboxComponent
-      },
-      { 
-        headerName: 'Ordine minimo', 
-        field: 'min_ord', 
-        editable: true
-      },
-      { 
-        headerName: 'Valido da', 
-        field: 'valido_da', 
-        editable: false,
-        cellRenderer: (params: { value: string | number | Date; }) => {
-          return new Date(params.value).toLocaleDateString('it-IT');
-        }
-      },
-      { 
-        headerName: 'Valido fino a', 
-        field: 'valido_a', 
-        editable: false,
-        cellRenderer: (params: { value: string | number | Date; }) => {
-          //console.log("before conversion: " + params.value);
-          //console.log("after conversion: " + new Date(params.value).toLocaleDateString('it-IT'));         
-          return new Date(params.value).toLocaleDateString('it-IT');
-        }
-      },
-      { 
-        headerName: 'Action', 
-        cellRenderer: ButtonDeleteProductComponent
-      }
-    ];
+    this.pharmaRegistryGridConfig = pharmaRegistryGridConfig
 
     //gridOptions
     this.gridOptions = {

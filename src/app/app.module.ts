@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,13 +42,22 @@ import { EditOrderComponent } from './edit-order/edit-order.component';
 import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component';
 import { DatepickerProductsDialogComponent } from './datepicker-products-dialog/datepicker-products-dialog.component'
 import { CommonModule } from '@angular/common';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { AreYouSureOrderRowComponent } from './are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from './are-you-sure-order/are-you-sure-order.component';
 import { AddOrderRowComponent } from './add-order-row/add-order-row.component';
 import { EditOrderRowComponent } from './edit-order-row/edit-order-row.component';
 import { AddOrderDialogComponent } from './add-order-dialog/add-order-dialog.component';
+import { DropdownUsersOrdersComponentComponent } from './dropdown-users-orders-component/dropdown-users-orders-component.component';
+import { DropdownUsersOrdersComponent } from './dropdown-users-orders/dropdown-users-orders.component';
 
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { OrdersExtraCheckboxComponent } from './orders-extra-checkbox/orders-extra-checkbox.component';
+import { OrdersUrgentCheckboxComponent } from './orders-urgent-checkbox/orders-urgent-checkbox.component';
+import { OrdersValidatedCheckboxComponent } from './orders-validated-checkbox/orders-validated-checkbox.component';
+import { PharmaRegistryActiveCheckboxComponent } from './pharma-registry-active-checkbox/pharma-registry-active-checkbox.component';
+import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +90,13 @@ import { AddOrderDialogComponent } from './add-order-dialog/add-order-dialog.com
     AddOrderRowComponent,
     EditOrderRowComponent,
     AddOrderDialogComponent,
+    DropdownUsersOrdersComponentComponent,
+    DropdownUsersOrdersComponent,
+    OrdersExtraCheckboxComponent,
+    OrdersUrgentCheckboxComponent,
+    OrdersValidatedCheckboxComponent,
+    PharmaRegistryActiveCheckboxComponent,
+    PharmaRegistryExtraCheckboxComponent,
   ],
   providers: [
     AddProductComponent,
@@ -113,8 +129,20 @@ import { AddOrderDialogComponent } from './add-order-dialog/add-order-dialog.com
     MatNativeDateModule,
     MatDatepickerModule,
     CommonModule,
-    MatCardModule
+    MatCardModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpTranslateLoader,
+        deps: [HttpClient]
+      }
+    })
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
+
+export function httpTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

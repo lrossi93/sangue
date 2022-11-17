@@ -1,26 +1,28 @@
-<h3 mat-dialog-title>Add/create order row</h3>
+<h3 mat-dialog-title>{{ 'Add/create order row' | translate }}</h3>
 
 <div mat-dialog-content>
-	<p>
+	<!--p>
 		<mat-form-field>
 			<input
 			placeholder="Username"
 			[formControl]="username"
 			matInput>
 		</mat-form-field>
-	</p>
+	</p-->
     <p>
 		<mat-form-field>
 			<input
-			placeholder="Numero riga"
+			placeholder="{{ 'Row number' | translate }}"
 			[formControl]="n_riga"
 			matInput>
 		</mat-form-field>
 	</p>
+	
+	<!--TODO: this will be a dropdown-->
     <p>
 		<mat-form-field>
 			<input
-			placeholder="ID Prodotto"
+			placeholder="{{ 'Product ID' | translate }}"
 			[formControl]="id_prd"
 			matInput>
 		</mat-form-field>
@@ -28,7 +30,7 @@
     <p>
 		<mat-form-field>
 			<input
-			placeholder="Quantità"
+			placeholder="{{ 'Quantity' | translate }}"
             type="number"
 			[formControl]="qta"
 			matInput>
@@ -37,7 +39,7 @@
     <p>
 		<mat-form-field>
 			<input
-			placeholder="Quantità validata"
+			placeholder="{{ 'Validated quantity' | translate }}"
 			[formControl]="qta_validata"
 			matInput>
 		</mat-form-field>
@@ -46,13 +48,13 @@
 		<mat-form-field>
 			<input
             type="textarea"
-			placeholder="Note"
+			placeholder="{{ 'Notes' | translate }}"
 			[formControl]="note"
 			matInput>
 		</mat-form-field>
 	</p>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button (click)="onSubmit()">Submit</button>
-    <button mat-raised-button matDialogClose="true" color="primary">Cancel</button>
+    <button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
+    <button mat-raised-button matDialogClose="true" color="primary">{{ 'Cancel' | translate }}</button>
 </div>

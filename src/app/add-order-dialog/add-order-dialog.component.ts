@@ -5,7 +5,6 @@ import { map, Observable, startWith } from 'rxjs';
 import { Order, OrderRow, Product, User } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
-import { PharmaRegistryService } from '../pharma-registry.service';
 
 //object of orderRows formControls
 interface OrderRowFormControls {
@@ -94,12 +93,13 @@ export class AddOrderDialogComponent implements OnInit {
     this.b_extra = _builder.control(false);
     this.b_validato = _builder.control(false);
     this.d_validato = _builder.control("");
-    this.note = _builder.control("");
+    this.note = _builder.control("");    
     console.log(this.data.users);
     console.log(this.data.products);
 
     if(loginService.getUserCode() == "210"){
-      //this.userFormControl = _builder.control(loginService.getUsername(), Validators.required);
+      this.userFormControl = _builder.control(loginService.getUsername(), Validators.required);
+      console.log("constructor: username: " + this.userFormControl.value);
     }
     //else, if sangueaslno, pick list of users
     else if(loginService.getUserCode() == "220"){
@@ -121,13 +121,6 @@ export class AddOrderDialogComponent implements OnInit {
 
     //filter input for products
     this.getProductNames();
-    /*
-    //the next lines must not be here! they must be populated when adding a new row
-    this.filteredProducts = this.productFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterProducts(value || ''))
-    );
-    */
   }
 
   pushOrderRow(newOrderRow: OrderRow){
@@ -144,7 +137,7 @@ export class AddOrderDialogComponent implements OnInit {
       let newOrderRow: OrderRow = {
         id: "",
         id_ordine: this.orderRowFormControls[i].id_ordine.value,
-        id_prd: this.orderRowFormControls[i].id_prd.value,
+        id_prd: this.getProductIdFromDes(this.orderRowFormControls[i].productFormControl.value),
         username: this.orderRowFormControls[i].username.value,
         n_riga: this.orderRowFormControls[i].n_riga.value,
         qta: this.orderRowFormControls[i].qta.value,
@@ -205,13 +198,15 @@ export class AddOrderDialogComponent implements OnInit {
       qta: new UntypedFormControl(0, Validators.required),
       qta_validata: new UntypedFormControl(0),
       note: new UntypedFormControl(""),
-      productFormControl: new UntypedFormControl("", Validators.required),
+      productFormControl: new UntypedFormControl(""),
       filteredProducts: new Observable<string[]> //che cos'è?
     };
     //assign formControl to new row
     newOrderRowFormControls.filteredProducts = newOrderRowFormControls.productFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterProducts(value || '')));
+      map(value => 
+        this._filterProducts(value || '')
+      ));
     this.orderRowFormControls.push(newOrderRowFormControls);
   }
 
@@ -226,19 +221,32 @@ export class AddOrderDialogComponent implements OnInit {
 
   save() {
     let isAdding = true;
-    console.log(this.newOrder);
-    console.log(this.newOrderRows);
-    
-    /*
-    this.ordersService.setOrderPromise(this.newOrder, isAdding).subscribe((data: any) => {
-      console.log(data); //data = ["OK", id_ordine]
-      //TODO: controllare che ci sia tutto negli orderRows seguenti
-      for(let i = 0; i < this.newOrderRows.length; ++i) {
-        this.newOrderRows[i].id_ordine = data[1];
-        this.ordersService.setOrderRow(this.newOrderRows[i], isAdding);
+    //console.log(this.newOrder);
+    //console.log(this.newOrderRows);
+    this.ordersService.setOrderPromise(this.newOrder, isAdding).subscribe(res => {
+      if(res[0] == "KO"){
+        alert("Error setting order!");
+      }
+      else {
+        console.log(res);
+        for(let i = 0; i < this.newOrderRows.length; ++i) {
+          this.newOrderRows[i].id_ordine = res[1];
+          this.ordersService.setOrderRowPromise(this.newOrderRows[i], isAdding).subscribe(res2 => {
+            if(res2[0] == "KO"){
+              alert("Error setting orderRow!");
+            }
+            else {
+              console.log("OrderRow with id " + res2[1] + " successfully set!");
+            }
+          });
+          let isSubmitted = true;
+          this.dialogRef.close({
+            newOrder: this.newOrder,
+            isSubmitted: isSubmitted
+          });
+        }        
       }
     });
-    */
   }
 
   //checkbox toggles
@@ -272,15 +280,11 @@ export class AddOrderDialogComponent implements OnInit {
 
   //if needed...
   onOrderDateChange(event: any) {
-    console.log("onOrderDateChange()");
-    console.log(event);
     console.log(this.d_ordine.value);
   }
 
   //if needed...
   onValidationDateChange(event: any) {
-    console.log("onValidationDateChange()");
-    console.log(event);
     console.log(this.d_validato.value);
   }
 
@@ -346,7 +350,6 @@ export class AddOrderDialogComponent implements OnInit {
 
   onUserSelected(event: any) {
     console.log(event);
-    
     if(event.source._selected){
       this.username = this.getUserId(event);
     }
@@ -358,15 +361,21 @@ export class AddOrderDialogComponent implements OnInit {
 
   //BEGIN functions for autocomplete - PRODUCTS
   private _filterProducts(value: string): string[]{
-    console.log("filterProducts value: " + value);
-    
-    const filterValue = value.toLowerCase();
-    return this.productNames.filter((option: string) => option.toLowerCase().includes(filterValue));
+    const filterValue = value.toLowerCase();  
+    return this.productNames.filter((option?: string) => option?.toLowerCase().includes(filterValue));
   }
 
   getProductId(event: any){
     for(let i = 0; i < this.products.length; ++i){
       if(this.products[i].des == event.source.value){
+        return this.products[i].id;
+      }
+    }
+  }
+
+  getProductIdFromDes(des: string) {
+    for(let i = 0; i < this.products.length; ++i){
+      if(this.products[i].des == des){
         return this.products[i].id;
       }
     }
@@ -378,9 +387,18 @@ export class AddOrderDialogComponent implements OnInit {
     }
   }
 
-  onProductSelected(event: any) {
+  onProductSelected(event: any, index: number) {
+    console.log(event.source.value);
+    console.log(this.orderRowFormControls[index].filteredProducts);
+    
+
     if(event.source._selected){
-      this.id_prd = this.getProductId(event);
+      for(let i = 0; i < this.orderRowFormControls.length; ++i) {
+        if(this.orderRowFormControls[i].id == index) {
+          this.orderRowFormControls[i].productFormControl = this.getProductId(event);
+          return;
+        }
+      }
     }
   }
   //END functions for autocomplete - PRODUCTS

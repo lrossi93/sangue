@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community'
+import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
   checked: boolean = false;
 
   constructor(
-    private pharmaRegistryService: PharmaRegistryService
+    //private pharmaRegistryService: PharmaRegistryService,
+    //private ordersService: OrdersService,
   ) {
 
   }
@@ -24,7 +26,7 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
     this.data = params.data;
     this.currentValue = params.value;
     this.headerName = params.colDef?.headerName;
-    
+    //console.log(params);
     if(this.currentValue == 1)
       this.checked = true;
   }
@@ -33,6 +35,10 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
     return false;
   }
 
+  toggleCheckbox(event: any): void {
+    console.log("To be implemented!");
+  }
+/*
   toggleCheckbox(event: any) {
     console.log(event);
     this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
@@ -74,28 +80,56 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
           this.data.valido_a,
           this.data.isAdding,
         );
-        console.log("Extraaaaaaaaaa");
         break;
 
-      case "Urgente":
-        //#TODO: set the value of the field b_urgente in an Order
-        console.log("Urgente");
+      case "Ordine urgente":
+        let orderUrgent = {
+          id: this.data.id,
+          anno: this.data.anno,
+          username: this.data.username,
+          d_ordine: this.data.d_ordine,
+          n_ordine: this.data.n_ordine,
+          b_urgente: this.currentValue,
+          b_extra: this.data.b_extra, 
+          b_validato: this.data.b_validato,
+          d_validato: this.data.d_validato,
+          note: this.data.note
+        }
+        this.ordersService.setOrder(orderUrgent, false);
         break;
       
-      //TODO: CAREFUL!!! this is the b_extra field of an Order!!!
-      //TODO: CAREFUL!!! this is the b_extra field of an Order!!!
-      //TODO: CAREFUL!!! this is the b_extra field of an Order!!!
-      case "Extra":
-        //#TODO: set the value of the field b_urgente in an Order
-        //if product, do something
-        //if order, do something else
-        console.log("Extra");
+      case "Ordine extra":
+        let orderExtra = {
+          id: this.data.id,
+          anno: this.data.anno,
+          username: this.data.username,
+          d_ordine: this.data.d_ordine,
+          n_ordine: this.data.n_ordine,
+          b_urgente: this.data.b_urgente,
+          b_extra: this.currentValue, 
+          b_validato: this.data.b_validato,
+          d_validato: this.data.d_validato,
+          note: this.data.note
+        }
+        this.ordersService.setOrder(orderExtra, false);
         break;
 
-      case "Validato":
-        //#TODO: set the value of the field b_validato in an Order
-        console.log("Validato");
+      case "Ordine validato":
+        let orderValidated = {
+          id: this.data.id,
+          anno: this.data.anno,
+          username: this.data.username,
+          d_ordine: this.data.d_ordine,
+          n_ordine: this.data.n_ordine,
+          b_urgente: this.data.b_urgente,
+          b_extra: this.data.b_extra, 
+          b_validato: this.currentValue,
+          d_validato: this.data.d_validato,
+          note: this.data.note
+        }
+        this.ordersService.setOrder(orderValidated, false);
         break;
     }
   }
+  */
 }

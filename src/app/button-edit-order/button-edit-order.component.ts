@@ -31,13 +31,10 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   orderRows: any = [];
   dialogRef: any;
   dialog: MatDialog;
-  ordersService!: OrdersService;
 
   constructor(
     dialog: MatDialog,
-    ordersService: OrdersService,
-    private http: HttpClient,
-    private loginService: LoginService
+    private ordersService: OrdersService,
   ) { 
     this.dialog = dialog;
     this.ordersService = ordersService; 
@@ -52,35 +49,26 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     return false;
   }
 
-  ngOnInit(): void {
-    //this.assignOrderData();
-  }
+  ngOnInit(): void { }
 
-  //usarla sempre perchè asincrona...
   listOrderRows(id: string) {
-    let path = this.url + '?request=listOrderRows&id_session=' + this.loginService.getSession() + '&id_order=' + id;
-    console.log(path);
-    
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
+    this.ordersService.listOrderRowsPromise(id).subscribe(
+      res => {
+        if(res[0] == "KO") {
+          alert("Error retrieving OrderRows!")
+        }
+        else {
+          this.orderRows = res[1];
+          console.log(this.orderRows);
+        }
       }
-    ).subscribe(res => {
-      if(res[0] == "KO"){
-        alert("Error retrieving orders!");
-        return null;
-      }
-      else{ 
-        this.orderRows = res[1];
-        return this.orderRows;
-      }
-    });
+    );
   }
 
   openEditOrderDialog(event: any) {  
     this.assignOrderData();
-        
+    console.log(this.orderRows);
+    
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
