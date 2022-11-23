@@ -11,7 +11,6 @@ import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/or
 import { OrdersValidatedCheckboxComponent } from "src/app/orders-validated-checkbox/orders-validated-checkbox.component";
 import { PharmaRegistryActiveCheckboxComponent } from "src/app/pharma-registry-active-checkbox/pharma-registry-active-checkbox.component";
 import { PharmaRegistryExtraCheckboxComponent } from "src/app/pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component";
-import { environment } from "./environment";
 
 /**
  * 
@@ -19,6 +18,8 @@ import { environment } from "./environment";
  * [columnDefs] attribute of the <ag-grid-angular> tag
  * 
  */
+
+var localeLang = 'it'//navigator.language.split("-", 2)[0]
 
 export const pharmaRegistryGridHeaders = {
   it: {
@@ -56,59 +57,59 @@ export const pharmaRegistryGridHeaders = {
 //AgGrid config for PharmaRegistryComponent and userlevel 200
 export const pharmaRegistryGridConfig = [
   { 
-    headerName: pharmaRegistryGridHeaders.it.ID, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.ID : pharmaRegistryGridHeaders.en.ID, 
     field: 'id',
     editable: false
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Code, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Code : pharmaRegistryGridHeaders.en.Code, 
     field: 'cod', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Description, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Description : pharmaRegistryGridHeaders.en.Description, 
     field: 'des', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Units, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Units : pharmaRegistryGridHeaders.en.Units, 
     field: 'unita', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Packaging, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Packaging : pharmaRegistryGridHeaders.en.Packaging, 
     field: 'confezionamento', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.MultiplePackaging, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.MultiplePackaging : pharmaRegistryGridHeaders.en.MultiplePackaging, 
     field: 'multiplo_confezionamento', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.MultiplePacking, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.MultiplePacking : pharmaRegistryGridHeaders.en.MultiplePacking, 
     field: 'multiplo_imballo', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Active, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Active : pharmaRegistryGridHeaders.en.Active, 
     field: 'attivo', 
     editable: false,
     cellRenderer: PharmaRegistryActiveCheckboxComponent
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Extra, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Extra : pharmaRegistryGridHeaders.en.Extra, 
     field: 'extra', 
     editable: false,
     cellRenderer: PharmaRegistryExtraCheckboxComponent
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.MinimumOrder, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.MinimumOrder : pharmaRegistryGridHeaders.en.MinimumOrder, 
     field: 'min_ord', 
     editable: true
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.ValidFrom, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.ValidFrom : pharmaRegistryGridHeaders.en.ValidFrom, 
     field: 'valido_da', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
@@ -116,7 +117,7 @@ export const pharmaRegistryGridConfig = [
     }
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.ValidThrough, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.ValidThrough : pharmaRegistryGridHeaders.en.ValidThrough, 
     field: 'valido_a', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {   
@@ -124,20 +125,45 @@ export const pharmaRegistryGridConfig = [
     }
   },
   { 
-    headerName: pharmaRegistryGridHeaders.it.Action, 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Action : pharmaRegistryGridHeaders.en.Action, 
     cellRenderer: ButtonDeleteProductComponent,
     autoHeight: true
   }
 ];
 
+export const forecastGridHeaders = {
+  it: {
+    ID: "ID",
+    Year: "Anno",
+    User: "Utente",
+    ProductName: "Nome prodotto",
+    Quantity: "Quantità",
+    Notes: "Note",
+    ApprovedQuantity: "Quantità approvata",
+    CostPerUnit: "Costo unitario",
+    Action: "Azione"
+  },
+  en: {
+    ID: "ID",
+    Year: "Year",
+    User: "User",
+    ProductName: "Product name",
+    Quantity: "Quantity",
+    Notes: "Notes",
+    ApprovedQuantity: "Approved quantity",
+    CostPerUnit: "Cost per unit",
+    Action: "Action"
+  }
+}
+
 //AgGrid config for ForecastComponent and userlevel 210
 export const gridConfigForecast210 = [
     { 
-      headerName: 'ID', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
       field: 'id'
     },
     { 
-      headerName: 'Year', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
       field: 'anno', 
       editable: true
     },
@@ -150,7 +176,7 @@ export const gridConfigForecast210 = [
     */
    //#TODO: questo qui sotto è necessario?
     {
-      headerName: 'Utente',
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User,
       field: 'username', //prende l'id dell'utente (forecast.username) e ritorna il nome utente (user.username) 
       cellRenderer: DropdownUsersForecastComponent,
       editable: false
@@ -163,32 +189,32 @@ export const gridConfigForecast210 = [
     },
     */
     { 
-      headerName: 'Product name', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'id_prd', 
       cellRenderer: DropdownProductsForecastComponent
     },
     { 
-      headerName: 'Quantity', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
       field: 'qta', 
       editable: true
     },
     { 
-      headerName: 'Notes', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
       field: 'note', 
       editable: true
     },
     { 
-      headerName: 'Quantità approvata', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
       field: 'qta_approvata', 
       editable: false
     },
     { 
-      headerName: 'Costo unitario (€)', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.CostPerUnit : forecastGridHeaders.en.CostPerUnit, 
       field: 'costo_unitario', 
       editable: false
     },
     { 
-      headerName: 'Action', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
       cellRenderer: ButtonDeleteForecastComponent,
       autoHeight: true
     }
@@ -197,11 +223,11 @@ export const gridConfigForecast210 = [
 //AgGrid config for ForecastComponent and userlevel 220
 export const gridConfigForecast220 = [
     { 
-      headerName: 'ID', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
       field: 'id'
     },
     { 
-      headerName: 'Year', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
       field: 'anno', 
       editable: false
     },
@@ -213,64 +239,93 @@ export const gridConfigForecast220 = [
     },
     */
     { 
-      headerName: 'Utente', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
       field: 'username',
       cellRenderer: DropdownUsersForecastComponent,
       editable: false
     },
     { 
-      headerName: 'Product name', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'id_prd', 
       cellRenderer: DropdownProductsForecastComponent,
       editable: false
     },
     { 
-      headerName: 'Quantity', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
       field: 'qta', 
       editable: false
     },
     { 
-      headerName: 'Notes', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
       field: 'note', 
       editable: false
     },
     { 
-      headerName: 'Quantità approvata', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
       field: 'qta_approvata', 
       editable: true
     },
     { 
-      headerName: 'Costo unitario (€)', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.CostPerUnit : forecastGridHeaders.en.CostPerUnit, 
       field: 'costo_unitario', 
       editable: true
     },
     { 
-      headerName: 'Action', 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
       cellRenderer: ButtonDeleteForecastComponent,
       autoHeight: true
     }
 ];
 
+export const orderGridHeaders = {
+  it: {
+    ID: "ID",
+    User: "Utente",
+    Year: "Anno",
+    OrderDate: "Data ordine",
+    OrderNumber: "Numero ordine",
+    Urgent: "Urgente",
+    Extra: "Extra",
+    Validated: "Validato",
+    ValidationDate: "Data validazione",
+    Notes: "Note",
+    EditOrder: "Modifica ordine"
+  },
+  en: {
+    ID: "ID",
+    User: "User",
+    Year: "Year",
+    OrderDate: "Order date",
+    OrderNumber: "Order number",
+    Urgent: "Urgent",
+    Extra: "Extra",
+    Validated: "Validated",
+    ValidationDate: "Validation date",
+    Notes: "Notes",
+    EditOrder: "Edit order"
+  }
+}
+
 //AgGrid config for OrdersComponent and userlevel 210
 export const gridConfigOrders210 = [
   { 
-      headerName: 'ID', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
       field: 'id', 
       editable: false
   },
   { 
-      headerName: 'Utente', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
       field: 'username', 
       cellRenderer: DropdownUsersOrdersComponent,
       editable: false
   },
   { 
-      headerName: 'Anno', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
       field: 'anno', 
       editable: true
   },
   { 
-      headerName: 'Data ordine', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
       field: 'd_ordine', 
       editable: false,
       cellRenderer: (params: { value: string | number | Date; }) => {
@@ -278,30 +333,30 @@ export const gridConfigOrders210 = [
       }
   },
   { 
-      headerName: 'Numero ordine', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
       field: 'n_ordine', 
       editable: true
   },
   { 
-      headerName: 'Urgente', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
       field: 'b_urgente', 
       editable: false,
       cellRenderer: OrdersUrgentCheckboxComponent
   },
   { 
-      headerName: 'Ordine extra', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.Extra : orderGridHeaders.en.Extra, 
       field: 'b_extra', 
       editable: false,
       cellRenderer: OrdersExtraCheckboxComponent
   },
   { 
-      headerName: 'Validato', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.Validated : orderGridHeaders.en.Validated, 
       field: 'b_validato', 
       editable: false,
       cellRenderer: OrdersValidatedCheckboxComponent
   },
   { 
-      headerName: 'Data validazione', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
       field: 'd_validato', 
       editable: false,
       cellRenderer: (params: { value: string | number | Date; }) => {
@@ -309,12 +364,12 @@ export const gridConfigOrders210 = [
       }
   },
   { 
-      headerName: 'Note', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
       field: 'note', 
       editable: true,
   },
   { 
-      headerName: 'Modifica ordine', 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.EditOrder : orderGridHeaders.en.EditOrder, 
       cellRenderer: ButtonEditOrderComponent,
       autoHeight: true
   }
@@ -323,23 +378,23 @@ export const gridConfigOrders210 = [
 //AgGrid config for OrdersComponent and userlevel 220
 export const gridConfigOrders220 = [
     { 
-        headerName: 'ID', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
         field: 'id', 
         editable: false
     },
     { 
-        headerName: 'Utente', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
         field: 'username', 
         cellRenderer: DropdownUsersOrdersComponent,
         editable: false
     },
     { 
-        headerName: 'Anno', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
         field: 'anno', 
         editable: true
     },
     { 
-        headerName: 'Data ordine', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
         field: 'd_ordine', 
         editable: false,
         cellRenderer: (params: { value: string | number | Date; }) => {
@@ -347,30 +402,30 @@ export const gridConfigOrders220 = [
         }
     },
     { 
-        headerName: 'Numero ordine', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
         field: 'n_ordine', 
         editable: true
     },
     { 
-        headerName: 'Ordine urgente', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
         field: 'b_urgente', 
         editable: false,
         cellRenderer: OrdersUrgentCheckboxComponent
     },
     { 
-        headerName: 'Ordine extra', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.Extra : orderGridHeaders.en.Extra, 
         field: 'b_extra', 
         editable: false,
         cellRenderer: OrdersExtraCheckboxComponent
     },
     { 
-        headerName: 'Ordine validato', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.Validated : orderGridHeaders.en.Validated, 
         field: 'b_validato', 
         editable: false,
         cellRenderer: OrdersValidatedCheckboxComponent
     },
     { 
-        headerName: 'Data validazione', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
         field: 'd_validato', 
         editable: false,
         cellRenderer: (params: { value: string | number | Date; }) => {
@@ -378,12 +433,12 @@ export const gridConfigOrders220 = [
         }
     },
     { 
-        headerName: 'Note', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
         field: 'note', 
         editable: true,
     },
     { 
-        headerName: 'Modifica ordine', 
+        headerName: localeLang == 'it' ? orderGridHeaders.it.EditOrder : orderGridHeaders.en.EditOrder, 
         cellRenderer: ButtonEditOrderComponent,
         autoHeight: true
     }
