@@ -4,7 +4,7 @@
 	<mat-form-field>
 		<input
 			type="number"
-			placeholder="Codice"
+			placeholder="{{ 'Code' | translate }}"
 			[formControl]="cod"
 			matInput>
 	</mat-form-field>
@@ -12,7 +12,7 @@
 	<mat-form-field>
 		<input
 			type="text"
-			placeholder="Descrizione"
+			placeholder="{{ 'Description' | translate }}"
 			[formControl]="des"
 			matInput>
 	</mat-form-field>
@@ -20,7 +20,7 @@
 	<mat-form-field>
 		<input
 			type="number"
-			placeholder="Unità"
+			placeholder="{{ 'Units' | translate }}"
 			[formControl]="unita"
 			matInput>
 	</mat-form-field>
@@ -28,7 +28,7 @@
 	<mat-form-field>
 		<input
 			type="text"
-			placeholder="Confezionamento (es. flacone)"
+			placeholder="{{ 'Packaging' | translate }}"
 			[formControl]="confezionamento"
 			matInput>
 	</mat-form-field>
@@ -36,7 +36,7 @@
 	<mat-form-field>
 		<input
 			type="number"
-			placeholder="Multiplo confezionamento"
+			placeholder="{{ 'Multiple Packaging' | translate }}"
 			[formControl]="multiplo_confezionamento"
 			matInput>
 	</mat-form-field>
@@ -44,7 +44,7 @@
 	<mat-form-field>
 		<input
 			type="number"
-			placeholder="Multiplo imballo"
+			placeholder="{{ 'Multiple Packing | translate }}"
 			[formControl]="multiplo_imballo"
 			matInput>
 	</mat-form-field>
@@ -52,19 +52,19 @@
 	<mat-checkbox 
 		labelPosition="before"
 		(click)="toggleAttivo()">
-		Attivo
+		{{ 'Attivo' | translate }}
 	</mat-checkbox>
 	<br>
 	<mat-checkbox 
 		labelPosition="before"
 		(click)="toggleExtra()">
-		Extra
+		{{ 'Extra' | translate }}
 	</mat-checkbox>
 	<br>
 	<mat-form-field>
 		<input
 			type="number"
-			placeholder="Ordine minimo"
+			placeholder="{{ 'Minimum Order' | translate }}"
 			[formControl]="min_ord"
 			matInput>
 	</mat-form-field>
@@ -72,16 +72,16 @@
 	<mat-form-field appearance="fill">
 		<mat-label>Validità</mat-label>
 		<mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-		  <input matStartDate formControlName="start" placeholder="Inizio validità">
-		  <input matEndDate formControlName="end" placeholder="Fine validità">
+		  <input matStartDate formControlName="start" placeholder="{{ 'Valid from' | translate }}">
+		  <input matEndDate formControlName="end" placeholder="{{ 'Valid through' | translate }}">
 		</mat-date-range-input>
-		<mat-hint>Inizio validità – Fine validità</mat-hint>
+		<mat-hint>{{ 'Valid from' | translate }} – {{ 'Valid through' | translate }}</mat-hint>
 		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 		<mat-date-range-picker #picker> </mat-date-range-picker>  
 	</mat-form-field>
 </div>
 
 <div mat-dialog-actions>
-	<button mat-raised-button (click)="onSubmit()">Submit</button>
-	<button mat-raised-button mat-dialog-close color="primary">Cancel</button>
+	<button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
+	<button mat-raised-button mat-dialog-close color="primary">{{ 'Cancel' | translate }}</button>
 </div>

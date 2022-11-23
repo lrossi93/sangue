@@ -48,5 +48,20 @@
     "Edit": "Modifica",
     "Delete": "Elimina",
     "Delete order": "Elimina ordine",
-    "Add\/create order row": "Aggiungi/crea una riga d'ordine"
+    "Add\/create order row": "Aggiungi/crea una riga d'ordine",
+    "Code": "Codice",
+    "Description": "Descrizione",
+    "Units": "Unità",
+    "Packaging": "Confezionamento",
+    "Multiple Packaging": "Multiplo Confezionamento",
+    "Multiple Packing": "Multiplo Imballo",
+    "Active": "Attivo",
+    "Minimum Order": "Ordine Minimo",
+    "Valid from": "Valido da",
+    "Valid through": "Valido fino a",
+    "Delete forecast with ID": "Elimina previsione con ID",
+    "Delete order with ID": "Elimina ordine con ID",
+    "Edit date": "Modifica data",
+    "Profile ID": "ID di profilo",
+    "Oops! We did not find what you were looking for": "Oops! Non abbiamo trovato ciò che cercavi"
 }

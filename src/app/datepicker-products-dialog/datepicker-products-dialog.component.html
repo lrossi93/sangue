@@ -1,7 +1,7 @@
 <div>
     <h2>Edit date</h2>
     <mat-form-field appearance="fill">
-        <mat-label>Edit date</mat-label>
+        <mat-label>{{ 'Edit date' | translate }}</mat-label>
         <input 
             matInput 
             [matDatepicker]="picker" 
@@ -12,7 +12,7 @@
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <div mat-dialog-actions>
-        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
-        <button mat-raised-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()">{{ 'Submit' | translate }}</button>
+        <button mat-raised-button mat-dialog-close>{{ 'Cancel' | translate }}</button>
     </div>
 </div>

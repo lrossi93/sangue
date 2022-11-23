@@ -1,6 +1,6 @@
-<h3 mat-dialog-title>Delete product with ID {{ id }}?</h3>
+<h3 mat-dialog-title>{{ 'Delete product with ID' | translate }} {{ id }}?</h3>
 
 <div mat-dialog-actions>
-	<button mat-button (click)="onSubmit()">Delete</button>
-	<button mat-button mat-dialog-close>Cancel</button>
+	<button mat-button (click)="onSubmit()">{{ 'Delete' | translate }}</button>
+	<button mat-button mat-dialog-close>{{ 'Cancel' | translate }}</button>
 </div>

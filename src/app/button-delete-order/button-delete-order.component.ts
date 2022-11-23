@@ -5,7 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
   selector: 'app-button-delete-order',
   template: `
-  <button color="primary" style="width: 100%;" (click)="openDeleteOrderDialog()">Elimina</button>
+  <button color="primary" style="width: 100%;" (click)="openDeleteOrderDialog()">{{ 'Delete' | translate }}</button>
 `,
   styleUrls: ['./button-delete-order.component.css']
 })

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from 'src/environments/environment';
 import { LoginService } from './login.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class AppComponent {
   ){
     translate.addLangs(['en', 'it']);
     translate.setDefaultLang('it');
+    environment.currentLanguage = 'it'
   }
 
   /*
@@ -43,5 +45,6 @@ export class AppComponent {
   */
   switchLanguage(lang: string) {
     this.translate.use(lang)
+    environment.currentLanguage = lang;
   }
 }

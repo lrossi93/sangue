@@ -1,4 +1,4 @@
-<h1>Log in</h1>
+<h1>{{ 'Login' | translate }}</h1>
 <p>
 	<input type="text" [(ngModel)]="username">
 </p>
@@ -6,4 +6,4 @@
 	<input type="password" [(ngModel)]="password">
 </p>
 
-<button (click)="login(username, password)">login</button>
+<button (click)="login(username, password)">{{ 'Login' | translate }}</button>

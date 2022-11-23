@@ -11,6 +11,7 @@ import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/or
 import { OrdersValidatedCheckboxComponent } from "src/app/orders-validated-checkbox/orders-validated-checkbox.component";
 import { PharmaRegistryActiveCheckboxComponent } from "src/app/pharma-registry-active-checkbox/pharma-registry-active-checkbox.component";
 import { PharmaRegistryExtraCheckboxComponent } from "src/app/pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component";
+import { environment } from "./environment";
 
 /**
  * 
@@ -19,62 +20,95 @@ import { PharmaRegistryExtraCheckboxComponent } from "src/app/pharma-registry-ex
  * 
  */
 
+export const pharmaRegistryGridHeaders = {
+  it: {
+    ID: 'ID',
+    Code: 'Codice',
+    Description: 'Descrizione',
+    Units: 'Unità',
+    Packaging: 'Confezionamento',
+    MultiplePackaging: 'Multiplo confezionamento',
+    MultiplePacking: 'Multiplo imballo',
+    Active: 'Attivo',
+    Extra: 'Extra',
+    MinimumOrder: 'Ordine minimo',
+    ValidFrom: 'Valido da',
+    ValidThrough: 'Valido fino a',
+    Action: 'Azione'
+  },
+  en: {
+    ID: 'ID',
+    Code: 'Code',
+    Description: 'Description',
+    Units: 'Units',
+    Packaging: 'Packaging',
+    MultiplePackaging: 'Multiple packaging',
+    MultiplePacking: 'Multiple packing',
+    Active: 'Active',
+    Extra: 'Extra',
+    MinimumOrder: 'Minimum order',
+    ValidFrom: 'Valid from',
+    ValidThrough: 'Valido through',
+    Action: 'Action'
+  }
+}
+
 //AgGrid config for PharmaRegistryComponent and userlevel 200
 export const pharmaRegistryGridConfig = [
   { 
-    headerName: 'ID', 
+    headerName: pharmaRegistryGridHeaders.it.ID, 
     field: 'id',
     editable: false
   },
   { 
-    headerName: 'Code', 
+    headerName: pharmaRegistryGridHeaders.it.Code, 
     field: 'cod', 
     editable: true
   },
   { 
-    headerName: 'Description', 
+    headerName: pharmaRegistryGridHeaders.it.Description, 
     field: 'des', 
     editable: true
   },
   { 
-    headerName: 'Unità', 
+    headerName: pharmaRegistryGridHeaders.it.Units, 
     field: 'unita', 
     editable: true
   },
   { 
-    headerName: 'Confezionamento', 
+    headerName: pharmaRegistryGridHeaders.it.Packaging, 
     field: 'confezionamento', 
     editable: true
   },
   { 
-    headerName: 'Multiplo Confezionamento', 
+    headerName: pharmaRegistryGridHeaders.it.MultiplePackaging, 
     field: 'multiplo_confezionamento', 
     editable: true
   },
   { 
-    headerName: 'Multiplo Imballo', 
+    headerName: pharmaRegistryGridHeaders.it.MultiplePacking, 
     field: 'multiplo_imballo', 
     editable: true
   },
   { 
-    headerName: 'Attivo', 
+    headerName: pharmaRegistryGridHeaders.it.Active, 
     field: 'attivo', 
     editable: false,
     cellRenderer: PharmaRegistryActiveCheckboxComponent
   },
   { 
-    headerName: 'Extra', 
+    headerName: pharmaRegistryGridHeaders.it.Extra, 
     field: 'extra', 
     editable: false,
     cellRenderer: PharmaRegistryExtraCheckboxComponent
   },
   { 
-    headerName: 'Ordine minimo', 
+    headerName: pharmaRegistryGridHeaders.it.MinimumOrder, 
     field: 'min_ord', 
     editable: true
   },
   { 
-    headerName: 'Valido da', 
+    headerName: pharmaRegistryGridHeaders.it.ValidFrom, 
     field: 'valido_da', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
@@ -82,17 +116,15 @@ export const pharmaRegistryGridConfig = [
     }
   },
   { 
-    headerName: 'Valido fino a', 
+    headerName: pharmaRegistryGridHeaders.it.ValidThrough, 
     field: 'valido_a', 
     editable: false,
-    cellRenderer: (params: { value: string | number | Date; }) => {
-      //console.log("before conversion: " + params.value);
-      //console.log("after conversion: " + new Date(params.value).toLocaleDateString('it-IT'));         
+    cellRenderer: (params: { value: string | number | Date; }) => {   
       return new Date(params.value).toLocaleDateString('it-IT');
     }
   },
   { 
-    headerName: 'Action', 
+    headerName: pharmaRegistryGridHeaders.it.Action, 
     cellRenderer: ButtonDeleteProductComponent,
     autoHeight: true
   }

@@ -2,9 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { TranslateService } from "@ngx-translate/core";
+
 export const environment = {
   production: false,
-  basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/'
+  basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
+  currentLanguage: 'it',
 };
 
 export interface AreYouSureData {
