@@ -16,7 +16,7 @@ interface OrderRowFormControls {
   qta: UntypedFormControl;
   qta_validata: UntypedFormControl;
   note: UntypedFormControl;
-  productFormControl: UntypedFormControl,
+  productFormControl: UntypedFormControl, //formControl for product name
   filteredProducts: Observable<string[]>
 }
 
@@ -192,7 +192,7 @@ export class AddOrderDialogComponent implements OnInit {
     {
       id: this.auxId++,
       id_ordine: new UntypedFormControl(this.orderRowFormControls.length, Validators.required),
-      n_riga: new UntypedFormControl(""),
+      n_riga: new UntypedFormControl(this.auxId),
       id_prd: new UntypedFormControl(""),
       username: new UntypedFormControl(this.loginService.getUsername(), Validators.required),
       qta: new UntypedFormControl(0, Validators.required),
@@ -390,12 +390,13 @@ export class AddOrderDialogComponent implements OnInit {
   onProductSelected(event: any, index: number) {
     console.log(event.source.value);
     console.log(this.orderRowFormControls[index].filteredProducts);
+    console.log("product ID: " + this.getProductId(event));
     
-
     if(event.source._selected){
       for(let i = 0; i < this.orderRowFormControls.length; ++i) {
         if(this.orderRowFormControls[i].id == index) {
-          this.orderRowFormControls[i].productFormControl = this.getProductId(event);
+          this.orderRowFormControls[i].productFormControl = this._builder.control(event.source.value);
+          this.orderRowFormControls[i].id_prd = this._builder.control(this.getProductId(event));
           return;
         }
       }

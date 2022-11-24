@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Order, OrderRow } from 'src/environments/environment';
+import { Order, OrderRow, User } from 'src/environments/environment';
 import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
@@ -26,6 +26,8 @@ export class EditOrderDialogComponent implements OnInit {
 
   order!: Order;
   orderRows: OrderRow[] = [];
+  users: any = [];
+  products: any = [];
 
   dialogRef!: any;
   dialog!: MatDialog;
@@ -33,7 +35,9 @@ export class EditOrderDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       order: Order,
-      orderRows: OrderRow[]
+      orderRows: OrderRow[],
+      users: any,
+      products: any
     },
     private _builder: UntypedFormBuilder,
     dialog: MatDialog,
@@ -51,6 +55,12 @@ export class EditOrderDialogComponent implements OnInit {
     this.order = data.order;
     this.orderRows = data.orderRows;
     this.dialog = dialog;
+    this.users = data.users;
+    this.products = data.products;
+    console.log(data.users);
+    console.log(data.products);
+    console.log(this.users);
+    console.log(this.products);
   }
 
   ngOnInit(): void {
@@ -99,6 +109,7 @@ export class EditOrderDialogComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     console.log(this.data.order.id);
+    console.log("OpenEditOrderRowDialog()================");
     
     //if id is not specified, create a new orderRow
     if(id == "") {
@@ -112,8 +123,14 @@ export class EditOrderDialogComponent implements OnInit {
         qta_validata: 0,
         note: ""
       }
+      console.log(this.users);
+      console.log(this.products);
+      
+      
       dialogConfig.data = {
-        orderRow: newOrderRow
+        orderRow: newOrderRow,
+        users: this.users,
+        products: this.products
       }
     }
     else {
@@ -124,7 +141,9 @@ export class EditOrderDialogComponent implements OnInit {
       editedOrderRow!.username = this.data.order.username;   
    
       dialogConfig.data = {
-        orderRow: this.getOrderRowById(id) 
+        orderRow: this.getOrderRowById(id),
+        users: this.users,
+        products: this.products
       }
     }
           

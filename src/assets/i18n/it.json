@@ -61,7 +61,9 @@
     "Valid through": "Valido fino a",
     "Delete forecast with ID": "Elimina previsione con ID",
     "Delete order with ID": "Elimina ordine con ID",
+    "Delete order row with ID": "Elimina riga d'ordine con ID",
     "Edit date": "Modifica data",
     "Profile ID": "ID di profilo",
-    "Oops! We did not find what you were looking for": "Oops! Non abbiamo trovato ciò che cercavi"
+    "Oops! We did not find what you were looking for": "Oops! Non abbiamo trovato ciò che cercavi",
+    "Row": "Riga"
 }

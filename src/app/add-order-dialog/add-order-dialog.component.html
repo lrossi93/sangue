@@ -86,7 +86,7 @@
     <h1 mat-dialog-title align="center" *ngIf="orderRowFormControls.length > 0">{{ 'Order Rows' | translate }}</h1>
     <hr *ngIf="orderRowFormControls.length > 0">
     <div *ngFor="let orderRow of orderRowFormControls" style="border: solid 1px grey; border-radius: 5px; margin: 5px; padding: 5px;">
-        <h2 mat-card-title>Row {{ orderRow.id }}</h2>
+        <h2 mat-card-title>{{ 'Row' | translate}} {{ orderRow.id }}</h2>
         <hr>
         
         <!--autocomplete dropdown for PRODUCTS-->
@@ -109,6 +109,15 @@
                 {{ option }}
             </mat-option>
             </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="loginService.getUserCode() == '220'"    
+            style="margin: 20px">
+            <input
+            placeholder="{{ 'Row number' | translate }}"
+            type="number"
+            [formControl]="orderRow.n_riga"
+            matInput>
         </mat-form-field>
 
         <mat-form-field style="margin: 20px">

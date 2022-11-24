@@ -7,6 +7,8 @@ import { environment, Order, OrderRow } from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
+import { PharmaRegistryService } from '../pharma-registry.service';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-button-edit-order',
@@ -28,13 +30,21 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     d_validato: 'string', //data di validazione dell'ordine
     note: ''
   };
+  
   orderRows: any = [];
+  
+  users: any = [];
+  products: any = [];
+
   dialogRef: any;
   dialog: MatDialog;
+
 
   constructor(
     dialog: MatDialog,
     private ordersService: OrdersService,
+    private usersService: UsersService,
+    private pharmaRegistryService: PharmaRegistryService
   ) { 
     this.dialog = dialog;
     this.ordersService = ordersService; 
@@ -49,7 +59,10 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     return false;
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.listProducts();
+    this.listUsers();
+  }
 
   listOrderRows(id: string) {
     this.ordersService.listOrderRowsPromise(id).subscribe(
@@ -73,7 +86,9 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       order: this.currentOrder,
-      orderRows: this.orderRows //array di orderRows 
+      orderRows: this.orderRows, //array di orderRows 
+      users: this.users,
+      products: this.products
     }
     dialogConfig.width = "60%";
     dialogConfig.minWidth = "60%";
@@ -106,5 +121,33 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.currentOrder.n_ordine = this.data.n_ordine;
     this.currentOrder.note = this.data.note;
     this.currentOrder.username = this.data.username;
+  }
+
+  listUsers() {
+    this.usersService.listUsersPromise("210").subscribe(
+      res => {
+        if(res[0] == "KO") {
+          alert("Error retrieving users!");
+        }
+        else {
+          this.users = res[1];
+          console.log(this.users);
+        }
+      }
+    );
+  }
+
+  listProducts() {
+    this.pharmaRegistryService.listProductsPromise().subscribe(
+      res => {
+        if(res[0] == "KO") {
+          alert("Error retrieving products!");
+        }
+        else {
+          this.products = res[1];
+          console.log(this.products);
+        }
+      }
+    );
   }
 }

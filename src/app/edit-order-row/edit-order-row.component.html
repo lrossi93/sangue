@@ -1,14 +1,22 @@
 <h3 mat-dialog-title>{{ 'Add/create order row' | translate }}</h3>
 
 <div mat-dialog-content>
-	<!--p>
+	<!--autocomplete dropdown for USERS-->
+	<form *ngIf="loginService.getUserCode()=='220'">
 		<mat-form-field>
-			<input
-			placeholder="Username"
-			[formControl]="username"
-			matInput>
+			<input 
+			type="text"
+			placeholder="{{ 'User' | translate }}"
+			matInput
+			[formControl]="userFormControl"
+			[matAutocomplete]="auto">
+			<mat-autocomplete #auto="matAutocomplete">
+			<mat-option *ngFor="let optionU of filteredUsers | async" [value]="optionU" (onSelectionChange)='onUserSelected($event)'>
+				{{ optionU }}
+			</mat-option>
+			</mat-autocomplete>
 		</mat-form-field>
-	</p-->
+	</form>
     <p>
 		<mat-form-field>
 			<input
@@ -17,16 +25,23 @@
 			matInput>
 		</mat-form-field>
 	</p>
-	
-	<!--TODO: this will be a dropdown-->
-    <p>
+
+	<!--autocomplete dropdown for PRODUCTS-->
+	<form>
 		<mat-form-field>
-			<input
-			placeholder="{{ 'Product ID' | translate }}"
-			[formControl]="id_prd"
-			matInput>
+			<input 
+			type="text"
+			placeholder="{{ 'Product' | translate }}"
+			matInput
+			[formControl]="productFormControl"
+			[matAutocomplete]="auto">
+			<mat-autocomplete #auto="matAutocomplete">
+			<mat-option *ngFor="let optionP of filteredProducts | async" [value]="optionP" (onSelectionChange)='onProductSelected($event)'>
+				{{ optionP }}
+			</mat-option>
+			</mat-autocomplete>
 		</mat-form-field>
-	</p>
+	</form>
     <p>
 		<mat-form-field>
 			<input
