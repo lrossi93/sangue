@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { LoginService } from './login.service';
@@ -9,11 +10,12 @@ import { LoginService } from './login.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'sangue';
   constructor(
     public loginService: LoginService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private router: Router
   ){
     translate.addLangs(['en', 'it']);
     
@@ -34,6 +36,11 @@ export class AppComponent {
     console.log(navigator.language.split("-", 2)[0]);
   }
 
+  ngOnInit(): void {
+    //check connection every 30s
+    this.checkRegularly(30);
+  }
+
   /*
   
     LOGIN SERVICE FUNCTIONS
@@ -49,6 +56,19 @@ export class AppComponent {
 
   logout(){
     this.loginService.logout();
+  }
+
+  checkRegularly(seconds: number) {
+    setInterval(() => {
+      this.loginService.checkPromise().subscribe(
+        res => {
+          if(res[0] == "KO"){
+            localStorage.removeItem("id_session");
+            this.router.navigate(['login']);
+          }
+        }
+      );
+    }, seconds * 1000);
   }
 
   /*

@@ -58,6 +58,8 @@ import { OrdersUrgentCheckboxComponent } from './orders-urgent-checkbox/orders-u
 import { OrdersValidatedCheckboxComponent } from './orders-validated-checkbox/orders-validated-checkbox.component';
 import { PharmaRegistryActiveCheckboxComponent } from './pharma-registry-active-checkbox/pharma-registry-active-checkbox.component';
 import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
 
 @NgModule({
   declarations: [
@@ -106,7 +108,7 @@ import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-ch
     {
       provide: MAT_DATE_LOCALE,
       useValue: 'it-IT'
-    }
+    },
   ],
   imports: [
     BrowserModule,

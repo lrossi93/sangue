@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -15,8 +16,10 @@ export class LoginService {
   logged: boolean = false;
 
   //constructor
-  constructor(private http: HttpClient, public router: Router) {
-  }
+  constructor(
+    private http: HttpClient, 
+    public router: Router
+  ){ }
 
   //methods
   getSession(){
@@ -62,6 +65,19 @@ export class LoginService {
     return this.logged;
   }
 
+  isLoggedPromise() {
+    this.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          this.router.navigate(['login']);
+        }
+        else {
+          
+        }
+      }
+    )
+  }
+
   check(){
     this.http.post<String[]>(
       environment.basePath + 'session.php',
@@ -75,13 +91,22 @@ export class LoginService {
         localStorage.removeItem("id_session");
         localStorage.removeItem("id_profile");
         this.logged = false;
-        //this.router.navigate(['/']);
       }
       else{
         console.log("CHECK: logged with sessionID " + localStorage.getItem("id_session"));
         this.logged = true;
       }
     })
+  }
+
+  checkPromise(): Observable<any> {
+    return this.http.post<String[]>(
+      environment.basePath + 'session.php',
+      {
+        request: "check",
+        id_session: localStorage.getItem("id_session")
+      }
+    )
   }
   
   login(username: string, password: string){
@@ -106,6 +131,15 @@ export class LoginService {
     });
   }
 
+  loginPromise(username: string, password: string): Observable<any> {
+    return this.http.post<String[]>(
+      environment.basePath + 'session.php', {
+      request: 'login',
+      sangue_username: username,
+      sangue_password: password
+    })
+  }
+
   logout(){
     this.http.post<String[]>(
       environment.basePath + 'session.php', {
@@ -125,5 +159,14 @@ export class LoginService {
         alert("Error logging out!");
       }
     })
+  }
+
+  logoutPromise(): Observable<any> {
+    return this.http.post<String[]>(
+      environment.basePath + 'session.php', {
+      request: 'logout',
+      id_session: localStorage.getItem("id_session"),
+      sangue_username: localStorage.getItem("sangue_username")
+    });
   }
 }

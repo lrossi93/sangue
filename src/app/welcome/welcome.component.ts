@@ -9,13 +9,20 @@ import { LoginService } from '../login.service';
 })
 export class WelcomeComponent implements OnInit {
 
-  constructor(public loginService: LoginService, public router: Router) {}
+  constructor(
+    public loginService: LoginService, 
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    console.log("logged: " + this.loginService.isLogged());
-    if(!this.loginService.isLogged()){
-      //this.router.navigate(['/login']);
-    }
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          this.loginService.logged = false;
+          this.router.navigate(['login']);
+        }
+      }
+    );
   }
-
 }

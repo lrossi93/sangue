@@ -12,6 +12,7 @@ import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component'
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 import { env } from 'process';
 import { pharmaRegistryGridConfig } from 'src/environments/grid-configs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -77,7 +78,9 @@ export class PharmaRegistryComponent implements OnInit {
   constructor(
     public loginService: LoginService, 
     private http: HttpClient,
-    private dialog: MatDialog)
+    private dialog: MatDialog,
+    private router: Router
+  )
   { 
 
     //columnDef
@@ -131,7 +134,16 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.check();
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          this.loginService.logged = false;
+          this.router.navigate(['login']);
+        }
+      }
+    );
+
     this.listProducts();
     setTimeout(
       () => {
@@ -150,7 +162,7 @@ export class PharmaRegistryComponent implements OnInit {
     ).subscribe((res: any[]) => {
       console.log(res);
       if(res[0] == "KO"){
-        alert("Error retrieving products!");
+        
       }
       else{
         console.log(res[1]); 

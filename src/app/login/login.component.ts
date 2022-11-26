@@ -10,6 +10,7 @@ import { LoginService } from '../login.service';
 export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
+    this.check();
   }
 
   //fields
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
   logged: boolean = false;
   private loginService: LoginService;
   router: Router;
+  isBadLogin: boolean = false;
   //constructor
   constructor(loginService: LoginService, router: Router) {
     this.loginService = loginService;
@@ -36,21 +38,54 @@ export class LoginComponent implements OnInit {
   }
 
   isLogged(){
-    return this.loginService.isLogged();
+    //was "isLogged()"
+    return this.loginService.isLoggedPromise();
   }
 
   check(){
-    this.loginService.check();
+    //was "check()"
+    if(this.loginService.logged){
+      this.router.navigate(['welcome']);
+      return;
+    }
+
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          this.logged = false;
+          this.router.navigate(['login']);
+        }
+      }
+    )
   }
   
   login(username: string, password: string){
-    this.loginService.login(username, password);
-    //dopo la login controlla se è loggato e, se sì, naviga su /welcome
-    this.router.navigate(['/welcome']);
+    this.loginService.loginPromise(username, password).subscribe(
+      res => {
+        if(res[0] == "KO") {
+          this.isBadLogin = true;
+          this.username = "";
+          this.password = "";
+        }
+        else {
+          this.isBadLogin = false;
+          localStorage.setItem("id_session", res[1].toString());
+          localStorage.setItem("id_profile", res[2].toString());
+          localStorage.setItem("sangue_username", username);
+          this.loginService.logged = true;
+          this.router.navigate(['welcome']);
+        }
+      }
+    );
   }
 
   logout(){
     this.loginService.logout();
     this.router.navigate(['/']);
+  }
+
+  onClick(){
+    console.log();
   }
 }

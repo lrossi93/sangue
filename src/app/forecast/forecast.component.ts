@@ -10,6 +10,7 @@ import { LoginService } from '../login.service';
 import { AgGridAngular } from 'ag-grid-angular';
 import { UsersService } from '../users.service';
 import { defaultColDef, gridConfigForecast210, gridConfigForecast220 } from 'src/environments/grid-configs'
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-forecast',
   templateUrl: './forecast.component.html',
@@ -63,6 +64,7 @@ export class ForecastComponent implements OnInit {
     private forecastService: ForecastService,
     private dialog: MatDialog,
     private usersService: UsersService,
+    private router: Router
     ) { 
       //console.log('profile: ' + loginService.getProfile());
       
@@ -99,7 +101,14 @@ export class ForecastComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.loginService.check();
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          this.router.navigate(['login']);
+        }
+      }
+    );
 
     //columnDef
     switch(this.loginService.getProfile()){
@@ -147,7 +156,7 @@ export class ForecastComponent implements OnInit {
     ).subscribe(res => {
       //console.log(res);
       if(res[0] == "KO"){
-        alert("Error retrieving forecasts!");
+        //instructions for when listforecasts fails
       }
       else{ 
         this.forecasts = res[1];
@@ -324,7 +333,7 @@ export class ForecastComponent implements OnInit {
       }
     ).subscribe(res => {
       if(res[0] == "KO"){
-        alert("Error retrieving products!");
+        //instructions for when listUsers fails
       }
       else{
         this.users = res[1];
@@ -341,7 +350,7 @@ export class ForecastComponent implements OnInit {
       }
     ).subscribe(res => {
       if(res[0] == "KO"){
-        alert("Error retrieving products!");
+        //instructions for when listProducts fails
       }
       else{
         this.products = res[1];

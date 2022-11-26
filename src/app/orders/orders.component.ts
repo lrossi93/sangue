@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
 import { Order, OrderRow, User } from 'src/environments/environment';
@@ -58,6 +59,7 @@ export class OrdersComponent implements OnInit {
     usersService: UsersService,
     private pharmaRegistryService: PharmaRegistryService,
     dialog: MatDialog,
+    private router: Router
   ) {
     if(loginService.getUserCode() == '210') {
       this.ordersGridConfig = gridConfigOrders210;
@@ -108,6 +110,14 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          this.router.navigate(['login']);
+        }
+      }
+    );
+
     this.listOrders("");
     this.listUsers('210');
     this.listProducts();
@@ -328,9 +338,14 @@ export class OrdersComponent implements OnInit {
   listUsers(userlevel: string) {
     this.usersService.listUsersPromise(userlevel).subscribe(
       res => {
-        this.users = res[1];
-        console.log("users: ");
-        console.log(this.users);
+        if(res[0] == "KO") {
+          this.router.navigate(['login']);
+        }
+        else {
+          this.users = res[1];
+          console.log("users: ");
+          console.log(this.users);
+        }
       }
     );
   }
@@ -343,9 +358,14 @@ export class OrdersComponent implements OnInit {
   listProducts() {
     this.pharmaRegistryService.listProductsPromise().subscribe(
       res => {
-        this.products = res[1];
-        console.log("products:");
-        console.log(this.products);
+        if(res[0] == "KO") {
+          this.router.navigate(['login']);
+        }
+        else {
+          this.products = res[1];
+          console.log("products:");
+          console.log(this.products);
+        }
       }
     );
   }

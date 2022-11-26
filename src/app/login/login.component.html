@@ -1,9 +1,21 @@
-<h1>{{ 'Login' | translate }}</h1>
-<p>
-	<input type="text" [(ngModel)]="username">
-</p>
-<p>
-	<input type="password" [(ngModel)]="password">
-</p>
+<div align="center" style="margin: 10%;">
+	<p>
+		<mat-form-field>
+			<input type="text" placeholder="Username" [(ngModel)]="username" (click)="onClick()" matInput>
+		</mat-form-field>
+	</p>
+	
+	<p>
+		<mat-form-field>
+			<input type="password" placeholder="Password" [(ngModel)]="password" matInput>
+		</mat-form-field>
+	</p>
 
-<button (click)="login(username, password)">{{ 'Login' | translate }}</button>
+	<p *ngIf="isBadLogin" style="color: red;">
+		{{ 'Incorrect username and\/or password' | translate }}!
+	</p>
+
+	<button mat-raised-button color="primary" (click)="login(username, password)">
+		{{ 'Login' | translate }}
+	</button>
+</div>
