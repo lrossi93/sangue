@@ -25,7 +25,7 @@ export class PharmaRegistryService {
     ).subscribe(res => {
       console.log(res);
       if(res[0] == "KO"){
-        alert("Error retrieving products!");
+        
         return null;
       }
       else{

@@ -1,9 +1,11 @@
+import { ValueGetterParams } from "ag-grid-community";
 import { ButtonDeleteForecastComponent } from "src/app/button-delete-forecast/button-delete-forecast.component";
 import { ButtonDeleteProductComponent } from "src/app/button-delete-product/button-delete-product.component";
 import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-order.component";
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
+import { LoginService } from "src/app/login.service";
 import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
 import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/orders-urgent-checkbox.component";
 import { OrdersValidatedCheckboxComponent } from "src/app/orders-validated-checkbox/orders-validated-checkbox.component";
@@ -165,13 +167,11 @@ export const gridConfigForecast210 = [
       field: 'anno', 
       editable: true
     },
-    /*
     { 
       headerName: 'User ID', 
       field: 'username', //questo è l'id di un utente
       editable: false
     },
-    */
    //#TODO: questo qui sotto è necessario?
     {
       headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User,
@@ -179,13 +179,11 @@ export const gridConfigForecast210 = [
       cellRenderer: DropdownUsersForecastComponent,
       editable: false
     },
-    /*
     { 
       headerName: 'Product ID', 
       field: 'id_prd', 
       editable: true
     },
-    */
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'id_prd', 
@@ -206,11 +204,13 @@ export const gridConfigForecast210 = [
       field: 'qta_approvata', 
       editable: false
     },
+    /*
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.CostPerUnit : forecastGridHeaders.en.CostPerUnit, 
       field: 'costo_unitario', 
       editable: false
     },
+    */
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
       cellRenderer: ButtonDeleteForecastComponent,
@@ -236,15 +236,39 @@ export const gridConfigForecast220 = [
       editable: false
     },
     */
+   /*
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
       field: 'username',
+      //cellRenderer: DropdownUsersForecastComponent,
+      editable: false
+    },
+    */
+    { 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
+      field: 'full_username',
       cellRenderer: DropdownUsersForecastComponent,
       editable: false
     },
+    /*
+    { 
+      headerName: 'User ID', 
+      field: 'username', 
+      editable: false,
+      valueGetter: usernameValueGetter
+    },
+    */
+   /*
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'id_prd', 
+      //cellRenderer: DropdownProductsForecastComponent,
+      editable: false
+    },
+    */
+    { 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
+      field: 'product_name',
       cellRenderer: DropdownProductsForecastComponent,
       editable: false
     },
@@ -274,6 +298,11 @@ export const gridConfigForecast220 = [
       autoHeight: true
     }
 ];
+
+//methods for valueGetters
+function usernameValueGetter(params: ValueGetterParams) { 
+  return 3;
+}
 
 export const orderGridHeaders = {
   it: {

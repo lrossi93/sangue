@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginService } from './login.service';
 
@@ -40,6 +41,18 @@ export class ForecastService {
         return res[1];
       }
     });
+  }
+
+  listForecastsPromise(year: string): Observable<any>{
+    let path = this.url + '?request=listForecasts&id_session='+localStorage.getItem('id_session') + '&year=' + year;
+    console.log(path);
+    
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    );
   }
 
   //POST

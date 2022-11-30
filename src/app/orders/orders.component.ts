@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
-import { Order, OrderRow, User } from 'src/environments/environment';
+import { Order, OrderRow } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders210, gridConfigOrders220 } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
@@ -40,9 +40,6 @@ export class OrdersComponent implements OnInit {
   dialog: any;
 
   loginService!: LoginService;
-  ordersService!: OrdersService;
-  usersService!: UsersService;
-  //pharmaRegistryService!: PharmaRegistryService;
 
   //agGrid config
   ordersGridConfig!: any;
@@ -55,8 +52,8 @@ export class OrdersComponent implements OnInit {
 
   constructor(
     loginService: LoginService,
-    ordersService: OrdersService,
-    usersService: UsersService,
+    private ordersService: OrdersService,
+    private usersService: UsersService,
     private pharmaRegistryService: PharmaRegistryService,
     dialog: MatDialog,
     private router: Router
@@ -68,8 +65,8 @@ export class OrdersComponent implements OnInit {
       this.ordersGridConfig = gridConfigOrders220;
     }
     this.loginService = loginService;
-    this.ordersService = ordersService;
-    this.usersService = usersService;
+    //this.ordersService = ordersService;
+    //this.usersService = usersService;
     //this.pharmaRegistryService = pharmaRegistryService;
     //
     //this.usersService.listUsers("210"); //get all customer asl users
@@ -78,9 +75,7 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        if(event.colDef.headerName == "Data ordine" || event.colDef.headerName == "Data validazione") {
-          //console.log(event);
-          //open dialog and pass date parameter to it
+        if(event.column.getColId() == "d_ordine" || event.column.getColId() == "d_validato") {
           this.openEditDateDialog(event);
         }
       },

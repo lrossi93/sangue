@@ -47,4 +47,13 @@ export class UsersService {
       { responseType: "json" }
     )
   }
+
+  getUserById(id: string, users: any) {
+    for(var i = 0; i < users.length; ++i) {
+      if(id == users[i].client) {
+        console.log("Returning " + users[i].client);
+        return users[i].client;
+      }
+    }
+  }
 }

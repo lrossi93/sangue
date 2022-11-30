@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CellValueChangedEvent } from 'ag-grid-community';
-import { environment } from 'src/environments/environment';
+import { environment, Forecast, ForecastGridRowData } from 'src/environments/environment';
 import { AddForecastComponent } from '../add-forecast/add-forecast.component';
 import { AreYouSureForecastComponent } from '../are-you-sure-forecast/are-you-sure-forecast.component';
 import { ForecastService } from '../forecast.service';
@@ -11,6 +11,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { UsersService } from '../users.service';
 import { defaultColDef, gridConfigForecast210, gridConfigForecast220 } from 'src/environments/grid-configs'
 import { Router } from '@angular/router';
+import { PharmaRegistryService } from '../pharma-registry.service';
 @Component({
   selector: 'app-forecast',
   templateUrl: './forecast.component.html',
@@ -18,10 +19,11 @@ import { Router } from '@angular/router';
 })
 @Injectable({providedIn: 'root'})
 export class ForecastComponent implements OnInit {
-  forecasts: any = [];
   url = environment.basePath + 'forecast.php';
   pharmaRegistryUrl = environment.basePath + 'anag.php';
   dialogRef: any;
+
+  loaded: number = 0;
   
   //parameters for [set|add|rm]Forecast()
   id = '';
@@ -37,12 +39,14 @@ export class ForecastComponent implements OnInit {
   //agGrid configuration
   api: any;
   forecastGridConfig: any;
+  forecasts: any = [];
+  forecastGridRowData: ForecastGridRowData[] = [];
   
   //sangueasl column definition (ASL cliente)
-  gridConfigUser210: any = gridConfigForecast210;
+  //gridConfigUser210: any = this.gridConfigForecast210;
 
   //sangueaslno column definition (ASL fornitore)
-  gridConfigUser220: any = gridConfigForecast220;
+  //gridConfigUser220: any = this.gridConfigForecast220;
   gridOptions: any;
   defaultColDef: any = defaultColDef;
 
@@ -50,7 +54,7 @@ export class ForecastComponent implements OnInit {
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
   //for dialog autocomplete
-  users: any = [];
+  users: any = []; 
   products: any = [];
 
 /*
@@ -62,42 +66,12 @@ export class ForecastComponent implements OnInit {
     private http: HttpClient,
     public loginService: LoginService,
     private forecastService: ForecastService,
+    private pharmaRegistryService: PharmaRegistryService,
     private dialog: MatDialog,
     private usersService: UsersService,
     private router: Router
     ) { 
-      //console.log('profile: ' + loginService.getProfile());
       
-      //usersService.listUsers();
-
-      //columnDef
-      switch(loginService.getProfile()){
-        case '210':
-          this.forecastGridConfig = this.gridConfigUser210;
-          break;
-        case '220':
-          this.forecastGridConfig = this.gridConfigUser220;
-          break;
-      }
-      
-      //gridOptions
-      this.gridOptions = {
-        onCellValueChanged: (event: CellValueChangedEvent) => {
-          //console.log("Changed from " + event.oldValue + " to " + event.newValue);
-          //console.log("event.data.toString(): " + event.data.toString());
-          this.setForecast(
-            event.data.id,
-            event.data.anno,
-            event.data.username,
-            event.data.id_prd,
-            event.data.qta,
-            event.data.note,
-            event.data.qta_approvata,
-            event.data.costo_unitario
-          );
-          this.updateGrid();
-        }
-      }
     }
 
   ngOnInit(): void {
@@ -110,16 +84,7 @@ export class ForecastComponent implements OnInit {
       }
     );
 
-    //columnDef
-    switch(this.loginService.getProfile()){
-      case '210':
-        this.forecastGridConfig = this.gridConfigUser210;
-        break;
-      case '220':
-        this.forecastGridConfig = this.gridConfigUser220;
-        break;
-    }
-
+    //retrieve data from db
     this.listForecasts(this.year);
     this.listUsers("210");
     this.listProducts();
@@ -140,28 +105,142 @@ export class ForecastComponent implements OnInit {
   }
 
   listForecasts(year: string): void {    
-    //this.forecasts = this.forecastService.listForecasts(this.year);
-    
-    if(this.forecasts == null){
-      console.log("null array of forecasts");
-    }
-    
-    let path = this.url + '?request=listForecasts&id_session='+localStorage.getItem('id_session') + '&year=' + this.year;
-    
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
+    this.forecastService.listForecastsPromise(year).subscribe(
+      res => {
+        //console.log(res);
+        if(res[0] == "KO"){
+          //instructions for when listforecasts fails
+        }
+        else{ 
+          this.forecasts = res[1];
+          console.log("forecasts:");
+          console.log(this.forecasts);
+          
+          this.loaded++;
+          this.everythingLoaded();
+        }
       }
-    ).subscribe(res => {
-      //console.log(res);
+    );
+  }
+  listUsers(userlevel: string): void{
+    this.usersService.listUsersPromise(userlevel).subscribe(res => {
       if(res[0] == "KO"){
-        //instructions for when listforecasts fails
+        //instructions for when listUsers fails
       }
-      else{ 
-        this.forecasts = res[1];
+      else{
+        this.users = res[1];
+        console.log("users:");
+        console.log(this.users);
+        this.loaded++;
+        this.everythingLoaded();
       }
     });
+  }
+
+  listProducts(): void{
+    this.pharmaRegistryService.listProductsPromise().subscribe(res => {
+      if(res[0] == "KO"){
+        //instructions for when listProducts fails
+      }
+      else{
+        this.products = res[1];
+        console.log("products:");
+        console.log(this.products);
+        this.loaded++;
+        this.everythingLoaded();
+      }
+    });
+  }
+
+  everythingLoaded() {
+    //when all 3 resources have loaded, enter if branch
+    if(this.loaded >= 3){
+      console.log("LOADED!");
+      
+      //columnDef
+      console.log("column definitions: LOADING");
+      if(this.loaded == 3)
+      switch(this.loginService.getProfile()){
+        case '210':
+          this.forecastGridConfig = gridConfigForecast210;
+          break;
+        case '220':
+          this.forecastGridConfig = gridConfigForecast220;
+          break;
+      }
+      console.log("column definitions: OK");
+
+      //gridOptions
+      console.log("grid options: LOADING");
+      if(this.loaded == 3)
+      this.gridOptions = {
+        onGridInit: () => {
+          this.createForecastGridRowData();
+          this.updateGrid();
+        },
+        onCellValueChanged: (event: CellValueChangedEvent) => {
+          //console.log("Changed from " + event.oldValue + " to " + event.newValue);
+          //console.log("event.data.toString(): " + event.data.toString());
+          this.setForecast(
+            event.data.id,
+            event.data.anno,
+            event.data.username,
+            event.data.id_prd,
+            event.data.qta,
+            event.data.note,
+            event.data.qta_approvata,
+            event.data.costo_unitario
+          );
+          this.updateGrid();
+        }
+      }
+      console.log("grid options: OK");
+      console.log(this.users);
+      console.log(this.products);
+      console.log(this.forecasts);
+      
+      this.createForecastGridRowData();
+      this.updateGrid();
+    }
+  }
+
+  createForecastGridRowData() {
+    this.forecastGridRowData = [];
+    for(var i = 0; i < this.forecasts.length; ++i) {
+      var newForecastGridRowData = {
+        id: this.forecasts[i].id,
+        anno: this.forecasts[i].anno,
+        username: this.forecasts[i].username,
+        full_username: this.getFullUsernameById(this.forecasts[i].username),
+        id_prd: this.forecasts[i].id_prd,
+        product_name: this.getProductNameById(this.forecasts[i].id_prd),
+        qta: this.forecasts[i].qta,
+        note: this.forecasts[i].note,
+        qta_approvata: this.forecasts[i].qta_approvata,
+        costo_unitario: this.forecasts[i].costo_unitario
+      };
+      this.forecastGridRowData.push(newForecastGridRowData);
+    }
+    console.log("forecastGridRowData");
+    console.log(this.forecastGridRowData);
+  }
+
+  getFullUsernameById(id: string): string {
+    for(var i = 0; i < this.users.length; ++i) {
+      if(this.users[i].username == id) {
+        return this.users[i].client;
+      }
+    }
+    return "";
+  }
+
+  getProductNameById(id: string): string {
+    for(var i = 0; i < this.products.length; ++i) {
+      if(this.products[i].id == id) {
+        return this.products[i].des;
+      }
+    }
+    return "";
   }
 
   setForecast(id: string, anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
@@ -321,40 +400,6 @@ export class ForecastComponent implements OnInit {
 
   updateGrid(){
     console.log(this.api);
-    this.api.setRowData(this.forecasts);
-  }
-
-  listUsers(userlevel: string): void{
-    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
-      }
-    ).subscribe(res => {
-      if(res[0] == "KO"){
-        //instructions for when listUsers fails
-      }
-      else{
-        this.users = res[1];
-      }
-    });
-  }
-
-  listProducts(): void{
-    let path = this.pharmaRegistryUrl + '?request=listProducts&id_session='+localStorage.getItem('id_session');
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
-      }
-    ).subscribe(res => {
-      if(res[0] == "KO"){
-        //instructions for when listProducts fails
-      }
-      else{
-        this.products = res[1];
-      }
-    });
+    this.api.setRowData(this.forecastGridRowData);
   }
 }

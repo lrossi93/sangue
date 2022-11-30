@@ -7,10 +7,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ButtonDeleteProductComponent } from '../button-delete-product/button-delete-product.component';
-import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
-import { env } from 'process';
 import { pharmaRegistryGridConfig } from 'src/environments/grid-configs';
 import { Router } from '@angular/router';
 
@@ -89,7 +86,7 @@ export class PharmaRegistryComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        if(event.colDef.headerName == "Valido da" || event.colDef.headerName == "Valido fino a") {
+        if(event.column.getColId() == "valido_a" || event.column.getColId() == "valido_da") {
           console.log(event);
           //open dialog and pass date parameter to it
           this.openEditDateDialog(event);
@@ -111,16 +108,9 @@ export class PharmaRegistryComponent implements OnInit {
         this.extra = event.data.extra;
         this.min_ord = event.data.min_ord;     
 
-        //the new date written as is by the user:
-        //console.log("data scritta dall'utente: " + event.data.valido_da)//.toISOString());
-        //convert it to american format YYYY-MM-DD
-        //console.log("data in formato IT: " + this.fromItLocaleToISO(event.data.valido_da))//new Date(event.data.valido_da).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10));
-        //save it as string in valido_da
-
         //salvo le date in formato italiano sulle variabili locali
         this.valido_da = new Date(event.data.valido_da).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
         this.valido_a = new Date(event.data.valido_a).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
-        //console.log("to ISO8601: " + this.fromItLocaleToISO(this.valido_da));
         
         this.setProduct(false); //edit product from grid
       }
