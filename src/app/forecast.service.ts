@@ -109,6 +109,51 @@ export class ForecastService {
       }
     });
   }
+
+  setForecastPromise(
+    id: string,
+    anno: number,
+    username: string,
+    id_prd: string,
+    qta: number,
+    note: string,
+    qta_approvata: number,
+    costo_unitario: number,
+    isAdding: boolean
+  ): Observable<any> | null{
+    if(!isAdding && parseInt(id) < 1){
+      console.error("Invalid ID!");
+      id = "";
+      return null;
+    }
+    else if(
+      id == "" || 
+      anno.toString() == "" || 
+      username == "" || 
+      id_prd == "" ||
+      qta.toString() == ""
+    ){
+      console.error("\"note\" is the only acceptable empty parameter.");
+      return null;
+    }
+    else{
+      return this.http.post<String[]>(
+        this.url, {
+          request: 'setForecast',
+          id_session: localStorage.getItem('id_session'),
+          id: id,
+          anno: anno,
+          username: username,
+          id_prd: id_prd,
+          qta: qta,
+          note: note,
+          qta_approvata: qta_approvata,
+          costo_unitario: costo_unitario
+        }
+      );
+    }
+  }
+
   //POST
   addForecast(
     anno: number,
@@ -123,6 +168,21 @@ export class ForecastService {
     let isAdding = true;
     return this.setForecast(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario, isAdding);
   }
+
+  addForecastPromise(
+    anno: number,
+    username: string,
+    id_prd: string,
+    qta: number,
+    note: string,
+    qta_approvata: number,
+    costo_unitario: number,
+  ): any{
+    let id = "-1";
+    let isAdding = true;
+    return this.setForecastPromise(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario, isAdding);
+  }
+  
   
   //POST
   rmForecast(id: string){
@@ -147,5 +207,20 @@ export class ForecastService {
         console.log("Product with ID " + res[1] + "successfully removed!");
       }
     });
+  }
+
+  rmForecastPromise(id: string): Observable<any> | null{
+    if(id == "" || parseInt(id) < 1){
+      alert("Invalid ID!");
+      return null;
+    }
+
+    return this.http.post<String[]>(
+      this.url, {
+        request: 'rmForecast',
+        id_session: localStorage.getItem('id_session'),
+        id: id
+      }
+    )
   }
 }

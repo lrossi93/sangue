@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { CellValueChangedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
 import { environment, Forecast, ForecastGridRowData } from 'src/environments/environment';
 import { AddForecastComponent } from '../add-forecast/add-forecast.component';
 import { AreYouSureForecastComponent } from '../are-you-sure-forecast/are-you-sure-forecast.component';
@@ -71,7 +71,40 @@ export class ForecastComponent implements OnInit {
     private usersService: UsersService,
     private router: Router
     ) { 
+      //columnDef
+      switch(this.loginService.getProfile()){
+        case '210':
+          this.forecastGridConfig = gridConfigForecast210;
+          break;
+        case '220':
+          this.forecastGridConfig = gridConfigForecast220;
+          break;
+      }
       
+      //gridOptions
+      this.gridOptions = {
+        onGridInit: () => {
+          this.createForecastGridRowData();
+          this.updateGrid();
+        },
+        onCellClicked: (event: CellClickedEvent) => {
+          console.log(event);
+        },
+        onCellValueChanged: (event: CellValueChangedEvent) => {
+          console.log("Changed from " + event.oldValue + " to " + event.newValue);
+          this.setForecast(
+            event.data.id,
+            event.data.anno,
+            event.data.username,
+            event.data.id_prd,
+            event.data.qta,
+            event.data.note,
+            event.data.qta_approvata,
+            event.data.costo_unitario
+          );
+          this.updateGrid();
+        }
+      }
     }
 
   ngOnInit(): void {
@@ -157,44 +190,8 @@ export class ForecastComponent implements OnInit {
     if(this.loaded >= 3){
       console.log("LOADED!");
       
-      //columnDef
-      console.log("column definitions: LOADING");
-      if(this.loaded == 3)
-      switch(this.loginService.getProfile()){
-        case '210':
-          this.forecastGridConfig = gridConfigForecast210;
-          break;
-        case '220':
-          this.forecastGridConfig = gridConfigForecast220;
-          break;
-      }
-      console.log("column definitions: OK");
+      
 
-      //gridOptions
-      console.log("grid options: LOADING");
-      if(this.loaded == 3)
-      this.gridOptions = {
-        onGridInit: () => {
-          this.createForecastGridRowData();
-          this.updateGrid();
-        },
-        onCellValueChanged: (event: CellValueChangedEvent) => {
-          //console.log("Changed from " + event.oldValue + " to " + event.newValue);
-          //console.log("event.data.toString(): " + event.data.toString());
-          this.setForecast(
-            event.data.id,
-            event.data.anno,
-            event.data.username,
-            event.data.id_prd,
-            event.data.qta,
-            event.data.note,
-            event.data.qta_approvata,
-            event.data.costo_unitario
-          );
-          this.updateGrid();
-        }
-      }
-      console.log("grid options: OK");
       console.log(this.users);
       console.log(this.products);
       console.log(this.forecasts);
@@ -245,8 +242,16 @@ export class ForecastComponent implements OnInit {
 
   setForecast(id: string, anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
     let isAdding = false;
-    this.forecastService.setForecast(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario, isAdding);
-    this.setLocally(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
+    this.forecastService.setForecastPromise(
+      id, anno, 
+      username, id_prd, qta, 
+      note, qta_approvata, 
+      costo_unitario, isAdding
+    )?.subscribe(
+      res => {
+        this.setLocally(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
+      }  
+    );
   }
 
   setLocally(id: string, anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
@@ -259,6 +264,7 @@ export class ForecastComponent implements OnInit {
         this.forecasts[i].note = note;
         this.forecasts[i].qta_approvata = qta_approvata;
         this.forecasts[i].costo_unitario = costo_unitario;
+        this.createForecastGridRowData();
         this.updateGrid();
         return;
       }
@@ -266,19 +272,26 @@ export class ForecastComponent implements OnInit {
   }
 
   addForecast(anno: number, username: string, id_prd: string, qta: number, note: string, qta_approvata: number, costo_unitario: number){
-    this.id = this.forecastService.addForecast(anno, username, id_prd, qta, note, qta_approvata, costo_unitario);
-    console.log("new forecast id: " + this.id);
-    let newForecast = {
-      id: this.id,
-      anno: anno,
-      username: username,
-      id_prd: id_prd,
-      qta: qta,
-      note: note,
-      qta_approvata: qta_approvata,
-      costo_unitario: costo_unitario
-    }
-    this.addLocally(newForecast);
+    this.forecastService.addForecastPromise(
+      anno, username, 
+      id_prd, qta, note, 
+      qta_approvata, costo_unitario
+    ).subscribe(
+      (res: string[]) => {
+        console.log("new forecast id: " + res[1]);
+        let newForecast = {
+          id: res[1],
+          anno: anno,
+          username: username,
+          id_prd: id_prd,
+          qta: qta,
+          note: note,
+          qta_approvata: qta_approvata,
+          costo_unitario: costo_unitario
+        }
+        this.addLocally(newForecast);
+      }
+    );
   }
 
   addLocally(newForecast: any){
@@ -286,12 +299,20 @@ export class ForecastComponent implements OnInit {
     console.log(newForecast);
     
     this.forecasts.push(newForecast);
+    this.createForecastGridRowData();
     this.updateGrid();
   }
 
   rmForecast(id: string){
-    this.forecastService.rmForecast(id);
-    this.listForecasts(this.year);
+    var rmForecastPromise = this.forecastService.rmForecastPromise(id);
+    if(rmForecastPromise != null){
+      rmForecastPromise.subscribe(
+        res => {
+          console.log("forecast with id " + res[1] + " successfully removed!");
+          this.rmLocally(id);
+        }
+      );
+    }
   }
 
   rmLocally(id: string){
@@ -312,6 +333,7 @@ export class ForecastComponent implements OnInit {
             visible = i;
           }
         }
+        this.createForecastGridRowData();
         this.updateGrid();
         this.api.ensureIndexVisible(visible);
         return;

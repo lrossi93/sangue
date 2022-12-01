@@ -167,12 +167,14 @@ export const gridConfigForecast210 = [
       field: 'anno', 
       editable: true
     },
+    /*
     { 
       headerName: 'User ID', 
       field: 'username', //questo è l'id di un utente
       editable: false
     },
-   //#TODO: questo qui sotto è necessario?
+    */
+    /*
     {
       headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User,
       field: 'username', //prende l'id dell'utente (forecast.username) e ritorna il nome utente (user.username) 
@@ -180,14 +182,29 @@ export const gridConfigForecast210 = [
       editable: false
     },
     { 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
+      field: 'full_username',
+      cellRenderer: DropdownUsersForecastComponent,
+      editable: false
+    },
+    */
+    { 
       headerName: 'Product ID', 
       field: 'id_prd', 
       editable: true
     },
+    /*
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'id_prd', 
       cellRenderer: DropdownProductsForecastComponent
+    },
+    */
+    { 
+      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
+      field: 'product_name',
+      cellRenderer: DropdownProductsForecastComponent,
+      editable: false
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
