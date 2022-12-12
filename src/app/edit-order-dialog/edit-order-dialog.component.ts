@@ -57,10 +57,11 @@ export class EditOrderDialogComponent implements OnInit {
     this.dialog = dialog;
     this.users = data.users;
     this.products = data.products;
-    console.log(data.users);
-    console.log(data.products);
-    console.log(this.users);
-    console.log(this.products);
+    
+    //console.log(data.users);
+    //console.log(data.products);
+    //console.log(this.users);
+    //console.log(this.products);
   }
 
   ngOnInit(): void {
@@ -199,7 +200,6 @@ export class EditOrderDialogComponent implements OnInit {
 
   openAreYouSureOrderDialog(id: string) {
     const dialogConfig = new MatDialogConfig();
-    //dialogConfig.autoFocus = true;
     dialogConfig.data = { id: id }
         
     this.dialogRef = this.dialog.open(
@@ -208,11 +208,9 @@ export class EditOrderDialogComponent implements OnInit {
     );
 
     this.dialogRef.afterClosed().subscribe(
-      (result: { isSubmitted: boolean }) => {
+      (result: { order: Order, orderRows: OrderRow[], isSubmitted: boolean }) => {
       if(result !== undefined && result.isSubmitted){
-        console.log("removing order with id: " + id);
-        //this.ordersService.rmOrder(id)
-        this.thisDialogRef.close();
+        this.thisDialogRef.close({orderId: id, orderRows: this.orderRows, isSubmitted: result.isSubmitted});
       }
     });
   }

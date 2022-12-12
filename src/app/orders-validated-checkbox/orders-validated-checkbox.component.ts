@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
+import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 
 @Component({
@@ -8,11 +9,13 @@ import { OrdersService } from '../orders.service';
   styleUrls: ['./orders-validated-checkbox.component.css']
 })
 export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent implements OnInit {
-
+  loginService!: LoginService
   constructor(
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    loginService: LoginService
   ) {
     super();
+    this.loginService = loginService;
   }
 
   ngOnInit(): void {

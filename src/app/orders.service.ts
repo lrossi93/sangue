@@ -190,6 +190,17 @@ export class OrdersService {
     });
   }
 
+  rmOrderPromise(id: string): Observable<any> {
+    return this.http.post<String[]>(
+      this.url, 
+      {
+        request: 'rmOrder',
+        id_session: this.loginService.getSession(),
+        id: id
+      }
+    );
+  }
+
   /*
   
         ORDERROWS ===========================

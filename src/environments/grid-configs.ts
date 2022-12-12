@@ -5,7 +5,6 @@ import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
-import { LoginService } from "src/app/login.service";
 import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
 import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/orders-urgent-checkbox.component";
 import { OrdersValidatedCheckboxComponent } from "src/app/orders-validated-checkbox/orders-validated-checkbox.component";
@@ -333,7 +332,8 @@ export const orderGridHeaders = {
     Validated: "Validato",
     ValidationDate: "Data validazione",
     Notes: "Note",
-    EditOrder: "Modifica ordine"
+    EditOrder: "Modifica ordine",
+    Pending: "In attesa"
   },
   en: {
     ID: "ID",
@@ -346,7 +346,8 @@ export const orderGridHeaders = {
     Validated: "Validated",
     ValidationDate: "Validation date",
     Notes: "Notes",
-    EditOrder: "Edit order"
+    EditOrder: "Edit order",
+    Pending: "Pending"
   }
 }
 
@@ -357,15 +358,17 @@ export const gridConfigOrders210 = [
       field: 'id', 
       editable: false
   },
+  /*
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
       field: 'username', 
       cellRenderer: DropdownUsersOrdersComponent,
       editable: false
   },
+  */
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
-    field: 'username', 
+    field: 'full_username', 
     cellRenderer: DropdownUsersOrdersComponent,
     editable: false
   },
@@ -410,7 +413,11 @@ export const gridConfigOrders210 = [
       field: 'd_validato', 
       editable: false,
       cellRenderer: (params: { value: string | number | Date; }) => {
-        return new Date(params.value).toLocaleDateString('it-IT');
+        //if date is awaiting validation
+        if(params.value == "0000-00-00")
+          return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+        else
+          return new Date(params.value).toLocaleDateString('it-IT');
       }
   },
   { 
@@ -487,7 +494,10 @@ export const gridConfigOrders220 = [
         field: 'd_validato', 
         editable: false,
         cellRenderer: (params: { value: string | number | Date; }) => {
-          return new Date(params.value).toLocaleDateString('it-IT');
+          if(params.value == "0000-00-00")
+            return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+          else
+            return new Date(params.value).toLocaleDateString('it-IT');
         }
     },
     { 

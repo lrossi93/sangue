@@ -1,4 +1,5 @@
 <mat-checkbox
 [checked]="checked"
+[disabled]="loginService.getUserCode() == '210'"
 (change)="toggleCheckbox($event)">
 </mat-checkbox>

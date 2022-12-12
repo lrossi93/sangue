@@ -7,6 +7,7 @@ import { environment, Order, OrderRow } from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
+import { OrdersComponent } from '../orders/orders.component';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { UsersService } from '../users.service';
 
@@ -44,7 +45,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     dialog: MatDialog,
     private ordersService: OrdersService,
     private usersService: UsersService,
-    private pharmaRegistryService: PharmaRegistryService
+    private pharmaRegistryService: PharmaRegistryService,
+    private ordersComponent: OrdersComponent
   ) { 
     this.dialog = dialog;
     this.ordersService = ordersService; 
@@ -68,11 +70,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.ordersService.listOrderRowsPromise(id).subscribe(
       res => {
         if(res[0] == "KO") {
-          alert("Error retrieving OrderRows!")
+          //alert("Error retrieving OrderRows!")
         }
         else {
           this.orderRows = res[1];
-          console.log(this.orderRows);
+          //console.log(this.orderRows);
         }
       }
     );
@@ -80,7 +82,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
 
   openEditOrderDialog(event: any) {  
     this.assignOrderData();
-    console.log(this.orderRows);
+    //console.log(this.orderRows);
     
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
@@ -106,8 +108,14 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     }) => {
       if(result !== undefined && result.isSubmitted){
         console.log(result);
+        this.rmOrderAndOrderRows(this.data.id, result.orderRows);
       }
     });
+  }
+
+
+  rmOrderAndOrderRows(orderId: string, orderRows: OrderRow[]) {
+    this.ordersComponent.rmOrderAndOrderRows(orderId, orderRows);
   }
 
   assignOrderData() {
@@ -127,11 +135,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.usersService.listUsersPromise("210").subscribe(
       res => {
         if(res[0] == "KO") {
-          alert("Error retrieving users!");
+          //alert("Error retrieving users!");
         }
         else {
           this.users = res[1];
-          console.log(this.users);
+          //console.log(this.users);
         }
       }
     );
@@ -141,11 +149,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.pharmaRegistryService.listProductsPromise().subscribe(
       res => {
         if(res[0] == "KO") {
-          alert("Error retrieving products!");
+          //alert("Error retrieving products!");
         }
         else {
           this.products = res[1];
-          console.log(this.products);
+          //console.log(this.products);
         }
       }
     );

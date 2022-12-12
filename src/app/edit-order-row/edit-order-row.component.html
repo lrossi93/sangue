@@ -71,7 +71,8 @@
 	</mat-form-field>
 
 
-	<mat-form-field>
+	<mat-form-field
+	*ngIf="loginService.getUserCode() == '220'">
 		<input
 		placeholder="{{ 'Validated quantity' | translate }}"
 		[formControl]="qta_validata"

@@ -67,7 +67,12 @@ export class EditOrderRowComponent implements OnInit {
     }
     //se sangueasl
     else if(loginService.getUserCode() == "210") {
-      this.usersFormControl = _builder.control(this.usernameToClient(localStorage.getItem("id_profile")!));
+      if(this.orderRow.id != null) {
+        this.usersFormControl = _builder.control(localStorage.getItem("id_profile"));
+      }
+      else{
+        this.usersFormControl = _builder.control(this.usernameToClient(localStorage.getItem("id_profile")!));
+      }
     }
 
     //products

@@ -76,11 +76,16 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        if(event.column.getColId() == "d_ordine" || event.column.getColId() == "d_validato") {
+        if(event.column.getColId() == "d_ordine") {
+          this.openEditDateDialog(event);
+        }
+        if(event.column.getColId() == "d_validato" && loginService.getUserCode() == "220") {
           this.openEditDateDialog(event);
         }
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {
+        console.log(event);
+        
         console.log("Changed from " + event.oldValue + " to " + event.newValue);
         this.order.id = event.data.id;
         this.order.anno = event.data.anno;
@@ -137,8 +142,8 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] != "KO") {
           this.orders = res[1];
-          console.log("received orders:");
-          console.log(this.orders);
+          //console.log("received orders:");
+          //console.log(this.orders);
           this.createOrderGridRowData();
           this.updateGrid();
         }
@@ -171,14 +176,11 @@ export class OrdersComponent implements OnInit {
       };
       this.orderGridRowData.push(newOrderGridRowData);
     }
-    console.log("forecastGridRowData");
-    console.log(this.orderGridRowData);
   }
 
   getFullUsernameById(id: string): string {
     for(var i = 0; i < this.users.length; ++i) {
       if(this.users[i].username == id) {
-        console.log("returning " + this.users[i].client);
         return this.users[i].client;
       }
     }
@@ -196,6 +198,7 @@ export class OrdersComponent implements OnInit {
           //set orderId for all orderRows before submitting
           for(var i = 0; i < newOrderRows.length; ++i) {
             newOrderRows[i].id_ordine = res[1];
+            newOrderRows[i].username = newOrder.username;
           }
 
           //then save all orderRows on db
@@ -218,6 +221,23 @@ export class OrdersComponent implements OnInit {
         }
       );
     }
+  }
+
+  rmOrderAndOrderRows(orderId: string, orderRows: OrderRow[]) {
+    this.ordersService.rmOrderPromise(orderId).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.rmOrderLocally(orderId);
+          for(var i = 0; i < orderRows.length; ++i){
+            this.rmOrderRow(orderRows[i].id);
+          }
+        }
+      }
+    );
+  }
+
+  rmOrderRow(id: string){
+    this.ordersService.rmOrderRow(id);
   }
 
   setOrder(order: Order, isAdding: boolean) {
@@ -249,6 +269,7 @@ export class OrdersComponent implements OnInit {
     else {  
       //if the id is not present, append the new element
       this.orders.push(order);
+      this.createOrderGridRowData();
     }
     //update order grid
     this.updateGrid();
@@ -291,12 +312,12 @@ export class OrdersComponent implements OnInit {
     this.ordersService.listOrderRows(orderId);
     this.orderRows = this.ordersService.orderRows;
   }
-  
+/*
   setOrderRow(orderRow: OrderRow, isAdding: boolean) {
     this.ordersService.setOrderRow(orderRow, isAdding);
     this.setOrderRowLocally(orderRow, isAdding);
   }
-
+*/
   setOrderRowLocally(orderRow: OrderRow, isAdding: boolean) {
     if(!isAdding) {
       for(let i = 0; i < this.orders.length; ++i) {
@@ -340,6 +361,10 @@ export class OrdersComponent implements OnInit {
       (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
         if(result !== undefined && result.isSubmitted){
           console.log(result);
+          let newOrder = result.newOrder;
+          if(this.loginService.getUserCode() == "210")
+            newOrder.username = this.loginService.getUsername()!;
+          //console.log(newOrder);
           this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
         }
       }
@@ -448,7 +473,6 @@ export class OrdersComponent implements OnInit {
       }
     );
   }
-
 
   /*
   
