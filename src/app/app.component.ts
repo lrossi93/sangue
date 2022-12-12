@@ -33,7 +33,9 @@ export class AppComponent implements OnInit {
     //comment the next line to activate language detection
     //translate.setDefaultLang('it');
     //environment.currentLanguage = 'it'
-    console.log(navigator.language.split("-", 2)[0]);
+    //console.log(navigator.language.split("-", 2)[0]);
+    console.log(loginService.getUserCode());
+    
   }
 
   ngOnInit(): void {
@@ -64,6 +66,8 @@ export class AppComponent implements OnInit {
         res => {
           if(res[0] == "KO"){
             localStorage.removeItem("id_session");
+            localStorage.removeItem("id_profile");
+            localStorage.removeItem("")
             this.router.navigate(['login']);
           }
         }

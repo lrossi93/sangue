@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
-import { OrderRow } from 'src/environments/environment';
+import { OrderRow, Product, User } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 
 @Component({
@@ -23,22 +23,20 @@ export class EditOrderRowComponent implements OnInit {
   n_riga!: UntypedFormControl;
   id_prd!: UntypedFormControl;
   qta!: UntypedFormControl;
+  motivazione!: UntypedFormControl;
   qta_validata!: UntypedFormControl;
   note!: UntypedFormControl;
 
-  //BEGIN: autocomplete - users
-  users: any = [];
-  filteredUsers!: Observable<string[]>;
-  userFormControl!: UntypedFormControl;
-  userNames: any = [];
-  //END: autocomplete - users
 
-  //BEGIN: autocomplete - products
-  products: any = [];
-  filteredProducts!: Observable<string[]>;
-  productFormControl!: UntypedFormControl;
-  productNames: any = [];
-  //END: autocomplete - products
+  productsFormControl!: FormControl;// = new FormControl('', Validators.required);
+  products: Product[] = [];
+  productOptions: string[] = [];
+  filteredProductOptions: Observable<string[]> | undefined;
+
+  usersFormControl!: FormControl;// = new FormControl('', Validators.required);
+  users: User[] = [];
+  userOptions: string[] = [];
+  filteredUserOptions: Observable<string[]> | undefined;
 
   loginService: LoginService
 
@@ -52,119 +50,146 @@ export class EditOrderRowComponent implements OnInit {
     private _builder: UntypedFormBuilder,
     loginService: LoginService
   ) {
-    this.loginService = loginService
+    this.loginService = loginService;
+
     this.orderRow = data.orderRow;
-    //if(this.loginService.getUserCode() == "220")
-    console.log("username: " + data.orderRow.username);
-    console.log("users");
-    console.log(data.users);
-    console.log("products");
-    console.log(data.products);
+    this.users = data.users;    
     
-    
-    this.username = _builder.control(data.orderRow.username, Validators.required);
-    this.n_riga = _builder.control(data.orderRow.n_riga);
-    this.id_prd = _builder.control(data.orderRow.id_prd, Validators.required);
-    this.qta = _builder.control(data.orderRow.qta, Validators.required);
-    if(this.loginService.getUserCode() == "220") {
-      this.userFormControl = _builder.control("", Validators.required);
+    //se sangueaslno
+    if(loginService.getUserCode() == "220") {
+      if(this.orderRow.id != "") {
+        this.usersFormControl = _builder.control(this.orderRow.username == "" ? "" : this.usernameToClient(this.orderRow.username), Validators.required);
+        //this.userOptions = this.usersToOptions(this.users);
+      }
+      else {
+        //do nothing, orderRow.username is already assigned
+      }
     }
-    this.productFormControl = _builder.control("", Validators.required);
-    this.qta_validata = _builder.control(data.orderRow.qta_validata, Validators.required);
-    this.note = _builder.control(data.orderRow.note);
+    //se sangueasl
+    else if(loginService.getUserCode() == "210") {
+      this.usersFormControl = _builder.control(this.usernameToClient(localStorage.getItem("id_profile")!));
+    }
+
+    //products
+    this.products = data.products;    
     
-   }
+    this.productsFormControl = _builder.control(this.productIdToDes(this.orderRow.id_prd), Validators.required);
+    this.productOptions = this.productsToOptions(this.products);
+    
+    this.n_riga = _builder.control(this.orderRow.n_riga == null ? 0 : this.orderRow.n_riga, Validators.required);
+    this.qta = _builder.control(this.orderRow.qta, Validators.required);
+    this.motivazione = _builder.control(this.orderRow.motivazione, Validators.required);
+    this.qta_validata = _builder.control(this.orderRow.qta_validata, Validators.required);
+    this.note = _builder.control(this.orderRow.note);
+  }
 
   ngOnInit(): void {
-    console.log("EditOrderRowComponent: orderID: " + this.data.orderRow.id_ordine);
-    
-    //filter input for users
-    this.filteredUsers = this.userFormControl.valueChanges.pipe(
+    //first filter
+    this.filteredProductOptions = this.productsFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterUsers(value || ''))
+      map(value => this._filterProducts(value || '')),
     );
-    
-    //filter input for products
-    this.filteredProducts = this.productFormControl.valueChanges.pipe(
+
+    //second filter
+/*
+    this.filteredUserOptions = this.usersFormControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterProducts(value || ''))
+      map(value => this._filterUsers(value || '')),
     );
+*/ 
+  }
+
+  private _filterProducts(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.productOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
+/*
+  private _filterUsers(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.userOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
+*/
+  productsToOptions(products: Product[]): string[] {
+    var productOptions: string[] = [];
+    for(var i = 0; i < products.length; ++i) {
+      productOptions.push(products[i].des);
+    }
+    return productOptions;
+  }
+
+  productDesToId(des: string): string {
+    for(var i = 0; i < this.products.length; ++i){
+      if(des == this.products[i].des) {
+        return this.products[i].id;
+      }
+    }
+    return "";
+  }
+
+  productIdToDes(id: string): string {
+    for(var i = 0; i < this.products.length; ++i){
+      if(id == this.products[i].id) {
+        return this.products[i].des;
+      }
+    }
+    return "";
+  }
+
+  usersToOptions(users: User[]): string[] {
+    var userOptions: string[] = [];
+    for(var i = 0; i < users.length; ++i) {
+      userOptions.push(users[i].client);
+    }
+    return userOptions;
+  }
+
+  userClientToId(client: string): string {
+    for(var i = 0; i < this.users.length; ++i){
+      if(client == this.users[i].client) {
+        return this.users[i].username;
+      }
+    }
+    return "";
+  }
+
+  usernameToClient(username: string): string {
+    for(var i = 0; i < this.users.length; ++i){
+      if(username == this.users[i].username) {
+        return this.users[i].client;
+      }
+    }
+    return "";
+  }
+
+  onUserSelected(event: any) {
+    console.log(event.source.value);
+    console.log(this.userClientToId(event.source.value));
+  }
+
+  onProductSelected(event: any) {
+    console.log(event.source.value);
+    console.log(this.productDesToId(event.source.value));
   }
 
   assignOrderRowValues() {
-    this.orderRow.id = this.data.orderRow.id;
-    //this.orderRow.id_ordine = this.data.orderId;
-    this.orderRow.id_prd = this.productID;
+    this.orderRow.id_prd = this.productDesToId(this.productsFormControl.value);
     this.orderRow.n_riga = this.n_riga.value;
     this.orderRow.note = this.note.value;
     this.orderRow.qta = this.qta.value;
+    this.orderRow.motivazione = this.motivazione.value;
     this.orderRow.qta_validata = this.qta_validata.value;
-    this.orderRow.username = this.username.value;
+    //this.orderRow.username = this.userClientToId(this.usersFormControl.value);
   }
 
   onSubmit() {
     this.isSubmitted = true;
-    //console.log(this.data.orderRow);
     this.assignOrderRowValues();
+    //console.log(this.orderRow);
     this.dialogRef.close(
       { 
         orderRow: this.orderRow, 
         isSubmitted: this.isSubmitted
       }
     );
-  }
-
-  //BEGIN functions for autocomplete - USERS
-  private _filterUsers(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.userNames.filter((option: string) => option!.toLowerCase().includes(filterValue));
-  }
-
-  getUserId(event: any){
-    for(let i = 0; i < this.users.length; ++i){
-      if(this.users[i].client == event.source.value){
-        return this.users[i].id;
-      }
-    }
-  }
-
-  getUserNames(): void {
-    for(let i = 0; i < this.data.users.length; ++i){
-      this.userNames.push(this.data.users[i].client);
-    }
-  }
-
-  onUserSelected(event: any) {
-    if(event.source._selected){
-      this.username = this.getUserId(event);
-    }
-  }
-  //END functions for autocomplete - USERS
-
-  //BEGIN functions for autocomplete - PRODUCTS
-  private _filterProducts(value: string): string[]{
-    const filterValue = value.toLowerCase();
-    return this.productNames.filter((option: string) => option!.toLowerCase().includes(filterValue));
-  }
-
-  getProductId(event: any){
-    for(let i = 0; i < this.products.length; ++i){
-      if(this.products[i].des == event.source.value){
-        return this.products[i].id;
-      }
-    }
-  }
-
-  getProductNames(): void {
-    for(let i = 0; i < this.data.products.length; ++i){      
-      this.productNames.push(this.data.products[i].des);
-    }
-  }
-
-  onProductSelected(event: any) {
-    if(event.source._selected){
-      this.id_prd = this._builder.control(this.getProductId(event));
-    }
-  }
-  //END functions for autocomplete - PRODUCTS
+  }  
 }

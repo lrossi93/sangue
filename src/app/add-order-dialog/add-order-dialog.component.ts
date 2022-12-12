@@ -1,33 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, UntypedFormControl, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { Order, OrderRow, Product, User } from 'src/environments/environment';
+import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
+import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.component';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
-
-//object of orderRows formControls
-interface OrderRowFormControls {
-  id: number;
-  id_ordine: UntypedFormControl;
-  n_riga: UntypedFormControl;
-  id_prd: UntypedFormControl;
-  username: UntypedFormControl;
-  qta: UntypedFormControl;
-  qta_validata: UntypedFormControl;
-  note: UntypedFormControl;
-  productFormControl: UntypedFormControl, //formControl for product name
-  filteredProducts: Observable<string[]>
-}
-
-
-
-/*
-
-TODO: trovare un modo per assegnare gli orderRows solo quando la setOrder 
-ha restituito un orderId da poter inserire negli orderRow appena creati
-
-*/
 
 @Component({
   selector: 'app-add-order-dialog',
@@ -35,12 +14,13 @@ ha restituito un orderId da poter inserire negli orderRow appena creati
   styleUrls: ['./add-order-dialog.component.css']
 })
 export class AddOrderDialogComponent implements OnInit {
+  dialog: any;
   dialogRef: any;
   loginService: LoginService;
   newOrder!: Order;
   newOrderRows: OrderRow[] = [];
   auxId = 0;
-
+  
   //newOrder formControls for fields
   anno!: UntypedFormControl;
   username!: string;
@@ -52,8 +32,6 @@ export class AddOrderDialogComponent implements OnInit {
   d_validato!: UntypedFormControl;
   note!: UntypedFormControl;
 
-  //array of formControls for orderRows
-  orderRowFormControls: OrderRowFormControls[] = [];
 
   //BEGIN: autocomplete - users
   users: any = [];
@@ -81,7 +59,8 @@ export class AddOrderDialogComponent implements OnInit {
     loginService: LoginService,
     private _builder: FormBuilder
   ) { 
-    this.dialogRef = thisDialogRef;
+    //this.dialogRef = thisDialogRef;
+    this.dialog = dialog;
     this.loginService = loginService;
 
     //creation of formControls from _builder
@@ -118,9 +97,6 @@ export class AddOrderDialogComponent implements OnInit {
       startWith(''),
       map(value => this._filterUsers(value || ''))
     );
-
-    //filter input for products
-    this.getProductNames();
   }
 
   pushOrderRow(newOrderRow: OrderRow){
@@ -129,24 +105,6 @@ export class AddOrderDialogComponent implements OnInit {
 
   rmOrderRowByIndex(index: number) {
     this.newOrderRows.splice(index, 1);
-  }
-
-  //create orderRow, fill it with values from dialog and push it to newOrderRows array
-  assignOrderRowValues() {
-    for(let i = 0; i < this.orderRowFormControls.length; ++i) {
-      let newOrderRow: OrderRow = {
-        id: "",
-        id_ordine: this.orderRowFormControls[i].id_ordine.value,
-        id_prd: this.getProductIdFromDes(this.orderRowFormControls[i].productFormControl.value),
-        username: this.orderRowFormControls[i].username.value,
-        n_riga: this.orderRowFormControls[i].n_riga.value,
-        qta: this.orderRowFormControls[i].qta.value,
-        qta_validata: this.orderRowFormControls[i].qta_validata.value, 
-        note: this.orderRowFormControls[i].note.value
-      };
-      console.log(newOrderRow);
-      this.pushOrderRow(newOrderRow);
-    }
   }
 
   assignNewOrderValues() {
@@ -186,68 +144,15 @@ export class AddOrderDialogComponent implements OnInit {
     return formattedDate;
   }
 
-  //add a new set of formControls for a new vOrderRow
-  addRow() {
-    let newOrderRowFormControls: OrderRowFormControls = 
-    {
-      id: this.auxId++,
-      id_ordine: new UntypedFormControl(this.orderRowFormControls.length, Validators.required),
-      n_riga: new UntypedFormControl(this.auxId),
-      id_prd: new UntypedFormControl(""),
-      username: new UntypedFormControl(this.loginService.getUsername(), Validators.required),
-      qta: new UntypedFormControl(0, Validators.required),
-      qta_validata: new UntypedFormControl(0),
-      note: new UntypedFormControl(""),
-      productFormControl: new UntypedFormControl(""),
-      filteredProducts: new Observable<string[]> //che cos'è?
-    };
-    //assign formControl to new row
-    newOrderRowFormControls.filteredProducts = newOrderRowFormControls.productFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => 
-        this._filterProducts(value || '')
-      ));
-    this.orderRowFormControls.push(newOrderRowFormControls);
-  }
-
-  //delete an orderRow from gui
-  deleteRow(id: number) {
-    for(let i = 0; i < this.orderRowFormControls.length; ++i) {
-      if(this.orderRowFormControls[i].id == id) {
-        this.orderRowFormControls.splice(i, 1);
+  deleteOrderRow(id: string) {
+    for(let i = 0; i < this.newOrderRows.length; ++i) {
+      if(this.newOrderRows[i].id == id) {
+        this.newOrderRows.splice(i, 1);
       }
     }
   }
 
-  save() {
-    let isAdding = true;
-    //console.log(this.newOrder);
-    //console.log(this.newOrderRows);
-    this.ordersService.setOrderPromise(this.newOrder, isAdding).subscribe(res => {
-      if(res[0] == "KO"){
-        alert("Error setting order!");
-      }
-      else {
-        console.log(res);
-        for(let i = 0; i < this.newOrderRows.length; ++i) {
-          this.newOrderRows[i].id_ordine = res[1];
-          this.ordersService.setOrderRowPromise(this.newOrderRows[i], isAdding).subscribe(res2 => {
-            if(res2[0] == "KO"){
-              alert("Error setting orderRow!");
-            }
-            else {
-              console.log("OrderRow with id " + res2[1] + " successfully set!");
-            }
-          });
-          let isSubmitted = true;
-          this.dialogRef.close({
-            newOrder: this.newOrder,
-            isSubmitted: isSubmitted
-          });
-        }        
-      }
-    });
-  }
+//===================================================================================================================
 
   //checkbox toggles
   toggleUrgente() {
@@ -269,14 +174,7 @@ export class AddOrderDialogComponent implements OnInit {
     }
   }
 
-  toggleQtaValidata(id: number) {
-    for(let i = 0; i < this.orderRowFormControls.length; ++i) {
-      if(this.orderRowFormControls[i].id == id){
-        this.orderRowFormControls[i].qta_validata.value ? this.orderRowFormControls[i].qta_validata = this._builder.control(false) : this.orderRowFormControls[i].qta_validata = this._builder.control(true);
-        return;
-      }
-    }
-  }
+//===================================================================================================================
 
   //if needed...
   onOrderDateChange(event: any) {
@@ -288,45 +186,24 @@ export class AddOrderDialogComponent implements OnInit {
     console.log(this.d_validato.value);
   }
 
-  checkCompulsoryFields(): boolean {
-    if(
-      this.username == "" ||
-      this.d_ordine.value == ""
-    ){
-      alert("All compulsory Order fields must not be empty!");
-      return false;
+  onSubmit(event: any) {
+    //TODO: check fields
+    this.assignNewOrderValues();
+    let isSubmitted = true;
+    
+    for(var i = 0; i < this.newOrderRows.length; ++i) {
+      this.newOrderRows[i].username = this.newOrder.username
     }
-    for(let i = 0; i < this.orderRowFormControls.length; ++i) {
-      if(this.orderRowFormControls[i].id_prd.value == "") {
-        alert("OrderRow of index " + i + " is missing id_prd");
-        return false;
-      }
-      if(this.orderRowFormControls[i].username.value == "") {
-        alert("OrderRow of index " + i + " is missing username");
-        return false;
-      }
-      if(this.orderRowFormControls[i].qta.value == 0) {
-        alert("OrderRow of index " + i + " is missing qta");
-        return false;
-      }
-    }
-    return true;
+
+    this.thisDialogRef.close({
+      newOrder: this.newOrder,
+      newOrderRows: this.newOrderRows,
+      isSubmitted: isSubmitted
+    });
+    return;
   }
 
-  onSubmit(event: any) {
-    if(this.orderRowFormControls.length == 0) {
-      alert("Cannot submit an order without order rows!");
-      return;
-    }
-    if(
-      true//this.checkCompulsoryFields()
-    ) {
-      this.assignNewOrderValues();
-      this.assignOrderRowValues();
-      this.save();
-      return;
-    }
-  }
+//===================================================================================================================
 
   //BEGIN functions for autocomplete - USERS
   private _filterUsers(value: string): string[] {
@@ -357,51 +234,108 @@ export class AddOrderDialogComponent implements OnInit {
   }
   //END functions for autocomplete - USERS
 
-
-
-  //BEGIN functions for autocomplete - PRODUCTS
-  private _filterProducts(value: string): string[]{
-    const filterValue = value.toLowerCase();  
-    return this.productNames.filter((option?: string) => option?.toLowerCase().includes(filterValue));
-  }
-
-  getProductId(event: any){
-    for(let i = 0; i < this.products.length; ++i){
-      if(this.products[i].des == event.source.value){
-        return this.products[i].id;
+  productIdToDes(id: string): string {
+    for(var i = 0; i < this.products.length; ++i){
+      if(id == this.products[i].id) {
+        return this.products[i].des;
       }
     }
+    return "";
   }
 
-  getProductIdFromDes(des: string) {
-    for(let i = 0; i < this.products.length; ++i){
-      if(this.products[i].des == des){
-        return this.products[i].id;
+  usernameToClient(username: string): string {
+    for(var i = 0; i < this.users.length; ++i){
+      if(username == this.users[i].username) {
+        return this.users[i].client;
       }
     }
+    return "";
   }
-
-  getProductNames(): void {
-    for(let i = 0; i < this.data.products.length; ++i){      
-      this.productNames.push(this.data.products[i].des);
+  
+  getOrderRowById(id: string): OrderRow | undefined {
+    for(let i = 0; i < this.newOrderRows.length; ++i){
+      if(id == this.newOrderRows[i].id){
+        console.log(this.newOrderRows[i]);
+        return this.newOrderRows[i];
+      }
     }
+    return undefined;
   }
 
-  onProductSelected(event: any, index: number) {
-    console.log(event.source.value);
-    console.log(this.orderRowFormControls[index].filteredProducts);
-    console.log("product ID: " + this.getProductId(event));
+  deleteOrderRowByIndex(index: number) {
+    this.newOrderRows.splice(index, 1);
+  }
+
+  //works both for adding and for editing an orderRow
+  //here id is not the real id but the index in the newOrderRows array!
+  openEditOrderRowDialog(id: string, isAdding: boolean) {
+    const dialogConfig = new MatDialogConfig();
+    //dialogConfig.autoFocus = true;
+    console.log("OpenEditOrderRowDialog: ID = " + id);
     
-    if(event.source._selected){
-      for(let i = 0; i < this.orderRowFormControls.length; ++i) {
-        if(this.orderRowFormControls[i].id == index) {
-          this.orderRowFormControls[i].productFormControl = this._builder.control(event.source.value);
-          this.orderRowFormControls[i].id_prd = this._builder.control(this.getProductId(event));
-          return;
+    //if id is not specified, create a new orderRow
+    if(id == "") {
+      let newOrderRow = {
+        id: "",
+        id_ordine: "",
+        username: "",
+        n_riga: 0,
+        id_prd: "",
+        qta: 0,
+        motivazione: "",
+        qta_validata: 0,
+        note: ""
+      }
+
+      dialogConfig.data = {
+        orderRow: newOrderRow,
+        products: this.products
+      }
+    }
+    else {
+      let editedOrderRow = this.getOrderRowById(id);
+      console.log(editedOrderRow);
+      dialogConfig.data = {
+        orderRow: editedOrderRow,
+        products: this.products
+      }
+    }
+          
+    this.dialogRef = this.dialog.open(
+      EditOrderRowComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { orderRow: OrderRow, isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        console.log(result);
+        let newOrderRow = result.orderRow;
+        //se l'id della orderRow è vuoto, allora la sto aggiungendo, quindi la devo pushare nell'array
+        if(newOrderRow.id == "") {
+          newOrderRow.id = this.newOrderRows.length.toString();
+          console.log(newOrderRow);
+          this.newOrderRows.push(newOrderRow);
         }
       }
-    }
+    });
   }
-  //END functions for autocomplete - PRODUCTS
-  
+
+  openAreYouSureOrderRowDialog(id: number) {
+    const dialogConfig = new MatDialogConfig();
+    //dialogConfig.autoFocus = true;
+    dialogConfig.data = { id: id }
+        
+    this.dialogRef = this.dialog.open(
+      AreYouSureOrderRowComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        this.deleteOrderRowByIndex(id);
+      }
+    });
+  }
 }

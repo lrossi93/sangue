@@ -298,6 +298,7 @@ export class OrdersService {
           id: orderRow.id,
           id_ordine: orderRow.id_ordine,
           username: orderRow.username,
+          motivazione: orderRow.motivazione,
           n_riga: orderRow.n_riga,
           id_prd: orderRow.id_prd,
           qta: orderRow.qta,

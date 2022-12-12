@@ -38,6 +38,7 @@
     "Validation date": "Data validazione",
     "Order rows": "Righe ordine",
     "Validated quantity": "Quantità validata",
+    "Reason": "Motivazione",
     "Validated": "Validato",
     "Delete row": "Elimina riga",
     "Add row": "Aggiungi riga",
@@ -48,7 +49,8 @@
     "Edit": "Modifica",
     "Delete": "Elimina",
     "Delete order": "Elimina ordine",
-    "Add\/create order row": "Aggiungi/crea una riga d'ordine",
+    "Add order row": "Aggiungi riga d'ordine",
+    "Edit order row": "Modifica riga d'ordine",
     "Code": "Codice",
     "Description": "Descrizione",
     "Units": "Unità",
@@ -66,5 +68,7 @@
     "Profile ID": "ID di profilo",
     "Oops! We did not find what you were looking for": "Oops! Non abbiamo trovato ciò che cercavi",
     "Row": "Riga",
-    "Incorrect username and\/or password": "Username e\/o password non corretti"
+    "Incorrect username and\/or password": "Username e\/o password non corretti",
+    "Extractions": "Estrazioni",
+    "Orderable period": "Periodo ordinabile"
 }

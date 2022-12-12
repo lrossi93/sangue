@@ -78,37 +78,39 @@ export interface OrderGridRowData {
   id: string;
   anno: number;
   username: string;
-  d_ordine: string; //data di piazzamento dell'ordine
-  n_ordine: number; //numero dell'ordine
+  full_username: string; //per permettere di filtrare sullo username (client)
+  d_ordine: string;
+  n_ordine: number;
   b_urgente: boolean;
-  b_extra: boolean; //ordine in più rispetto a quello dell'anno corrente
+  b_extra: boolean;
   b_validato: boolean;
-  d_validato: string; //data di validazione dell'ordine
+  d_validato: string;
   note: string;
 }
 
 export interface OrderRow {
   id: string;
-  id_ordine: string; //identificativo dell'ordine di cui fa parte
-  n_riga: number; //numero della riga?
-  id_prd: string; //id del prodotto che fa parte della riga di quest'ordine
-  username: string; //id dell'utente che ha piazzato l'ordine --> #TODO: è necessario?
-  qta: number; //quante copie del prodotto sono state ordinate
+  id_ordine: string;          //identificativo dell'ordine di cui fa parte
+  n_riga: number;             //numero della riga?
+  id_prd: string;             //id del prodotto che fa parte della riga di quest'ordine
+  username: string;           //id dell'utente che ha piazzato l'ordine
+  qta: number;                //quante copie del prodotto sono state ordinate
+  motivazione: string;        //perchè vengono ordinate così tante copie
   qta_validata: number; //quante copie del prodotto vengono concesse
   note: string;
 }
 
 /**
- * OrderRow data type to be shown in 
+ * 
  */
 export interface OrderRowGridRowData {
   id: string;
-  id_ordine: string; //identificativo dell'ordine di cui fa parte
-  n_riga: number; //numero della riga?
-  product_name: string; //id del prodotto che fa parte della riga di quest'ordine
-  full_username: string; //id dell'utente che ha piazzato l'ordine --> #TODO: è necessario?
-  qta: number; //quante copie del prodotto sono state ordinate
-  qta_validata: number; //quante copie del prodotto vengono concesse
+  id_ordine: string;
+  n_riga: number;
+  product_name: string;
+  full_username: string;
+  qta: number;
+  qta_validata: number;
   note: string;
 }
 

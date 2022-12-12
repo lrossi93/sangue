@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Order, OrderRow, User } from 'src/environments/environment';
+import { Order, OrderRow } from 'src/environments/environment';
 import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
@@ -47,7 +47,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.annoFormControl = _builder.control(data.order.anno, Validators.required);
     this.dOrdineFormControl = _builder.control(data.order.d_ordine, Validators.required);
     this.nOrdineFormControl = _builder.control(data.order.n_ordine, Validators.required);
-    this.urgenteFormControl = _builder.control(data.order.b_urgente, Validators.required);//questo sarà un checkbox
+    this.urgenteFormControl = _builder.control(data.order.b_urgente, Validators.required);
     this.extraFormControl = _builder.control(data.order.b_extra, Validators.required);
     this.validatoFormControl = _builder.control(data.order.b_validato, Validators.required);
     this.dValidatoFormControl = _builder.control(data.order.d_validato, Validators.required);
@@ -88,7 +88,7 @@ export class EditOrderDialogComponent implements OnInit {
 
   openAreYouSureOrderRowDialog(id: string) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
     dialogConfig.data = { id: id }
         
     this.dialogRef = this.dialog.open(
@@ -107,7 +107,7 @@ export class EditOrderDialogComponent implements OnInit {
   //works both for adding and for editing an orderRow
   openEditOrderRowDialog(id: string, isAdding: boolean) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
     console.log(this.data.order.id);
     console.log("OpenEditOrderRowDialog()================");
     
@@ -116,17 +116,16 @@ export class EditOrderDialogComponent implements OnInit {
       let newOrderRow = {
         id: "",
         id_ordine: this.data.order.id,
-        username: "",
+        username: this.data.order.username,
         n_riga: "",
         id_prd: "",
         qta: 0,
+        motivazione: "",
         qta_validata: 0,
         note: ""
       }
-      console.log(this.users);
-      console.log(this.products);
-      
-      
+      //console.log(this.users);
+      //console.log(this.products);
       dialogConfig.data = {
         orderRow: newOrderRow,
         users: this.users,
@@ -156,14 +155,21 @@ export class EditOrderDialogComponent implements OnInit {
       (result: { orderRow: OrderRow, isSubmitted: boolean }) => {
       if(result !== undefined && result.isSubmitted){
         console.log(result);
-        if(isAdding)
-          console.log("isAdding");
-        //se isAdding == true, non serve un orderRowId, altrimenti è già stato impostato
         this.ordersService
           .setOrderRowPromise(result.orderRow, isAdding)
           .subscribe(
-            (data: any) => {
-              console.log(data);
+            res => {
+              if(res[0] != "KO"){
+                console.log(res);
+                let newOrderRow = result.orderRow;
+                if(newOrderRow.id == "") {
+                  newOrderRow.id = res[1];
+                  this.orderRows.push(newOrderRow);
+                }
+              }
+              else {
+                console.log(res[0]);
+              }
             }
           );
       }
@@ -172,7 +178,7 @@ export class EditOrderDialogComponent implements OnInit {
 
   openAddOrderRowDialog() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
     dialogConfig.data = {
       order: this.data.order,
       orderRows: this.orderRows //array di orderRows 
@@ -193,7 +199,7 @@ export class EditOrderDialogComponent implements OnInit {
 
   openAreYouSureOrderDialog(id: string) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
     dialogConfig.data = { id: id }
         
     this.dialogRef = this.dialog.open(
@@ -209,5 +215,23 @@ export class EditOrderDialogComponent implements OnInit {
         this.thisDialogRef.close();
       }
     });
+  }
+
+  productIdToDes(id: string): string {
+    for(var i = 0; i < this.products.length; ++i){
+      if(id == this.products[i].id) {
+        return this.products[i].des;
+      }
+    }
+    return "";
+  }
+
+  usernameToClient(username: string): string {
+    for(var i = 0; i < this.users.length; ++i){
+      if(username == this.users[i].username) {
+        return this.users[i].client;
+      }
+    }
+    return "";
   }
 }

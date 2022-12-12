@@ -1,10 +1,14 @@
-<h2 style="text-align: center;">{{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ data.order.username }}</h2>
+<h2 style="text-align: center;">{{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}</h2>
 <mat-dialog-content class="typography">
     <mat-card *ngFor="let orderRow of orderRows" style="margin-bottom: 20px;">
         <mat-card-title>ID: {{ orderRow.id }}</mat-card-title>
-        <h5><b>{{ 'Product ID' | translate }}:</b> {{ orderRow.id_prd }}</h5>
+        <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
         <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
         <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
+        <h5
+        *ngIf="orderRow.motivazione != null">
+            <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
+        </h5>
         <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
         <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
         <div mat-dialog-actions align="center">

@@ -1,9 +1,7 @@
-<hr>
-<h1 mat-dialog-title align="center">{{ 'New order'| translate }}</h1>
-<hr>
-<div style="border: solid 1px grey; border-radius: 5px; margin: 5px; padding: 5px;">
+<div>
+    <h1 align="center">{{ 'New order'| translate }}</h1>
     <h2 mat-dialog-title>{{ 'Details' | translate }}</h2>
-    <hr>
+
     <!--autocomplete dropdown for USERS-->
     <mat-form-field *ngIf="loginService.getUserCode()=='220'">
         <input 
@@ -40,25 +38,31 @@
         matInput>
     </mat-form-field>
 
-    <mat-checkbox 
-        labelPosition="before"
-        (click)="toggleUrgente()">
-        {{ 'Urgent' | translate }}
-    </mat-checkbox>
-    
-    <mat-checkbox 
-        labelPosition="before"
-        (click)="toggleExtra()">
-        {{ 'Extra' | translate }}
-    </mat-checkbox>
-    
+    <p>
+        <mat-checkbox 
+            labelPosition="before"
+            (click)="toggleUrgente()">
+            {{ 'Urgent' | translate }}
+        </mat-checkbox>
+    </p>
+
+    <p>
+        <mat-checkbox 
+            labelPosition="before"
+            (click)="toggleExtra()">
+            {{ 'Extra' | translate }}
+        </mat-checkbox>
+    </p>
+
     <!--sangueaslno only-->
-    <mat-checkbox *ngIf="loginService.getUserCode() == '220'"
-        labelPosition="before"
-        (click)="toggleValidato()">
-        {{ 'Validated' | translate }}
-    </mat-checkbox>
-    
+    <p>
+        <mat-checkbox *ngIf="loginService.getUserCode() == '220'"
+            labelPosition="before"
+            (click)="toggleValidato()">
+            {{ 'Validated' | translate }}
+        </mat-checkbox>
+    </p>
+
     <!--sangueaslno only-->
     <mat-form-field *ngIf="loginService.getUserCode() == '220' && b_validato.value">
         <input 
@@ -82,83 +86,25 @@
 </div>
 
     <!--ORDERROWS-->
-    <hr *ngIf="orderRowFormControls.length > 0">
-    <h1 mat-dialog-title align="center" *ngIf="orderRowFormControls.length > 0">{{ 'Order Rows' | translate }}</h1>
-    <hr *ngIf="orderRowFormControls.length > 0">
-    <div *ngFor="let orderRow of orderRowFormControls" style="border: solid 1px grey; border-radius: 5px; margin: 5px; padding: 5px;">
-        <h2 mat-card-title>{{ 'Row' | translate}} {{ orderRow.id }}</h2>
-        <hr>
-        
-        <!--autocomplete dropdown for PRODUCTS-->
-        <mat-form-field>
-            <input 
-            type="text"
-            placeholder="{{ 'Product' | translate }}"
-            matInput
-            [formControl]="orderRow.productFormControl"
-            [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-            <mat-option 
-            *ngFor="
-                let option of orderRow.filteredProducts | 
-                async
-            " 
-            [value]="option" 
-            (onSelectionChange)='onProductSelected($event, orderRow.id)'
-            >
-                {{ option }}
-            </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
+    <mat-card *ngFor="let orderRow of newOrderRows; let i = index" style="margin-bottom: 20px;">
+        <mat-card-title>ID: {{ i }}</mat-card-title>
+        <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
+        <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
+        <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
+        <h5
+        *ngIf="orderRow.motivazione != null">
+            <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
+        </h5>
+        <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
+        <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
+        <div mat-dialog-actions align="center">
+            <button mat-raised-button color="primary" (click)="openEditOrderRowDialog(orderRow.id, false)">{{ 'Edit' | translate }}</button>
+            <button mat-raised-button color="warn" (click)="openAreYouSureOrderRowDialog(i)">{{ 'Delete' | translate }}</button>
+        </div>
+    </mat-card>
 
-        <mat-form-field *ngIf="loginService.getUserCode() == '220'"    
-            style="margin: 20px">
-            <input
-            placeholder="{{ 'Row number' | translate }}"
-            type="number"
-            [formControl]="orderRow.n_riga"
-            matInput>
-        </mat-form-field>
-
-        <mat-form-field style="margin: 20px">
-            <input
-            placeholder="{{ 'Quantity' | translate }}"
-            type="number"
-            [formControl]="orderRow.qta"
-            matInput>
-        </mat-form-field>
-
-        <!--sangueaslno only-->
-        <mat-form-field *ngIf="loginService.getUserCode() == '220'"    
-            style="margin: 20px">
-            <input
-            placeholder="{{ 'Validated quantity' | translate }}"
-            type="number"
-            [formControl]="orderRow.qta_validata"
-            matInput>
-        </mat-form-field>
-
-        <!--sangueaslno only-->
-        <mat-checkbox *ngIf="loginService.getUserCode() == '220'"
-            labelPosition="before"
-            (click)="toggleQtaValidata(orderRow.id)">
-            {{ 'Validated' | translate }}
-        </mat-checkbox>
-
-        <mat-form-field style="margin: 20px">
-            <input
-            placeholder="{{ 'Notes' | translate }}"
-            type="text"
-            [formControl]="orderRow.note"
-            matInput>
-        </mat-form-field>
-        
-        <br>
-        <button mat-raised-button color="warn" style="width: 100%" (click)="deleteRow(orderRow.id)">{{ 'Delete row' | translate }}</button>
-    </div>
-<!--/mat-dialog-content-->
-<div mat-dialog-actions align="center">
-    <button mat-raised-button color="accent" (click)="addRow()">{{ 'Add row' | translate }}</button>
-    <button mat-raised-button color="primary" (click)="onSubmit($event)">{{ 'Submit' | translate }}</button>
+    <div mat-dialog-actions align="center">
+    <button mat-raised-button color="accent" (click)="openEditOrderRowDialog('', true)">{{ 'Add row' | translate }}</button>
+    <button *ngIf="newOrderRows.length > 0" mat-raised-button color="primary" (click)="onSubmit($event)">{{ 'Submit' | translate }}</button>
     <button mat-raised-button color="secondary" mat-dialog-close="true">{{ 'Cancel' | translate }}</button>
 </div>

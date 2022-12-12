@@ -364,6 +364,12 @@ export const gridConfigOrders210 = [
       editable: false
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'username', 
+    cellRenderer: DropdownUsersOrdersComponent,
+    editable: false
+  },
+  { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
       field: 'anno', 
       editable: true
@@ -426,11 +432,19 @@ export const gridConfigOrders220 = [
         field: 'id', 
         editable: false
     },
+    /*
     { 
         headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
         field: 'username', 
-        cellRenderer: DropdownUsersOrdersComponent,
+        //cellRenderer: DropdownUsersOrdersComponent,
         editable: false
+    },
+    */
+    { 
+      headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+      field: 'full_username', 
+      cellRenderer: DropdownUsersOrdersComponent,
+      editable: false
     },
     { 
         headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
-import { environment, Forecast, ForecastGridRowData } from 'src/environments/environment';
+import { environment, ForecastGridRowData } from 'src/environments/environment';
 import { AddForecastComponent } from '../add-forecast/add-forecast.component';
 import { AreYouSureForecastComponent } from '../are-you-sure-forecast/are-you-sure-forecast.component';
 import { ForecastService } from '../forecast.service';

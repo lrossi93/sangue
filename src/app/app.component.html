@@ -4,48 +4,82 @@
 </header>
 
 <nav>
-	<button mat-button [matMenuTriggerFor]="menu"> {{ 'Menu' | translate }}</button>
+	<button 
+	mat-button 
+	[matMenuTriggerFor]="menu"
+	> 
+		{{ 'Menu' | translate }}
+	</button>
 	<mat-menu #menu="matMenu">
 		<button 
-		mat-menu-item
-		[routerLink]="['']">
-			{{ 'Home' | translate }}
-		</button>
-		<button 
 		mat-menu-item 
-		*ngIf="!loginService.logged"
+		*ngIf="loginService.getUserCode() == null"
 		[routerLink]="['/login']">
 			{{ 'Login' | translate }}
 		</button>
 		<button 
 		mat-menu-item 
-		*ngIf="loginService.logged" 
+		*ngIf="loginService.getUserCode() != null"
 		[routerLink]="['/welcome']">
 			{{ 'Welcome' | translate }}
 		</button>
 		<button
 		mat-menu-item 
-		*ngIf="loginService.logged && loginService.getProfile() == '200'"
+		*ngIf="loginService.getProfile() == '200'"
 		[routerLink]="['/pharma-registry']">
 			{{ 'Registry' | translate }}
 		</button>
 		<button 
-		mat-menu-item *ngIf="loginService.logged && loginService.getProfile() == '210' || loginService.getProfile() == '220'"
+		mat-menu-item *ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'"
 		[routerLink]="['/forecast']">
 			{{ 'Forecast' | translate }}
 		</button>
 		<button 
-		mat-menu-item
-		*ngIf="loginService.logged && loginService.getProfile() == '210' || loginService.getProfile() == '220'"
-		[routerLink]="['/orders']">
-			{{ 'Orders' | translate }}
-		</button>
-		<button 
 		mat-menu-item 
-		*ngIf="loginService.logged" 
+		*ngIf="loginService.getUserCode() != null"
 		(click)="loginService.logout()"
 		[routerLink]="['']">
 			{{ 'Logout' | translate }}
+		</button>
+	</mat-menu>	
+	
+	<button 
+	*ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'"
+	mat-button 
+	[matMenuTriggerFor]="orders"
+	> 
+		{{ 'Orders' | translate }}
+	</button>
+	<mat-menu #orders="matMenu">
+		<button 
+		mat-menu-item
+		[routerLink]="['/orders']">
+			{{ 'Orders' | translate }}
+		</button>
+
+		<button 
+		*ngIf="loginService.getUserCode() == '220'"
+		mat-menu-item
+		[routerLink]="['/orderable-period']">
+			{{ 'Orderable period' | translate }}
+		</button>
+	</mat-menu>	
+
+	<button 
+	*ngIf="loginService.getUserCode() != null"
+	mat-button 
+	[matMenuTriggerFor]="extractions"
+	> {{ 'Extractions' | translate }}</button>
+	<mat-menu #extractions="matMenu">
+		<button 
+		mat-menu-item
+		>
+			{{ 'Report 1' | translate }}
+		</button>
+		<button 
+		mat-menu-item 
+		>
+			{{ 'Report 2' | translate }}
 		</button>
 	</mat-menu>	
 </nav>

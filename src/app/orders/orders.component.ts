@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
-import { Order, OrderRow } from 'src/environments/environment';
+import { Order, OrderGridRowData, OrderRow } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders210, gridConfigOrders220 } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
@@ -31,11 +31,12 @@ export class OrdersComponent implements OnInit {
     note: ""
   }
   orders: any = [];
+  orderGridRowData: OrderGridRowData[] = [];
   orderRows: any = [];
   users: any = [];
   products: any = [];
 
-  year: string = "2022";
+  year: string = new Date().getFullYear().toString();
   dialogRef: any;
   dialog: any;
 
@@ -80,10 +81,7 @@ export class OrdersComponent implements OnInit {
         }
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {
-        //console.log(event);
-        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
-        //console.log(event.data.d_validato);
-        
+        console.log("Changed from " + event.oldValue + " to " + event.newValue);
         this.order.id = event.data.id;
         this.order.anno = event.data.anno;
         this.order.username = event.data.username;
@@ -98,6 +96,7 @@ export class OrdersComponent implements OnInit {
         //not adding but editing
         let isAdding = false;
         this.setOrder(this.order, isAdding);
+        this.updateGrid();
       }
     }
     //console.log(this.orders);
@@ -113,7 +112,7 @@ export class OrdersComponent implements OnInit {
       }
     );
 
-    this.listOrders("");
+    this.listOrders(this.year);
     this.listUsers('210');
     this.listProducts();
     //initialize Ag-Grid API
@@ -136,17 +135,97 @@ export class OrdersComponent implements OnInit {
   listOrders(year: string) {
     this.ordersService.listOrdersPromise(year).subscribe(
       res => {
-        this.orders = res[1];
-        console.log("received orders:");
-        console.log(this.orders);
-        this.updateGrid();
+        if(res[0] != "KO") {
+          this.orders = res[1];
+          console.log("received orders:");
+          console.log(this.orders);
+          this.createOrderGridRowData();
+          this.updateGrid();
+        }
+        else {
+          this.loginService.logoutPromise().subscribe(
+            res => {
+              this.router.navigate([""]);
+            }
+          )
+        }
       }
     );
   }
 
+  createOrderGridRowData() {
+    this.orderGridRowData = [];
+    for(var i = 0; i < this.orders.length; ++i) {
+      var newOrderGridRowData = {
+        id: this.orders[i].id,
+        anno: this.orders[i].anno,
+        username: this.orders[i].username,
+        full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
+        d_ordine: this.orders[i].d_ordine,
+        n_ordine: this.orders[i].n_ordine,
+        b_urgente: this.orders[i].b_urgente,
+        b_extra: this.orders[i].b_extra,
+        b_validato: this.orders[i].b_validato,
+        d_validato: this.orders[i].d_validato,
+        note: this.orders[i].note
+      };
+      this.orderGridRowData.push(newOrderGridRowData);
+    }
+    console.log("forecastGridRowData");
+    console.log(this.orderGridRowData);
+  }
+
+  getFullUsernameById(id: string): string {
+    for(var i = 0; i < this.users.length; ++i) {
+      if(this.users[i].username == id) {
+        console.log("returning " + this.users[i].client);
+        return this.users[i].client;
+      }
+    }
+    return "";
+  }
+
+  addOrderAndOrderRows(newOrder: Order, newOrderRows: OrderRow[]) {
+    //this.ordersService.setOrder(newOrder, true);
+    this.ordersService.setOrderPromise(newOrder, true).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          newOrder.id = res[1];
+          this.setOrderLocally(newOrder, true);
+          
+          //set orderId for all orderRows before submitting
+          for(var i = 0; i < newOrderRows.length; ++i) {
+            newOrderRows[i].id_ordine = res[1];
+          }
+
+          //then save all orderRows on db
+          this.setOrderRowRec(newOrderRows, 0);
+        }
+      }
+    );
+  }
+
+  setOrderRowRec(newOrderRows: OrderRow[], index: number) {
+    if(index >= newOrderRows.length) {
+      return;
+    }
+    else {
+      this.ordersService.setOrderRowPromise(newOrderRows[index], true).subscribe(
+        res => {
+          if(res[0] == "OK") {
+            this.setOrderRowRec(newOrderRows, ++index);
+          }
+        }
+      );
+    }
+  }
+
   setOrder(order: Order, isAdding: boolean) {
-    this.ordersService.setOrder(order, isAdding);
-    this.setOrderLocally(order, isAdding);
+    this.ordersService.setOrderPromise(order, isAdding).subscribe(
+      res => {
+        this.setOrderLocally(order, isAdding);
+      }
+    )
   }
 
   setOrderLocally(order: Order, isAdding: boolean) {
@@ -161,6 +240,7 @@ export class OrdersComponent implements OnInit {
           this.orders[i].b_validato = order.b_validato;
           this.orders[i].d_validato = order.d_validato;
           this.orders[i].note = order.note;
+          this.createOrderGridRowData();
           this.updateGrid();
           return;
         }
@@ -192,6 +272,7 @@ export class OrdersComponent implements OnInit {
             visible = i;
           }
         }
+        this.createOrderGridRowData();
         this.updateGrid();
         this.api.ensureIndexVisible(visible);
         return;
@@ -223,6 +304,7 @@ export class OrdersComponent implements OnInit {
           this.orderRows[i].id_ordine = orderRow.id_ordine;
           this.orderRows[i].username = orderRow.username;
           this.orderRows[i].n_riga = orderRow.n_riga;
+          this.orderRows[i].motivazione = orderRow.motivazione;
           this.orderRows[i].id_prd = orderRow.id_prd;
           this.orderRows[i].qta = orderRow.qta;
           this.orderRows[i].qta_validata = orderRow.qta_validata;
@@ -255,11 +337,13 @@ export class OrdersComponent implements OnInit {
     );
 
     this.dialogRef.afterClosed().subscribe(
-      (result: { newOrder: Order, isSubmitted: boolean }) => {
-      if(result !== undefined && result.isSubmitted){
-        this.setOrderLocally(result.newOrder, true);
+      (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
+        if(result !== undefined && result.isSubmitted){
+          console.log(result);
+          this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
+        }
       }
-    });
+    );
   }
 
   /*
@@ -372,7 +456,7 @@ export class OrdersComponent implements OnInit {
 
   */
   updateGrid() {
-    this.api.setRowData(this.orders);
+    this.api.setRowData(this.orderGridRowData);
   }
 }
   
