@@ -70,5 +70,7 @@
     "Row": "Riga",
     "Incorrect username and\/or password": "Username e\/o password non corretti",
     "Extractions": "Estrazioni",
-    "Orderable period": "Periodo ordinabile"
+    "Orderable period": "Periodo ordinabile",
+    "Start date": "Inizio",
+    "End date": "Termine"
 }

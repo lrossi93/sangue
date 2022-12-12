@@ -136,7 +136,15 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
           d_validato: this.data.d_validato,
           note: this.data.note
         }
-        this.ordersService.setOrder(updatedOrder, false);
+        this.ordersService.setOrderPromise(updatedOrder, false).subscribe(
+          res => {
+            if(res[0] == "OK") {
+              //also set updatedOrder.username to all orderRows with
+              console.log("ok!");
+              //TODO
+            }
+          }
+        );
     }
   }
 

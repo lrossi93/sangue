@@ -59,6 +59,7 @@ import { OrdersValidatedCheckboxComponent } from './orders-validated-checkbox/or
 import { PharmaRegistryActiveCheckboxComponent } from './pharma-registry-active-checkbox/pharma-registry-active-checkbox.component';
 import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 
 
 @NgModule({
@@ -99,6 +100,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     OrdersValidatedCheckboxComponent,
     PharmaRegistryActiveCheckboxComponent,
     PharmaRegistryExtraCheckboxComponent,
+    OrderablePeriodComponent,
   ],
   providers: [
     AddProductComponent,

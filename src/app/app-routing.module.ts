@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ForecastComponent } from './forecast/forecast.component';
 //import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 import { OrdersComponent } from './orders/orders.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'pharma-registry', component: PharmaRegistryComponent},
   {path: 'forecast', component: ForecastComponent},
   {path: 'orders', component: OrdersComponent},
+  {path: 'orderable-period', component: OrderablePeriodComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 
