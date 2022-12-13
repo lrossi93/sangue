@@ -26,4 +26,15 @@ export class OrderablePeriodService {
       }
     )
   }
+
+  setOrderPeriodPromise(min: string, max: string): Observable<any> {
+    return this.http.post<String[]>(
+      this.url, {
+        request: 'setOrderPeriod',
+        id_session: localStorage.getItem('id_session'),
+        gg_min: min,
+        gg_max: max
+      }
+    );
+  }
 }

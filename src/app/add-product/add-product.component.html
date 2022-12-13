@@ -1,4 +1,4 @@
-<h3 mat-dialog-title>Add a new product</h3>
+<h3 mat-dialog-title>{{ 'Add a new product' | translate }}</h3>
 
 <div mat-dialog-content>
 	<mat-form-field>
@@ -14,6 +14,13 @@
 			type="text"
 			placeholder="{{ 'Description' | translate }}"
 			[formControl]="des"
+			matInput>
+	</mat-form-field>
+	<mat-form-field>
+		<input
+			type="text"
+			placeholder="{{ 'Sorting' | translate }}"
+			[formControl]="ord"
 			matInput>
 	</mat-form-field>
 	<br>
@@ -48,19 +55,19 @@
 			[formControl]="multiplo_imballo"
 			matInput>
 	</mat-form-field>
-	<br>
+	
 	<mat-checkbox 
 		labelPosition="before"
 		(click)="toggleAttivo()">
 		{{ 'Attivo' | translate }}
 	</mat-checkbox>
-	<br>
+	
 	<mat-checkbox 
 		labelPosition="before"
 		(click)="toggleExtra()">
 		{{ 'Extra' | translate }}
 	</mat-checkbox>
-	<br>
+	
 	<mat-form-field>
 		<input
 			type="number"
@@ -68,9 +75,9 @@
 			[formControl]="min_ord"
 			matInput>
 	</mat-form-field>
-	<br>
+
 	<mat-form-field appearance="fill">
-		<mat-label>Validità</mat-label>
+		<mat-label>{{ 'Validity' | translate }}</mat-label>
 		<mat-date-range-input [formGroup]="range" [rangePicker]="picker">
 		  <input matStartDate formControlName="start" placeholder="{{ 'Valid from' | translate }}">
 		  <input matEndDate formControlName="end" placeholder="{{ 'Valid through' | translate }}">
@@ -81,7 +88,7 @@
 	</mat-form-field>
 </div>
 
-<div mat-dialog-actions>
+<div mat-dialog-actions align="center">
 	<button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
 	<button mat-raised-button mat-dialog-close color="primary">{{ 'Cancel' | translate }}</button>
 </div>

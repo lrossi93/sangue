@@ -10,6 +10,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 import { pharmaRegistryGridConfig } from 'src/environments/grid-configs';
 import { Router } from '@angular/router';
+import { PharmaRegistryService } from '../pharma-registry.service';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -18,7 +19,24 @@ import { Router } from '@angular/router';
 })
 @Injectable({providedIn: 'root'})
 export class PharmaRegistryComponent implements OnInit {
-  products: any = [];
+  //auxiliary product
+  product: Product = {
+    id: "",
+    cod: "",
+    des: "",
+    ord: "",
+    unita: 0,
+    confezionamento: "",
+    multiplo_confezionamento: 0,
+    multiplo_imballo: 0,
+    attivo: false,
+    extra: false,
+    min_ord: 0,
+    valido_da: "",
+    valido_a: ""
+  };
+  id: string = "";
+  products: Product[] = [];
   url = environment.basePath + 'anag.php';
 
   //sample param for dialog
@@ -33,9 +51,11 @@ export class PharmaRegistryComponent implements OnInit {
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
   //parameters for [set|add|rm]Product()
-  id!: string;
+  
+  /*id!: string;
   cod!: string;
   des!: string;
+  ord!: string;
   unita!: number;
   confezionamento!: string;
   multiplo_confezionamento!: number;
@@ -45,20 +65,9 @@ export class PharmaRegistryComponent implements OnInit {
   min_ord!: number;
   valido_da: string = "";
   valido_a: string = "";
+  */
 
   api: any;
-
-  setId(id: string){
-    this.id = id;
-  }
-
-  setCod(cod: string){
-    this.cod = cod;
-  }
-
-  setDes(des: string){
-    this.des = des;
-  }
 
   //dialog reference
   dialogRef: any;
@@ -76,18 +85,19 @@ export class PharmaRegistryComponent implements OnInit {
     public loginService: LoginService, 
     private http: HttpClient,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private pharmaRegistryService: PharmaRegistryService
   )
   { 
 
     //columnDef
-    this.pharmaRegistryGridConfig = pharmaRegistryGridConfig
+    this.pharmaRegistryGridConfig = pharmaRegistryGridConfig;
 
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
+        console.log(event);
         if(event.column.getColId() == "valido_a" || event.column.getColId() == "valido_da") {
-          console.log(event);
           //open dialog and pass date parameter to it
           this.openEditDateDialog(event);
         }
@@ -97,22 +107,23 @@ export class PharmaRegistryComponent implements OnInit {
         console.log('onCellValueChanged\n\n\n\n');
         console.log(event);
         console.log("Changed from " + event.oldValue + " to " + event.newValue);
-        this.id = event.data.id;
-        this.cod = event.data.cod;
-        this.des = event.data.des;
-        this.unita = event.data.unita;
-        this.confezionamento = event.data.confezionamento;
-        this.multiplo_confezionamento = event.data.multiplo_confezionamento;
-        this.multiplo_imballo = event.data.multiplo_imballo;
-        this.attivo = event.data.attivo;
-        this.extra = event.data.extra;
-        this.min_ord = event.data.min_ord;     
+        this.product.id = event.data.id;
+        this.product.cod = event.data.cod;
+        this.product.des = event.data.des;
+        this.product.ord = event.data.ord;
+        this.product.unita = event.data.unita;
+        this.product.confezionamento = event.data.confezionamento;
+        this.product.multiplo_confezionamento = event.data.multiplo_confezionamento;
+        this.product.multiplo_imballo = event.data.multiplo_imballo;
+        this.product.attivo = event.data.attivo;
+        this.product.extra = event.data.extra;
+        this.product.min_ord = event.data.min_ord;     
 
         //salvo le date in formato italiano sulle variabili locali
-        this.valido_da = new Date(event.data.valido_da).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
-        this.valido_a = new Date(event.data.valido_a).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
+        this.product.valido_da = new Date(event.data.valido_da).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
+        this.product.valido_a = new Date(event.data.valido_a).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
         
-        this.setProduct(false); //edit product from grid
+        this.setProduct(this.product, false); //edit product from grid
       }
     }
 
@@ -135,6 +146,7 @@ export class PharmaRegistryComponent implements OnInit {
     );
 
     this.listProducts();
+
     setTimeout(
       () => {
         this.api = this.agGrid.api;
@@ -142,120 +154,56 @@ export class PharmaRegistryComponent implements OnInit {
       }, 300);
   }
 
+  setId(id: string) {
+    this.id = id;
+  }
+
   listProducts(): void{
-    let path = this.url + '?request=listProducts&id_session='+localStorage.getItem('id_session');
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
+    this.pharmaRegistryService.listProductsPromise().subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.products = res[1];
+        }
+        else{
+          console.error("Error retrieving products!");
+        }
       }
-    ).subscribe((res: any[]) => {
-      console.log(res);
-      if(res[0] == "KO"){
-        
-      }
-      else{
-        console.log(res[1]); 
-        this.products = res[1];
-      }
-    });
+    );
   }
 
   logAPI(){
     console.log(this.api);
   }
 
-  setProduct(isAdding: boolean): void{
-    if(!isAdding && parseInt(this.id) < 1){
-      alert("Invalid ID!");
-      this.id = "";
-      return;
-    }
-
-    if(this.id == "" || this.cod == "" || this.des == ""){
-      alert("Empty parameters are invalid.");
-      return;
-    }
-
-    this.http.post<String[]>(
-      this.url, {
-        request: 'setProduct',
-        id_session: localStorage.getItem('id_session'),
-        id: this.id,
-        cod: this.cod,
-        des: this.des,
-        unita: this.unita,
-        confezionamento: this.confezionamento,
-        multiplo_confezionamento: this.multiplo_confezionamento,
-        multiplo_imballo: this.multiplo_imballo,
-        attivo: this.attivo,
-        extra: this.extra,
-        min_ord: this.min_ord,
-        //salvo le date su DB in formato americano, e so che arrivano così dal datepicker
-        valido_da: this.valido_da,
-        valido_a: this.valido_a
-      }
-    ).subscribe(res => {
-      console.log("WS response: " + res);
-      if(res[0] == "KO"){
-        alert(res[1].toString());
-      }
-      else{
-        console.log("Product with ID " + res[1] + "successfully set!");
-        if(isAdding){
-          this.addLocally(
-            res[1].toString(), 
-            this.cod, 
-            this.des,
-            this.unita,
-            this.confezionamento,
-            this.multiplo_confezionamento,
-            this.multiplo_imballo,
-            this.attivo,
-            this.extra,
-            this.min_ord,
-            //aggiungo le date localmente in formato US, vengono convertite automaticamente dalla grid nel rendering
-            this.valido_da,
-            this.valido_a
-          );
+  //if adding, product.id == -1
+  setProduct(product: Product, isAdding: boolean): void{
+    this.pharmaRegistryService.setProductPromise(product).subscribe(
+      res => {
+        if(res[0] == "OK"){
+          console.log("Product with ID " + res[1] + "successfully set!");
+          if(isAdding){
+            let newProduct = product;
+            newProduct.id = res[1];
+            this.addLocally(newProduct);
+          }
+          else{
+            this.setLocally(product);
+          }
         }
-        else{
-          //console.log(new Date(this.valido_da).toLocaleDateString('it-IT'));
-          
-          this.setLocally(
-            parseInt(res[1].toString()), 
-            this.cod, 
-            this.des,
-            this.unita,
-            this.confezionamento,
-            this.multiplo_confezionamento,
-            this.multiplo_imballo,
-            this.attivo,
-            this.extra,
-            this.min_ord,
-            this.valido_da,
-            this.valido_a
-          );
+        else {
+          console.error("Error setting product!");
         }
-        this.clearVars();
       }
-    });
+    );
   }
 
+  //TODO
   /*
-  formatDate(date: string): string {
-    let formattedDate!: string;
-    let splittedDate = date.split("-", 3);
-    formattedDate = splittedDate[2] + "/" + splittedDate[1] + "/" + splittedDate[0];
-    console.log(formattedDate)
-    return formattedDate;
-  }
-  */
-
   setProductParams(
     id: string,
     cod: string,
     des: string,
+    ord: string,
     unita: number,
     confezionamento: string,
     multiplo_confezionamento: number,
@@ -269,6 +217,7 @@ export class PharmaRegistryComponent implements OnInit {
     this.id = id;
     this.cod = cod;
     this.des = des;
+    this.ord = ord;
     this.unita = unita;
     this.confezionamento = confezionamento;
     this.multiplo_confezionamento = multiplo_confezionamento;
@@ -281,51 +230,31 @@ export class PharmaRegistryComponent implements OnInit {
     let isAdding = false;
     this.setProduct(isAdding);
   }
+  */
 
+  //TODO
+  /*
   addProduct(): void{
     this.id = "-1";
     let isAdding = true;
     this.setProduct(isAdding);
   }
+  */
 
-  addLocally(
-    id: string, 
-    cod: string, 
-    des: string,
-    unita: number,
-    confezionamento: string,
-    multiplo_confezionamento: number,
-    multiplo_imballo: number,
-    attivo: boolean,
-    extra: boolean,
-    min_ord: number,
-    valido_da: string,
-    valido_a: string
-  ){
-    let newProduct = {
-      id: id,
-      cod: cod,
-      des: des,
-      unita: unita,
-      confezionamento: confezionamento,
-      multiplo_confezionamento: multiplo_confezionamento,
-      multiplo_imballo: multiplo_imballo,
-      attivo: attivo,
-      extra: extra,
-      min_ord: min_ord,
-      valido_da: valido_da,
-      valido_a: valido_a
-    };
-    this.products.push(newProduct);
+  addLocally(product: Product){
+    this.products.push(product);
     console.log(this.products);
     this.updateGrid();
     this.api.ensureIndexVisible(this.products.length - 1);
-    this.api.refreshCells();
+    //this.api.refreshCells();
   }
 
+  //TODO
+  /*
   addProductParams(
     cod: string, 
     des: string,
+    ord: string,
     unita: number,
     confezionamento: string,
     multiplo_confezionamento: number,
@@ -338,6 +267,7 @@ export class PharmaRegistryComponent implements OnInit {
   ){
     this.cod = cod;
     this.des = des;
+    this.ord = ord;
     this.unita = unita;
     this.confezionamento = confezionamento;
     this.multiplo_confezionamento = multiplo_confezionamento;
@@ -349,34 +279,22 @@ export class PharmaRegistryComponent implements OnInit {
     this.valido_a = valido_a;
     this.addProduct();
   }
+  */
 
   rmProduct(id: string): void{
-    if(id == "" || parseInt(id) < 1){
-      alert("Invalid ID!");
-      return;
-    }
-
-    this.http.post<String[]>(
-      this.url, {
-        request: 'rmProduct',
-        id_session: localStorage.getItem('id_session'),
-        id: id
+    this.pharmaRegistryService.rmProductPromise(id).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.rmLocally(res[1]);
+        }
+        else {
+          console.error("Error removing product with ID = " + id);
+        }
       }
-    ).subscribe(res => {
-      console.log("WS response: " + res);
-      if(res[0] == "KO"){
-        alert(res[1].toString());
-      }
-      else{
-        console.log("Product with ID " + res[1] + " removed from database.");
-        this.rmLocally(parseInt(res[1].toString()));
-        console.log("Product with ID " + res[1] + " removed locally.");
-        this.clearVars();
-      }
-    });
+    );
   }
 
-  rmLocally(id: number){
+  rmLocally(id: string){
     let visible = 0;
     for(let i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id){
@@ -400,36 +318,24 @@ export class PharmaRegistryComponent implements OnInit {
       }
     }
   }
-/*
-  rmProduct(){
-    this.pharmaRegistryService.rmProduct(this.id);
-    this.listProducts();
-  }
-*/
-
-  clearVars(){
-    this.id = '';
-    this.cod = '';
-    this.des = '';
-  }
 
   openAddProductDialog(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
-    //dialogConfig.width = "80%";
 
     dialogConfig.data = {
-      cod: this.cod, 
-      des: this.des,
-      unita: this.unita,
-      confezionamento: this.confezionamento,
-      multiplo_confezionamento: this.multiplo_confezionamento,
-      multiplo_imballo: this.multiplo_imballo,
-      attivo: this.attivo,
-      extra: this.extra,
-      min_ord: this.min_ord,
-      valido_da: this.valido_da,
-      valido_a: this.valido_a
+      cod: this.product.cod, 
+      des: this.product.des,
+      ord: this.product.ord,
+      unita: this.product.unita,
+      confezionamento: this.product.confezionamento,
+      multiplo_confezionamento: this.product.multiplo_confezionamento,
+      multiplo_imballo: this.product.multiplo_imballo,
+      attivo: this.product.attivo,
+      extra: this.product.extra,
+      min_ord: this.product.min_ord,
+      valido_da: this.product.valido_da,
+      valido_a: this.product.valido_a
     }
 
     this.dialogRef = this.dialog.open(
@@ -437,26 +343,17 @@ export class PharmaRegistryComponent implements OnInit {
       dialogConfig
     );
 
-    this.dialogRef.afterClosed().subscribe( (result: Product) => {
+    this.dialogRef.afterClosed().subscribe(
+      (result: {newProduct: Product, isSubmitted: boolean}) => {
       if(result !== undefined && result.isSubmitted){
-        this.addProductParams(
-          result.cod,
-          result.des,
-          result.unita,
-          result.confezionamento,
-          result.multiplo_confezionamento,
-          result.multiplo_imballo,
-          result.attivo,
-          result.extra,
-          result.min_ord,
-          result.valido_da,
-          result.valido_a
-        );
+        let newProduct = result.newProduct;
+        newProduct.id = "-1";
+        this.setProduct(newProduct, true);
         this.updateGrid();
-      }
-    });
+      }});
   }
 
+  //TODO
   openAreYouSureDialog(){
     this.dialogRef = this.dialog.open(
       AreYouSureProductComponent,
@@ -501,95 +398,73 @@ export class PharmaRegistryComponent implements OnInit {
       dialogConfig
     );
 
-    this.dialogRef.afterClosed().subscribe( (result: {date: string, isValidoDa: boolean, isValidoA: boolean, isSubmitted: boolean}) => {
+    this.dialogRef.afterClosed().subscribe(
+      (result: {
+        date: string,
+        isValidoDa: boolean,
+        isValidoA: boolean,
+        isSubmitted: boolean
+      }) => {
+
       if(result !== undefined && result.isSubmitted){
         console.log(result);
         
+        let editedProduct = {
+          id: event.data.id,
+          cod: event.data.cod,
+          des: event.data.des,
+          ord: event.data.ord,
+          unita: event.data.unita,
+          confezionamento: event.data.confezionamento,
+          multiplo_confezionamento: event.data.multiplo_confezionamento,
+          multiplo_imballo: event.data.multiplo_imballo,
+          attivo: event.data.attivo,
+          extra: event.data.extra,
+          min_ord: event.data.min_ord,
+          valido_da: "",
+          valido_a: ""
+        };
+
         if(result.isValidoDa){
-          this.setProductParams(
-            event.data.id,
-            event.data.cod,
-            event.data.des,
-            event.data.unita,
-            event.data.confezionamento,
-            event.data.multiplo_confezionamento,
-            event.data.multiplo_imballo,
-            event.data.attivo,
-            event.data.extra,
-            event.data.min_ord,
-            result.date,
-            event.data.valido_a
-          );
+          editedProduct.valido_da = result.date;
+          editedProduct.valido_a = event.data.valido_a;
+          this.setProduct(editedProduct, false);
         }
         else if(result.isValidoA) {
-          this.setProductParams(
-            event.data.id,
-            event.data.cod,
-            event.data.des,
-            event.data.unita,
-            event.data.confezionamento,
-            event.data.multiplo_confezionamento,
-            event.data.multiplo_imballo,
-            event.data.attivo,
-            event.data.extra,
-            event.data.min_ord,
-            event.data.valido_da,
-            result.date
-          );
+          editedProduct.valido_da = event.data.valido_da;
+          editedProduct.valido_a = result.date;
+          this.setProduct(editedProduct, false);
         }
-        
         this.updateGrid();
       }
     });
   }
 
-  setLocally(
-    id: number, 
-    cod: string, 
-    des: string,
-    unita: number,
-    confezionamento: string,
-    multiplo_confezionamento: number,
-    multiplo_imballo: number,
-    attivo: boolean,
-    extra: boolean,
-    min_ord: number,
-    valido_da: string,
-    valido_a: string
-  ){
+  setLocally(product: Product){
     for(let i = 0; i < this.products.length; ++i){
-      if(id == this.products[i].id){
-        this.products[i].cod = cod;
-        this.products[i].des = des;
-        this.products[i].unita = unita;
-        this.products[i].confezionamento = confezionamento;
-        this.products[i].multiplo_confezionamento = multiplo_confezionamento;
-        this.products[i].multiplo_imballo = multiplo_imballo;
-        this.products[i].attivo = attivo;
-        this.products[i].extra = extra;
-        this.products[i].min_ord = min_ord;
-        this.products[i].valido_da = valido_da;
-        this.products[i].valido_a = valido_a;
+      if(product.id == this.products[i].id){
+        this.products[i].cod = product.cod;
+        this.products[i].des = product.des;
+        this.products[i].ord = product.ord;
+        this.products[i].unita = product.unita;
+        this.products[i].confezionamento = product.confezionamento;
+        this.products[i].multiplo_confezionamento = product.multiplo_confezionamento;
+        this.products[i].multiplo_imballo = product.multiplo_imballo;
+        this.products[i].attivo = product.attivo;
+        this.products[i].extra = product.extra;
+        this.products[i].min_ord = product.min_ord;
+        this.products[i].valido_da = product.valido_da;
+        this.products[i].valido_a = product.valido_a;
         this.updateGrid();
+        this.api.ensureIndexVisible(i);
         return;
       }
     }
   }
 
-  clearSelection() {
-    this.api.deselectAll();
-  }
-
   updateGrid(){
     console.log(this.api);
     this.api.setRowData(this.products);
-  }
-
-  fromItLocaleToISO(itDate: string): string {
-    let year = itDate.substring(6, 10);
-    let month = itDate.substring(3, 5);
-    let day = itDate.substring(0, 2);
-    return year + "-" + month + "-" + day;
   }
 }
 

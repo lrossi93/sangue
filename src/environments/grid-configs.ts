@@ -34,7 +34,8 @@ export const pharmaRegistryGridHeaders = {
     MinimumOrder: 'Ordine minimo',
     ValidFrom: 'Valido da',
     ValidThrough: 'Valido fino a',
-    Action: 'Azione'
+    Action: 'Azione',
+    Sorting: 'Ordinamento'
   },
   en: {
     ID: 'ID',
@@ -49,7 +50,8 @@ export const pharmaRegistryGridHeaders = {
     MinimumOrder: 'Minimum order',
     ValidFrom: 'Valid from',
     ValidThrough: 'Valido through',
-    Action: 'Action'
+    Action: 'Action',
+    Sorting: 'Sorting'
   }
 }
 
@@ -64,6 +66,11 @@ export const pharmaRegistryGridConfig = [
     headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Code : pharmaRegistryGridHeaders.en.Code, 
     field: 'cod', 
     editable: true
+  },
+  { 
+    headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Sorting : pharmaRegistryGridHeaders.en.Sorting, 
+    field: 'ord', 
+    editable: false
   },
   { 
     headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Description : pharmaRegistryGridHeaders.en.Description, 

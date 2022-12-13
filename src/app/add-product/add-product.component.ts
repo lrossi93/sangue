@@ -12,6 +12,7 @@ export class AddProductComponent{
 
   cod!: UntypedFormControl;
   des!: UntypedFormControl;
+  ord!: UntypedFormControl;
   unita!: UntypedFormControl;
   confezionamento!: UntypedFormControl;
   multiplo_confezionamento!: UntypedFormControl;
@@ -37,6 +38,7 @@ export class AddProductComponent{
     //formBuilder configuration
     this.cod = _builder.control('', Validators.required);
     this.des = _builder.control('', Validators.required);
+    this.ord = _builder.control('', Validators.required);
     this.unita = _builder.control('', Validators.required);
     this.confezionamento = _builder.control('');
     this.multiplo_confezionamento = _builder.control('');
@@ -50,9 +52,11 @@ export class AddProductComponent{
 
   onSubmit(): void {
     this.isSubmitted = true;
-    this.dialogRef.close({
+    let newProduct = {
+      id: "-1",
       cod: this.cod.value, 
       des: this.des.value,
+      ord: this.ord.value,
       unita: this.unita.value,
       confezionamento: this.confezionamento.value,
       multiplo_confezionamento: this.multiplo_confezionamento.value,
@@ -61,8 +65,9 @@ export class AddProductComponent{
       extra: this.extra.value ? 1 : 0,
       min_ord: this.min_ord.value,
       valido_da: this.formatDate(this.range.controls['start'].value.toLocaleString('it-IT').split(",", 2)[0]),
-      valido_a: this.formatDate(this.range.controls['end'].value.toLocaleString('it-IT').split(",", 2)[0]),
-      isSubmitted: this.isSubmitted});
+      valido_a: this.formatDate(this.range.controls['end'].value.toLocaleString('it-IT').split(",", 2)[0])
+    }
+    this.dialogRef.close({newProduct: newProduct, isSubmitted: this.isSubmitted});
   }
 
   //date: full value of the date Y-M-D in string format
@@ -94,14 +99,5 @@ export class AddProductComponent{
 
   toggleExtra(): void {
     this.extra.value ? this.extra = this._builder.control(false) : this.extra = this._builder.control(true);
-  }
-
-  getData(): void {
-    console.log(
-      "cod: " + this.cod.value +
-      " des: " + this.des.value +
-      " attivo: " + this.attivo.value + 
-      " extra: " + this.extra.value
-    );
   }
 }

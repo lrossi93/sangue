@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment, Product } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -87,8 +87,8 @@ export class PharmaRegistryService {
         attivo: attivo,
         extra: extra,
         min_ord: min_ord,
-        valido_da,
-        valido_a
+        valido_da: valido_da,
+        valido_a: valido_a
       }
     ).subscribe(res => {
       console.log("WS response: " + res);
@@ -100,6 +100,29 @@ export class PharmaRegistryService {
         console.log("Product with ID " + res[1] + "successfully set!");
       }
     });
+  }
+
+  setProductPromise(product: Product): Observable<any> {
+    //product.id == -1 for ADDING
+    return this.http.post<String[]>(
+      this.url, {
+        request: 'setProduct',
+        id_session: localStorage.getItem('id_session'),
+        id: product.id,
+        cod: product.cod,
+        des: product.des,
+        ord: product.ord,
+        unita: product.unita,
+        confezionamento: product.confezionamento,
+        multiplo_confezionamento: product.multiplo_confezionamento,
+        multiplo_imballo: product.multiplo_imballo,
+        attivo: product.attivo,
+        extra: product.extra,
+        min_ord: product.min_ord,
+        valido_da: product.valido_da,
+        valido_a: product.valido_a
+      }
+    );
   }
 
   addProduct(
@@ -157,5 +180,15 @@ export class PharmaRegistryService {
         console.log("Product with ID " + res[1] + "successfully removed!");
       }
     });
+  }
+
+  rmProductPromise(id: string): Observable<any> {
+    return this.http.post<String[]>(
+      this.url, {
+        request: 'rmProduct',
+        id_session: localStorage.getItem('id_session'),
+        id: id
+      }
+    );
   }
 }

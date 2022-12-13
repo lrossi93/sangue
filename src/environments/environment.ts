@@ -18,6 +18,7 @@ export interface Product {
   id: string;
   cod: string;
   des: string;
+  ord: string;
   unita: number;
   confezionamento: string;
   multiplo_confezionamento: number;
@@ -27,7 +28,6 @@ export interface Product {
   min_ord: number;
   valido_da: string;
   valido_a: string;
-  isSubmitted: boolean;
 }
 
 export interface Forecast {

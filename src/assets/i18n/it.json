@@ -72,5 +72,10 @@
     "Extractions": "Estrazioni",
     "Orderable period": "Periodo ordinabile",
     "Start date": "Inizio",
-    "End date": "Termine"
+    "End date": "Termine",
+    "Sorting": "Ordinamento",
+    "Add a new product": "Aggiungi un nuovo prodotto",
+    "Validity": "Validità",
+    "Invalid start date": "Data d'inizio non valida",
+    "Invalid end date": "Data di termine non valida"
 }
