@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { MatDateRangePicker } from '@angular/material/datepicker';
 import { OrderablePeriodService } from '../orderable-period.service';
 
 @Component({
@@ -23,11 +22,7 @@ export class OrderablePeriodComponent implements OnInit {
     private orderablePeriodService: OrderablePeriodService
   ) { 
     this.year = new Date().getFullYear().toString();
-    console.log("year: " + this.year);
-    
     this.month = new Date().getMonth().toString();
-    console.log("month: " + this.month);
-    
   }
 
   ngOnInit(): void {
@@ -55,7 +50,7 @@ export class OrderablePeriodComponent implements OnInit {
     this.orderablePeriodService.setOrderPeriodPromise(min, max).subscribe(
       res => {
         if(res[0] == "OK"){
-          console.log("orderPeriod set!");
+          //console.log("orderPeriod set!");
           let newDate = new Date();
           this.range.controls['start'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(min)));
           this.gg_min = min;
@@ -74,7 +69,7 @@ export class OrderablePeriodComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           let newDate = new Date();
-          console.log(newDate); 
+          //console.log(newDate); 
           this.range.controls['start'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_min));
           this.range.controls['end'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_max));
         }
@@ -135,17 +130,19 @@ export class OrderablePeriodComponent implements OnInit {
     }
 
     this.formattedDate = year + "-" + month + "-" + day;   
-    console.log(this.formattedDate);
+    //console.log(this.formattedDate);
+    
     if(type == "start") {
       this.formattedStartDate = this.formattedDate;
       this.gg_min = this.formattedDate.split("-")[2];
-      console.log("min: " + this.gg_min + "; max: " + this.gg_max);
+      if(this.gg_min > this.gg_max){
+        this.gg_max = this.gg_min;
+      }
       this.setOrderPeriod(this.gg_min, this.gg_max);
     }
     else if(type == "end" && this.formattedDate != "1970-01-01") {
       this.formattedEndDate = this.formattedDate;
       this.gg_max = this.formattedDate.split("-")[2];
-      console.log("min: " + this.gg_min + "; max: " + this.gg_max);
       this.setOrderPeriod(this.gg_min, this.gg_max);
     }
   }

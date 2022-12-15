@@ -24,6 +24,8 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
   userNames: string[] = [];
   userName: string = '';
 
+  isLocked!: boolean;
+
   //sample array
   options: string[] = [];
   filteredOptions: Observable<string[]> | undefined;
@@ -37,19 +39,22 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
   ) { 
     this.listUsers('210');
      //adapt dropdown to user type
-     switch(loginService.getUserCode()){
-      case "210":
-        this.formControl = new UntypedFormControl({value: this.userName, disabled: true});
-        break;
-      case "220":
-        this.formControl = new UntypedFormControl({value: this.userName, disabled: false});
-        break;
-    }
+     
   }
   
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
-    this.value = params.value; //user id
+    this.isLocked = this.data.isRowLocked;
+    this.value = params.value;
+
+    switch(this.loginService.getUserCode()){
+      case "210":
+        this.formControl = new UntypedFormControl({value: this.userName, disabled: this.isLocked});
+        break;
+      case "220":
+        this.formControl = new UntypedFormControl({value: this.userName, disabled: this.isLocked});
+        break;
+    }
   }
   
   refresh(params: ICellRendererParams<any, any>): boolean {

@@ -21,6 +21,11 @@ export class AddOrderDialogComponent implements OnInit {
   newOrderRows: OrderRow[] = [];
   auxId = 0;
   
+  gg_min!: string;
+  minDate!: Date;
+  gg_max!: string;
+  maxDate!: Date;
+
   //newOrder formControls for fields
   anno!: UntypedFormControl;
   username!: string;
@@ -51,13 +56,15 @@ export class AddOrderDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       users: User[],
-      products: Product[]
+      products: Product[],
+      gg_min: string,
+      gg_max: string
     },
     private thisDialogRef: MatDialogRef<AddOrderDialogComponent>,
     dialog: MatDialog,
     private ordersService: OrdersService,
     loginService: LoginService,
-    private _builder: FormBuilder
+    private _builder: FormBuilder,
   ) { 
     //this.dialogRef = thisDialogRef;
     this.dialog = dialog;
@@ -84,6 +91,10 @@ export class AddOrderDialogComponent implements OnInit {
     else if(loginService.getUserCode() == "220"){
       this.userFormControl = _builder.control('', Validators.required);
     }
+
+    var auxDate = new Date();
+    this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_min));
+    this.maxDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_max));
   }
 
   ngOnInit(): void {

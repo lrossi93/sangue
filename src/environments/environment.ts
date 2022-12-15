@@ -86,6 +86,7 @@ export interface OrderGridRowData {
   b_validato: boolean;
   d_validato: string;
   note: string;
+  isRowLocked: boolean;
 }
 
 export interface OrderRow {

@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-datepicker-products-dialog',
@@ -11,6 +12,8 @@ export class DatepickerProductsDialogComponent {
   date!: UntypedFormControl;
   formattedDate!: string;
   isSubmitted = false;
+  minDate!: Date;
+  maxDate!: Date;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -19,39 +22,41 @@ export class DatepickerProductsDialogComponent {
       isValidoA: boolean,
       isOrderDate: boolean,
       isValidationDate: boolean,
+      gg_min: string,
+      gg_max: string
     },
-    private dialogRef: MatDialogRef<DatepickerProductsDialogComponent>
+    private dialogRef: MatDialogRef<DatepickerProductsDialogComponent>,
+    public loginService: LoginService
   ) {
     this.date = new UntypedFormControl(data.date, Validators.required);
+    if(loginService.getUserCode() == '210' && data.isOrderDate){
+      var auxDate = new Date();
+      this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(data.gg_min));
+      this.maxDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(data.gg_max));
+    }
   }
 
   onDateChange(event: any) {
     //here it's better to keep the date type as Date because it's handled well by the datepicker
     this.date = new UntypedFormControl(new Date(event.value), Validators.required);
-    console.log(this.date.value.toLocaleString('it-IT'));
+    this.formattedDate = this.getFormattedDate(this.date.value); 
+  }
 
-    //crop the hour part (we don't need it)
-    let fullLocaleDate = this.date.value.toLocaleString('it-IT').split(",", 2)[0];
-    console.log(fullLocaleDate);
+  getFormattedDate(date: Date): string {
+    let splitDate = date.toLocaleString('it-IT').split(",", 2)[0].split("/", 3);
     
-    //split where the separators "/" are
-    let splittedDate = fullLocaleDate.split("/", 3);
-    
-    let day = splittedDate[0];
-    let month = splittedDate[1];
-    let year = splittedDate[2];
+    let day = splitDate[0];
+    let month = splitDate[1];
+    let year = splitDate[2];
 
-    //prepare date to be saved on db
     if(day.length == 1){
       day = "0" + day;
     }
     if(month.length == 1){
       month = "0" + month;
     }
-    
-    this.formattedDate = year + "-" + month + "-" + day;   
+    return year + "-" + month + "-" + day;  
   }
-
 
   onSubmit() {
     this.isSubmitted = true;

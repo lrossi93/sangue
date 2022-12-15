@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
 import { Order, OrderGridRowData, OrderRow } from 'src/environments/environment';
-import { defaultColDef, gridConfigOrders210, gridConfigOrders220 } from 'src/environments/grid-configs';
+import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 import { LoginService } from '../login.service';
+import { OrderablePeriodService } from '../orderable-period.service';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { UsersService } from '../users.service';
@@ -36,11 +37,14 @@ export class OrdersComponent implements OnInit {
   users: any = [];
   products: any = [];
 
+  day: number = parseInt(new Date().toLocaleString('it-IT').split(",", 2)[0].split("/", 2)[0]);
+  gg_min!: number;
+  gg_max!: number;
+  isDateLocked!: boolean;
+
   year: string = new Date().getFullYear().toString();
   dialogRef: any;
   dialog: any;
-
-  loginService!: LoginService;
 
   //agGrid config
   ordersGridConfig!: any;
@@ -52,20 +56,14 @@ export class OrdersComponent implements OnInit {
   api: any;
 
   constructor(
-    loginService: LoginService,
+    public loginService: LoginService,
     private ordersService: OrdersService,
     private usersService: UsersService,
     private pharmaRegistryService: PharmaRegistryService,
     dialog: MatDialog,
-    private router: Router
-  ) {
-    if(loginService.getUserCode() == '210') {
-      this.ordersGridConfig = gridConfigOrders210;
-    } 
-    if(loginService.getUserCode() == '220') {
-      this.ordersGridConfig = gridConfigOrders220;
-    }
-    this.loginService = loginService;
+    private router: Router,
+    private orderablePeriodService: OrderablePeriodService
+  ) {    
     //this.ordersService = ordersService;
     //this.usersService = usersService;
     //this.pharmaRegistryService = pharmaRegistryService;
@@ -76,36 +74,40 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        if(event.column.getColId() == "d_ordine") {
-          this.openEditDateDialog(event);
-        }
-        if(event.column.getColId() == "d_validato" && loginService.getUserCode() == "220") {
-          this.openEditDateDialog(event);
+        if(!event.node.data.isRowLocked) {
+          if(event.column.getColId() == "d_ordine") {
+              this.openEditDateDialog(event);
+          }
+          if(event.column.getColId() == "d_validato" && loginService.getUserCode() == "220") {
+            this.openEditDateDialog(event);
+          }
         }
       },
-      onCellValueChanged: (event: CellValueChangedEvent) => {
-        console.log(event);
-        
-        console.log("Changed from " + event.oldValue + " to " + event.newValue);
-        this.order.id = event.data.id;
-        this.order.anno = event.data.anno;
-        this.order.username = event.data.username;
-        this.order.d_ordine = event.data.d_ordine;
-        this.order.n_ordine = event.data.n_ordine;
-        this.order.b_urgente = event.data.b_urgente;
-        this.order.b_extra = event.data.b_extra;
-        this.order.b_validato = event.data.b_validato;
-        this.order.d_validato = event.data.d_validato;
-        this.order.note = event.data.note;   
-        
-        //not adding but editing
-        let isAdding = false;
-        this.setOrder(this.order, isAdding);
+      onCellValueChanged: (event: CellValueChangedEvent) => {        
+        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        //if row is not locked and an update is received, perform update
+        //TODO: se imposto una data di validazione, deve essere MAGGIORE o UGUALE alla data dell'ordine
+        if(!event.node.data.isRowLocked && !this.isDateLocked){
+          console.log("the order was not locked, so I modify it!");
+          
+          this.order.id = event.data.id;
+          this.order.anno = event.data.anno;
+          this.order.username = event.data.username;
+          this.order.d_ordine = event.data.d_ordine;
+          this.order.n_ordine = event.data.n_ordine;
+          this.order.b_urgente = event.data.b_urgente;
+          this.order.b_extra = event.data.b_extra;
+          this.order.b_validato = event.data.b_validato;
+          this.order.d_validato = event.data.d_validato;
+          this.order.note = event.data.note;   
+          
+          //not adding but editing
+          let isAdding = false;
+          this.setOrder(this.order, isAdding);
+        }
         this.updateGrid();
       }
     }
-    //console.log(this.orders);
-    //console.log(this.pharmaRegistryService.products);
   }
 
   ngOnInit(): void {
@@ -117,15 +119,21 @@ export class OrdersComponent implements OnInit {
       }
     );
 
-    this.listOrders(this.year);
-    this.listUsers('210');
+    //independent from current view
     this.listProducts();
+
+    this.listOrders(this.year);
+    //the next method is included in the previous method
+    //this.listUsersAndSetLock('210');
+    
     //initialize Ag-Grid API
     setTimeout(
       () => {
         this.api = this.agGrid.api;
         this.logAPI();
       }, 300);
+
+    //this.listOrderRows('1')
   }
 
   logAPI(){
@@ -144,8 +152,9 @@ export class OrdersComponent implements OnInit {
           this.orders = res[1];
           //console.log("received orders:");
           //console.log(this.orders);
-          this.createOrderGridRowData();
-          this.updateGrid();
+          this.listUsersAndSetLock('210');
+          //this.createOrderGridRowData();
+          //this.updateGrid();
         }
         else {
           this.loginService.logoutPromise().subscribe(
@@ -161,6 +170,20 @@ export class OrdersComponent implements OnInit {
   createOrderGridRowData() {
     this.orderGridRowData = [];
     for(var i = 0; i < this.orders.length; ++i) {
+      var lock: boolean = false;
+
+      //lock cells ONLY if customer!
+      if(this.loginService.getUserCode() == "210"){
+        //locked row conditions:
+        //if date is locked, everything is locked
+        if(this.isDateLocked == true){
+          lock = true;
+        }
+        //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
+        if((this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine)) {
+          lock = true;
+        }
+      }
       var newOrderGridRowData = {
         id: this.orders[i].id,
         anno: this.orders[i].anno,
@@ -172,10 +195,12 @@ export class OrdersComponent implements OnInit {
         b_extra: this.orders[i].b_extra,
         b_validato: this.orders[i].b_validato,
         d_validato: this.orders[i].d_validato,
-        note: this.orders[i].note
+        note: this.orders[i].note,
+        isRowLocked: lock
       };
-      this.orderGridRowData.push(newOrderGridRowData);
+      this.orderGridRowData.push(newOrderGridRowData);      
     }
+    console.log(this.orderGridRowData);
   }
 
   getFullUsernameById(id: string): string {
@@ -236,11 +261,26 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  rmOrder(orderId: string) {
+    this.ordersService.rmOrderPromise(orderId).subscribe(
+      res => {
+        if (res[0] == "OK") {
+          this.rmOrderLocally(orderId);
+        }
+        else {
+          console.error("Error remiving order with ID: " + orderId);
+        }
+      }
+    );
+  }
+
   rmOrderRow(id: string){
     this.ordersService.rmOrderRow(id);
   }
 
   setOrder(order: Order, isAdding: boolean) {
+    console.log("SET ORDER:");
+    console.log(order);  
     this.ordersService.setOrderPromise(order, isAdding).subscribe(
       res => {
         this.setOrderLocally(order, isAdding);
@@ -309,8 +349,13 @@ export class OrdersComponent implements OnInit {
   */
   listOrderRows(orderId: string) {
     //console.log("listOrders: orderId: " + orderId);
-    this.ordersService.listOrderRows(orderId);
-    this.orderRows = this.ordersService.orderRows;
+    this.ordersService.listOrderRowsPromise(orderId).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          console.log(res[1][0]);
+        }
+      }
+    );
   }
 /*
   setOrderRow(orderRow: OrderRow, isAdding: boolean) {
@@ -347,7 +392,9 @@ export class OrdersComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       users: this.users,
-      products: this.products
+      products: this.products,
+      gg_min: this.gg_min,
+      gg_max: this.gg_max
     }
     dialogConfig.width = "95%";
     dialogConfig.maxHeight = "500px";
@@ -360,32 +407,30 @@ export class OrdersComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(
       (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
         if(result !== undefined && result.isSubmitted){
-          console.log(result);
+          //console.log(result);
           let newOrder = result.newOrder;
           if(this.loginService.getUserCode() == "210")
             newOrder.username = this.loginService.getUsername()!;
-          //console.log(newOrder);
+          //console.log(result.newOrderRows);
           this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
         }
       }
     );
   }
 
-  /*
-  openEditOrderDialog() {
-    console.log("openEditOrderDialog()");
-  }
-  */
-
   openEditDateDialog(event: CellClickedEvent) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
+    console.log(event)
+    //TODO: use header id instead
     switch(event.colDef.headerName){
       case "Data ordine":
         dialogConfig.data = {
           date: event.data.d_ordine,
           isOrderDate: true,
+          gg_min: this.gg_min,
+          gg_max: this.gg_max
         }
         break;
 
@@ -439,16 +484,18 @@ export class OrdersComponent implements OnInit {
         USERS ===========================
 
   */
-  listUsers(userlevel: string) {
+  listUsersAndSetLock(userlevel: string) {
     this.usersService.listUsersPromise(userlevel).subscribe(
       res => {
         if(res[0] == "KO") {
+          console.error("Error retrieving users!");
           this.router.navigate(['login']);
         }
         else {
           this.users = res[1];
-          console.log("users: ");
-          console.log(this.users);
+          //console.log("users: ");
+          //console.log(this.users);
+          this.setLock();
         }
       }
     );
@@ -467,8 +514,8 @@ export class OrdersComponent implements OnInit {
         }
         else {
           this.products = res[1];
-          console.log("products:");
-          console.log(this.products);
+          //console.log("products:");
+          //console.log(this.products);
         }
       }
     );
@@ -481,6 +528,46 @@ export class OrdersComponent implements OnInit {
   */
   updateGrid() {
     this.api.setRowData(this.orderGridRowData);
+  }
+
+  /*
+
+        ORDER PERIOD ===========================
+
+  */
+  setLock() {
+    this.orderablePeriodService.getOrderPeriodPromise().subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.gg_min = parseInt(res[1].gg_min);
+          this.gg_max = parseInt(res[1].gg_max);
+          
+          //lock cells according to the date
+          if(this.gg_min < this.day && this.day > this.gg_max){
+            this.isDateLocked = true;
+          }
+          else {
+            this.isDateLocked = false;
+          }
+
+          //now set grid config
+          if(this.loginService.getUserCode() == '210') {
+            //TODO: condizione per celle bloccate
+            this.isDateLocked ? this.ordersGridConfig = gridConfigOrders210Locked : this.ordersGridConfig = gridConfigOrders210;
+          } 
+          if(this.loginService.getUserCode() == '220') {
+            //TODO: condizione per celle bloccate
+            this.isDateLocked ? this.ordersGridConfig = gridConfigOrders220Locked : this.ordersGridConfig = gridConfigOrders220;
+          }
+
+          this.createOrderGridRowData();
+          this.updateGrid();
+        }
+        else {
+          console.error("Error in getOrderPeriodPromise()");
+        }
+      }
+    );
   }
 }
   

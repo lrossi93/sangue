@@ -129,6 +129,8 @@ export class OrdersService {
     order: Order,
     isAdding: boolean
   ): Observable<any> {
+    console.log("SET ORDER PROMISE:");
+    console.log(order);
     if(!isAdding){
       //SET
       return this.http.post<String[]>(
@@ -298,9 +300,9 @@ export class OrdersService {
   setOrderRowPromise(
     orderRow: OrderRow,
     isAdding: boolean
-  ): Observable<any> {
+  ): Observable<any> {    
     if(!isAdding){
-      //SET
+      console.log("motivazione: " + orderRow.motivazione);
       return this.http.post<String[]>(
         this.url, 
         {
@@ -331,6 +333,7 @@ export class OrdersService {
           n_riga: orderRow.n_riga,
           id_prd: orderRow.id_prd,
           qta: orderRow.qta,
+          motivazione: orderRow.motivazione,
           qta_validata: orderRow.qta_validata,
           note: orderRow.note
         }

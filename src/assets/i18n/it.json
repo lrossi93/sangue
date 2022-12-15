@@ -77,5 +77,10 @@
     "Add a new product": "Aggiungi un nuovo prodotto",
     "Validity": "Validità",
     "Invalid start date": "Data d'inizio non valida",
-    "Invalid end date": "Data di termine non valida"
+    "Invalid end date": "Data di termine non valida",
+    "Orders cannot be placed or edited now": "Non è possibile piazzare o modificare ordini adesso",
+    "Reference year": "Anno di riferimento",
+    "Close": "Chiudi",
+    "View": "Visualizza",
+    "This order does not contain any orderRows and will thus be deleted": "Quest'ordine non contiene righe d'ordine, perciò sarà cancellato"
 }

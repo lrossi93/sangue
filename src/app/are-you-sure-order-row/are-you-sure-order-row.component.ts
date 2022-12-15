@@ -7,11 +7,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./are-you-sure-order-row.component.css']
 })
 export class AreYouSureOrderRowComponent implements OnInit {
-  id!: number;
+  id!: string;
   isSubmitted: boolean = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {id: number, isSubmitted: boolean},
+    @Inject(MAT_DIALOG_DATA) public data: {id: string, isSubmitted: boolean},
     private dialogRef: MatDialogRef<AreYouSureOrderRowComponent>
   ) { 
     this.id = data.id;

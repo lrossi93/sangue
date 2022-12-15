@@ -1,9 +1,40 @@
-<div *ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'">
+<div *ngIf="true">
     <h1>{{ 'Orders' | translate }}</h1>
-    <button mat-raised-button color="primary" style="width: 100%;" (click)="openAddOrderDialog()">{{ 'Add order' | translate }}</button>
-	<input type="text" placeholder="Anno di riferimento" [(ngModel)]="year" style="width: 45%;">
-	<button (click)="listOrders(year)" style="width: 50%;">{{ 'List orders' | translate }}</button>
-	
+
+	<div align="center">
+		<button 
+		*ngIf="isDateLocked != undefined"
+		[disabled]="isDateLocked && loginService.getUserCode() == '210'"
+		mat-raised-button 
+		color="primary" 
+		style="width: 90%; margin: 5px;" 
+		(click)="openAddOrderDialog()">
+			{{ 'Add order' | translate }}
+		</button>
+		
+		<p 
+		*ngIf="isDateLocked && loginService.getUserCode() == '210'" 
+		style="color: red;">
+			{{ 'Orders cannot be placed or edited now' | translate }}.
+		</p>
+
+		<div align="center" style=" padding: 10px; margin: 5px;">
+			<p>{{ 'Reference year' | translate }}:</p>
+			<input 
+			matInput 
+			type="number"
+			placeholder="{{ 'Reference year' | translate }}" 
+			[(ngModel)]="year" 
+			style="width: 50%;" 
+			(change)="listOrders(year)">
+		</div>
+		<button 
+		mat-raised-button 
+		(click)="listOrders(year)" 
+		style="width: 90%; margin: 5px;">
+			{{ 'List orders' | translate }}
+		</button>
+	</div>
 	<ag-grid-angular 
 		style="width: 100%; height: 400px;"
 		class="ag-theme-balham"

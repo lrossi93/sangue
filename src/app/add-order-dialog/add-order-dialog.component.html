@@ -24,6 +24,8 @@
         placeholder="{{'Order date' | translate }}"
         [matDatepicker]="pickerOrderDate" 
         [value]="d_ordine.value"
+        [min]="minDate"
+        [max]="maxDate"
         [formControl]="d_ordine"
         (dateChange)="onOrderDateChange($event)">
         <mat-datepicker-toggle matSuffix [for]="pickerOrderDate"></mat-datepicker-toggle>

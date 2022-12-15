@@ -14,6 +14,7 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
   currentValue: any;
   headerName: string | undefined = '';
   checked: boolean = false;
+  isLocked!: boolean;
 
   constructor(
     //private pharmaRegistryService: PharmaRegistryService,
@@ -26,6 +27,8 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
     this.data = params.data;
     this.currentValue = params.value;
     this.headerName = params.colDef?.headerName;
+    this.isLocked = params.data.isRowLocked;
+    
     //console.log(params);
     if(this.currentValue == 1)
       this.checked = true;

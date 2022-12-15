@@ -19,7 +19,7 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
   }
 
   override toggleCheckbox(event: any): void {
-    //console.log(event);
+    console.log(event);
     this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
     console.log("current checkbox value: " + this.currentValue);
 

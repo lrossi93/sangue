@@ -3,6 +3,31 @@
     <mat-form-field appearance="fill">
         <mat-label>{{ 'Edit date' | translate }}</mat-label>
         <input 
+            *ngIf="loginService.getUserCode() == '210' && !data.isOrderDate"
+            matInput 
+            [matDatepicker]="picker" 
+            [value]="date.value"
+            [min]="minDate"
+            (dateChange)="onDateChange($event)">
+
+        <input 
+            *ngIf="loginService.getUserCode() == '210' && data.isOrderDate"
+            matInput 
+            [matDatepicker]="picker" 
+            [value]="date.value"
+            [min]="minDate"
+            [max]="maxDate"
+            (dateChange)="onDateChange($event)">
+
+        <input 
+            *ngIf="loginService.getUserCode() == '220' && data.isOrderDate"
+            matInput 
+            [matDatepicker]="picker" 
+            [value]="date.value"
+            (dateChange)="onDateChange($event)">
+        
+            <input 
+            *ngIf="loginService.getUserCode() == '220' && data.isValidationDate"
             matInput 
             [matDatepicker]="picker" 
             [value]="date.value"

@@ -32,12 +32,15 @@ export class EditOrderDialogComponent implements OnInit {
   dialogRef!: any;
   dialog!: MatDialog;
 
+  isLocked!: boolean;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       order: Order,
       orderRows: OrderRow[],
       users: any,
-      products: any
+      products: any,
+      isLocked: boolean
     },
     private _builder: UntypedFormBuilder,
     dialog: MatDialog,
@@ -57,7 +60,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.dialog = dialog;
     this.users = data.users;
     this.products = data.products;
-    
+    this.isLocked = data.isLocked;
     //console.log(data.users);
     //console.log(data.products);
     //console.log(this.users);
@@ -90,7 +93,9 @@ export class EditOrderDialogComponent implements OnInit {
   openAreYouSureOrderRowDialog(id: string) {
     const dialogConfig = new MatDialogConfig();
     //dialogConfig.autoFocus = true;
-    dialogConfig.data = { id: id }
+    dialogConfig.data = { 
+      id: id
+    }
         
     this.dialogRef = this.dialog.open(
       AreYouSureOrderRowComponent, 
@@ -138,7 +143,9 @@ export class EditOrderDialogComponent implements OnInit {
       console.log(this.data.order.username);
       console.log(this.getOrderRowById(id));
       let editedOrderRow = this.getOrderRowById(id);
-      editedOrderRow!.username = this.data.order.username;   
+      editedOrderRow!.username = this.data.order.username; 
+      console.log(editedOrderRow);
+        
    
       dialogConfig.data = {
         orderRow: this.getOrderRowById(id),
@@ -153,7 +160,10 @@ export class EditOrderDialogComponent implements OnInit {
     );
 
     this.dialogRef.afterClosed().subscribe(
-      (result: { orderRow: OrderRow, isSubmitted: boolean }) => {
+      (result: { 
+        orderRow: OrderRow, 
+        isSubmitted: boolean
+       }) => {
       if(result !== undefined && result.isSubmitted){
         console.log(result);
         this.ordersService
@@ -210,7 +220,11 @@ export class EditOrderDialogComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(
       (result: { order: Order, orderRows: OrderRow[], isSubmitted: boolean }) => {
       if(result !== undefined && result.isSubmitted){
-        this.thisDialogRef.close({orderId: id, orderRows: this.orderRows, isSubmitted: result.isSubmitted});
+        this.thisDialogRef.close({
+          orderId: id, 
+          orderRows: this.orderRows, 
+          isSubmitted: result.isSubmitted
+        });
       }
     });
   }
@@ -231,5 +245,17 @@ export class EditOrderDialogComponent implements OnInit {
       }
     }
     return "";
+  }
+
+  onClose(id: string) {
+    if(this.orderRows.length == 0){
+      this.thisDialogRef.close({
+        isClosing: true,
+        deleteOrder: true
+      });
+    }
+    else {
+      this.thisDialogRef.close();
+    }
   }
 }

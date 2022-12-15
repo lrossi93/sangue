@@ -1,11 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { environment, Order, OrderRow } from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
-import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 import { OrdersComponent } from '../orders/orders.component';
 import { PharmaRegistryService } from '../pharma-registry.service';
@@ -19,6 +17,7 @@ import { UsersService } from '../users.service';
 export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularComp {
   url = environment.basePath + "order.php";
   data: any;
+  isLocked!: boolean;
   currentOrder: Order = {
     id: '',
     anno: 0,
@@ -54,6 +53,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
+    this.isLocked = this.data.isRowLocked;
     this.listOrderRows(this.data.id);
   }
   
@@ -70,7 +70,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.ordersService.listOrderRowsPromise(id).subscribe(
       res => {
         if(res[0] == "KO") {
-          //alert("Error retrieving OrderRows!")
+          console.error("Error retrieving OrderRows!")
         }
         else {
           this.orderRows = res[1];
@@ -90,11 +90,13 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       order: this.currentOrder,
       orderRows: this.orderRows, //array di orderRows 
       users: this.users,
-      products: this.products
+      products: this.products,
+      isLocked: this.isLocked
     }
     dialogConfig.width = "60%";
     dialogConfig.minWidth = "60%";
-        
+    dialogConfig.disableClose = true;
+    
     this.dialogRef = this.dialog.open(
       EditOrderDialogComponent, 
       dialogConfig
@@ -104,15 +106,21 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       (result: {
         order: Order,
         orderRows: OrderRow[],
-        isSubmitted: boolean
+        isSubmitted: boolean,
+        isClosing: boolean,
+        deleteOrder: boolean
     }) => {
       if(result !== undefined && result.isSubmitted){
         console.log(result);
         this.rmOrderAndOrderRows(this.data.id, result.orderRows);
       }
+      if(result !== undefined && result.isClosing) {       
+        if(result.deleteOrder){
+          this.ordersComponent.rmOrder(this.currentOrder.id);
+        }
+      }
     });
   }
-
 
   rmOrderAndOrderRows(orderId: string, orderRows: OrderRow[]) {
     this.ordersComponent.rmOrderAndOrderRows(orderId, orderRows);
