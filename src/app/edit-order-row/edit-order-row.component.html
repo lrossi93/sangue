@@ -50,7 +50,6 @@
 		placeholder="{{ 'Row number' | translate }}"
 		[formControl]="n_riga"
 		matInput
-		(blur)="onBlur($event)"
 		(keyup)="checkFields($event)"
 		type="number">
 	</mat-form-field>

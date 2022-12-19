@@ -102,19 +102,19 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.loginService.getUserCode() == "220"){
+    if(this.loginService.getUserCode() == "220") {
       this.users = this.data.users;
     }
+    if(this.loginService.getUserCode() == '210') {
+      this.filterForecastsByUsername(this.loginService.getUsername()!);
+    }
     this.products = this.data.products;
-    //this.getForecastsByUsername(this.username);
     //filter input for users
     this.getUserNames();
     this.filteredUsers = this.userFormControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterUsers(value || ''))
     );
-
-
   }
 
   pushOrderRow(newOrderRow: OrderRow){
@@ -370,10 +370,16 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   enableAddRowAndSubmit(selectedUser: string) {
-    this.isAddRowEnabled = false;
-    this.isSubmitEnabled = false;
-    
-    if(this.isAmongUsers(selectedUser)) {
+    if(this.loginService.getUserCode() == '220') {
+      this.isAddRowEnabled = false;
+      this.isSubmitEnabled = false;
+      
+      if(this.isAmongUsers(selectedUser) && this.n_ordine.value > 0) {
+        this.isAddRowEnabled = true;
+        this.isSubmitEnabled = true;
+      }
+    }
+    if(this.loginService.getUserCode() == '210' && this.n_ordine.value > 0) {
       this.isAddRowEnabled = true;
       this.isSubmitEnabled = true;
     }

@@ -39,6 +39,7 @@
         placeholder="{{'Order number' | translate }}"
         type="number"
         [formControl]="n_ordine"
+        (keyup)="enableAddRowAndSubmit(userFormControl.value)"
         matInput>
     </mat-form-field>
 

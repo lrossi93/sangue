@@ -235,8 +235,7 @@ export class EditOrderRowComponent implements OnInit {
   }
   
   onBlur(event: Event) {
-    console.log(event);
-    
+    //console.log(event);
     if(this.qta.value == null){
       this.qta.setValue(0);
       this.isMotivazioneVisible = false;
