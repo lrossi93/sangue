@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { environment, Order, OrderRow } from 'src/environments/environment';
+import { environment, Order, OrderRow, Forecast} from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
+import { ForecastService } from '../forecast.service';
 import { OrdersService } from '../orders.service';
 import { OrdersComponent } from '../orders/orders.component';
 import { PharmaRegistryService } from '../pharma-registry.service';
@@ -35,6 +36,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   
   users: any = [];
   products: any = [];
+  forecasts: Forecast[] = [];
+  filteredForecasts: Forecast[] = [];
 
   dialogRef: any;
   dialog: MatDialog;
@@ -45,7 +48,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     private ordersService: OrdersService,
     private usersService: UsersService,
     private pharmaRegistryService: PharmaRegistryService,
-    private ordersComponent: OrdersComponent
+    private ordersComponent: OrdersComponent,
+    private forecastService: ForecastService
   ) { 
     this.dialog = dialog;
     this.ordersService = ordersService; 
@@ -53,8 +57,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
+    console.log(this.data);
+    
     this.isLocked = this.data.isRowLocked;
     this.listOrderRows(this.data.id);
+    this.listForecasts(this.data.anno);
   }
   
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -91,7 +98,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       orderRows: this.orderRows, //array di orderRows 
       users: this.users,
       products: this.products,
-      isLocked: this.isLocked
+      isLocked: this.isLocked,
+      forecasts: this.filteredForecasts
     }
     dialogConfig.width = "60%";
     dialogConfig.minWidth = "60%";
@@ -165,5 +173,30 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         }
       }
     );
+  }
+
+  listForecasts(year: string) {
+    this.forecastService.listForecastsPromise(year).subscribe(
+      res => {
+        if(res[0] == "OK"){
+          this.forecasts = res[1];
+          //console.log(this.forecasts);
+          this.filterForecastsByUsername(this.data.username);
+          console.log(this.filteredForecasts);
+        }
+        else {
+          console.error("Error retrieving forecasts!");
+        }
+      }
+    )
+  }
+
+  filterForecastsByUsername(username: string) {
+    this.filteredForecasts = [];
+    for(var i = 0; i < this.forecasts.length; ++i) {
+      if(this.forecasts[i].username == username) {
+        this.filteredForecasts.push(this.forecasts[i]);
+      }
+    }
   }
 }

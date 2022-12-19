@@ -3,10 +3,11 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
-import { Order, OrderGridRowData, OrderRow } from 'src/environments/environment';
+import { Forecast, Order, OrderGridRowData, OrderRow } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
+import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
 import { OrderablePeriodService } from '../orderable-period.service';
 import { OrdersService } from '../orders.service';
@@ -36,6 +37,7 @@ export class OrdersComponent implements OnInit {
   orderRows: any = [];
   users: any = [];
   products: any = [];
+  forecasts: Forecast[] = [];
 
   day: number = parseInt(new Date().toLocaleString('it-IT').split(",", 2)[0].split("/", 2)[0]);
   gg_min!: number;
@@ -62,7 +64,8 @@ export class OrdersComponent implements OnInit {
     private pharmaRegistryService: PharmaRegistryService,
     dialog: MatDialog,
     private router: Router,
-    private orderablePeriodService: OrderablePeriodService
+    private orderablePeriodService: OrderablePeriodService,
+    private forecastService: ForecastService
   ) {    
     //this.ordersService = ordersService;
     //this.usersService = usersService;
@@ -121,8 +124,11 @@ export class OrdersComponent implements OnInit {
 
     //independent from current view
     this.listProducts();
-
+    console.log("aaaaaaaaaaaa");
+    
+    this.listForecasts(this.year);
     this.listOrders(this.year);
+
     //the next method is included in the previous method
     //this.listUsersAndSetLock('210');
     
@@ -357,12 +363,7 @@ export class OrdersComponent implements OnInit {
       }
     );
   }
-/*
-  setOrderRow(orderRow: OrderRow, isAdding: boolean) {
-    this.ordersService.setOrderRow(orderRow, isAdding);
-    this.setOrderRowLocally(orderRow, isAdding);
-  }
-*/
+
   setOrderRowLocally(orderRow: OrderRow, isAdding: boolean) {
     if(!isAdding) {
       for(let i = 0; i < this.orders.length; ++i) {
@@ -389,10 +390,11 @@ export class OrdersComponent implements OnInit {
   
   openAddOrderDialog() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
     dialogConfig.data = {
       users: this.users,
       products: this.products,
+      forecasts: this.forecasts,
       gg_min: this.gg_min,
       gg_max: this.gg_max
     }
@@ -565,6 +567,26 @@ export class OrdersComponent implements OnInit {
         }
         else {
           console.error("Error in getOrderPeriodPromise()");
+        }
+      }
+    );
+  }
+
+  /*
+
+        FORECAST ===========================
+
+  */
+  listForecasts(year: string) {
+    this.forecastService.listForecastsPromise(year).subscribe(
+      res => {
+        //console.log(res);
+        if(res[0] == "OK") {
+          this.forecasts = res[1];
+          console.log(this.forecasts);
+        }
+        else {
+          console.error("Error retrieving forecasts!");
         }
       }
     );

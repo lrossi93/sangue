@@ -3,15 +3,17 @@
     <h2 mat-dialog-title>{{ 'Details' | translate }}</h2>
 
     <!--autocomplete dropdown for USERS-->
-    <mat-form-field *ngIf="loginService.getUserCode()=='220'">
+    <mat-form-field 
+    *ngIf="loginService.getUserCode()=='220'">
         <input 
         type="text"
         placeholder="{{ 'User' | translate }}"
         matInput
         [formControl]="userFormControl"
-        [matAutocomplete]="auto">
+        [matAutocomplete]="auto"
+        (keyup)="enableAddRowAndSubmit(userFormControl.value)">
         <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)'>
+        <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)' onchange="">
             {{ option }}
         </mat-option>
         </mat-autocomplete>
@@ -106,7 +108,26 @@
     </mat-card>
 
     <div mat-dialog-actions align="center">
-    <button mat-raised-button color="accent" (click)="openEditOrderRowDialog('', true)">{{ 'Add row' | translate }}</button>
-    <button *ngIf="newOrderRows.length > 0" mat-raised-button color="primary" (click)="onSubmit($event)">{{ 'Submit' | translate }}</button>
-    <button mat-raised-button color="secondary" mat-dialog-close="true">{{ 'Cancel' | translate }}</button>
+    <button 
+    mat-raised-button 
+    [disabled]="!isAddRowEnabled"
+    (click)="openEditOrderRowDialog('', true)">
+        {{ 'Add row' | translate }}
+    </button>
+    
+    <button 
+    *ngIf="newOrderRows.length > 0" 
+    mat-raised-button
+    [disabled]="!isSubmitEnabled" 
+    color="primary" 
+    (click)="onSubmit($event)">
+        {{ 'Submit' | translate }}
+    </button>
+    
+    <button 
+    mat-raised-button 
+    color="warn" 
+    mat-dialog-close="true">
+        {{ 'Cancel' | translate }}
+    </button>
 </div>

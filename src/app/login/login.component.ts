@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.check();
+    this.amILogged();
   }
 
   //fields
@@ -58,6 +59,14 @@ export class LoginComponent implements OnInit {
         }
       }
     )
+  }
+
+  amILogged() {
+    if(localStorage.getItem('id_session') != null) {
+      console.log("redirecting to welcome");
+      
+      this.router.navigate(['welcome']);
+    }
   }
   
   login(username: string, password: string){

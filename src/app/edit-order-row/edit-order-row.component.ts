@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
-import { OrderRow, Product, User } from 'src/environments/environment';
+import { environment, Forecast, OrderRow, Product, User, alerts } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 
 @Component({
@@ -17,6 +17,17 @@ export class EditOrderRowComponent implements OnInit {
   productID!: string;
   usernameString!: string;
 
+  qtyThreshold!: number;
+  qtyValue!: number;
+
+  forecasts: Forecast[] = [];
+
+  //flags for field checking
+  productOK: boolean = false;
+  nRigaOK: boolean = false;
+  quantitaOK: boolean = false;
+  motivazioneOK: boolean = false;
+
   id!: UntypedFormControl;
   id_ordine!: UntypedFormControl;
   username!: UntypedFormControl;
@@ -27,6 +38,8 @@ export class EditOrderRowComponent implements OnInit {
   qta_validata!: UntypedFormControl;
   note!: UntypedFormControl;
 
+  isSubmitEnabled: boolean = false;
+  isMotivazioneVisible: boolean = false;
 
   productsFormControl!: FormControl;// = new FormControl('', Validators.required);
   products: Product[] = [];
@@ -44,7 +57,8 @@ export class EditOrderRowComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { 
       orderRow: OrderRow,
       users: any,
-      products: any
+      products: any,
+      forecasts: Forecast[]
     },
     private dialogRef: MatDialogRef<EditOrderRowComponent>,
     private _builder: UntypedFormBuilder,
@@ -54,6 +68,10 @@ export class EditOrderRowComponent implements OnInit {
 
     this.orderRow = data.orderRow;
     this.users = data.users;    
+    this.forecasts = data.forecasts;
+    console.log(this.forecasts);
+
+
     
     //se sangueaslno
     if(loginService.getUserCode() == "220") {
@@ -123,8 +141,11 @@ export class EditOrderRowComponent implements OnInit {
   }
 
   productDesToId(des: string): string {
+    //console.log("des: " + des);
+    
     for(var i = 0; i < this.products.length; ++i){
       if(des == this.products[i].des) {
+        //console.log("found! returning product id: " + this.products[i].id);
         return this.products[i].id;
       }
     }
@@ -172,8 +193,23 @@ export class EditOrderRowComponent implements OnInit {
   }
 
   onProductSelected(event: any) {
-    console.log(event.source.value);
-    console.log(this.productDesToId(event.source.value));
+    if(event.source.selected){    
+    this.productsFormControl.setValue(event.source.value);
+    this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(this.productDesToId(event.source.value)) / 12);
+    this.checkFields(event);
+    }
+  }
+
+  getQtaApprovataByProductId(id: string): number {
+    for(var i = 0; i < this.forecasts.length; ++i) {
+      if(this.forecasts[i].id_prd == id){
+        //this.qtyThreshold = Math.floor(this.forecasts[i].qta_approvata / 12);
+        //console.log(this.forecasts[i].qta_approvata / 12);
+        
+        return this.forecasts[i].qta_approvata;
+      }
+    }
+    return -1;
   }
 
   assignOrderRowValues() {
@@ -196,5 +232,99 @@ export class EditOrderRowComponent implements OnInit {
         isSubmitted: this.isSubmitted
       }
     );
-  }  
+  }
+  
+  onBlur(event: Event) {
+    console.log(event);
+    
+    if(this.qta.value == null){
+      this.qta.setValue(0);
+      this.isMotivazioneVisible = false;
+    }
+
+    this.qtyValue = this.qta.value;
+    
+    if(this.qtyThreshold == -1 || this.qtyValue <= this.qtyThreshold){
+      this.isMotivazioneVisible = false;
+      this.motivazione.setValue(null);
+      return;
+    }
+    
+    if(this.qtyValue > this.qtyThreshold){
+      alert(environment.currentLanguage == 'it' ? alerts.it.ThresholdSurpassed : alerts.en.ThresholdSurpassed);
+      this.isMotivazioneVisible = true;
+      return;
+    }
+  }
+
+  checkFields(event: Event) {
+    //console.log(event);
+    
+    this.isSubmitEnabled = false;
+    //this.productsFormControl.setValue(this.productsFormControl.value);
+    //console.log("checkFields(): " + this.productsFormControl.value);
+    //console.log("motivazione: " + this.motivazione.value);
+
+    //se il prodotto scritto è tra i prodotti esistenti AND
+    //se il numero riga è positivo
+      //se la quantità è maggiore della soglia
+        //se la motivazione non è vuota
+          //abilita submit
+      //se la quantità è == -1
+        //abilita submit
+    
+    //il prodotto esiste e ha un numero riga
+    if(this.isAmongProducts(this.productsFormControl.value) && this.n_riga.value > 0) {
+      console.log("the product exists");
+      
+      //ha una soglia
+      if(this.qtyThreshold != -1){
+
+        //se la soglia è stata superata, serve una motivazione
+        if(this.qta.value > this.qtyThreshold) {
+          console.log("\tthreshold surpassed, enabling motivazione");
+
+          //non ha una motivazione --> submit disabilitato
+          if(this.motivazione.value == null || this.motivazione.value == undefined || this.motivazione.value == "") {
+            console.log("\treason EMPTY --> disabling submit");
+            this.isSubmitEnabled = false;
+          }
+
+          //ha una motivazione --> submit abilitato
+          else if(this.motivazione.value != null && this.motivazione.value != "" && this.motivazione.value != undefined) {
+            console.log("\treason not empty --> enabling submit");
+            this.isSubmitEnabled = true;
+          }
+        }
+
+        //se la soglia non è stata superata, non serve una motivazione
+        else {
+          console.log("threshold not surpassed, enabling submit independently from motivazione");
+          this.isSubmitEnabled = true;
+        }
+      }
+      //non ha una soglia --> abilito submit
+      else {
+        console.log("threshold not set");
+        if(this.qta.value > 0) {
+          this.isSubmitEnabled = true;
+        }
+      }
+    }
+    //prodotto non esiste o non ha un numero riga --> submit disabilitato a prescindere
+    else {
+      this.isSubmitEnabled = false;
+    }
+  }
+
+  isAmongProducts(inputValue: string): boolean {
+    for(var i = 0; i < this.products.length; ++i) {
+      if(inputValue == this.products[i].des) {
+        this.getQtaApprovataByProductId(this.products[i].id);
+        return true;
+      }
+    }
+    this.qtyThreshold = Infinity;
+    return false;
+  }
 }

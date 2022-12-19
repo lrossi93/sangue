@@ -24,14 +24,15 @@
 			</mat-option>
 		</mat-autocomplete>
 	</mat-form-field-->
-
+<form>
 	<mat-form-field class="example-full-width">
 		<mat-label>{{ 'Product' | translate }}</mat-label>
 		<input type="text"
 		placeholder="Pick one"
 		matInput
 		[formControl]="productsFormControl"
-		[matAutocomplete]="autoP">
+		[matAutocomplete]="autoP"
+		(keyup)="checkFields($event)">
 		<mat-autocomplete 
 		autoActiveFirstOption
 		#autoP="matAutocomplete">
@@ -49,24 +50,43 @@
 		placeholder="{{ 'Row number' | translate }}"
 		[formControl]="n_riga"
 		matInput
-		type="number">
-	</mat-form-field>
-
-	<mat-form-field>
-		<input
-		placeholder="{{ 'Quantity' | translate }}"
-		[formControl]="qta"
-		matInput
+		(blur)="onBlur($event)"
+		(keyup)="checkFields($event)"
 		type="number">
 	</mat-form-field>
 
 	<mat-form-field
-	*ngIf="qta.value > 0">
+	*ngIf="qtyThreshold != -1">
 		<input
+		placeholder="{{ 'Quantity' | translate }} (max: {{qtyThreshold}})"
+		[formControl]="qta"
+		matInput
+		(blur)="onBlur($event)"
+		(keyup)="checkFields($event)"
+		type="number">
+	</mat-form-field>
+
+	<mat-form-field
+	*ngIf="qtyThreshold == -1">
+		<input
+		placeholder="{{ 'Quantity' | translate }}"
+		[formControl]="qta"
+		matInput
+		(blur)="onBlur($event)"
+		(keyup)="checkFields($event)"
+		type="number">
+	</mat-form-field>
+
+	<mat-form-field
+	*ngIf="isMotivazioneVisible">	
+		<input
+		#motivazioneInput
 		placeholder="{{ 'Reason' | translate }}"
 		[formControl]="motivazione"
 		matInput
-		type="text">
+		(keyup)="checkFields($event)"
+		type="text"
+		(focus)="true">
 	</mat-form-field>
 
 
@@ -86,9 +106,22 @@
 		matInput
 		type="text">
 	</mat-form-field>
-
+</form>
 </div>
+
 <div mat-dialog-actions align="center">
-    <button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
-    <button mat-raised-button matDialogClose="true" color="primary">{{ 'Cancel' | translate }}</button>
+    <button 
+	mat-raised-button 
+	[disabled]="!isSubmitEnabled"
+	color="primary" 
+	(click)="onSubmit()">
+		{{ 'Submit' | translate }}
+	</button>
+    
+	<button 
+	mat-raised-button 
+	matDialogClose="true" 
+	color="warn">
+		{{ 'Cancel' | translate }}
+	</button>
 </div>

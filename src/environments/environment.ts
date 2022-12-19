@@ -115,6 +115,15 @@ export interface OrderRowGridRowData {
   note: string;
 }
 
+export const alerts = {
+  it: {
+    ThresholdSurpassed: "Soglia superata! Si prega di giustificare la quantità in eccesso nel box 'Motivazione'."
+  },
+  en: {
+    ThresholdSurpassed: "Threshold surpassed! Please justify the exceeding quantity in the 'Reason' text box."
+  }
+}
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

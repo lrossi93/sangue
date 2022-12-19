@@ -11,7 +11,7 @@
         <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
         <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
         <h5
-        *ngIf="orderRow.motivazione != null || orderRow.motivazione != ''">
+        *ngIf="orderRow.motivazione != null && orderRow.motivazione != '' && orderRow.motivazione != undefined">
             <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
         </h5>
         <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>

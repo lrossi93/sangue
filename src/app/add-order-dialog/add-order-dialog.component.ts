@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
-import { Order, OrderRow, Product, User } from 'src/environments/environment';
+import { Forecast, Order, OrderRow, Product, User } from 'src/environments/environment';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.component';
 import { LoginService } from '../login.service';
@@ -25,6 +25,13 @@ export class AddOrderDialogComponent implements OnInit {
   minDate!: Date;
   gg_max!: string;
   maxDate!: Date;
+
+  isInputAmongUsers: boolean = false;
+  isAddRowEnabled: boolean = false;
+  isSubmitEnabled: boolean = false;
+
+  forecasts: Forecast[] = [];
+  currentUserForecasts: Forecast[] = [];
 
   //newOrder formControls for fields
   anno!: UntypedFormControl;
@@ -57,6 +64,7 @@ export class AddOrderDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {
       users: User[],
       products: Product[],
+      forecasts: Forecast[],
       gg_min: string,
       gg_max: string
     },
@@ -71,21 +79,16 @@ export class AddOrderDialogComponent implements OnInit {
     this.loginService = loginService;
 
     //creation of formControls from _builder
-    //this.anno = _builder.control(new Date().getFullYear(), Validators.required);
-    //this.username = _builder.control(loginService.getUsername(), Validators.required);
     this.d_ordine = _builder.control(new Date(), Validators.required);
     this.n_ordine = _builder.control(0);
     this.b_urgente = _builder.control(false);
     this.b_extra = _builder.control(false);
     this.b_validato = _builder.control(false);
     this.d_validato = _builder.control("");
-    this.note = _builder.control("");    
-    console.log(this.data.users);
-    console.log(this.data.products);
+    this.note = _builder.control("");
 
     if(loginService.getUserCode() == "210"){
       this.userFormControl = _builder.control(loginService.getUsername(), Validators.required);
-      console.log("constructor: username: " + this.userFormControl.value);
     }
     //else, if sangueaslno, pick list of users
     else if(loginService.getUserCode() == "220"){
@@ -95,6 +98,7 @@ export class AddOrderDialogComponent implements OnInit {
     var auxDate = new Date();
     this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_min));
     this.maxDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_max));
+    this.forecasts = data.forecasts;
   }
 
   ngOnInit(): void {
@@ -102,12 +106,15 @@ export class AddOrderDialogComponent implements OnInit {
       this.users = this.data.users;
     }
     this.products = this.data.products;
+    //this.getForecastsByUsername(this.username);
     //filter input for users
     this.getUserNames();
     this.filteredUsers = this.userFormControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterUsers(value || ''))
     );
+
+
   }
 
   pushOrderRow(newOrderRow: OrderRow){
@@ -237,11 +244,12 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   onUserSelected(event: any) {
-    console.log(event);
+    this.isInputAmongUsers = false;
     if(event.source._selected){
       this.username = this.getUserId(event);
+      this.enableAddRowAndSubmit(event.source.value);
+      this.filterForecastsByUsername(this.username);
     }
-    console.log("username: " + this.username);
   }
   //END functions for autocomplete - USERS
 
@@ -300,7 +308,8 @@ export class AddOrderDialogComponent implements OnInit {
 
       dialogConfig.data = {
         orderRow: newOrderRow,
-        products: this.products
+        products: this.products,
+        forecasts: this.currentUserForecasts
       }
     }
     else {
@@ -308,7 +317,8 @@ export class AddOrderDialogComponent implements OnInit {
       console.log(editedOrderRow);
       dialogConfig.data = {
         orderRow: editedOrderRow,
-        products: this.products
+        products: this.products,
+        forecasts: this.currentUserForecasts
       }
     }
           
@@ -348,5 +358,34 @@ export class AddOrderDialogComponent implements OnInit {
         this.deleteOrderRowByIndex(id);
       }
     });
+  }
+
+  isAmongUsers(inputValue: string): boolean {
+    for(var i = 0; i < this.userNames.length; ++i) {
+      if(inputValue == this.userNames[i]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  enableAddRowAndSubmit(selectedUser: string) {
+    this.isAddRowEnabled = false;
+    this.isSubmitEnabled = false;
+    
+    if(this.isAmongUsers(selectedUser)) {
+      this.isAddRowEnabled = true;
+      this.isSubmitEnabled = true;
+    }
+  }
+
+  filterForecastsByUsername(username: string) {
+    this.currentUserForecasts = [];
+    for(var i = 0; i < this.forecasts.length; ++i) {
+      if(this.forecasts[i].username == username) {
+        this.currentUserForecasts.push(this.forecasts[i]);
+      }
+    }
+    console.log(this.currentUserForecasts);
   }
 }

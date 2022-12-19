@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Order, OrderRow } from 'src/environments/environment';
+import { Forecast, Order, OrderRow } from 'src/environments/environment';
 import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
@@ -28,6 +28,7 @@ export class EditOrderDialogComponent implements OnInit {
   orderRows: OrderRow[] = [];
   users: any = [];
   products: any = [];
+  forecasts: Forecast[] = [];
 
   dialogRef!: any;
   dialog!: MatDialog;
@@ -40,7 +41,8 @@ export class EditOrderDialogComponent implements OnInit {
       orderRows: OrderRow[],
       users: any,
       products: any,
-      isLocked: boolean
+      isLocked: boolean,
+      forecasts: Forecast[]
     },
     private _builder: UntypedFormBuilder,
     dialog: MatDialog,
@@ -61,14 +63,14 @@ export class EditOrderDialogComponent implements OnInit {
     this.users = data.users;
     this.products = data.products;
     this.isLocked = data.isLocked;
+    this.forecasts = data.forecasts;
     //console.log(data.users);
     //console.log(data.products);
     //console.log(this.users);
     //console.log(this.products);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   deleteOrderRowById(id: string) {
     for(let i = 0; i < this.orderRows.length; ++i){
@@ -114,8 +116,8 @@ export class EditOrderDialogComponent implements OnInit {
   openEditOrderRowDialog(id: string, isAdding: boolean) {
     const dialogConfig = new MatDialogConfig();
     //dialogConfig.autoFocus = true;
-    console.log(this.data.order.id);
-    console.log("OpenEditOrderRowDialog()================");
+    //console.log(this.data.order.id);
+    //console.log("OpenEditOrderRowDialog()================");
     
     //if id is not specified, create a new orderRow
     if(id == "") {
@@ -135,22 +137,26 @@ export class EditOrderDialogComponent implements OnInit {
       dialogConfig.data = {
         orderRow: newOrderRow,
         users: this.users,
-        products: this.products
+        products: this.products,
+        forecasts: this.forecasts
       }
     }
     else {
+      /*
       console.log("orderRowID: " + id);
       console.log(this.data.order.username);
       console.log(this.getOrderRowById(id));
+      */
       let editedOrderRow = this.getOrderRowById(id);
       editedOrderRow!.username = this.data.order.username; 
-      console.log(editedOrderRow);
+      //console.log(editedOrderRow);
         
    
       dialogConfig.data = {
         orderRow: this.getOrderRowById(id),
         users: this.users,
-        products: this.products
+        products: this.products,
+        forecasts: this.forecasts
       }
     }
           
@@ -171,7 +177,7 @@ export class EditOrderDialogComponent implements OnInit {
           .subscribe(
             res => {
               if(res[0] != "KO"){
-                console.log(res);
+                //console.log(res);
                 let newOrderRow = result.orderRow;
                 if(newOrderRow.id == "") {
                   newOrderRow.id = res[1];
@@ -179,7 +185,7 @@ export class EditOrderDialogComponent implements OnInit {
                 }
               }
               else {
-                console.log(res[0]);
+                console.error("Error setting orderRow!");
               }
             }
           );
@@ -192,7 +198,8 @@ export class EditOrderDialogComponent implements OnInit {
     //dialogConfig.autoFocus = true;
     dialogConfig.data = {
       order: this.data.order,
-      orderRows: this.orderRows //array di orderRows 
+      orderRows: this.orderRows, //array di orderRows
+      forecasts: this.forecasts 
     }
         
     this.dialogRef = this.dialog.open(
