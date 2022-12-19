@@ -1,4 +1,3 @@
-import { ValueGetterParams } from "ag-grid-community";
 import { ButtonDeleteForecastComponent } from "src/app/button-delete-forecast/button-delete-forecast.component";
 import { ButtonDeleteProductComponent } from "src/app/button-delete-product/button-delete-product.component";
 import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-order.component";
@@ -147,7 +146,8 @@ export const forecastGridHeaders = {
     Notes: "Note",
     ApprovedQuantity: "Quantità approvata",
     CostPerUnit: "Costo unitario",
-    Action: "Azione"
+    Action: "Azione",
+    Pending: "In attesa",
   },
   en: {
     ID: "ID",
@@ -158,7 +158,8 @@ export const forecastGridHeaders = {
     Notes: "Notes",
     ApprovedQuantity: "Approved quantity",
     CostPerUnit: "Cost per unit",
-    Action: "Action"
+    Action: "Action",
+    Pending: "In attesa",
   }
 }
 
@@ -171,41 +172,10 @@ export const gridConfigForecast210 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
       field: 'anno', 
-      editable: true
+      editable: (params: { data: { qta_approvata: string; }; })  => {
+        return (params.data.qta_approvata == "In attesa" || params.data.qta_approvata == "in attesa" || params.data.qta_approvata == "0");
+      }
     },
-    /*
-    { 
-      headerName: 'User ID', 
-      field: 'username', //questo è l'id di un utente
-      editable: false
-    },
-    */
-    /*
-    {
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User,
-      field: 'username', //prende l'id dell'utente (forecast.username) e ritorna il nome utente (user.username) 
-      cellRenderer: DropdownUsersForecastComponent,
-      editable: false
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
-      field: 'full_username',
-      cellRenderer: DropdownUsersForecastComponent,
-      editable: false
-    },
-    */
-    { 
-      headerName: 'Product ID', 
-      field: 'id_prd', 
-      editable: true
-    },
-    /*
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
-      field: 'id_prd', 
-      cellRenderer: DropdownProductsForecastComponent
-    },
-    */
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'product_name',
@@ -215,7 +185,9 @@ export const gridConfigForecast210 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
       field: 'qta', 
-      editable: true
+      editable: (params: { data: { qta_approvata: string; }; })  => {
+        return (params.data.qta_approvata == "In attesa" || params.data.qta_approvata == "in attesa" || params.data.qta_approvata == "0");
+      }
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
@@ -225,15 +197,16 @@ export const gridConfigForecast210 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
       field: 'qta_approvata', 
-      editable: false
+      editable: false,
+      cellRenderer: (params: { value: string | number; }) => {
+        if(params.value == "0" || params.value == null || params.value == 0) {
+          return localeLang == 'it' ? forecastGridHeaders.it.Pending : forecastGridHeaders.en.Pending;
+        }
+        else {
+          return params.value;
+        }
+      }
     },
-    /*
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.CostPerUnit : forecastGridHeaders.en.CostPerUnit, 
-      field: 'costo_unitario', 
-      editable: false
-    },
-    */
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
       cellRenderer: ButtonDeleteForecastComponent,
@@ -252,43 +225,12 @@ export const gridConfigForecast220 = [
       field: 'anno', 
       editable: false
     },
-    /*
-    { 
-      headerName: 'User ID', 
-      field: 'username', 
-      editable: false
-    },
-    */
-   /*
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
-      field: 'username',
-      //cellRenderer: DropdownUsersForecastComponent,
-      editable: false
-    },
-    */
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
       field: 'full_username',
       cellRenderer: DropdownUsersForecastComponent,
       editable: false
     },
-    /*
-    { 
-      headerName: 'User ID', 
-      field: 'username', 
-      editable: false,
-      valueGetter: usernameValueGetter
-    },
-    */
-   /*
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
-      field: 'id_prd', 
-      //cellRenderer: DropdownProductsForecastComponent,
-      editable: false
-    },
-    */
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'product_name',
@@ -303,7 +245,7 @@ export const gridConfigForecast220 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
       field: 'note', 
-      editable: false
+      editable: true
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
@@ -322,11 +264,7 @@ export const gridConfigForecast220 = [
     }
 ];
 
-//methods for valueGetters
-function usernameValueGetter(params: ValueGetterParams) { 
-  return 3;
-}
-
+//header translation for orders
 export const orderGridHeaders = {
   it: {
     ID: "ID",
@@ -370,7 +308,6 @@ export const gridConfigOrders210 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
-    //cellRenderer: DropdownUsersOrdersComponent,
     editable: false
   },
   { 

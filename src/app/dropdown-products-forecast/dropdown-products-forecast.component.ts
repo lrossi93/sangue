@@ -28,31 +28,18 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   productName: string = '';
 
   //sample array
-  options: string[] = [];//['Delhi', 'Mumbai', 'Banglore'];
+  options: string[] = [];
   filteredOptions: Observable<string[]> | undefined;
   formControl!: UntypedFormControl;
 
   constructor(
     loginService: LoginService,
     private forecastService: ForecastService,
-    private http: HttpClient,
+    private pharmaRegistryService: PharmaRegistryService
   ) { 
-    
-    //retrieve product names
     this.getProducts();
-    
     this.options = this.productNames;
     this.loginService = loginService;
-
-    //adapt dropdown to user type
-    switch(loginService.getUserCode()){
-      case "210":
-        this.formControl = new UntypedFormControl({value: this.productName, disabled: false});
-        break;
-      case "220":
-        this.formControl = new UntypedFormControl({value: this.productName, disabled: true});
-        break;
-    }
   }
 
   ngOnInit(): void {
@@ -67,6 +54,16 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
     this.value = params.value; //product id
+
+    //adapt dropdown to user type
+    switch(this.loginService.getUserCode()){
+      case "210":
+        this.formControl = new UntypedFormControl({value: this.productName, disabled: this.data.qta_approvata != 0});
+        break;
+      case "220":
+        this.formControl = new UntypedFormControl({value: this.productName, disabled: true});
+        break;
+    }
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -91,15 +88,9 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   }
 
   getProducts(): void{
-    let path = this.pharmaRegistryUrl + '?request=listProducts&id_session='+localStorage.getItem('id_session');
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
-      }
-    ).subscribe(res => {
+    this.pharmaRegistryService.listProductsPromise().subscribe(res => {
       if(res[0] == "KO"){
-        alert("Error retrieving products!");
+        console.error("Error retrieving products!");
       }
       else{
         this.products = res[1];
@@ -121,9 +112,6 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   onOptionSelected(event: any) {
     if(event.source._selected){
       let productId = this.getProductId(event);
-      //console.log('product id: ' + productId);
-  
-        //perform call to update db
         this.forecastService.setForecast(
           this.data.id,
           this.data.anno,
