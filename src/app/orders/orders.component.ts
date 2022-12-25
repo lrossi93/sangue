@@ -2,12 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
-import { Forecast, Order, OrderGridRowData, OrderRow } from 'src/environments/environment';
+import { CellClickedEvent, CellValueChangedEvent, ILoadingCellRendererParams } from 'ag-grid-community';
+import { retry } from 'rxjs';
+import { Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 import { ForecastService } from '../forecast.service';
+import { LoadingCellRendererComponent } from '../loading-cell-renderer/loading-cell-renderer.component';
 import { LoginService } from '../login.service';
 import { OrderablePeriodService } from '../orderable-period.service';
 import { OrdersService } from '../orders.service';
@@ -38,6 +40,7 @@ export class OrdersComponent implements OnInit {
   users: any = [];
   products: any = [];
   forecasts: Forecast[] = [];
+  orderStatusArr: any[] = []; //array di array di orderStatus
 
   day: number = parseInt(new Date().toLocaleString('it-IT').split(",", 2)[0].split("/", 2)[0]);
   gg_min!: number;
@@ -57,6 +60,12 @@ export class OrdersComponent implements OnInit {
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
   api: any;
 
+  loading: boolean = true;
+
+  //loading animation
+  //loadingCellRenderer: LoadingCellRendererComponent;
+  //loadingCellRendererParams: ILoadingCellRendererParams;
+
   constructor(
     public loginService: LoginService,
     private ordersService: OrdersService,
@@ -65,7 +74,8 @@ export class OrdersComponent implements OnInit {
     dialog: MatDialog,
     private router: Router,
     private orderablePeriodService: OrderablePeriodService,
-    private forecastService: ForecastService
+    private forecastService: ForecastService,
+    //loadingCellRenderer: LoadingCellRendererComponent
   ) {    
     //this.ordersService = ordersService;
     //this.usersService = usersService;
@@ -73,6 +83,14 @@ export class OrdersComponent implements OnInit {
     //
     //this.usersService.listUsers("210"); //get all customer asl users
     this.dialog = dialog;
+
+    /*
+    this.loadingCellRenderer = new LoadingCellRendererComponent();
+    this.loadingCellRendererParams = this.loadingCellRenderer.params;
+    */
+
+    this.loading = true;
+
 
     //gridOptions
     this.gridOptions = {
@@ -106,7 +124,17 @@ export class OrdersComponent implements OnInit {
           
           //not adding but editing
           let isAdding = false;
-          this.setOrder(this.order, isAdding);
+          let orderStatus = {
+            id: "0",
+            username: localStorage.getItem('sangue_username')!,
+            id_order: event.data.id,
+            d_status: this.getFormattedDate(new Date()),
+            status: event.column.getColId() == 'd_validato' || event.column.getColId() == 'b_validato' ? "confermato" : "inviato",
+            note: event.column.getColId() == 'd_validato' || event.column.getColId() == 'b_validato' ? "confermato da " + localStorage.getItem('sangue_username')! : "inviato",
+            b_sto: false
+          }
+
+          this.setOrder(this.order, orderStatus, isAdding);
         }
         this.updateGrid();
       }
@@ -122,24 +150,15 @@ export class OrdersComponent implements OnInit {
       }
     );
 
-    //independent from current view
-    this.listProducts();
-    console.log("aaaaaaaaaaaa");
-    
+    this.getAllData();
     this.listForecasts(this.year);
-    this.listOrders(this.year);
+    this.listProducts();
 
-    //the next method is included in the previous method
-    //this.listUsersAndSetLock('210');
-    
     //initialize Ag-Grid API
     setTimeout(
       () => {
         this.api = this.agGrid.api;
-        this.logAPI();
       }, 300);
-
-    //this.listOrderRows('1')
   }
 
   logAPI(){
@@ -152,15 +171,13 @@ export class OrdersComponent implements OnInit {
 
   */  
   listOrders(year: string) {
+    this.loading = true;
     this.ordersService.listOrdersPromise(year).subscribe(
       res => {
         if(res[0] != "KO") {
           this.orders = res[1];
-          //console.log("received orders:");
-          //console.log(this.orders);
           this.listUsersAndSetLock('210');
-          //this.createOrderGridRowData();
-          //this.updateGrid();
+          this.getAllOrderStatusRec(this.orders, 0);
         }
         else {
           this.loginService.logoutPromise().subscribe(
@@ -171,42 +188,6 @@ export class OrdersComponent implements OnInit {
         }
       }
     );
-  }
-
-  createOrderGridRowData() {
-    this.orderGridRowData = [];
-    for(var i = 0; i < this.orders.length; ++i) {
-      var lock: boolean = false;
-
-      //lock cells ONLY if customer!
-      if(this.loginService.getUserCode() == "210"){
-        //locked row conditions:
-        //if date is locked, everything is locked
-        if(this.isDateLocked == true){
-          lock = true;
-        }
-        //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
-        if((this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine)) {
-          lock = true;
-        }
-      }
-      var newOrderGridRowData = {
-        id: this.orders[i].id,
-        anno: this.orders[i].anno,
-        username: this.orders[i].username,
-        full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
-        d_ordine: this.orders[i].d_ordine,
-        n_ordine: this.orders[i].n_ordine,
-        b_urgente: this.orders[i].b_urgente,
-        b_extra: this.orders[i].b_extra,
-        b_validato: this.orders[i].b_validato,
-        d_validato: this.orders[i].d_validato,
-        note: this.orders[i].note,
-        isRowLocked: lock
-      };
-      this.orderGridRowData.push(newOrderGridRowData);      
-    }
-    console.log(this.orderGridRowData);
   }
 
   getFullUsernameById(id: string): string {
@@ -224,13 +205,26 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           newOrder.id = res[1];
-          this.setOrderLocally(newOrder, true);
+          //set order status
+          let orderStatus = {
+            id: "0",
+            username: localStorage.getItem('sangue_username')!,
+            id_order: newOrder.id,
+            d_status: newOrder.d_ordine,           
+            status: "inviato",
+            note: "ordine appena creato",
+            b_sto: false
+          }
+
+          this.setOrderLocally(newOrder, orderStatus, true);
           
           //set orderId for all orderRows before submitting
           for(var i = 0; i < newOrderRows.length; ++i) {
             newOrderRows[i].id_ordine = res[1];
             newOrderRows[i].username = newOrder.username;
           }
+
+          this.setOrderStatus(orderStatus);
 
           //then save all orderRows on db
           this.setOrderRowRec(newOrderRows, 0);
@@ -284,17 +278,26 @@ export class OrdersComponent implements OnInit {
     this.ordersService.rmOrderRow(id);
   }
 
-  setOrder(order: Order, isAdding: boolean) {
-    console.log("SET ORDER:");
-    console.log(order);  
-    this.ordersService.setOrderPromise(order, isAdding).subscribe(
+  setOrder(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
+    //set order status
+
+    this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
-        this.setOrderLocally(order, isAdding);
+        if(res[0] == "KO")
+          console.error("Error setting order status for order " + order.id);
+        
+        this.ordersService.setOrderPromise(order, isAdding).subscribe(
+          res2 => {
+            if(res2 == "KO") 
+              console.error("Error setting order with id " + order.id);
+              this.setOrderLocally(order, orderStatus, isAdding);
+          }
+        );
       }
-    )
+    );
   }
 
-  setOrderLocally(order: Order, isAdding: boolean) {
+  setOrderLocally(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
     if(!isAdding) {
       for(let i = 0; i < this.orders.length; ++i) {
         if(order.id == this.orders[i].id) {
@@ -306,8 +309,10 @@ export class OrdersComponent implements OnInit {
           this.orders[i].b_validato = order.b_validato;
           this.orders[i].d_validato = order.d_validato;
           this.orders[i].note = order.note;
+          this.orderStatusArr[i].status = orderStatus.status;
           this.createOrderGridRowData();
           this.updateGrid();
+          this.api.ensureIndexVisible(i);
           return;
         }
       }
@@ -319,6 +324,45 @@ export class OrdersComponent implements OnInit {
     }
     //update order grid
     this.updateGrid();
+  }
+
+  createOrderGridRowData() {
+    this.orderGridRowData = [];
+    for(var i = 0; i < this.orders.length; ++i) {
+      var lock: boolean = false;
+
+      //lock cells ONLY if customer!
+      if(this.loginService.getUserCode() == "210"){
+        //locked row conditions:
+        //if date is locked, everything is locked
+        if(this.isDateLocked == true){
+          lock = true;
+        }
+        //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
+        if((this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine)) {
+          lock = true;
+        }
+      }
+
+      var newOrderGridRowData = {
+        id: this.orders[i].id,
+        anno: this.orders[i].anno,
+        username: this.orders[i].username,
+        full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
+        d_ordine: this.orders[i].d_ordine,
+        n_ordine: this.orders[i].n_ordine,
+        b_urgente: this.orders[i].b_urgente,
+        b_extra: this.orders[i].b_extra,
+        b_validato: this.orders[i].b_validato,
+        d_validato: this.orders[i].d_validato,
+        status: this.orderStatusArr[i].status,
+        note: this.orders[i].note,
+        isRowLocked: lock
+      };
+      this.orderGridRowData.push(newOrderGridRowData);      
+    }
+    console.log(this.orderGridRowData);
+    this.loading = false;
   }
 
   rmOrderLocally(id: string) {
@@ -376,7 +420,8 @@ export class OrdersComponent implements OnInit {
           this.orderRows[i].qta = orderRow.qta;
           this.orderRows[i].qta_validata = orderRow.qta_validata;
           this.orderRows[i].note = orderRow.note;
-          this.updateGrid();
+          //no need to update grid here
+          //this.updateGrid();
           return;
         }
       }
@@ -385,12 +430,11 @@ export class OrdersComponent implements OnInit {
       //if the id is not present, append the new element
       this.orders.push(orderRow);
     }
-    //TODO: update orderRow locally
   }
   
   openAddOrderDialog() {
     const dialogConfig = new MatDialogConfig();
-    //dialogConfig.autoFocus = true;
+    
     dialogConfig.data = {
       users: this.users,
       products: this.products,
@@ -409,11 +453,9 @@ export class OrdersComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(
       (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
         if(result !== undefined && result.isSubmitted){
-          //console.log(result);
           let newOrder = result.newOrder;
           if(this.loginService.getUserCode() == "210")
             newOrder.username = this.loginService.getUsername()!;
-          //console.log(result.newOrderRows);
           this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
         }
       }
@@ -424,10 +466,8 @@ export class OrdersComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
-    console.log(event)
-    //TODO: use header id instead
-    switch(event.colDef.headerName){
-      case "Data ordine":
+    switch(event.colDef.field){
+      case "d_ordine":
         dialogConfig.data = {
           date: event.data.d_ordine,
           isOrderDate: true,
@@ -436,7 +476,7 @@ export class OrdersComponent implements OnInit {
         }
         break;
 
-      case "Data validazione":
+      case "d_validato":
         dialogConfig.data = {
           date: event.data.d_validato,
           isValidationDate: true
@@ -465,15 +505,33 @@ export class OrdersComponent implements OnInit {
         this.order.d_validato = event.data.d_validato;
         this.order.note = event.data.note;   
 
+        let orderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: event.data.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "",
+          note: "",
+          b_sto: false
+        }
+
+        //when setting order date, just set order date
         if(result.isOrderDate){
           this.order.d_ordine = result.date;
+          orderStatus.status = "inviato"
+          orderStatus.note = "Data ordine modificata da " + localStorage.getItem('sangue_username');
           console.log("setting: " + this.order.d_ordine);
-          this.setOrder(this.order, false);
+          this.setOrder(this.order, orderStatus, false);
         }
+
+        //when setting a validation date, automatically validate order
         else if(result.isValidationDate) {
           this.order.d_validato = result.date;
+          this.order.b_validato = true;
+          orderStatus.status = "confermato";
+          orderStatus.note = "Ordine confermato da " + localStorage.getItem('sangue_username');
           console.log("setting: " + this.order.d_validato);
-          this.setOrder(this.order, false);
+          this.setOrder(this.order, orderStatus, false);
         }
         
         this.updateGrid();
@@ -495,8 +553,6 @@ export class OrdersComponent implements OnInit {
         }
         else {
           this.users = res[1];
-          //console.log("users: ");
-          //console.log(this.users);
           this.setLock();
         }
       }
@@ -516,8 +572,6 @@ export class OrdersComponent implements OnInit {
         }
         else {
           this.products = res[1];
-          //console.log("products:");
-          //console.log(this.products);
         }
       }
     );
@@ -554,11 +608,9 @@ export class OrdersComponent implements OnInit {
 
           //now set grid config
           if(this.loginService.getUserCode() == '210') {
-            //TODO: condizione per celle bloccate
             this.isDateLocked ? this.ordersGridConfig = gridConfigOrders210Locked : this.ordersGridConfig = gridConfigOrders210;
           } 
           if(this.loginService.getUserCode() == '220') {
-            //TODO: condizione per celle bloccate
             this.isDateLocked ? this.ordersGridConfig = gridConfigOrders220Locked : this.ordersGridConfig = gridConfigOrders220;
           }
 
@@ -590,6 +642,124 @@ export class OrdersComponent implements OnInit {
         }
       }
     );
+  }
+
+  /**
+   * 
+   * ORDER STATUS MANAGEMENT
+   * 
+   */
+  
+  getOrderStatus(orderId: string) {
+    this.ordersService.getOrderStatusPromise(orderId).subscribe(
+      res => {        
+        if(res[0] == "OK"){
+          console.log("WS response:");
+          console.log(res);
+        }
+        else{
+          console.error("Error retrieving orderStatus for order " + orderId);
+          console.error(res);
+        }
+      }
+    );
+  }
+
+  setOrderStatus(orderStatus: OrderStatus) {
+    this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
+      res => {
+        if(res[0] == "OK"){
+          console.log("set:");
+          console.log(orderStatus);
+          console.log(res);
+        }
+        else {
+          console.error("Error setting status for order with id " + orderStatus.id_order);
+        }
+      }
+    );
+  }
+
+  //big function to be called at the very beginning, to retrieve everything we need
+  getAllData() {
+    //listOrders, then
+    this.ordersService.listOrdersPromise(this.year).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.orders = res[1];
+          this.getAllOrderStatusRec(this.orders, 0);
+          console.log(this.orderStatusArr);
+          
+        }
+        else {
+          console.error("Error retrieving orders!");
+        }
+        
+      }
+    );
+    //getAllOrderStatus, then
+    //setLock
+  }
+
+  getAllOrderStatusRec(orders: Order[], i: number) {
+    //uscita
+    if(i >= orders.length) {
+      this.listUsersAndSetLock('210');
+      return;
+    }
+    this.ordersService.getOrderStatusPromise(orders[i].id).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          console.log(res[1][res[1].length - 1]);
+
+          //check if all orders have a status
+          if(res[1][res[1].length -1] === undefined) {
+            let orderStatus = {
+              id: "0",
+              username: localStorage.getItem('sangue_username')!,
+              id_order: orders[i].id,
+              d_status: orders[i].d_ordine,           
+              status: "inviato",
+              note: "",
+              b_sto: 0
+            }
+            this.orderStatusArr.push(orderStatus);
+          }
+          else{
+            this.orderStatusArr.push(res[1][res[1].length - 1]);
+          }
+          this.getAllOrderStatusRec(orders, ++i);
+        }
+        else {
+          console.error("Error retrieving orderStatus for order " + orders[i].id);
+        }
+      }
+    );
+  }
+
+  getStatusByOrderId(orderId: string): string {
+    for(var i = 0; i < this.orderStatusArr.length; ++i) {
+      if(this.orderStatusArr[i].id_order == orderId) {
+        return this.orderStatusArr[i].status;
+      }
+    }
+    return "";
+  }
+
+  getFormattedDate(date: Date): string {
+    let splitDate = date.toLocaleString('it-IT').split(",", 2)[0].split("/", 3);
+    
+    let day = splitDate[0];
+    let month = splitDate[1];
+    let year = splitDate[2];
+
+    if(day.length == 1){
+      day = "0" + day;
+    }
+    if(month.length == 1){
+      month = "0" + month;
+    }
+    return year + "-" + month + "-" + day;  
   }
 }
   

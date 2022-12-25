@@ -85,6 +85,7 @@ export interface OrderGridRowData {
   b_extra: boolean;
   b_validato: boolean;
   d_validato: string;
+  status: string;
   note: string;
   isRowLocked: boolean;
 }
@@ -97,7 +98,8 @@ export interface OrderRow {
   username: string;           //id dell'utente che ha piazzato l'ordine
   qta: number;                //quante copie del prodotto sono state ordinate
   motivazione: string;        //perchè vengono ordinate così tante copie
-  qta_validata: number; //quante copie del prodotto vengono concesse
+  qta_validata: number;       //quante copie del prodotto vengono concesse
+  qta_ricevuta: number;       //quante copie del prodotto vengono ricevute
   note: string;
 }
 
@@ -113,6 +115,16 @@ export interface OrderRowGridRowData {
   qta: number;
   qta_validata: number;
   note: string;
+}
+
+export interface OrderStatus {
+  id: string,
+  username: string,         //username dell'ultimo utente che ha modificato lo stato dell'ordine
+  id_order: string,         //id dell'ordine a cui si riferisce lo stato
+  d_status: string,         //data di ultima modifica dello stato dell'ordine
+  status: string,           //[inviato|confermato|inviato al fornitore|inviato al cliente|ricevuto]
+  note: string;
+  b_sto: boolean            //false = l'ordine (lo stato) è appena stato creato; true: l'ordine (lo stato) è appena stato solo modificato
 }
 
 export const alerts = {

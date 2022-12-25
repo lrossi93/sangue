@@ -17,8 +17,8 @@ export class OrderablePeriodService {
 
   getOrderPeriodPromise(): Observable<any> {
     let requestType = "getOrderPeriod";
-    let path = this.url + '?request=' + requestType + '&id_session=' + this.loginService.getSession();
-    console.log(path);
+    let id_session = localStorage.getItem('id_session');
+    let path = this.url + '?request=' + requestType + '&id_session=' + id_session;
     return this.http.get<String[]>(
       path,
       {

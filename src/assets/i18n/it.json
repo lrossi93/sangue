@@ -83,5 +83,6 @@
     "Close": "Chiudi",
     "View": "Visualizza",
     "This order does not contain any orderRows and will thus be deleted": "Quest'ordine non contiene righe d'ordine, perciò sarà cancellato",
-    "Choose a product": "Scegli un prodotto"
+    "Choose a product": "Scegli un prodotto",
+    "Loading": "Caricamento in corso"
 }

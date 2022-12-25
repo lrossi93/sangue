@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Forecast, Order, OrderRow } from 'src/environments/environment';
+import { Forecast, Order, OrderRow, OrderStatus } from 'src/environments/environment';
 import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
@@ -64,10 +64,6 @@ export class EditOrderDialogComponent implements OnInit {
     this.products = data.products;
     this.isLocked = data.isLocked;
     this.forecasts = data.forecasts;
-    //console.log(data.users);
-    //console.log(data.products);
-    //console.log(this.users);
-    //console.log(this.products);
   }
 
   ngOnInit(): void { }
@@ -108,6 +104,18 @@ export class EditOrderDialogComponent implements OnInit {
       (result: { isSubmitted: boolean }) => {
       if(result !== undefined && result.isSubmitted){
         this.deleteOrderRowById(id);
+        
+        let orderStatus: OrderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: this.order.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "inviato",
+          note: "eliminazione riga d'ordine",
+          b_sto: false
+        }
+
+        this.setOrderStatus(orderStatus);
       }
     });
   }
@@ -115,9 +123,6 @@ export class EditOrderDialogComponent implements OnInit {
   //works both for adding and for editing an orderRow
   openEditOrderRowDialog(id: string, isAdding: boolean) {
     const dialogConfig = new MatDialogConfig();
-    //dialogConfig.autoFocus = true;
-    //console.log(this.data.order.id);
-    //console.log("OpenEditOrderRowDialog()================");
     
     //if id is not specified, create a new orderRow
     if(id == "") {
@@ -132,8 +137,6 @@ export class EditOrderDialogComponent implements OnInit {
         qta_validata: 0,
         note: ""
       }
-      //console.log(this.users);
-      //console.log(this.products);
       dialogConfig.data = {
         orderRow: newOrderRow,
         users: this.users,
@@ -142,15 +145,8 @@ export class EditOrderDialogComponent implements OnInit {
       }
     }
     else {
-      /*
-      console.log("orderRowID: " + id);
-      console.log(this.data.order.username);
-      console.log(this.getOrderRowById(id));
-      */
       let editedOrderRow = this.getOrderRowById(id);
-      editedOrderRow!.username = this.data.order.username; 
-      //console.log(editedOrderRow);
-        
+      editedOrderRow!.username = this.data.order.username;       
    
       dialogConfig.data = {
         orderRow: this.getOrderRowById(id),
@@ -169,30 +165,44 @@ export class EditOrderDialogComponent implements OnInit {
       (result: { 
         orderRow: OrderRow, 
         isSubmitted: boolean
-       }) => {
-      if(result !== undefined && result.isSubmitted){
-        console.log(result);
-        this.ordersService
-          .setOrderRowPromise(result.orderRow, isAdding)
-          .subscribe(
-            res => {
-              if(res[0] != "KO"){
-                //console.log(res);
-                let newOrderRow = result.orderRow;
-                if(newOrderRow.id == "") {
-                  newOrderRow.id = res[1];
-                  this.orderRows.push(newOrderRow);
+      }) => {
+        //confirm edits
+        if(result !== undefined && result.isSubmitted){
+          console.log(result);
+          this.ordersService
+            .setOrderRowPromise(result.orderRow, isAdding)
+            .subscribe(
+              res => {
+                if(res[0] != "KO"){
+                  //console.log(res);
+                  let newOrderRow = result.orderRow;
+                  if(newOrderRow.id == "") {
+                    newOrderRow.id = res[1];
+                    this.orderRows.push(newOrderRow);
+                  }
+
+                  let orderStatus: OrderStatus = {
+                    id: "0",
+                    username: localStorage.getItem('sangue_username')!,
+                    id_order: result.orderRow.id_ordine,
+                    d_status: this.getFormattedDate(new Date()),
+                    status: "inviato",
+                    note: "modifica riga d'ordine",
+                    b_sto: false
+                  }
+          
+                  this.setOrderStatus(orderStatus);
+                }
+                else {
+                  console.error("Error setting orderRow!");
                 }
               }
-              else {
-                console.error("Error setting orderRow!");
-              }
-            }
-          );
-      }
+            );
+        }
     });
   }
 
+  /*
   openAddOrderRowDialog() {
     const dialogConfig = new MatDialogConfig();
     //dialogConfig.autoFocus = true;
@@ -214,6 +224,7 @@ export class EditOrderDialogComponent implements OnInit {
       }
     });
   }
+  */
 
   openAreYouSureOrderDialog(id: string) {
     const dialogConfig = new MatDialogConfig();
@@ -264,5 +275,34 @@ export class EditOrderDialogComponent implements OnInit {
     else {
       this.thisDialogRef.close();
     }
+  }
+
+  getFormattedDate(date: Date): string {
+    let splitDate = date.toLocaleString('it-IT').split(",", 2)[0].split("/", 3);
+    
+    let day = splitDate[0];
+    let month = splitDate[1];
+    let year = splitDate[2];
+
+    if(day.length == 1){
+      day = "0" + day;
+    }
+    if(month.length == 1){
+      month = "0" + month;
+    }
+    return year + "-" + month + "-" + day;  
+  }
+
+  setOrderStatus(orderStatus: OrderStatus) {
+    this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          console.log("Status for order " + orderStatus.id_order + " successfully set!");
+        }
+        else {
+          console.error("Error setting status for order " + orderStatus.id_order);
+        }
+      }
+    );
   }
 }

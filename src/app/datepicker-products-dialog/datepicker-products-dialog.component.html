@@ -1,37 +1,71 @@
 <div>
     <h2>Edit date</h2>
-    <mat-form-field appearance="fill">
+    <!--sangueadmin in PharmaRegistry-->
+    <mat-form-field 
+    *ngIf="loginService.getUserCode() == '200'"
+    appearance="fill">
         <mat-label>{{ 'Edit date' | translate }}</mat-label>
         <input 
-            *ngIf="loginService.getUserCode() == '210' && !data.isOrderDate"
-            matInput 
-            [matDatepicker]="picker" 
-            [value]="date.value"
-            [min]="minDate"
-            (dateChange)="onDateChange($event)">
+        matInput 
+        [value]="date.value"
+        [matDatepicker]="picker"
+        (dateChange)="onDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
+    <!--sangueasl in OrdersComponent-->
+    <mat-form-field 
+    *ngIf="loginService.getUserCode() == '210' && !data.isOrderDate"
+    appearance="fill">
+        <mat-label>{{ 'Edit date' | translate }}</mat-label>
         <input 
-            *ngIf="loginService.getUserCode() == '210' && data.isOrderDate"
-            matInput 
-            [matDatepicker]="picker" 
-            [value]="date.value"
-            [min]="minDate"
-            [max]="maxDate"
-            (dateChange)="onDateChange($event)">
+        matInput 
+        [matDatepicker]="picker" 
+        [value]="date.value"
+        [min]="minDate"
+        (dateChange)="onDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    
+    <!--sangueasl in OrdersComponent-->
+    <mat-form-field
+    *ngIf="loginService.getUserCode() == '210' && data.isOrderDate"
+    appearance="fill">
+        <mat-label>{{ 'Edit date' | translate }}</mat-label>
+        <input 
+        matInput 
+        [matDatepicker]="picker" 
+        [value]="date.value"
+        [min]="minDate"
+        [max]="maxDate"
+        (dateChange)="onDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
+    <mat-form-field
+    *ngIf="loginService.getUserCode() == '220' && data.isOrderDate"         
+    appearance="fill">
+        <mat-label>{{ 'Edit date' | translate }}</mat-label>
         <input 
-            *ngIf="loginService.getUserCode() == '220' && data.isOrderDate"
-            matInput 
-            [matDatepicker]="picker" 
-            [value]="date.value"
-            (dateChange)="onDateChange($event)">
-        
-            <input 
-            *ngIf="loginService.getUserCode() == '220' && data.isValidationDate"
-            matInput 
-            [matDatepicker]="picker" 
-            [value]="date.value"
-            (dateChange)="onDateChange($event)">
+        matInput 
+        [matDatepicker]="picker" 
+        [value]="date.value"
+        (dateChange)="onDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field
+    *ngIf="loginService.getUserCode() == '220' && data.isValidationDate"
+    appearance="fill">
+        <mat-label>{{ 'Edit date' | translate }}</mat-label>
+        <input 
+        matInput 
+        [matDatepicker]="picker" 
+        [value]="date.value"
+        (dateChange)="onDateChange($event)">
         <!--mat-hint>MM/DD/YYYY</mat-hint-->
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>

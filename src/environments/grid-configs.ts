@@ -279,7 +279,8 @@ export const orderGridHeaders = {
     Notes: "Note",
     EditOrder: "Modifica ordine",
     Pending: "In attesa",
-    Action: "Azione"
+    Action: "Azione",
+    Status: "Stato"
   },
   en: {
     ID: "ID",
@@ -294,7 +295,8 @@ export const orderGridHeaders = {
     Notes: "Notes",
     EditOrder: "Edit order",
     Pending: "Pending",
-    Action: "Action"
+    Action: "Action",
+    Status: "Status"
   }
 }
 
@@ -315,6 +317,14 @@ export const gridConfigOrders210 = [
     field: 'anno', 
     editable: (params: { data: { isRowLocked: boolean; }; }) => {
       return !params.data.isRowLocked;
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
+    field: 'status', 
+    editable: false,
+    cellRenderer: (params: { value: string }) => {
+      return params.value === undefined ? "inviato" : params.value;
     }
   },
   { 
@@ -394,6 +404,14 @@ export const gridConfigOrders210Locked = [
       editable: false
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
+    field: 'status', 
+    editable: false,
+    cellRenderer: (params: { value: string }) => {
+      return params.value === undefined ? "inviato" : params.value;
+    }
+  },
+  { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
       field: 'd_ordine', 
       editable: false,
@@ -467,6 +485,14 @@ export const gridConfigOrders220 = [
     editable: true
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
+    field: 'status', 
+    editable: false,
+    cellRenderer: (params: { value: string }) => {
+      return params.value === undefined ? "inviato" : params.value;
+    }
+  },
+  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
     field: 'd_ordine', 
     editable: false,
@@ -536,6 +562,14 @@ export const gridConfigOrders220Locked = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
     field: 'anno', 
     editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
+    field: 'status', 
+    editable: false,
+    cellRenderer: (params: { value: string }) => {
+      return params.value === undefined ? "inviato" : params.value;
+    }
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 

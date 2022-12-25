@@ -105,7 +105,8 @@ export class PharmaRegistryService {
   setProductPromise(product: Product): Observable<any> {
     //product.id == -1 for ADDING
     return this.http.post<String[]>(
-      this.url, {
+      this.url, 
+      {
         request: 'setProduct',
         id_session: localStorage.getItem('id_session'),
         id: product.id,
@@ -164,7 +165,8 @@ export class PharmaRegistryService {
     }
 
     this.http.post<String[]>(
-      this.url, {
+      this.url, 
+      {
         request: 'rmProduct',
         id_session: localStorage.getItem('id_session'),
         id: id
@@ -184,7 +186,8 @@ export class PharmaRegistryService {
 
   rmProductPromise(id: string): Observable<any> {
     return this.http.post<String[]>(
-      this.url, {
+      this.url, 
+      {
         request: 'rmProduct',
         id_session: localStorage.getItem('id_session'),
         id: id

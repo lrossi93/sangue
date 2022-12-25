@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment, Order, OrderRow } from 'src/environments/environment';
+import { environment, Order, OrderRow, OrderStatus } from 'src/environments/environment';
 import { LoginService } from './login.service';
 
 @Injectable({
@@ -51,8 +51,8 @@ export class OrdersService {
   }
 
   listOrdersPromise(year: string): Observable<any> {
-    let path = this.url + '?request=listOrders&id_session=' + this.loginService.getSession() + '&year=' + year;
-    //console.log(path);
+    let id_session = localStorage.getItem('id_session');
+    let path = this.url + '?request=listOrders&id_session=' + id_session + '&year=' + year;
     return this.http.get<String[]>(
       path,
       {
@@ -222,6 +222,9 @@ export class OrdersService {
       }
       else{   
         this.orderRows = res[1];
+        console.log("orderRowssssssssssssssssssssssssssssssssssssssssssssss");
+        
+        console.log(res[1]);
         return this.orderRows;
       }
     });
@@ -255,6 +258,7 @@ export class OrdersService {
           id_prd: orderRow.id_prd,
           qta: orderRow.qta,
           qta_validata: orderRow.qta_validata,
+          qta_ricevuta: orderRow.qta_ricevuta,
           note: orderRow.note
         }
       ).subscribe(res => {
@@ -302,7 +306,7 @@ export class OrdersService {
     isAdding: boolean
   ): Observable<any> {    
     if(!isAdding){
-      console.log("motivazione: " + orderRow.motivazione);
+      //SET
       return this.http.post<String[]>(
         this.url, 
         {
@@ -359,5 +363,39 @@ export class OrdersService {
         this.lastOrderRowId = res[1].toString();
       }
     });
+  }
+
+  /**
+   * 
+   * ORDER STATUS MANAGEMENT
+   * 
+   */
+  getOrderStatusPromise(id_order: string) {
+    let request = 'getOrderStatus';
+    let id_session = localStorage.getItem('id_session');
+    let path = this.url + '?request='+ request + '&id_session=' + id_session + '&id_order=' + id_order;
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    );
+  }
+
+  setOrderStatusPromise(orderStatus: OrderStatus) {
+    console.log("Setting order status for order " + orderStatus.id_order);
+    
+    return this.http.post<String[]>(
+      this.url, 
+      {
+        request: 'setOrderStatus',
+        id_session: localStorage.getItem('id_session'),
+        username: orderStatus.username,
+        id_order: orderStatus.id_order,
+        d_status: orderStatus.d_status,
+        status: orderStatus.status,
+        note: orderStatus.note
+      }
+    )
   }
 }

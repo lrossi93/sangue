@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { environment, Order, OrderRow, Forecast} from 'src/environments/environment';
+import { environment, Order, OrderRow, Forecast, OrderStatus} from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
 import { ForecastService } from '../forecast.service';
 import { OrdersService } from '../orders.service';
@@ -57,8 +57,6 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
-    console.log(this.data);
-    
     this.isLocked = this.data.isRowLocked;
     this.listOrderRows(this.data.id);
     this.listForecasts(this.data.anno);
@@ -89,7 +87,6 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
 
   openEditOrderDialog(event: any) {  
     this.assignOrderData();
-    //console.log(this.orderRows);
     
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
@@ -101,8 +98,6 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       isLocked: this.isLocked,
       forecasts: this.filteredForecasts
     }
-    dialogConfig.width = "60%";
-    dialogConfig.minWidth = "60%";
     dialogConfig.disableClose = true;
     
     this.dialogRef = this.dialog.open(
@@ -121,11 +116,42 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       if(result !== undefined && result.isSubmitted){
         console.log(result);
         this.rmOrderAndOrderRows(this.data.id, result.orderRows);
+        
+        let orderStatus: OrderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: result.order.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "eliminato",
+          note: "",
+          b_sto: false
+        }
+
+        console.log("setting status:");
+        console.log(orderStatus);
+        
+
+        this.ordersComponent.setOrderStatus(orderStatus);
       }
       if(result !== undefined && result.isClosing) {       
         if(result.deleteOrder){
           this.ordersComponent.rmOrder(this.currentOrder.id);
         }
+
+        let orderStatus: OrderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: this.currentOrder.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "eliminato",
+          note: "",
+          b_sto: false
+        }
+
+        console.log("setting status:");
+        console.log(orderStatus);
+
+        this.ordersComponent.setOrderStatus(orderStatus);
       }
     });
   }
@@ -182,7 +208,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           this.forecasts = res[1];
           //console.log(this.forecasts);
           this.filterForecastsByUsername(this.data.username);
-          console.log(this.filteredForecasts);
+          //console.log(this.filteredForecasts);
         }
         else {
           console.error("Error retrieving forecasts!");
@@ -198,5 +224,41 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         this.filteredForecasts.push(this.forecasts[i]);
       }
     }
+  }
+
+  /**
+   * 
+   * ORDER STATUS MANAGEMENT
+   * 
+   */
+  
+  getOrderStatus(orderId: string) {
+    this.ordersService.getOrderStatusPromise(orderId).subscribe(
+      res => {
+        if(res[0] == "OK"){
+          
+        }
+        else{
+          //console.error("Error retrieving orderStatus for order " + orderId);
+          //console.error(res);
+        }
+      }
+    );
+  }
+
+  getFormattedDate(date: Date): string {
+    let splitDate = date.toLocaleString('it-IT').split(",", 2)[0].split("/", 3);
+    
+    let day = splitDate[0];
+    let month = splitDate[1];
+    let year = splitDate[2];
+
+    if(day.length == 1){
+      day = "0" + day;
+    }
+    if(month.length == 1){
+      month = "0" + month;
+    }
+    return year + "-" + month + "-" + day;  
   }
 }

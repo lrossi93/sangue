@@ -19,8 +19,10 @@ export class ForecastService {
   
   //GET
   listForecasts(year: string, result: any): any{
-    let path = this.url + '?request=listForecasts&id_session='+localStorage.getItem('id_session') + '&year=' + year;
-    console.log(path);
+    let request = 'listForecasts';
+    let id_session = localStorage.getItem('id_session');
+
+    let path = this.url + '?request='+ request +'&id_session=' + id_session + '&year=' + year;
     
     this.http.get<String[]>(
       path,
@@ -44,8 +46,10 @@ export class ForecastService {
   }
 
   listForecastsPromise(year: string): Observable<any>{
-    let path = this.url + '?request=listForecasts&id_session='+localStorage.getItem('id_session') + '&year=' + year;
-    console.log(path);
+    let request = 'listForecasts';
+    let id_session = localStorage.getItem('id_session');
+
+    let path = this.url + '?request=' + request + '&id_session='+ id_session + '&year=' + year;
     
     return this.http.get<String[]>(
       path,
@@ -182,7 +186,6 @@ export class ForecastService {
     let isAdding = true;
     return this.setForecastPromise(id, anno, username, id_prd, qta, note, qta_approvata, costo_unitario, isAdding);
   }
-  
   
   //POST
   rmForecast(id: string){

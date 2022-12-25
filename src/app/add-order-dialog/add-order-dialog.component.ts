@@ -303,6 +303,7 @@ export class AddOrderDialogComponent implements OnInit {
         qta: 0,
         motivazione: "",
         qta_validata: 0,
+        qta_ricevuta: 0,
         note: ""
       }
 

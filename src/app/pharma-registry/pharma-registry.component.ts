@@ -177,6 +177,10 @@ export class PharmaRegistryComponent implements OnInit {
 
   //if adding, product.id == -1
   setProduct(product: Product, isAdding: boolean): void{
+    console.log(product.id == "-1" ? "adding" : "setting");
+    
+    console.log(product);
+    
     this.pharmaRegistryService.setProductPromise(product).subscribe(
       res => {
         if(res[0] == "OK"){

@@ -1,46 +1,62 @@
-<div *ngIf="true">
+<div>
     <h1>{{ 'Orders' | translate }}</h1>
 
-	<div align="center">
-		<button 
-		*ngIf="isDateLocked != undefined"
-		[disabled]="isDateLocked && loginService.getUserCode() == '210'"
-		mat-raised-button 
-		color="primary" 
-		style="width: 90%; margin: 5px;" 
-		(click)="openAddOrderDialog()">
-			{{ 'Add order' | translate }}
-		</button>
-		
-		<p 
-		*ngIf="isDateLocked && loginService.getUserCode() == '210'" 
-		style="color: red;">
-			{{ 'Orders cannot be placed or edited now' | translate }}.
-		</p>
 
-		<div align="center" style=" padding: 10px; margin: 5px;">
-			<p>{{ 'Reference year' | translate }}:</p>
-			<input 
-			matInput 
-			type="number"
-			placeholder="{{ 'Reference year' | translate }}" 
-			[(ngModel)]="year" 
-			style="width: 50%;" 
-			(change)="listOrders(year)">
-		</div>
-		<button 
-		mat-raised-button 
-		(click)="listOrders(year)" 
-		style="width: 90%; margin: 5px;">
-			{{ 'List orders' | translate }}
-		</button>
+		<p
+		*ngIf="loading"
+		align="center">
+			<mat-spinner></mat-spinner>
+		</p>
+		<h2
+		*ngIf="loading"
+		align="center">
+			{{ 'Loading' | translate }}...
+		</h2>
+		
+		<div
+		*ngIf="!loading">		
+			<div align="center">
+				<button 
+				*ngIf="isDateLocked != undefined"
+				[disabled]="isDateLocked && loginService.getUserCode() == '210'"
+				mat-raised-button 
+				color="primary" 
+				style="width: 90%; margin: 5px;" 
+				(click)="openAddOrderDialog()">
+					{{ 'Add order' | translate }}
+				</button>
+				
+				<p 
+				*ngIf="isDateLocked && loginService.getUserCode() == '210'" 
+				style="color: red;">
+					{{ 'Orders cannot be placed or edited now' | translate }}.
+				</p>
+
+				<div align="center" style=" padding: 10px; margin: 5px;">
+					<p>{{ 'Reference year' | translate }}:</p>
+					<input 
+					matInput 
+					type="number"
+					placeholder="{{ 'Reference year' | translate }}" 
+					[(ngModel)]="year" 
+					style="width: 50%;" 
+					(change)="listOrders(year)">
+				</div>
+				<button 
+				mat-raised-button 
+				(click)="listOrders(year)" 
+				style="width: 90%; margin: 5px;">
+					{{ 'List orders' | translate }}
+				</button>
+			</div>
+		
+		<ag-grid-angular 
+			style="width: 100%; height: 400px;"
+			class="ag-theme-balham"
+			[rowData]="orderGridRowData"
+			[columnDefs]="ordersGridConfig"
+			[defaultColDef]="defaultColDef"
+			[gridOptions]="gridOptions">
+		</ag-grid-angular>
 	</div>
-	<ag-grid-angular 
-		style="width: 100%; height: 400px;"
-		class="ag-theme-balham"
-		[rowData]="orderGridRowData"
-		[columnDefs]="ordersGridConfig"
-		[defaultColDef]="defaultColDef"
-		[gridOptions]="gridOptions">
-	</ag-grid-angular>
 </div>

@@ -58,9 +58,10 @@ import { OrdersUrgentCheckboxComponent } from './orders-urgent-checkbox/orders-u
 import { OrdersValidatedCheckboxComponent } from './orders-validated-checkbox/orders-validated-checkbox.component';
 import { PharmaRegistryActiveCheckboxComponent } from './pharma-registry-active-checkbox/pharma-registry-active-checkbox.component';
 import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
-
+import { LoadingCellRendererComponent } from './loading-cell-renderer/loading-cell-renderer.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { OrderablePeriodComponent } from './orderable-period/orderable-period.co
     PharmaRegistryActiveCheckboxComponent,
     PharmaRegistryExtraCheckboxComponent,
     OrderablePeriodComponent,
+    LoadingCellRendererComponent
   ],
   providers: [
     AddProductComponent,
@@ -119,7 +121,6 @@ import { OrderablePeriodComponent } from './orderable-period/orderable-period.co
     FormsModule,
     HttpClientModule,
     AgGridModule,
-    BrowserAnimationsModule,
     MatTableModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -140,7 +141,8 @@ import { OrderablePeriodComponent } from './orderable-period/orderable-period.co
         useFactory: httpTranslateLoader,
         deps: [HttpClient]
       }
-    })
+    }),
+    MatProgressSpinnerModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,4 @@
-<h2 style="text-align: center;">{{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}</h2>
+<mat-card-title style="text-align: center;">{{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}</mat-card-title>
 <mat-dialog-content class="typography">
     <p
     *ngIf="orderRows.length == 0"
@@ -15,6 +15,10 @@
             <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
         </h5>
         <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
+        <h5
+        *ngIf="orderRow.qta_ricevuta > 0">
+            <b>{{ 'Received quantity' | translate }}:</b> {{ orderRow.qta_ricevuta }}
+        </h5>
         <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
         <div mat-dialog-actions align="center">
             <button
