@@ -5,6 +5,7 @@ import { DropdownProductsForecastComponent } from "src/app/dropdown-products-for
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
 import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
+import { OrdersSentCheckboxComponent } from "src/app/orders-sent-checkbox/orders-sent-checkbox.component";
 import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/orders-urgent-checkbox.component";
 import { OrdersValidatedCheckboxComponent } from "src/app/orders-validated-checkbox/orders-validated-checkbox.component";
 import { PharmaRegistryActiveCheckboxComponent } from "src/app/pharma-registry-active-checkbox/pharma-registry-active-checkbox.component";
@@ -280,7 +281,8 @@ export const orderGridHeaders = {
     EditOrder: "Modifica ordine",
     Pending: "In attesa",
     Action: "Azione",
-    Status: "Stato"
+    Status: "Stato",
+    SentToSupplier: "Inviato al fornitore"
   },
   en: {
     ID: "ID",
@@ -296,7 +298,8 @@ export const orderGridHeaders = {
     EditOrder: "Edit order",
     Pending: "Pending",
     Action: "Action",
-    Status: "Status"
+    Status: "Status",
+    SentToSupplier: "Sent to supplier"
   }
 }
 
@@ -522,6 +525,12 @@ export const gridConfigOrders220 = [
     field: 'b_validato', 
     editable: false,
     cellRenderer: OrdersValidatedCheckboxComponent
+  },
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.SentToSupplier : orderGridHeaders.en.SentToSupplier,
+    field: 'b_to_supplier',
+    editable: false,
+    cellRenderer: OrdersSentCheckboxComponent
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 

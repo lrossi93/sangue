@@ -25,7 +25,7 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
   userName: string = '';
 
   isLocked!: boolean;
-
+  loading: boolean = false;
   //sample array
   options: string[] = [];
   filteredOptions: Observable<string[]> | undefined;
@@ -101,6 +101,7 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
   */
 
   listUsers(userlevel: string) {
+    this.loading = true;
     this.usersService.listUsersPromise(userlevel)
     .subscribe(res => {
       if(res[0] == "KO"){
@@ -112,6 +113,7 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
         this.getUserNames();
         this.options = this.userNames;
         this.assignUserName();
+        this.loading = false;
       }
     });
   }

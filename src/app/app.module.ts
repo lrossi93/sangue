@@ -62,6 +62,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 import { LoadingCellRendererComponent } from './loading-cell-renderer/loading-cell-renderer.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { OrdersSentCheckboxComponent } from './orders-sent-checkbox/orders-sent-checkbox.component';
+import { SendToSupplierDialogComponent } from './send-to-supplier-dialog/send-to-supplier-dialog.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +104,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     PharmaRegistryActiveCheckboxComponent,
     PharmaRegistryExtraCheckboxComponent,
     OrderablePeriodComponent,
-    LoadingCellRendererComponent
+    LoadingCellRendererComponent,
+    OrdersSentCheckboxComponent,
+    SendToSupplierDialogComponent
   ],
   providers: [
     AddProductComponent,

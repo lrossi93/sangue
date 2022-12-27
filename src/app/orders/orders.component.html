@@ -56,7 +56,8 @@
 			[rowData]="orderGridRowData"
 			[columnDefs]="ordersGridConfig"
 			[defaultColDef]="defaultColDef"
-			[gridOptions]="gridOptions">
+			[gridOptions]="gridOptions"
+			(gridReady)="onGridReady($event)">
 		</ag-grid-angular>
 	</div>
 </div>

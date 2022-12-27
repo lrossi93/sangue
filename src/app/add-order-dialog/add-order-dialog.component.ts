@@ -212,12 +212,13 @@ export class AddOrderDialogComponent implements OnInit {
     for(var i = 0; i < this.newOrderRows.length; ++i) {
       this.newOrderRows[i].username = this.newOrder.username
     }
-
+    
     this.thisDialogRef.close({
       newOrder: this.newOrder,
       newOrderRows: this.newOrderRows,
       isSubmitted: isSubmitted
     });
+    
     return;
   }
 

@@ -32,6 +32,8 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
   formControl!: UntypedFormControl;
 
 
+  loading: boolean = false;
+
   //constructor is called when cells are hidden and then re-displayed
   constructor(
     loginService: LoginService,
@@ -95,7 +97,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
   getUsers(userlevel: string): void{
     let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
     //console.log(path);
-    
+    this.loading = true;
     this.http.get<String[]>(
       path,
       {
@@ -109,6 +111,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
         this.users = res[1];
         this.getUserNames();
         this.assignUserName();
+        this.loading = false;
       }
     });
   }

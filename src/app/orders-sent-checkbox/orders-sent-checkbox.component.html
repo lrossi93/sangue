@@ -1,0 +1,6 @@
+<mat-checkbox
+[checked]="checked"
+[disabled]="isLocked"
+[(ngModel)]="currentValue"
+(change)="toggleCheckbox($event)">
+</mat-checkbox>

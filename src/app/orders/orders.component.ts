@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, CellValueChangedEvent, ILoadingCellRendererParams } from 'ag-grid-community';
-import { retry } from 'rxjs';
+import { CellClickedEvent, CellValueChangedEvent, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
 import { Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
@@ -58,9 +57,13 @@ export class OrdersComponent implements OnInit {
 
   //agGrid API handles
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
+  gridApi!: GridApi;
   api: any;
+  columnApi: any;
 
+  //spinner boolean
   loading: boolean = true;
+  
 
   //loading animation
   //loadingCellRenderer: LoadingCellRendererComponent;
@@ -141,6 +144,15 @@ export class OrdersComponent implements OnInit {
     }
   }
 
+  onGridReady = (params: { api: any; columnApi: any; }) => {
+    this.api = params.api;
+    this.columnApi = params.columnApi;
+    console.log(this.api);
+    this.listForecasts(this.year);
+    this.listProducts();
+    this.api.sizeColumnsToFit();
+  }
+
   ngOnInit(): void {
     this.loginService.checkPromise().subscribe(
       res => {
@@ -150,15 +162,16 @@ export class OrdersComponent implements OnInit {
       }
     );
 
+    
     this.getAllData();
-    this.listForecasts(this.year);
-    this.listProducts();
-
+    
     //initialize Ag-Grid API
+    /*
     setTimeout(
       () => {
         this.api = this.agGrid.api;
-      }, 300);
+      }, 10000);
+    */
   }
 
   logAPI(){
@@ -201,6 +214,10 @@ export class OrdersComponent implements OnInit {
 
   addOrderAndOrderRows(newOrder: Order, newOrderRows: OrderRow[]) {
     //this.ordersService.setOrder(newOrder, true);
+    console.log("newOrder");
+    console.log(newOrder);
+    console.log("newOrderRows");
+    console.log(newOrderRows);
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
@@ -211,23 +228,26 @@ export class OrdersComponent implements OnInit {
             username: localStorage.getItem('sangue_username')!,
             id_order: newOrder.id,
             d_status: newOrder.d_ordine,           
-            status: "inviato",
+            status: "inviato",          //order has just been created
             note: "ordine appena creato",
             b_sto: false
           }
-
-          this.setOrderLocally(newOrder, orderStatus, true);
           
-          //set orderId for all orderRows before submitting
+          //set orderId and username for all orderRows before submitting
           for(var i = 0; i < newOrderRows.length; ++i) {
             newOrderRows[i].id_ordine = res[1];
             newOrderRows[i].username = newOrder.username;
           }
 
+          //save status on db and locally
           this.setOrderStatus(orderStatus);
+          this.orderStatusArr.push(orderStatus);
 
           //then save all orderRows on db
           this.setOrderRowRec(newOrderRows, 0);
+
+          //update grid
+          this.setOrderLocally(newOrder, orderStatus, true);
         }
       }
     );
@@ -235,13 +255,19 @@ export class OrdersComponent implements OnInit {
 
   setOrderRowRec(newOrderRows: OrderRow[], index: number) {
     if(index >= newOrderRows.length) {
+      console.log("Exiting setOrderRowRec()");
       return;
     }
     else {
       this.ordersService.setOrderRowPromise(newOrderRows[index], true).subscribe(
         res => {
           if(res[0] == "OK") {
-            this.setOrderRowRec(newOrderRows, ++index);
+            console.log("You saved the following orderRow:");
+            console.log(newOrderRows[index]);
+            this.setOrderRowRec(newOrderRows, index + 1);
+          }
+          else {
+            console.error("Error saving orderRow!");
           }
         }
       );
@@ -311,6 +337,7 @@ export class OrdersComponent implements OnInit {
           this.orders[i].note = order.note;
           this.orderStatusArr[i].status = orderStatus.status;
           this.createOrderGridRowData();
+          this.logAPI();
           this.updateGrid();
           this.api.ensureIndexVisible(i);
           return;
@@ -339,9 +366,26 @@ export class OrdersComponent implements OnInit {
           lock = true;
         }
         //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
-        if((this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine)) {
+        if(
+          (this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine) ||
+          this.orderStatusArr[i].status == "inviato al fornitore") {
           lock = true;
         }
+      }
+
+      let toSupplierCondition = false;
+
+      switch(this.orderStatusArr[i].status){
+        case "inviato":
+          toSupplierCondition = false;
+          break;
+        case "confermato":
+          toSupplierCondition = false;
+          break;
+        default:
+          toSupplierCondition = true;
+          lock = true;
+        break;
       }
 
       var newOrderGridRowData = {
@@ -354,6 +398,7 @@ export class OrdersComponent implements OnInit {
         b_urgente: this.orders[i].b_urgente,
         b_extra: this.orders[i].b_extra,
         b_validato: this.orders[i].b_validato,
+        b_to_supplier: toSupplierCondition,
         d_validato: this.orders[i].d_validato,
         status: this.orderStatusArr[i].status,
         note: this.orders[i].note,
@@ -433,6 +478,7 @@ export class OrdersComponent implements OnInit {
   }
   
   openAddOrderDialog() {
+    this.logAPI();
     const dialogConfig = new MatDialogConfig();
     
     dialogConfig.data = {
@@ -454,8 +500,9 @@ export class OrdersComponent implements OnInit {
       (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
         if(result !== undefined && result.isSubmitted){
           let newOrder = result.newOrder;
-          if(this.loginService.getUserCode() == "210")
+          if(this.loginService.getUserCode() == "210") {
             newOrder.username = this.loginService.getUsername()!;
+          }
           this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
         }
       }
@@ -635,7 +682,7 @@ export class OrdersComponent implements OnInit {
         //console.log(res);
         if(res[0] == "OK") {
           this.forecasts = res[1];
-          console.log(this.forecasts);
+          //console.log(this.forecasts);
         }
         else {
           console.error("Error retrieving forecasts!");
@@ -710,7 +757,7 @@ export class OrdersComponent implements OnInit {
     this.ordersService.getOrderStatusPromise(orders[i].id).subscribe(
       res => {
         if(res[0] == "OK") {
-          console.log(res[1][res[1].length - 1]);
+          //console.log(res[1][res[1].length - 1]);
 
           //check if all orders have a status
           if(res[1][res[1].length -1] === undefined) {

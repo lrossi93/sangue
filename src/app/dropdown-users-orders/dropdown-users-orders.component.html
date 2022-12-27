@@ -1,4 +1,9 @@
 <form>
+    <mat-spinner
+    align="center"
+    [diameter]="20"
+    *ngIf="loading"></mat-spinner>
+
     <mat-form-field>
       <input 
         type="text" 

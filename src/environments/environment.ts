@@ -84,6 +84,7 @@ export interface OrderGridRowData {
   b_urgente: boolean;
   b_extra: boolean;
   b_validato: boolean;
+  b_to_supplier: boolean;
   d_validato: string;
   status: string;
   note: string;

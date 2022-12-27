@@ -84,5 +84,8 @@
     "View": "Visualizza",
     "This order does not contain any orderRows and will thus be deleted": "Quest'ordine non contiene righe d'ordine, perciò sarà cancellato",
     "Choose a product": "Scegli un prodotto",
-    "Loading": "Caricamento in corso"
+    "Loading": "Caricamento in corso",
+    "Send order": "Inviare l'ordine",
+    "to supplier": "al fornitore",
+    "Once you confirm, the order cannot be edited": "Dopo la conferma, l'ordine non potrà più essere modificato"
 }

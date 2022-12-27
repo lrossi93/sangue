@@ -32,6 +32,8 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   filteredOptions: Observable<string[]> | undefined;
   formControl!: UntypedFormControl;
 
+  loading: boolean = false;
+
   constructor(
     loginService: LoginService,
     private forecastService: ForecastService,
@@ -88,6 +90,7 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
   }
 
   getProducts(): void{
+    this.loading = true;
     this.pharmaRegistryService.listProductsPromise().subscribe(res => {
       if(res[0] == "KO"){
         console.error("Error retrieving products!");
@@ -96,6 +99,7 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
         this.products = res[1];
         this.getProductNames();
         this.assignProductName();
+        this.loading = false;
       }
     });
   }
