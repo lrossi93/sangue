@@ -7,6 +7,7 @@ import { OrderablePeriodComponent } from './orderable-period/orderable-period.co
 import { OrdersComponent } from './orders/orders.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
+import { SuppliesComponent } from './supplies/supplies.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'forecast', component: ForecastComponent},
   {path: 'orders', component: OrdersComponent},
   {path: 'orderable-period', component: OrderablePeriodComponent},
+  {path: 'supplies', component: SuppliesComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

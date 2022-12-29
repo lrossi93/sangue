@@ -150,7 +150,7 @@ export class OrdersComponent implements OnInit {
     console.log(this.api);
     this.listForecasts(this.year);
     this.listProducts();
-    this.api.sizeColumnsToFit();
+    //this.api.sizeColumnsToFit();
   }
 
   ngOnInit(): void {

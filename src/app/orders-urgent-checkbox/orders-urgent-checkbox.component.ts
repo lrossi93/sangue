@@ -16,6 +16,9 @@ export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent impleme
   }
 
   ngOnInit(): void {
+    if(this.data.status != "inviato" && localStorage.getItem("id_profile") != '220') {
+      this.isLocked = true;
+    }
   }
 
   override toggleCheckbox(event: any): void {

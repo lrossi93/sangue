@@ -64,6 +64,11 @@ import { LoadingCellRendererComponent } from './loading-cell-renderer/loading-ce
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { OrdersSentCheckboxComponent } from './orders-sent-checkbox/orders-sent-checkbox.component';
 import { SendToSupplierDialogComponent } from './send-to-supplier-dialog/send-to-supplier-dialog.component';
+import { SuppliesComponent } from './supplies/supplies.component';
+import { OrdersToCustomerComponent } from './orders-to-customer/orders-to-customer.component';
+import { OrdersToCustomerCheckboxComponent } from './orders-to-customer-checkbox/orders-to-customer-checkbox.component';
+import { SendToCustomerDialogComponent } from './send-to-customer-dialog/send-to-customer-dialog.component';
+import { ButtonSupplyDetailsComponent } from './button-supply-details/button-supply-details.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +111,12 @@ import { SendToSupplierDialogComponent } from './send-to-supplier-dialog/send-to
     OrderablePeriodComponent,
     LoadingCellRendererComponent,
     OrdersSentCheckboxComponent,
-    SendToSupplierDialogComponent
+    SendToSupplierDialogComponent,
+    SuppliesComponent,
+    OrdersToCustomerComponent,
+    OrdersToCustomerCheckboxComponent,
+    SendToCustomerDialogComponent,
+    ButtonSupplyDetailsComponent
   ],
   providers: [
     AddProductComponent,

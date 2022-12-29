@@ -6,7 +6,7 @@ import { ForecastComponent } from '../forecast/forecast.component';
 @Component({
   selector: 'app-button-delete-forecast',
   template: `
-    <button color="primary" style="width: 100%;" (click)="onClickOpenDialog($event)">{{ 'Delete' | translate }}</button>
+    <button mat-raised-button color="primary" style="width: 100%;" (click)="onClickOpenDialog($event)">{{ 'Delete' | translate }}</button>
   `,
   styleUrls: ['./button-delete-forecast.component.css']
 })

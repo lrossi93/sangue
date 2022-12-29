@@ -25,14 +25,21 @@
 		</button>
 		<button
 		mat-menu-item 
-		*ngIf="loginService.getProfile() == '200'"
+		*ngIf="loginService.getUserCode() == '200'"
 		[routerLink]="['/pharma-registry']">
 			{{ 'Registry' | translate }}
 		</button>
 		<button 
-		mat-menu-item *ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'"
+		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'"
 		[routerLink]="['/forecast']">
 			{{ 'Forecast' | translate }}
+		</button>
+		<button 
+		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '230'"
+		[routerLink]="['/supplies']">
+			{{ 'Supplies' | translate }}
 		</button>
 		<button 
 		mat-menu-item 
@@ -44,7 +51,7 @@
 	</mat-menu>	
 	
 	<button 
-	*ngIf="loginService.getProfile() == '210' || loginService.getProfile() == '220'"
+	*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'"
 	mat-button 
 	[matMenuTriggerFor]="orders"
 	> 

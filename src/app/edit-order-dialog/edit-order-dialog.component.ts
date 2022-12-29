@@ -256,7 +256,7 @@ export class EditOrderDialogComponent implements OnInit {
     return "";
   }
 
-  usernameToClient(username: string): string {
+  usernameToClient(username: string): string {    
     for(var i = 0; i < this.users.length; ++i){
       if(username == this.users[i].username) {
         return this.users[i].client;

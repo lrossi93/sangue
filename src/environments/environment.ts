@@ -128,6 +128,24 @@ export interface OrderStatus {
   b_sto: boolean            //false = l'ordine (lo stato) è appena stato creato; true: l'ordine (lo stato) è appena stato solo modificato
 }
 
+//similar to orders
+export interface SupplyGridRowData {
+  id: string;
+  anno: number;
+  username: string;
+  full_username: string; //per permettere di filtrare sullo username (client)
+  d_ordine: string;
+  n_ordine: number;
+  b_urgente: boolean;
+  b_extra: boolean;
+  b_validato: boolean;
+  b_to_customer: boolean;
+  d_validato: string;
+  status: string;
+  note: string;
+  isRowLocked: boolean;
+}
+
 export const alerts = {
   it: {
     ThresholdSurpassed: "Soglia superata! Si prega di giustificare la quantità in eccesso nel box 'Motivazione'."

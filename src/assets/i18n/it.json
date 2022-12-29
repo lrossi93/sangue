@@ -87,5 +87,8 @@
     "Loading": "Caricamento in corso",
     "Send order": "Inviare l'ordine",
     "to supplier": "al fornitore",
-    "Once you confirm, the order cannot be edited": "Dopo la conferma, l'ordine non potrà più essere modificato"
+    "Once you confirm, the order cannot be edited": "Dopo la conferma, l'ordine non potrà più essere modificato",
+    "Supplies": "Forniture",
+    "This action cannot be undone": "Questa azione non può essere annullata",
+    "to customer": "al cliente"
 }

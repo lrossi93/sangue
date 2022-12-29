@@ -33,7 +33,6 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   };
   
   orderRows: any = [];
-  
   users: any = [];
   products: any = [];
   forecasts: Forecast[] = [];

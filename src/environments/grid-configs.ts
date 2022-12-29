@@ -1,11 +1,13 @@
 import { ButtonDeleteForecastComponent } from "src/app/button-delete-forecast/button-delete-forecast.component";
 import { ButtonDeleteProductComponent } from "src/app/button-delete-product/button-delete-product.component";
 import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-order.component";
+import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/button-supply-details.component";
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
 import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
 import { OrdersSentCheckboxComponent } from "src/app/orders-sent-checkbox/orders-sent-checkbox.component";
+import { OrdersToCustomerCheckboxComponent } from "src/app/orders-to-customer-checkbox/orders-to-customer-checkbox.component";
 import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/orders-urgent-checkbox.component";
 import { OrdersValidatedCheckboxComponent } from "src/app/orders-validated-checkbox/orders-validated-checkbox.component";
 import { PharmaRegistryActiveCheckboxComponent } from "src/app/pharma-registry-active-checkbox/pharma-registry-active-checkbox.component";
@@ -282,7 +284,8 @@ export const orderGridHeaders = {
     Pending: "In attesa",
     Action: "Azione",
     Status: "Stato",
-    SentToSupplier: "Inviato al fornitore"
+    SentToSupplier: "Inviato al fornitore",
+    SentToCustomer: "Inviato al cliente"
   },
   en: {
     ID: "ID",
@@ -299,7 +302,8 @@ export const orderGridHeaders = {
     Pending: "Pending",
     Action: "Action",
     Status: "Status",
-    SentToSupplier: "Sent to supplier"
+    SentToSupplier: "Sent to supplier",
+    SentToCustomer: "Sent to customer"
   }
 }
 
@@ -611,6 +615,12 @@ export const gridConfigOrders220Locked = [
     editable: false,
     cellRenderer: OrdersValidatedCheckboxComponent
   },
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.SentToSupplier : orderGridHeaders.en.SentToSupplier,
+    field: 'b_to_supplier',
+    editable: false,
+    cellRenderer: OrdersSentCheckboxComponent
+  },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
     field: 'd_validato', 
@@ -634,6 +644,103 @@ export const gridConfigOrders220Locked = [
   }
 ];
 
+
+//grid config for user 230
+export const gridConfigSupplies = [
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
+    field: 'id', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'full_username', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
+    field: 'status', 
+    editable: false,
+    /*
+    cellRenderer: (params: { value: string }) => {
+      return params.value === undefined ? "inviato" : params.value;
+    }
+    */
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
+    field: 'd_ordine', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
+    field: 'n_ordine', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
+    field: 'b_urgente', 
+    editable: false,
+    cellRenderer: OrdersUrgentCheckboxComponent
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Extra : orderGridHeaders.en.Extra, 
+    field: 'b_extra', 
+    editable: false,
+    cellRenderer: OrdersExtraCheckboxComponent
+  },
+  /*
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Validated : orderGridHeaders.en.Validated, 
+    field: 'b_validato', 
+    editable: false,
+    cellRenderer: OrdersValidatedCheckboxComponent
+  },
+  */
+ /*
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.SentToSupplier : orderGridHeaders.en.SentToSupplier,
+    field: 'b_to_supplier',
+    editable: false,
+    cellRenderer: OrdersSentCheckboxComponent
+  },
+  */
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.SentToCustomer : orderGridHeaders.en.SentToCustomer,
+    field: 'b_to_customer',
+    editable: false,
+    cellRenderer: OrdersToCustomerCheckboxComponent
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
+    field: 'd_validato', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+    if(params.value == "0000-00-00")
+      return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+    else
+      return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
+    field: 'note', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
+    cellRenderer: ButtonSupplyDetailsComponent,
+    autoHeight: false
+  }
+];
 /**
  * 
  * The following configs need to be used in the 
@@ -642,6 +749,6 @@ export const gridConfigOrders220Locked = [
  */
 
 export const defaultColDef = {
-    sortable: true,
-    filter: true
+  sortable: true,
+  filter: true
 }
