@@ -92,10 +92,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         else {
           this.orderRows = res[1];
           //console.log(this.orderRows);
-          
+          /*
           this.orderRows.forEach(orderRow => {
             console.log(orderRow.qta_ricevuta);
           });
+          */
         }
       }
     );
@@ -132,7 +133,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         deleteOrder: boolean
     }) => {
       if(result !== undefined && result.isSubmitted){
-        console.log(result);
+        //console.log(result);
         this.rmOrderAndOrderRows(this.data.id, result.orderRows);
         
         let orderStatus: OrderStatus = {

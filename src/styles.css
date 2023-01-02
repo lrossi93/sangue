@@ -5,15 +5,22 @@
 @import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 
-html { height: 100%; }
-body { 
+html { 
 	height: 100%;
+	box-sizing: border-box;
+}
+body { 
+	position: relative;
 	width: 100%;
-	margin: 0%;
 	margin: 0; 
 	font-family: Roboto, 
 	"Helvetica Neue", sans-serif; 
 	background-color: #F0F9FF;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	box-sizing: inherit;
+	padding-bottom: 6.74rem;
 }
 
 header{
@@ -49,7 +56,14 @@ article{
 footer{
 	background-color: #33AAFF;
 	display: flex;
+	flex-direction: column;
 	flex-wrap: wrap;
+	margin-top: auto;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 20px;
 }
 a {
 /*decidere stile dei link*/

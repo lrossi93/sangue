@@ -1,14 +1,28 @@
-<div align="center" style="margin: 10%;">
+<div 
+layout="row" 
+layout-align="center" 
+align="center" 
+style="min-height: 50px; margin: 10%;">
 	<h1>Login</h1>
 	<p>
 		<mat-form-field>
-			<input type="text" placeholder="Username" [(ngModel)]="username" (click)="onClick()" matInput>
+			<input 
+			type="text" 
+			placeholder="Username" 
+			[(ngModel)]="username" 
+			(click)="onClick()" 
+			matInput>
 		</mat-form-field>
 	</p>
 	
 	<p>
 		<mat-form-field>
-			<input type="password" placeholder="Password" [(ngModel)]="password" matInput>
+			<input 
+			type="password" 
+			placeholder="Password" 
+			[(ngModel)]="password" 
+			(keyup.enter)="login(username, password)"
+			matInput>
 		</mat-form-field>
 	</p>
 

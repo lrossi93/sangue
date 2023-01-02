@@ -40,7 +40,9 @@ export const pharmaRegistryGridHeaders = {
     ValidFrom: 'Valido da',
     ValidThrough: 'Valido fino a',
     Action: 'Azione',
-    Sorting: 'Ordinamento'
+    Sorting: 'Ordinamento',
+    InvalidDate: 'Data non valida',
+    DateNotSet: 'Data non impostata'
   },
   en: {
     ID: 'ID',
@@ -56,7 +58,9 @@ export const pharmaRegistryGridHeaders = {
     ValidFrom: 'Valid from',
     ValidThrough: 'Valido through',
     Action: 'Action',
-    Sorting: 'Sorting'
+    Sorting: 'Sorting',
+    InvalidDate: 'Invalid date',
+    DateNotSet: 'Date not set'
   }
 }
 
@@ -124,7 +128,10 @@ export const pharmaRegistryGridConfig = [
     field: 'valido_da', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
-      return new Date(params.value).toLocaleDateString('it-IT');
+      let date = new Date(params.value).toLocaleDateString('it-IT');
+      if(date == "Invalid Date" || date == "0000-00-00" || date == "1970-01-01" || params.value == null)
+        return localeLang == 'it' ? pharmaRegistryGridHeaders.it.DateNotSet : pharmaRegistryGridHeaders.en.DateNotSet
+      return date;
     }
   },
   { 
@@ -132,7 +139,10 @@ export const pharmaRegistryGridConfig = [
     field: 'valido_a', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {   
-      return new Date(params.value).toLocaleDateString('it-IT');
+      let date = new Date(params.value).toLocaleDateString('it-IT');
+      if(date == "Invalid Date" || date == "0000-00-00" || date == "1970-01-01" || params.value == null)
+        return localeLang == 'it' ? pharmaRegistryGridHeaders.it.DateNotSet : pharmaRegistryGridHeaders.en.DateNotSet
+      return date;
     }
   },
   { 

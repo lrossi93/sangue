@@ -18,6 +18,9 @@ export class OrderablePeriodComponent implements OnInit {
   year = "";
   month = "";
 
+  currentStartDate!: Date;
+  currentEndDate!: Date;
+
   constructor(
     private orderablePeriodService: OrderablePeriodService
   ) { 
@@ -26,25 +29,13 @@ export class OrderablePeriodComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.getOrderPeriod();
-    this.setDates();
+    this.getDates();
   }
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
-
-  getOrderPeriod() {
-    this.orderablePeriodService.getOrderPeriodPromise().subscribe(
-      res => {
-        if(res[0] == "OK") {
-          this.gg_min = res[1].gg_min;
-          this.gg_max = res[1].gg_max;          
-        }
-      }
-    );
-  }
 
   setOrderPeriod(min: string, max: string) {
     this.orderablePeriodService.setOrderPeriodPromise(min, max).subscribe(
@@ -64,7 +55,7 @@ export class OrderablePeriodComponent implements OnInit {
     );
   }
 
-  setDates() {
+  getDates() {
     this.orderablePeriodService.getOrderPeriodPromise().subscribe(
       res => {
         if(res[0] == "OK") {
@@ -73,18 +64,32 @@ export class OrderablePeriodComponent implements OnInit {
           this.range.controls['start'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_min));
           this.range.controls['end'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_max));
         }
+        else{
+          console.error("Error getting orderPeriod!");
+        }
       }
     );
   }
 
   onDateChange(type: string, event: any) {
+   let fullLocaleDate = "";
     //here it's better to keep the date type as Date because it's handled well by the datepicker
-    this.date = new UntypedFormControl(new Date(event.value), Validators.required);
-    //console.log(this.date.value.toLocaleString('it-IT'));
+    switch(type) {
+      case "start":
+        this.range.controls['start'] = new FormControl(new Date(event.value), Validators.required);
+        fullLocaleDate = this.range.controls.start.value!.toLocaleString('it-IT').split(",", 2)[0];        
+        break;
+      case "end":
+        if(event.value == null) {
+          let newDate = new Date();
+          this.range.controls['end'] = new FormControl(new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(this.gg_max)), Validators.required);
+        }
+        else
+          this.range.controls['end'] = new FormControl(new Date(event.value), Validators.required);
+        fullLocaleDate = this.range.controls.end.value!.toLocaleString('it-IT').split(",", 2)[0];
+        break;
+    }
 
-    //crop the hour part (we don't need it)
-    let fullLocaleDate = this.date.value.toLocaleString('it-IT').split(",", 2)[0];
-    
     //split where the separators "/" are
     let splittedDate = fullLocaleDate.split("/", 3);
     
@@ -93,20 +98,38 @@ export class OrderablePeriodComponent implements OnInit {
     let year = splittedDate[2];
 
     //prepare date to be saved on db
-    if(day.length == 1){
-      day = "0" + day;
-    }
     if(month.length == 1){
       month = "0" + month;
     }
     
-    //check day can be what it is
+    //check day is formatted correctly
+    day = this.checkDay(parseInt(day));
+
+    this.formattedDate = year + "-" + month + "-" + day;   
+    //console.log(this.formattedDate);
+    
+    if(type == "start") {
+      this.formattedStartDate = this.formattedDate;
+      this.gg_min = this.formattedDate.split("-")[2];
+      if(this.gg_min > this.gg_max){
+        this.gg_max = this.gg_min;
+      }
+      this.setOrderPeriod(this.gg_min, this.gg_max);
+    }
+    else if(type == "end" && this.formattedDate != "1970-01-01") {
+      this.formattedEndDate = this.formattedDate;
+      this.gg_max = this.formattedDate.split("-")[2];
+      this.setOrderPeriod(this.gg_min, this.gg_max);
+    }
+  }
+
+  checkDay(day: number): string {
     switch(this.month) {
       case "02":
         if(parseInt(this.year) % 4 == 0 && day > 29){
           day = 29;
         }
-        else if(day > 28){
+        else if((day) > 28){
           day = 28;
         }
         break;
@@ -129,21 +152,26 @@ export class OrderablePeriodComponent implements OnInit {
         break;
     }
 
-    this.formattedDate = year + "-" + month + "-" + day;   
-    //console.log(this.formattedDate);
+    if(day.toString().length == 1){
+      return "0" + day;
+    }
+    else 
+      return day.toString();
+  }
+
+  getFormattedDate(date: Date): string {
+    let splitDate = date.toLocaleString('it-IT').split(",", 2)[0].split("/", 3);
     
-    if(type == "start") {
-      this.formattedStartDate = this.formattedDate;
-      this.gg_min = this.formattedDate.split("-")[2];
-      if(this.gg_min > this.gg_max){
-        this.gg_max = this.gg_min;
-      }
-      this.setOrderPeriod(this.gg_min, this.gg_max);
+    let day = splitDate[0];
+    let month = splitDate[1];
+    let year = splitDate[2];
+
+    if(day.length == 1){
+      day = "0" + day;
     }
-    else if(type == "end" && this.formattedDate != "1970-01-01") {
-      this.formattedEndDate = this.formattedDate;
-      this.gg_max = this.formattedDate.split("-")[2];
-      this.setOrderPeriod(this.gg_min, this.gg_max);
+    if(month.length == 1){
+      month = "0" + month;
     }
+    return year + "-" + month + "-" + day;  
   }
 }

@@ -1,23 +1,37 @@
 <div *ngIf="loginService.getProfile() == '200'">
 	<h1>{{ 'Pharmaceutical registry' | translate }}</h1>
-	<button 
-		mat-button
-		mat-raised-button 
-		color="primary" 
-		(click)="openAddProductDialog()"
-		style="width: 100%; height: 100%;"
-		>
-			{{ 'Add product' | translate }}
-	</button>
-	<ag-grid-angular 
-		style="width: 100%; height: 400px;"
-		class="ag-theme-material"
-		[rowData]="this.products"
-		[columnDefs]="pharmaRegistryGridConfig"
-		[defaultColDef]="defaultColDef"
-		[gridOptions]="gridOptions"
-		[enableCellChangeFlash]="true"
-		[animateRows]="true"
-		[rowSelection]="'multiple'">
-	</ag-grid-angular>
+
+	<p
+	*ngIf="isLoading"
+	align="center">
+		<mat-spinner></mat-spinner>
+	</p>
+	<h2
+	*ngIf="isLoading"
+	align="center">
+		{{ 'Loading' | translate }}...
+	</h2>
+
+	<div
+	*ngIf="!isLoading"
+	align="center">
+		<button
+			mat-raised-button 
+			color="primary" 
+			(click)="openAddProductDialog()"
+			style="width: 90%; margin: 15px;">
+				{{ 'Add product' | translate }}
+		</button>
+		<ag-grid-angular 
+			style="width: 100%; height: 400px;"
+			class="ag-theme-material"
+			[rowData]="this.products"
+			[columnDefs]="pharmaRegistryGridConfig"
+			[defaultColDef]="defaultColDef"
+			[gridOptions]="gridOptions"
+			[enableCellChangeFlash]="true"
+			[animateRows]="true"
+			[rowSelection]="'multiple'">
+		</ag-grid-angular>
+	</div>
 </div>

@@ -1,17 +1,21 @@
 <div>
     <h1>{{ 'Orders' | translate }}</h1>
 
-
-	<p
+	<div 
 	*ngIf="loading"
-	align="center">
-		<mat-spinner></mat-spinner>
-	</p>
-	<h2
-	*ngIf="loading"
-	align="center">
-		{{ 'Loading' | translate }}...
-	</h2>
+	layout="row" 
+	layout-align="center" 
+	align="center" 
+	style="min-height: 50px; margin: 10%;">
+		<p
+		align="center">
+			<mat-spinner></mat-spinner>
+		</p>
+		<h2
+		align="center">
+			{{ 'Loading' | translate }}...
+		</h2>
+	</div>
 		
 	<div
 	*ngIf="!loading">		

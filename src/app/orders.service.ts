@@ -39,7 +39,7 @@ export class OrdersService {
     ).subscribe(res => {
       //console.log(res);
       if(res[0] == "KO"){
-        alert("Error retrieving orders!");
+        console.error("Error retrieving orders!");
         return null;
       }
       else{
@@ -85,7 +85,7 @@ export class OrdersService {
         }
       ).subscribe(res => {
         if(res[0] == "KO"){
-          alert("setOrders() error: " + res[1].toString());
+          console.error("setOrders() error: " + res[1].toString());
         }
         else{
           console.log("Result: " + res[0]);
@@ -114,7 +114,7 @@ export class OrdersService {
         }
       ).subscribe(res => {
         if(res[0] == "KO"){
-          alert("setOrders() error: " + res[1].toString());
+          console.error("setOrders() error: " + res[1].toString());
         }
         else{
           console.log("Result: " + res[0]);
@@ -182,7 +182,7 @@ export class OrdersService {
       }
     ).subscribe(res => {
       if(res[0] == "KO"){
-        alert("setOrderRows() error: " + res[1].toString());
+        console.error("setOrderRows() error: " + res[1].toString());
       }
       else{
         console.log("Result: " + res[0]);
@@ -217,7 +217,7 @@ export class OrdersService {
       }
     ).subscribe(res => {
       if(res[0] == "KO"){
-        alert("Error retrieving orders!");
+        console.error("Error retrieving orders!");
         return null;
       }
       else{   
@@ -263,7 +263,7 @@ export class OrdersService {
         }
       ).subscribe(res => {
         if(res[0] == "KO"){
-          alert("setOrderRows() error: " + res[1].toString());
+          console.error("setOrderRows() error: " + res[1].toString());
         }
         else{
           console.log("Result: " + res[0]);
@@ -290,7 +290,7 @@ export class OrdersService {
         }
       ).subscribe(res => {
         if(res[0] == "KO"){
-          alert("setOrderRows() error: " + res[1].toString());
+          console.error("setOrderRows() error: " + res[1].toString());
         }
         else{
           console.log("Result: " + res[0]);
@@ -357,7 +357,7 @@ export class OrdersService {
       }
     ).subscribe(res => {
       if(res[0] == "KO"){
-        alert("setOrderRows() error: " + res[1].toString());
+        console.error("setOrderRows() error: " + res[1].toString());
       }
       else{
         console.log("Result: " + res[0]);

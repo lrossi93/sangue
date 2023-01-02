@@ -50,32 +50,14 @@ export class PharmaRegistryComponent implements OnInit {
   //agGrid API handle
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
-  //parameters for [set|add|rm]Product()
-  
-  /*id!: string;
-  cod!: string;
-  des!: string;
-  ord!: string;
-  unita!: number;
-  confezionamento!: string;
-  multiplo_confezionamento!: number;
-  multiplo_imballo!: number;
-  attivo!: boolean;
-  extra!: boolean;
-  min_ord!: number;
-  valido_da: string = "";
-  valido_a: string = "";
-  */
-
   api: any;
 
   //dialog reference
   dialogRef: any;
   columnApi: any;
 
-
+  isLoading: boolean = false;
   
-
   /*
   
     CONSTRUCTOR
@@ -96,7 +78,7 @@ export class PharmaRegistryComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        console.log(event);
+        //console.log(event);
         if(event.column.getColId() == "valido_a" || event.column.getColId() == "valido_da") {
           //open dialog and pass date parameter to it
           this.openEditDateDialog(event);
@@ -104,9 +86,9 @@ export class PharmaRegistryComponent implements OnInit {
       },
 
       onCellValueChanged: (event: CellValueChangedEvent) => {
-        console.log('onCellValueChanged\n\n\n\n');
-        console.log(event);
-        console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        //console.log('onCellValueChanged\n\n\n\n');
+        //console.log(event);
+        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         this.product.id = event.data.id;
         this.product.cod = event.data.cod;
         this.product.des = event.data.des;
@@ -150,7 +132,7 @@ export class PharmaRegistryComponent implements OnInit {
     setTimeout(
       () => {
         this.api = this.agGrid.api;
-        console.log(this.api);
+        //console.log(this.api);
       }, 300);
   }
 
@@ -159,10 +141,12 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   listProducts(): void{
+    this.isLoading = true;
     this.pharmaRegistryService.listProductsPromise().subscribe(
       res => {
         if(res[0] == "OK") {
           this.products = res[1];
+          this.isLoading = false;
         }
         else{
           console.error("Error retrieving products!");
@@ -177,14 +161,14 @@ export class PharmaRegistryComponent implements OnInit {
 
   //if adding, product.id == -1
   setProduct(product: Product, isAdding: boolean): void{
-    console.log(product.id == "-1" ? "adding" : "setting");
+    //console.log(product.id == "-1" ? "adding" : "setting");
     
-    console.log(product);
+    //console.log(product);
     
     this.pharmaRegistryService.setProductPromise(product).subscribe(
       res => {
         if(res[0] == "OK"){
-          console.log("Product with ID " + res[1] + "successfully set!");
+          //console.log("Product with ID " + res[1] + "successfully set!");
           if(isAdding){
             let newProduct = product;
             newProduct.id = res[1];
@@ -201,89 +185,13 @@ export class PharmaRegistryComponent implements OnInit {
     );
   }
 
-  //TODO
-  /*
-  setProductParams(
-    id: string,
-    cod: string,
-    des: string,
-    ord: string,
-    unita: number,
-    confezionamento: string,
-    multiplo_confezionamento: number,
-    multiplo_imballo: number,
-    attivo: boolean,
-    extra: boolean,
-    min_ord: number,
-    valido_da: string,
-    valido_a: string
-  ) {
-    this.id = id;
-    this.cod = cod;
-    this.des = des;
-    this.ord = ord;
-    this.unita = unita;
-    this.confezionamento = confezionamento;
-    this.multiplo_confezionamento = multiplo_confezionamento;
-    this.multiplo_imballo = multiplo_imballo;
-    this.attivo = attivo;
-    this.extra = extra;
-    this.min_ord = min_ord;
-    this.valido_da = valido_da;
-    this.valido_a = valido_a;
-    let isAdding = false;
-    this.setProduct(isAdding);
-  }
-  */
-
-  //TODO
-  /*
-  addProduct(): void{
-    this.id = "-1";
-    let isAdding = true;
-    this.setProduct(isAdding);
-  }
-  */
-
   addLocally(product: Product){
     this.products.push(product);
-    console.log(this.products);
+    //console.log(this.products);
     this.updateGrid();
     this.api.ensureIndexVisible(this.products.length - 1);
     //this.api.refreshCells();
   }
-
-  //TODO
-  /*
-  addProductParams(
-    cod: string, 
-    des: string,
-    ord: string,
-    unita: number,
-    confezionamento: string,
-    multiplo_confezionamento: number,
-    multiplo_imballo: number,
-    attivo: boolean,
-    extra: boolean,
-    min_ord: number,
-    valido_da: string,
-    valido_a: string
-  ){
-    this.cod = cod;
-    this.des = des;
-    this.ord = ord;
-    this.unita = unita;
-    this.confezionamento = confezionamento;
-    this.multiplo_confezionamento = multiplo_confezionamento;
-    this.multiplo_imballo = multiplo_imballo;
-    this.attivo = attivo;
-    this.extra = extra;
-    this.min_ord = min_ord;
-    this.valido_da = valido_da;
-    this.valido_a = valido_a;
-    this.addProduct();
-  }
-  */
 
   rmProduct(id: string): void{
     this.pharmaRegistryService.rmProductPromise(id).subscribe(
@@ -357,7 +265,6 @@ export class PharmaRegistryComponent implements OnInit {
       }});
   }
 
-  //TODO
   openAreYouSureDialog(){
     this.dialogRef = this.dialog.open(
       AreYouSureProductComponent,
@@ -379,8 +286,8 @@ export class PharmaRegistryComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
-    switch(event.colDef.headerName){
-      case "Valido da":
+    switch(event.column.getColId()){
+      case "valido_da":
         dialogConfig.data = {
           date: event.data.valido_da,
           isValidoDa: true,
@@ -388,7 +295,7 @@ export class PharmaRegistryComponent implements OnInit {
         }
         break;
 
-      case "Valido fino a":
+      case "valido_a":
         dialogConfig.data = {
           date: event.data.valido_a,
           isValidoDa: false,
@@ -411,7 +318,7 @@ export class PharmaRegistryComponent implements OnInit {
       }) => {
 
       if(result !== undefined && result.isSubmitted){
-        console.log(result);
+        //console.log(result);
         
         let editedProduct = {
           id: event.data.id,
@@ -467,7 +374,7 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   updateGrid(){
-    console.log(this.api);
+    //console.log(this.api);
     this.api.setRowData(this.products);
   }
 }

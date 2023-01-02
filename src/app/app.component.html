@@ -96,10 +96,14 @@
 
 
 <footer>
-	<p *ngIf="loginService.getUsername() != null">
+	<p 
+	*ngIf="loginService.getUsername() != null"
+	align="center">
 		{{ 'Logged as' | translate }} <b>{{ localStorage.getItem("sangue_username") }}</b>.
 	</p>
-	<p *ngIf="loginService.getUsername() == null">
+	<p 
+	*ngIf="loginService.getUsername() == null"
+	align="center">
 		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
 	</p>	
 </footer>

@@ -32,7 +32,7 @@ export class ForecastService {
     ).subscribe(res => {
       console.log(res);
       if(res[0] == "KO"){
-        alert("Error retrieving forecasts!");
+        console.error("Error retrieving forecasts!");
         return null;
       }
       else{
@@ -72,7 +72,7 @@ export class ForecastService {
     isAdding: boolean
   ): any{
     if(!isAdding && parseInt(id) < 1){
-      alert("Invalid ID!");
+      console.error("Invalid ID!");
       id = "";
       return null;
     }
@@ -83,7 +83,7 @@ export class ForecastService {
       id_prd == "" ||
       qta.toString() == ""
     ){
-      alert("\"note\" is the only acceptable empty parameter.");
+      console.error("\"note\" is the only acceptable empty parameter.");
       return null;
     }
 
@@ -103,7 +103,7 @@ export class ForecastService {
     ).subscribe(res => {
       //console.log("WS response: " + res);
       if(res[0] == "KO"){
-        alert("setForecast() error: " + res[1].toString());
+        console.error("setForecast() error: " + res[1].toString());
         return null;
       }
       else{
@@ -190,7 +190,7 @@ export class ForecastService {
   //POST
   rmForecast(id: string){
     if(id == "" || parseInt(id) < 1){
-      alert("Invalid ID!");
+      console.error("Invalid ID!");
       return;
     }
 
@@ -203,7 +203,7 @@ export class ForecastService {
     ).subscribe(res => {
       console.log("WS response: " + res);
       if(res[0] == "KO"){
-        alert(res[1].toString());
+        console.error(res[1].toString());
       }
       else{
         //console.log("Removing product with ID " + res[0]);
@@ -214,7 +214,7 @@ export class ForecastService {
 
   rmForecastPromise(id: string): Observable<any> | null{
     if(id == "" || parseInt(id) < 1){
-      alert("Invalid ID!");
+      console.error("Invalid ID!");
       return null;
     }
 

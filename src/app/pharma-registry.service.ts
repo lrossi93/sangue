@@ -63,13 +63,13 @@ export class PharmaRegistryService {
     isAdding: boolean
   ): void{
     if(!isAdding && parseInt(id) < 1){
-      alert("Invalid ID!");
+      console.error("Invalid ID!");
       id = "";
       return;
     }
 
     if(id == "" || cod == "" || des == ""){
-      alert("Empty core parameters are invalid.");
+      console.error("Empty core parameters are invalid.");
       return;
     }
 
@@ -93,7 +93,7 @@ export class PharmaRegistryService {
     ).subscribe(res => {
       console.log("WS response: " + res);
       if(res[0] == "KO"){
-        alert(res[1].toString());
+        console.error(res[1].toString());
       }
       else{
         console.log("Result: " + res[0]);
@@ -160,7 +160,7 @@ export class PharmaRegistryService {
 
   rmProduct(id: string): void{
     if(id == "" || parseInt(id) < 1){
-      alert("Invalid ID!");
+      console.error("Invalid ID!");
       return;
     }
 
@@ -174,7 +174,7 @@ export class PharmaRegistryService {
     ).subscribe(res => {
       console.log("WS response: " + res);
       if(res[0] == "KO"){
-        alert(res[1].toString());
+        console.error(res[1].toString());
       }
       else{
         console.log("rmProduct result: " + res[0]);

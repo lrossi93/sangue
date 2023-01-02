@@ -124,7 +124,7 @@ export class LoginService {
     }).subscribe(res => {
       if(res[0] == "KO"){
         console.log("Login KO!");
-        alert(res[1].toString());
+        console.error(res[1].toString());
         this.logged = false;
       }
       else{
@@ -162,7 +162,7 @@ export class LoginService {
         this.router.navigate(['/']);
       }
       else{
-        alert("Error logging out!");
+        console.error("Error logging out!");
       }
     })
   }
