@@ -38,6 +38,7 @@ export class SuppliesComponent implements OnInit {
   columnApi: any;
 
   //spinner boolean
+  //isLoading = true;//qui mostra lo spinner senza caricare nulla
   isLoading = false;
 
   constructor(
@@ -48,10 +49,12 @@ export class SuppliesComponent implements OnInit {
     this.gridOptions = {
       //functions for managing the grid
     }
+    //this.isLoading = true;//qui mostra lo spinner senza caricare nulla
   }
 
   ngOnInit(): void {
     //call list* here
+    //this.isLoading = true;//qui mostra lo spinner senza caricare nulla
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -66,6 +69,7 @@ export class SuppliesComponent implements OnInit {
     this.api = params.api;
     this.columnApi = params.columnApi;
     console.log(this.api);
+    //this.isLoading = true;//qui continua a scaricare dati...
     this.getAllData();
     this.listProducts();
     this.listOrders(this.year);
@@ -76,11 +80,12 @@ export class SuppliesComponent implements OnInit {
 
   getAllData() {
     //listOrders, then
-    //this.isLoading = true;
+    //this.isLoading = true;//qui continua a scaricare dati
     this.ordersService.listOrdersPromise(this.year).subscribe(
       res => {
         console.log(res);
         if(res[0] == "OK") {
+          //this.isLoading = true;//qui continua a scaricare dati
           this.orders = res[1];
           console.log(this.orders);
           this.orderStatusArr = [];
@@ -94,8 +99,10 @@ export class SuppliesComponent implements OnInit {
   }
 
   getAllOrderStatusRec(orders: Order[], i: number) {
+    //this.isLoading = true;//qui continua a scaricare dati
     //uscita
     if(i >= orders.length) {
+      //this.isLoading = true;//qui continua a scaricare dati
       this.listUsers();
       console.log(this.orderStatusArr);
       return;
@@ -104,6 +111,7 @@ export class SuppliesComponent implements OnInit {
       res => {
         //console.log(res);
         if(res[0] == "OK") {
+          //this.isLoading = true;//qui continua a scaricare dati
           //console.log(res[1][res[1].length - 1]);
           this.orderStatusArr.push(res[1][res[1].length - 1]);
           this.getAllOrderStatusRec(orders, i + 1);
@@ -145,8 +153,10 @@ export class SuppliesComponent implements OnInit {
   }
 
   listUsers() {
+    //this.isLoading = true;//qui continua a scaricare dati
     this.usersService.listUsersPromise('210').subscribe(
       res => {
+        this.isLoading = true;//QUI FUNZIONAAAAAAAAAAAAAAAAAAAAAA
         if(res[0] == "OK") {
           this.users = res[1];
           console.log(this.users);
@@ -172,6 +182,8 @@ export class SuppliesComponent implements OnInit {
           */
         var lock: boolean = false;
         let toCustomerCondition = false;
+        console.log("Stato:");
+        console.log(this.orderStatusArr[i]);
 
         switch(this.orderStatusArr[i].status){
           case "inviato al fornitore":
@@ -204,7 +216,7 @@ export class SuppliesComponent implements OnInit {
         this.supplyGridRowData.push(newSupplyGridRowData);
       //}
     }
-    //this.isLoading = false;
+    this.isLoading = false;
     console.log(this.supplyGridRowData);
   }
 

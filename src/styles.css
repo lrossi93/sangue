@@ -4,9 +4,16 @@
 @import "ag-grid-community/dist/styles/ag-theme-balham.css";
 @import "ag-grid-community/dist/styles/ag-theme-material.css";
 
-body{
+
+html { height: 100%; }
+body { 
+	height: 100%;
 	width: 100%;
 	margin: 0%;
+	margin: 0; 
+	font-family: Roboto, 
+	"Helvetica Neue", sans-serif; 
+	background-color: #F0F9FF;
 }
 
 header{
@@ -21,7 +28,7 @@ nav{
 	display: flex;
 	flex: wrap;
 	justify-content: left;
-	background-color: aqua;
+	background-color: #33AAFF;
 	position: sticky;
 	top: 0;
 	padding: 15px;
@@ -36,7 +43,6 @@ section{
 article{
 	padding: 10px;
 	margin: 10px;
-	background-color: #33AAFF;
 	flex: 200px;
 }
 
@@ -45,5 +51,8 @@ footer{
 	display: flex;
 	flex-wrap: wrap;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+a {
+/*decidere stile dei link*/
+	text-decoration: none;	
+	cursor: pointer;
+}

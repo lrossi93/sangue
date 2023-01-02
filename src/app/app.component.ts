@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
+import { environment, User } from 'src/environments/environment';
 import { LoginService } from './login.service';
+import { UsersService } from './users.service';
 
 
 @Component({
@@ -12,12 +13,18 @@ import { LoginService } from './login.service';
 })
 export class AppComponent implements OnInit {
   title = 'sangue';
+  users: User[] = [];
+  currentUser!: User;
+  localStorage: any;
+
   constructor(
     public loginService: LoginService,
     public translate: TranslateService,
-    private router: Router
+    private router: Router,
+    private usersService: UsersService
   ){
     translate.addLangs(['en', 'it']);
+    this.localStorage = localStorage
     
     if(
       navigator.language.split("-", 2)[0] == 'it' ||
@@ -34,8 +41,7 @@ export class AppComponent implements OnInit {
     //translate.setDefaultLang('it');
     //environment.currentLanguage = 'it'
     //console.log(navigator.language.split("-", 2)[0]);
-    console.log(loginService.getUserCode());
-    
+    //console.log(loginService.getUserCode());
   }
 
   ngOnInit(): void {
@@ -67,7 +73,7 @@ export class AppComponent implements OnInit {
           if(res[0] == "KO"){
             localStorage.removeItem("id_session");
             localStorage.removeItem("id_profile");
-            localStorage.removeItem("")
+            localStorage.removeItem("sangue_username");
             this.router.navigate(['login']);
           }
         }

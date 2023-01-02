@@ -69,6 +69,8 @@ import { OrdersToCustomerComponent } from './orders-to-customer/orders-to-custom
 import { OrdersToCustomerCheckboxComponent } from './orders-to-customer-checkbox/orders-to-customer-checkbox.component';
 import { SendToCustomerDialogComponent } from './send-to-customer-dialog/send-to-customer-dialog.component';
 import { ButtonSupplyDetailsComponent } from './button-supply-details/button-supply-details.component';
+import { OrdersReceivedCheckboxComponent } from './orders-received-checkbox/orders-received-checkbox.component';
+import { MarkAsReceivedDialogComponent } from './mark-as-received-dialog/mark-as-received-dialog.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +118,9 @@ import { ButtonSupplyDetailsComponent } from './button-supply-details/button-sup
     OrdersToCustomerComponent,
     OrdersToCustomerCheckboxComponent,
     SendToCustomerDialogComponent,
-    ButtonSupplyDetailsComponent
+    ButtonSupplyDetailsComponent,
+    OrdersReceivedCheckboxComponent,
+    MarkAsReceivedDialogComponent
   ],
   providers: [
     AddProductComponent,

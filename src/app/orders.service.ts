@@ -320,6 +320,7 @@ export class OrdersService {
           id_prd: orderRow.id_prd,
           qta: orderRow.qta,
           qta_validata: orderRow.qta_validata,
+          qta_ricevuta: orderRow.qta_ricevuta,
           note: orderRow.note
         }
       )
@@ -339,6 +340,7 @@ export class OrdersService {
           qta: orderRow.qta,
           motivazione: orderRow.motivazione,
           qta_validata: orderRow.qta_validata,
+          qta_ricevuta: orderRow.qta_ricevuta,
           note: orderRow.note
         }
       )

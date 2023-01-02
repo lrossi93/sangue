@@ -1,0 +1,16 @@
+<div
+*ngIf="!isSubmitted">
+    <h2 align="center">{{ 'Mark order' | translate }} {{ orderId }} {{ 'as received' | translate }}?</h2>
+    <div mat-dialog-actions align="center">
+        <button mat-raised-button (click)="onSubmit()" color="warn">{{ 'Submit' | translate }}</button>
+        <button mat-raised-button matDialogClose="true" (click)="onCancel()" color="primary">{{ 'Cancel' | translate }}</button>
+    </div>
+</div>
+<div
+*ngIf="isSubmitted">
+    <h2 align="center">{{ 'Order' | translate }} {{ orderId }} {{ 'marked as received' | translate }}!</h2>
+    <h3 align="center">{{ 'You can now edit the received quantity of each product you ordered' | translate}}.</h3>
+    <div mat-dialog-actions align="center">
+        <button mat-raised-button matDialogClose="true" (click)="onOK()" color="primary">{{ 'Ok' | translate }}</button>
+    </div>
+</div>

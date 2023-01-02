@@ -6,6 +6,7 @@ import { DropdownProductsForecastComponent } from "src/app/dropdown-products-for
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
 import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
+import { OrdersReceivedCheckboxComponent } from "src/app/orders-received-checkbox/orders-received-checkbox.component";
 import { OrdersSentCheckboxComponent } from "src/app/orders-sent-checkbox/orders-sent-checkbox.component";
 import { OrdersToCustomerCheckboxComponent } from "src/app/orders-to-customer-checkbox/orders-to-customer-checkbox.component";
 import { OrdersUrgentCheckboxComponent } from "src/app/orders-urgent-checkbox/orders-urgent-checkbox.component";
@@ -22,6 +23,8 @@ import { PharmaRegistryExtraCheckboxComponent } from "src/app/pharma-registry-ex
 
 var localeLang = 'it'//navigator.language.split("-", 2)[0]
 
+//===============================================================================================================
+//Products
 export const pharmaRegistryGridHeaders = {
   it: {
     ID: 'ID',
@@ -139,6 +142,8 @@ export const pharmaRegistryGridConfig = [
   }
 ];
 
+//===============================================================================================================
+//FORECASTS
 export const forecastGridHeaders = {
   it: {
     ID: "ID",
@@ -267,6 +272,8 @@ export const gridConfigForecast220 = [
     }
 ];
 
+//===============================================================================================================
+//ORDERS
 //header translation for orders
 export const orderGridHeaders = {
   it: {
@@ -285,7 +292,8 @@ export const orderGridHeaders = {
     Action: "Azione",
     Status: "Stato",
     SentToSupplier: "Inviato al fornitore",
-    SentToCustomer: "Inviato al cliente"
+    SentToCustomer: "Inviato al cliente",
+    Received: "Ricevuto"
   },
   en: {
     ID: "ID",
@@ -303,7 +311,8 @@ export const orderGridHeaders = {
     Action: "Action",
     Status: "Status",
     SentToSupplier: "Sent to supplier",
-    SentToCustomer: "Sent to customer"
+    SentToCustomer: "Sent to customer",
+    Received: "Received"
   }
 }
 
@@ -366,6 +375,13 @@ export const gridConfigOrders210 = [
     field: 'b_validato', 
     editable: false,
     cellRenderer: OrdersValidatedCheckboxComponent
+  },
+  //TODO: b_to_supplier??
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Received : orderGridHeaders.en.Received,
+    field: 'b_received',
+    editable: false,
+    cellRenderer: OrdersReceivedCheckboxComponent
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
@@ -448,6 +464,13 @@ export const gridConfigOrders210Locked = [
       field: 'b_validato', 
       editable: false,
       cellRenderer: OrdersValidatedCheckboxComponent
+  },
+  //TODO: b_to_supplier?
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Received : orderGridHeaders.en.Received,
+    field: 'b_received',
+    editable: false,
+    cellRenderer: OrdersReceivedCheckboxComponent
   },
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
@@ -536,6 +559,12 @@ export const gridConfigOrders220 = [
     editable: false,
     cellRenderer: OrdersSentCheckboxComponent
   },
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Received : orderGridHeaders.en.Received,
+    field: 'b_received',
+    editable: false,
+    cellRenderer: OrdersReceivedCheckboxComponent
+  },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
     field: 'd_validato', 
@@ -621,6 +650,12 @@ export const gridConfigOrders220Locked = [
     editable: false,
     cellRenderer: OrdersSentCheckboxComponent
   },
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Received : orderGridHeaders.en.Received,
+    field: 'b_received',
+    editable: false,
+    cellRenderer: OrdersReceivedCheckboxComponent
+  },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
     field: 'd_validato', 
@@ -644,7 +679,8 @@ export const gridConfigOrders220Locked = [
   }
 ];
 
-
+//===============================================================================================================
+//SUPPLIES
 //grid config for user 230
 export const gridConfigSupplies = [
   { 

@@ -63,6 +63,7 @@ export class OrdersComponent implements OnInit {
 
   //spinner boolean
   loading: boolean = true;
+  visibleIndex: number = 0;
   
 
   //loading animation
@@ -98,6 +99,8 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
+        //console.log(event);
+        //this.api.ensureIndexVisible(event.rowIndex, "top");
         if(!event.node.data.isRowLocked) {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);
@@ -138,6 +141,7 @@ export class OrdersComponent implements OnInit {
           }
 
           this.setOrder(this.order, orderStatus, isAdding);
+          this.api.ensureIndexVisible(event.rowIndex, "middle");
         }
         this.updateGrid();
       }
@@ -145,12 +149,19 @@ export class OrdersComponent implements OnInit {
   }
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
+    console.log("onGridReady================");
+    
     this.api = params.api;
     this.columnApi = params.columnApi;
     console.log(this.api);
     this.listForecasts(this.year);
     this.listProducts();
-    //this.api.sizeColumnsToFit();
+    /*
+    this.api.ensureIndexVisible(this.visibleIndex);
+    console.log("visible index: " + this.visibleIndex);
+    this.updateGrid();
+    this.visibleIndex = 0;
+    */
   }
 
   ngOnInit(): void {
@@ -162,16 +173,7 @@ export class OrdersComponent implements OnInit {
       }
     );
 
-    
     this.getAllData();
-    
-    //initialize Ag-Grid API
-    /*
-    setTimeout(
-      () => {
-        this.api = this.agGrid.api;
-      }, 10000);
-    */
   }
 
   logAPI(){
@@ -306,7 +308,7 @@ export class OrdersComponent implements OnInit {
 
   setOrder(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
     //set order status
-
+    //this.loading = true;
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
         if(res[0] == "KO")
@@ -338,8 +340,12 @@ export class OrdersComponent implements OnInit {
           this.orderStatusArr[i].status = orderStatus.status;
           this.createOrderGridRowData();
           this.logAPI();
-          this.updateGrid();
-          this.api.ensureIndexVisible(i);
+          this.visibleIndex = i;
+          this.updateGrid(i);
+          console.log("index: " + i);
+          console.log("row index: " + this.api.getDisplayedRowAtIndex(i).rowIndex);
+          this.api.ensureIndexVisible(this.api.getDisplayedRowAtIndex(i).rowIndex, "middle");
+          //this.makeRowVisible(i, "top");
           return;
         }
       }
@@ -404,7 +410,8 @@ export class OrdersComponent implements OnInit {
         note: this.orders[i].note,
         isRowLocked: lock
       };
-      this.orderGridRowData.push(newOrderGridRowData);      
+      this.orderGridRowData.push(newOrderGridRowData);    
+      this.visibleIndex = i;  
     }
     console.log(this.orderGridRowData);
     this.loading = false;
@@ -478,7 +485,7 @@ export class OrdersComponent implements OnInit {
   }
   
   openAddOrderDialog() {
-    this.logAPI();
+    //this.logAPI();
     const dialogConfig = new MatDialogConfig();
     
     dialogConfig.data = {
@@ -629,8 +636,17 @@ export class OrdersComponent implements OnInit {
         GRID UPDATES ===========================
 
   */
-  updateGrid() {
+  updateGrid(visibleIndex?: number) {
     this.api.setRowData(this.orderGridRowData);
+    if(visibleIndex !== undefined) {
+      this.api.ensureIndexVisible(visibleIndex, "top");
+    }
+  }
+
+  makeRowVisible(index: number, position: string) {
+    console.log("index: " + index);
+    
+    this.api.ensureIndexVisible(index, position);
   }
 
   /*
@@ -660,9 +676,7 @@ export class OrdersComponent implements OnInit {
           if(this.loginService.getUserCode() == '220') {
             this.isDateLocked ? this.ordersGridConfig = gridConfigOrders220Locked : this.ordersGridConfig = gridConfigOrders220;
           }
-
           this.createOrderGridRowData();
-          this.updateGrid();
         }
         else {
           console.error("Error in getOrderPeriodPromise()");

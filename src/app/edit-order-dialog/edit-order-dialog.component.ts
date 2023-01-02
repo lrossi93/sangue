@@ -34,6 +34,7 @@ export class EditOrderDialogComponent implements OnInit {
   dialog!: MatDialog;
 
   isLocked!: boolean;
+  qtaRicevuta: number[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -42,7 +43,8 @@ export class EditOrderDialogComponent implements OnInit {
       users: any,
       products: any,
       isLocked: boolean,
-      forecasts: Forecast[]
+      forecasts: Forecast[],
+      status: string
     },
     private _builder: UntypedFormBuilder,
     dialog: MatDialog,
@@ -66,7 +68,10 @@ export class EditOrderDialogComponent implements OnInit {
     this.forecasts = data.forecasts;
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log(this.orderRows);
+    this.assignQtaRicevuta();
+  }
 
   deleteOrderRowById(id: string) {
     for(let i = 0; i < this.orderRows.length; ++i){
@@ -78,8 +83,44 @@ export class EditOrderDialogComponent implements OnInit {
     }
   }
 
+  assignQtaRicevuta() {
+    for(var i = 0; i < this.orderRows.length; ++i){
+      this.qtaRicevuta[i] = this.orderRows[i].qta_ricevuta;
+    }
+  }
+
+  onQtaRicevutaSet(orderRow: OrderRow, qtaRicevuta: number) {
+    if(qtaRicevuta > 0){
+      console.log(orderRow);
+      orderRow.qta_ricevuta = qtaRicevuta;
+      this.ordersService.setOrderRowPromise(orderRow, false).subscribe(
+        res => {
+          if(res[0] == "OK"){
+            let orderStatus: OrderStatus = {
+              id: "0",
+              username: localStorage.getItem('sangue_username')!,
+              id_order: orderRow.id_ordine,
+              d_status: this.getFormattedDate(new Date()),
+              status: "ricevuto",
+              note: "Quantità ricevuta impostata a " + orderRow.qta_ricevuta,
+              b_sto: false
+            }
+    
+            this.setOrderStatus(orderStatus);
+          }
+          else {
+            console.error("Error setting orderRow!");
+          }
+        }
+      );
+    }
+    else {
+      qtaRicevuta = orderRow.qta_ricevuta;
+    }
+  }
+
   getOrderRowById(id: string): OrderRow | undefined {
-    for(let i = 0; i < this.orderRows.length; ++i){
+    for(var i = 0; i < this.orderRows.length; ++i){
       if(id == this.orderRows[i].id){
         console.log(this.orderRows[i]);
         return this.orderRows[i];

@@ -13,13 +13,13 @@ import { WelcomeComponent } from './welcome/welcome.component';
 const routes: Routes = [
   //{path: '', component: HomeComponent},
   {path: 'login', redirectTo: '', pathMatch: 'full'},
-  {path: 'home', redirectTo: '', pathMatch: 'full'},
+  {path: 'welcome', redirectTo: '', pathMatch: 'full'},
   {path: '', component: LoginComponent},
-  {path: 'welcome', component: WelcomeComponent},
+  {path: 'home', component: WelcomeComponent},
   {path: 'pharma-registry', component: PharmaRegistryComponent},
   {path: 'forecast', component: ForecastComponent},
   {path: 'orders', component: OrdersComponent},
-  {path: 'orderable-period', component: OrderablePeriodComponent},
+  {path: 'order-period', component: OrderablePeriodComponent},
   {path: 'supplies', component: SuppliesComponent},
   {path: '**', component: PageNotFoundComponent}
 ];

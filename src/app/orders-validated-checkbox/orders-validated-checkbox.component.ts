@@ -9,16 +9,19 @@ import { OrdersService } from '../orders.service';
   styleUrls: ['./orders-validated-checkbox.component.css']
 })
 export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent implements OnInit {
-  loginService!: LoginService
+  //loginService!: LoginService
+  loading = false;
+  userCode!: string;
   constructor(
     private ordersService: OrdersService,
-    loginService: LoginService
+    private loginService: LoginService
   ) {
     super();
     this.loginService = loginService;
   }
 
   ngOnInit(): void {
+    this.userCode = this.loginService.getUserCode()!;
   }
 
   override toggleCheckbox(event: any): void {
@@ -37,6 +40,39 @@ export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent impl
       d_validato: this.data.d_validato,
       note: this.data.note
     }
-    this.ordersService.setOrder(orderValidated, false);
+
+    let orderStatus = {
+      id: "0",
+      username: localStorage.getItem('sangue_username')!,
+      id_order: this.data.id,
+      d_status: this.getFormattedDate(new Date()),
+      status: this.data.status,
+      note: this.data.b_validato ? "segnato come extra da " + localStorage.getItem('sangue_username') : "segnato come non extra da" + localStorage.getItem('sangue_username'),
+      b_sto: false
+    };
+    this.ordersService.setOrderPromise(orderValidated, false).subscribe(
+      res => {
+        if(res[0] == "OK"){
+          this.loading = false;
+          this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
+            res2 => {
+              if(res2[0] == "OK"){
+                this.loading = false;
+                console.log("OrderStatus set");
+              }
+              else {
+                console.error("Error setting order!");
+                this.loading = false;
+              }
+            }
+          );
+        }
+        else {
+          console.error("Error setting order!");
+          this.loading = false;
+          this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
+        }
+      }
+    );
   }
 }

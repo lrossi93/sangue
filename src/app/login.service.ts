@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment, User } from 'src/environments/environment';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,14 @@ export class LoginService {
   id_session!: string | null;
   id_profile!: string | null;
   logged: boolean = false;
+  currentUser: User = {id: "", username: "", client: ""};
+  users: User[] = [];
 
   //constructor
   constructor(
     private http: HttpClient, 
-    public router: Router
+    public router: Router,
+    private usersService: UsersService
   ){ }
 
   //methods
@@ -70,6 +74,7 @@ export class LoginService {
       res => {
         if(res[0] == "KO"){
           this.router.navigate(['login']);
+          localStorage.removeItem("sangue_username");
         }
         else {
           
@@ -90,6 +95,7 @@ export class LoginService {
         console.log("CHECK: NOT logged!");
         localStorage.removeItem("id_session");
         localStorage.removeItem("id_profile");
+        localStorage.removeItem("sangue_username");
         this.logged = false;
       }
       else{
@@ -169,4 +175,48 @@ export class LoginService {
       sangue_username: localStorage.getItem("sangue_username")
     });
   }
+
+  /*
+  getCurrentUser() {
+    this.usersService.listUsersPromise(this.getUserCode()).subscribe(
+      res => {
+        //console.log(res);
+        if(res[0] == "OK") {
+          this.users = res[1];
+          //console.log(this.users);
+
+          for(var i = 0; i < this.users.length; ++i) {
+            console.log(this.users[i]);
+            if(this.users[i].username == localStorage.getItem("sangue_username")){
+              console.log(this.users[i]);
+              this.currentUser.id = this.users[i].id,
+              this.currentUser.username = this.users[i].username,
+              this.currentUser.client = this.users[i].client
+
+              switch(this.getUserCode()){
+                case '200':
+                  this.currentUser.client = "Amministratore";
+                  break;
+                case '220':
+                  this.currentUser.client = "ASL Novara";
+                  break;
+                case '230':
+                  this.currentUser.client = "Fornitore";
+                  break;
+                default:
+                  break;
+              }
+              localStorage.setItem("current_client", this.currentUser.client);
+              return;
+            }
+          }
+          
+        }
+        else {
+          console.error("Error retrieving users!");
+        }
+      }
+    );
+  }
+  */
 }

@@ -20,8 +20,8 @@
 		<button 
 		mat-menu-item 
 		*ngIf="loginService.getUserCode() != null"
-		[routerLink]="['/welcome']">
-			{{ 'Welcome' | translate }}
+		[routerLink]="['/home']">
+			{{ 'Home' | translate }}
 		</button>
 		<button
 		mat-menu-item 
@@ -67,7 +67,7 @@
 		<button 
 		*ngIf="loginService.getUserCode() == '220'"
 		mat-menu-item
-		[routerLink]="['/orderable-period']">
+		[routerLink]="['/order-period']">
 			{{ 'Orderable period' | translate }}
 		</button>
 	</mat-menu>	
@@ -96,10 +96,10 @@
 
 
 <footer>
-	<p *ngIf="loginService.logged">
-		{{ 'Logged as' | translate }} <b>{{ loginService.getUserType() }}</b>.
+	<p *ngIf="loginService.getUsername() != null">
+		{{ 'Logged as' | translate }} <b>{{ localStorage.getItem("sangue_username") }}</b>.
 	</p>
-	<p *ngIf="!loginService.logged">
+	<p *ngIf="loginService.getUsername() == null">
 		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
 	</p>	
 </footer>

@@ -1,7 +1,70 @@
-<div>
+<h1>{{ 'Home' | translate }}</h1>
+<!--div>
 	<h1>{{ 'Welcome' | translate }}!</h1>
 	<h3>{{ 'Logged with' | translate }}:</h3>
 	<h5>{{ 'Profile' | translate }}: {{ loginService.getProfile() }}</h5>
 	<h5>{{ 'Session ID' | translate }}: {{ loginService.getSession() }}</h5>
 	<button (click)="loginService.logout()">{{ 'Logout' | translate }}</button>
-</div>
+</div-->
+
+<section>	
+	<article
+	*ngIf="loginService.getUserCode() != '200' && loginService.getUserCode() != '230'">
+		<a [routerLink]="['/forecast']">
+			<mat-card>
+				<mat-card-title>{{ 'Forecasts' | translate}}</mat-card-title>
+				<mat-card-content>{{ 'Forecasts dashboard' | translate}}</mat-card-content>
+			</mat-card>
+		</a>
+	</article>
+	
+	<article
+	*ngIf="loginService.getUserCode() != '200' && loginService.getUserCode() != '230'">
+		<a [routerLink]="['/orders']">
+			<mat-card>
+				<mat-card-title>{{ 'Orders' | translate}}</mat-card-title>
+				<mat-card-content>{{ 'Orders dashboard' | translate}}</mat-card-content>
+			</mat-card>
+		</a>
+	</article>
+
+	<article
+	*ngIf="loginService.getUserCode() == '220'">
+		<a [routerLink]="['/order-period']">
+			<mat-card>
+				<mat-card-title>{{ 'Order period' | translate}}</mat-card-title>
+				<mat-card-content>{{ 'Order period management' | translate}}</mat-card-content>
+			</mat-card>
+		</a>
+	</article>
+
+	<article
+	*ngIf="loginService.getUserCode() == '200'">
+		<a [routerLink]="['/pharma-registry']">
+			<mat-card>
+				<mat-card-title>{{ 'Pharmaceutical registry' | translate}}</mat-card-title>
+				<mat-card-content>{{ 'Products dashboard' | translate}}</mat-card-content>
+			</mat-card>
+		</a>
+	</article>
+
+	<article
+	*ngIf="loginService.getUserCode() == '230'">
+		<a [routerLink]="['/supplies']">
+			<mat-card>
+				<mat-card-title>{{ 'Supplies' | translate}}</mat-card-title>
+				<mat-card-content>{{ 'Supplies dashboard' | translate}}</mat-card-content>
+			</mat-card>
+		</a>
+	</article>
+
+	<article>
+		<a>
+			<mat-card
+			(click)="loginService.logout()">
+				<mat-card-title>{{ 'Logout' | translate}}</mat-card-title>
+				<mat-card-content>{{ 'Perform logout' | translate}}</mat-card-content>
+			</mat-card>
+		</a>
+	</article>
+</section>

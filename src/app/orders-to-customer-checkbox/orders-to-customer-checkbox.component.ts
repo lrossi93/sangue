@@ -24,7 +24,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
 
   ngOnInit(): void {
     if(this.data.status == "inviato al cliente" || this.data.status == "ricevuto"){
-      this.isLocked == true;
+      this.isLocked = true;
     }
    }
 
@@ -102,21 +102,5 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
       }
       }
     );
-  }
-
-  getFormattedDate(date: Date): string {
-    let splitDate = date.toLocaleString('it-IT').split(",", 2)[0].split("/", 3);
-    
-    let day = splitDate[0];
-    let month = splitDate[1];
-    let year = splitDate[2];
-
-    if(day.length == 1){
-      day = "0" + day;
-    }
-    if(month.length == 1){
-      month = "0" + month;
-    }
-    return year + "-" + month + "-" + day;  
   }
 }

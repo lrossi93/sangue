@@ -1,11 +1,12 @@
 <mat-card-title style="text-align: center;">{{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}</mat-card-title>
+<h3 align="center"><b>Status:</b> {{this.data.status}}</h3>
 <mat-dialog-content class="typography">
     <p
     *ngIf="orderRows.length == 0"
     align="center">
         {{ 'This order does not contain any orderRows and will thus be deleted' | translate }}.
     </p>
-    <mat-card *ngFor="let orderRow of orderRows" style="margin-bottom: 20px;">
+    <mat-card *ngFor="let orderRow of orderRows; let i = index" style="margin-bottom: 20px;">
         <mat-card-title>ID: {{ orderRow.id }}</mat-card-title>
         <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
         <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
@@ -20,6 +21,26 @@
             <b>{{ 'Received quantity' | translate }}:</b> {{ orderRow.qta_ricevuta }}
         </h5>
         <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
+
+        <div
+        *ngIf="this.data.status == 'ricevuto' && orderRow.qta_ricevuta == 0"
+        align="center">
+            <h5>
+                <b>{{'Received quantity' | translate}}:</b> 
+                
+                <input 
+                type="number"
+                matInput
+                [(ngModel)]="qtaRicevuta[i]">    
+            </h5>
+            
+            <button
+            mat-raised-button
+            (click)="onQtaRicevutaSet(orderRow, qtaRicevuta[i])"
+            color="primary">{{ 'Submit' | translate }}</button>
+            <h5 align="center" style="color: red">{{ 'Warning: once set, the received quantity cannot be modified' | translate}}!</h5>
+        </div>
+
         <div mat-dialog-actions align="center">
             <button
             *ngIf="!isLocked"
@@ -38,6 +59,7 @@
         </div>
     </mat-card> 
 </mat-dialog-content>
+
 <div mat-dialog-actions align="center">
     <button 
     *ngIf="!isLocked && orderRows.length > 0"

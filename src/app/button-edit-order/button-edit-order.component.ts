@@ -32,7 +32,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     note: ''
   };
   
-  orderRows: any = [];
+  orderRows: OrderRow[] = [];
   users: any = [];
   products: any = [];
   forecasts: Forecast[] = [];
@@ -68,6 +68,19 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   ngOnInit(): void {
     this.listProducts();
     this.listUsers();
+    switch(localStorage.getItem("id_profile")) {
+      case '220':
+        this.isLocked = (this.data.status == "inviato al fornitore" || this.data.status == "inviato al cliente" || this.data.status == "ricevuto");
+        break;
+      case '210':
+        this.isLocked = (this.data.status != "inviato");
+        break;
+      case '230':
+        this.isLocked = true;
+        break;
+      default:
+        break;
+    }
   }
 
   listOrderRows(id: string) {
@@ -79,6 +92,10 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         else {
           this.orderRows = res[1];
           //console.log(this.orderRows);
+          
+          this.orderRows.forEach(orderRow => {
+            console.log(orderRow.qta_ricevuta);
+          });
         }
       }
     );
@@ -95,9 +112,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       users: this.users,
       products: this.products,
       isLocked: this.isLocked,
-      forecasts: this.filteredForecasts
+      forecasts: this.filteredForecasts,
+      status: this.data.status
     }
-    dialogConfig.disableClose = true;
+    if(this.data.status == "inviato")
+      dialogConfig.disableClose = true;
     
     this.dialogRef = this.dialog.open(
       EditOrderDialogComponent, 
@@ -122,13 +141,14 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           id_order: result.order.id,
           d_status: this.getFormattedDate(new Date()),
           status: "eliminato",
-          note: "",
+          note: "eliminato da " + localStorage.getItem('sangue_username'),
           b_sto: false
         }
 
+        /*
         console.log("setting status:");
         console.log(orderStatus);
-        
+        */
 
         this.ordersComponent.setOrderStatus(orderStatus);
       }
@@ -143,13 +163,14 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           id_order: this.currentOrder.id,
           d_status: this.getFormattedDate(new Date()),
           status: "eliminato",
-          note: "",
+          note: "eliminato da " + localStorage.getItem('sangue_username'),
           b_sto: false
         }
 
+        /*
         console.log("setting status:");
         console.log(orderStatus);
-
+        */
         this.ordersComponent.setOrderStatus(orderStatus);
       }
     });

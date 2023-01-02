@@ -9,11 +9,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class SendToSupplierDialogComponent implements OnInit {
 
   orderId!: string;
+  isValidated!: boolean;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { orderId: string },
+    @Inject(MAT_DIALOG_DATA) public data: { orderId: string, isValidated: boolean},
     private dialogRef: MatDialogRef<SendToSupplierDialogComponent>
   ) {
     this.orderId = data.orderId;
+    this.isValidated = data.isValidated;
    }
 
   ngOnInit(): void {

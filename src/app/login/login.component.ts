@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
   check(){
     //was "check()"
     if(this.loginService.logged){
-      this.router.navigate(['welcome']);
+      this.router.navigate(['home']);
       return;
     }
 
@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
     if(localStorage.getItem('id_session') != null) {
       console.log("redirecting to welcome");
       
-      this.router.navigate(['welcome']);
+      this.router.navigate(['home']);
     }
   }
   
@@ -83,7 +83,8 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("id_profile", res[2].toString());
           localStorage.setItem("sangue_username", username);
           this.loginService.logged = true;
-          this.router.navigate(['welcome']);
+          this.router.navigate(['home']);
+          //this.loginService.getCurrentUser();
         }
       }
     );
@@ -91,7 +92,7 @@ export class LoginComponent implements OnInit {
 
   logout(){
     this.loginService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
   onClick(){

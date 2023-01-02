@@ -1,5 +1,6 @@
 <mat-checkbox
 [checked]="checked"
-[disabled]="userCode == '210' || isLocked"
+[disabled]="isLocked"
+[(ngModel)]="checked"
 (change)="toggleCheckbox($event)">
 </mat-checkbox>
