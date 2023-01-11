@@ -22,6 +22,10 @@ export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent impl
 
   ngOnInit(): void {
     this.userCode = this.loginService.getUserCode()!;
+    //console.log(this.data);
+    if(this.data.b_to_supplier){
+      this.isLocked = true;
+    }
   }
 
   override toggleCheckbox(event: any): void {

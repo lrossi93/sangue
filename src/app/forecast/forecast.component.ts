@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
-import { environment, ForecastGridRowData } from 'src/environments/environment';
+import { environment, Forecast, ForecastGridRowData } from 'src/environments/environment';
 import { AddForecastComponent } from '../add-forecast/add-forecast.component';
 import { AreYouSureForecastComponent } from '../are-you-sure-forecast/are-you-sure-forecast.component';
 import { ForecastService } from '../forecast.service';
@@ -39,7 +39,7 @@ export class ForecastComponent implements OnInit {
   //agGrid configuration
   api: any;
   forecastGridConfig: any;
-  forecasts: any = [];
+  forecasts: Forecast[] = [];
   forecastGridRowData: ForecastGridRowData[] = [];
   
   //sangueasl column definition (ASL cliente)
@@ -56,6 +56,8 @@ export class ForecastComponent implements OnInit {
   //for dialog autocomplete
   users: any = []; 
   products: any = [];
+
+  isLoading: boolean = false;
 
 /*
 
@@ -88,7 +90,7 @@ export class ForecastComponent implements OnInit {
           this.updateGrid();
         },
         onCellClicked: (event: CellClickedEvent) => {
-          console.log(event);
+          //console.log(event);
         },
         onCellValueChanged: (event: CellValueChangedEvent) => {
           console.log("Changed from " + event.oldValue + " to " + event.newValue);
@@ -102,7 +104,9 @@ export class ForecastComponent implements OnInit {
             event.data.qta_approvata,
             event.data.costo_unitario
           );
-          this.updateGrid();
+          console.log("changed!");
+          
+          //this.updateGrid();
         }
       }
     }
@@ -118,6 +122,7 @@ export class ForecastComponent implements OnInit {
     );
 
     //retrieve data from db
+    this.isLoading = true;
     this.listForecasts(this.year);
     this.listUsers("210");
     this.listProducts();
@@ -181,6 +186,7 @@ export class ForecastComponent implements OnInit {
         console.log(this.products);
         this.loaded++;
         this.everythingLoaded();
+        this.isLoading = false;
       }
     });
   }
@@ -188,16 +194,14 @@ export class ForecastComponent implements OnInit {
   everythingLoaded() {
     //when all 3 resources have loaded, enter if branch
     if(this.loaded >= 3){
-      console.log("LOADED!");
-      
-      
-
+      //console.log("LOADED!");
       console.log(this.users);
       console.log(this.products);
       console.log(this.forecasts);
       
       this.createForecastGridRowData();
       this.updateGrid();
+      this.isLoading = false;
     }
   }
 
@@ -264,8 +268,8 @@ export class ForecastComponent implements OnInit {
         this.forecasts[i].note = note;
         this.forecasts[i].qta_approvata = qta_approvata;
         this.forecasts[i].costo_unitario = costo_unitario;
-        this.createForecastGridRowData();
-        this.updateGrid();
+        //this.createForecastGridRowData();
+        //this.updateGrid();
         return;
       }
     }
@@ -295,12 +299,23 @@ export class ForecastComponent implements OnInit {
   }
 
   addLocally(newForecast: any){
-    //#TODO: check the ID is put in the grid
-    console.log(newForecast);
-    
+    //console.log(newForecast);
     this.forecasts.push(newForecast);
-    this.createForecastGridRowData();
-    this.updateGrid();
+    //this.createForecastGridRowData();
+    //this.updateGrid();
+    this.api.applyTransaction({
+      add: [{
+        id: newForecast.id,
+        anno: newForecast.anno,
+        username: newForecast.username,
+        id_prd: newForecast.id_prd,
+        qta: newForecast.qta,
+        note: newForecast.note,
+        qta_approvata: newForecast.qta_approvata,
+        costo_unitario: newForecast.costo_unitario
+      }]
+    })
+    this.api.ensureIndexVisible(this.forecasts.length - 1);
   }
 
   rmForecast(id: string){
@@ -334,7 +349,7 @@ export class ForecastComponent implements OnInit {
           }
         }
         this.createForecastGridRowData();
-        this.updateGrid();
+        //this.updateGrid();
         this.api.ensureIndexVisible(visible);
         return;
       }
@@ -392,7 +407,7 @@ export class ForecastComponent implements OnInit {
             result.qta_approvata,
             result.costo_unitario
           );
-          this.updateGrid();
+          //this.updateGrid();
         }
       }
     });

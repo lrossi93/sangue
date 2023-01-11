@@ -79,7 +79,7 @@ export const pharmaRegistryGridConfig = [
   { 
     headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Sorting : pharmaRegistryGridHeaders.en.Sorting, 
     field: 'ord', 
-    editable: false
+    editable: true
   },
   { 
     headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Description : pharmaRegistryGridHeaders.en.Description, 
@@ -252,7 +252,7 @@ export const gridConfigForecast220 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'product_name',
-      cellRenderer: DropdownProductsForecastComponent,
+      //cellRenderer: DropdownProductsForecastComponent,
       editable: false
     },
     { 
@@ -440,9 +440,11 @@ export const gridConfigOrders210Locked = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
+    /*
     cellRenderer: (params: { value: string }) => {
       return params.value === undefined ? "inviato" : params.value;
     }
+    */
   },
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
@@ -522,15 +524,19 @@ export const gridConfigOrders220 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
     field: 'anno', 
-    editable: true
+    editable: (params: { data: { isRowLocked: boolean; }; }) => {
+      return !params.data.isRowLocked;
+    }
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
-    cellRenderer: (params: { value: string }) => {
-      return params.value === undefined ? "inviato" : params.value;
+    /*
+    cellRenderer: (params: { data: { b_validato: any; }; value: undefined; }) => {
+      return params.value;
     }
+    */
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
@@ -580,7 +586,7 @@ export const gridConfigOrders220 = [
     field: 'd_validato', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
-      if(params.value == "0000-00-00")
+      if(params.value == "0000-00-00" || params.value == "Invalid Date")
         return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
         return new Date(params.value).toLocaleDateString('it-IT');
@@ -796,5 +802,6 @@ export const gridConfigSupplies = [
 
 export const defaultColDef = {
   sortable: true,
-  filter: true
+  filter: true,
+  resizable: true
 }

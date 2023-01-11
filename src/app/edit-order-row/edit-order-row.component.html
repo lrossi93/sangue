@@ -55,7 +55,7 @@
 	</mat-form-field>
 
 	<mat-form-field
-	*ngIf="qtyThreshold != -1">
+	*ngIf="qtyThreshold != -1 && minQty == 0">
 		<input
 		placeholder="{{ 'Quantity' | translate }} (max: {{qtyThreshold}})"
 		[formControl]="qta"
@@ -66,9 +66,20 @@
 	</mat-form-field>
 
 	<mat-form-field
+	*ngIf="qtyThreshold != -1 && minQty > 0">
+		<input
+		placeholder="{{ 'Quantity' | translate }} (min: {{minQty}}, max: {{qtyThreshold}})"
+		[formControl]="qta"
+		matInput
+		(blur)="onBlur($event)"
+		(keyup)="checkFields($event)"
+		type="number">
+	</mat-form-field>
+
+	<mat-form-field
 	*ngIf="qtyThreshold == -1">
 		<input
-		placeholder="{{ 'Quantity' | translate }}"
+		placeholder="{{ 'Quantity' | translate }} (min: {{minQty}})"
 		[formControl]="qta"
 		matInput
 		(blur)="onBlur($event)"

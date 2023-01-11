@@ -24,7 +24,7 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
 
     switch(localStorage.getItem("id_profile")) {
       case '220':
-        this.isLocked = (this.data.status == "inviato al fornitore" || this.data.status == "inviato al cliente" || this.data.status == "ricevuto");
+        this.isLocked = this.data.b_to_supplier;
         break;
       case '210':
         this.isLocked = (this.data.status != "inviato");
@@ -35,13 +35,18 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
       default:
         break;
     }
+    /*
+    if(this.data.b_to_supplier){
+      this.isLocked = true;
+    }
+    */
   }
 
   override toggleCheckbox(event: any): void {
     this.loading = true;
-    console.log(event);
+    //console.log(event);
     this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
-    console.log("current checkbox value: " + this.currentValue);
+    //console.log("current checkbox value: " + this.currentValue);
 
     let orderExtra = {
       id: this.data.id,
@@ -74,7 +79,7 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
             res2 => {
               if(res2[0] == "OK"){
                 this.loading = false;
-                console.log("OrderStatus set");
+                //console.log("OrderStatus set");
               }
               else {
                 console.error("Error setting order!");

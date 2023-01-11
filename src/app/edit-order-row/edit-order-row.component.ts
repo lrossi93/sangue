@@ -21,6 +21,7 @@ export class EditOrderRowComponent implements OnInit {
   qtyValue!: number;
 
   forecasts: Forecast[] = [];
+  orderRows: OrderRow[] = [];
 
   //flags for field checking
   productOK: boolean = false;
@@ -52,13 +53,15 @@ export class EditOrderRowComponent implements OnInit {
   filteredUserOptions: Observable<string[]> | undefined;
 
   loginService: LoginService
+  minQty: number = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { 
       orderRow: OrderRow,
       users: any,
-      products: any,
-      forecasts: Forecast[]
+      products: Product[],
+      forecasts: Forecast[],
+      orderRows: OrderRow[]
     },
     private dialogRef: MatDialogRef<EditOrderRowComponent>,
     private _builder: UntypedFormBuilder,
@@ -67,6 +70,7 @@ export class EditOrderRowComponent implements OnInit {
     this.loginService = loginService;
 
     this.orderRow = data.orderRow;
+    this.orderRows = data.orderRows;
     this.users = data.users;    
     this.forecasts = data.forecasts;
     console.log(this.forecasts);
@@ -95,11 +99,15 @@ export class EditOrderRowComponent implements OnInit {
 
     //products
     this.products = data.products;    
+    console.log(this.products);
     
     this.productsFormControl = _builder.control(this.productIdToDes(this.orderRow.id_prd), Validators.required);
     this.productOptions = this.productsToOptions(this.products);
     
-    this.n_riga = _builder.control(this.orderRow.n_riga == null ? 0 : this.orderRow.n_riga, Validators.required);
+    //this.n_riga = _builder.control(this.orderRow.n_riga == null ? 0 : this.orderRow.n_riga, Validators.required);
+    console.log("RIGA: " +  this.orderRow.n_riga == "0" ? this.orderRows.length + 1 : this.orderRow.n_riga);
+    
+    this.n_riga = _builder.control(this.orderRow.n_riga == 0 ? this.orderRows.length + 1 : this.orderRow.n_riga, Validators.required);
     this.qta = _builder.control(this.orderRow.qta, Validators.required);
     this.motivazione = _builder.control(this.orderRow.motivazione, Validators.required);
     this.qta_validata = _builder.control(this.orderRow.qta_validata, Validators.required);
@@ -194,8 +202,10 @@ export class EditOrderRowComponent implements OnInit {
 
   onProductSelected(event: any) {
     if(event.source.selected){    
+    let productId = this.productDesToId(event.source.value);
     this.productsFormControl.setValue(event.source.value);
-    this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(this.productDesToId(event.source.value)) / 12);
+    this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
+    this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
     this.checkFields(event);
     }
   }
@@ -210,6 +220,17 @@ export class EditOrderRowComponent implements OnInit {
       }
     }
     return -1;
+  }
+
+  getMinOrdByProductId(id: string): number {
+    for(var i = 0; i < this.products.length; ++i) {
+      if(this.products[i].id == id){
+        console.log("minimum order quantity: " + this.products[i].min_ord);
+        
+        return this.products[i].min_ord;
+      }
+    }
+    return 0;
   }
 
   assignOrderRowValues() {
@@ -274,38 +295,41 @@ export class EditOrderRowComponent implements OnInit {
     
     //il prodotto esiste e ha un numero riga
     if(this.isAmongProducts(this.productsFormControl.value) && this.n_riga.value > 0) {
-      console.log("the product exists");
+      //console.log("the product exists");
       
       //ha una soglia
-      if(this.qtyThreshold != -1){
+      if(this.qtyThreshold != -1 && this.minQty >= 0){
 
         //se la soglia è stata superata, serve una motivazione
         if(this.qta.value > this.qtyThreshold) {
-          console.log("\tthreshold surpassed, enabling motivazione");
+          //console.log("\tthreshold surpassed, enabling motivazione");
 
           //non ha una motivazione --> submit disabilitato
           if(this.motivazione.value == null || this.motivazione.value == undefined || this.motivazione.value == "") {
-            console.log("\treason EMPTY --> disabling submit");
+            //console.log("\treason EMPTY --> disabling submit");
             this.isSubmitEnabled = false;
           }
 
           //ha una motivazione --> submit abilitato
           else if(this.motivazione.value != null && this.motivazione.value != "" && this.motivazione.value != undefined) {
-            console.log("\treason not empty --> enabling submit");
+            //console.log("\treason not empty --> enabling submit");
             this.isSubmitEnabled = true;
           }
         }
 
-        //se la soglia non è stata superata, non serve una motivazione
+        //se la soglia non è stata superata, non serve una motivazione MA serve vedere che sia stata superata la minQty
         else {
-          console.log("threshold not surpassed, enabling submit independently from motivazione");
-          this.isSubmitEnabled = true;
+          //console.log("threshold not surpassed, enabling submit independently from motivazione");
+          if(this.qta.value >= this.minQty)
+            this.isSubmitEnabled = true;
+          else 
+            this.isSubmitEnabled = false;
         }
       }
       //non ha una soglia --> abilito submit
       else {
-        console.log("threshold not set");
-        if(this.qta.value > 0) {
+        //console.log("threshold not set");
+        if(this.qta.value > 0 && this.qta.value >= this.minQty) {
           this.isSubmitEnabled = true;
         }
       }

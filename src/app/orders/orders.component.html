@@ -61,7 +61,11 @@
 			[columnDefs]="ordersGridConfig"
 			[defaultColDef]="defaultColDef"
 			[gridOptions]="gridOptions"
-			(gridReady)="onGridReady($event)">
+			(gridReady)="onGridReady($event)"
+			[enableCellChangeFlash]="true"
+			[getRowId]="getRowId"
+			[animateRows]="true"
+			[enableCellChangeFlash]="true">
 		</ag-grid-angular>
 	</div>
 </div>

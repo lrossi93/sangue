@@ -32,6 +32,7 @@ export class AddOrderDialogComponent implements OnInit {
 
   forecasts: Forecast[] = [];
   currentUserForecasts: Forecast[] = [];
+  orderRows: OrderRow[] = [];
 
   //newOrder formControls for fields
   anno!: UntypedFormControl;
@@ -212,7 +213,11 @@ export class AddOrderDialogComponent implements OnInit {
     for(var i = 0; i < this.newOrderRows.length; ++i) {
       this.newOrderRows[i].username = this.newOrder.username
     }
-    
+
+    if(this.newOrder.d_validato == "") {
+      this.newOrder.d_validato = "0000-00-00";
+    }
+
     this.thisDialogRef.close({
       newOrder: this.newOrder,
       newOrderRows: this.newOrderRows,
@@ -311,7 +316,8 @@ export class AddOrderDialogComponent implements OnInit {
       dialogConfig.data = {
         orderRow: newOrderRow,
         products: this.products,
-        forecasts: this.currentUserForecasts
+        forecasts: this.currentUserForecasts,
+        orderRows: this.newOrderRows
       }
     }
     else {
@@ -394,6 +400,6 @@ export class AddOrderDialogComponent implements OnInit {
         this.currentUserForecasts.push(this.forecasts[i]);
       }
     }
-    console.log(this.currentUserForecasts);
+    //console.log(this.currentUserForecasts);
   }
 }

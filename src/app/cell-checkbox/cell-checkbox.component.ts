@@ -16,7 +16,8 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
   checked: boolean = false;
   isLocked!: boolean;
 
-  constructor( ) { }
+  constructor( ) { 
+  }
 
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
@@ -27,6 +28,15 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
     //console.log(params);
     if(this.currentValue == 1)
       this.checked = true;
+/*
+    switch(this.data.status){
+      default:
+        case "inviato al fornitore":
+          break;
+        this.isLocked = false;
+        break;
+    }
+    */
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {

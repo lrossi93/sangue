@@ -15,7 +15,7 @@ export class AddForecastComponent implements OnInit{
 
   url = environment.basePath + 'anag.php';
   username: string | null = "";
-  id_prd!: string;
+  id_prd: string = "";
   isSubmitted: boolean = false;
   loginService!: LoginService; 
 
@@ -39,6 +39,8 @@ export class AddForecastComponent implements OnInit{
   productFormControl!: UntypedFormControl;
   productNames: any = [];
   //END: autocomplete - products
+
+  isBadForecast: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -73,7 +75,7 @@ export class AddForecastComponent implements OnInit{
       }
 
       this.productFormControl = _builder.control('', Validators.required);
-      this.qta = _builder.control('');
+      this.qta = _builder.control(0, Validators.required);
       this.note = _builder.control('');
   }
 
@@ -104,19 +106,34 @@ export class AddForecastComponent implements OnInit{
   }
 
   onSubmit() {
-    this.isSubmitted = true;
-    this.dialogRef.close(
-      {
-        anno: this.anno.value,
-        username: this.username,
-        id_prd: this.id_prd,
-        qta: this.qta.value,
-        note: this.note.value,
-        qta_approvata: this.qta_approvata.value,
-        costo_unitario: this.costo_unitario.value,
-        isSubmitted: this.isSubmitted
-      }
-    );
+    if(!this.invalidFields()){
+      this.isSubmitted = true;
+      this.dialogRef.close(
+        {
+          anno: this.anno.value,
+          username: this.username,
+          id_prd: this.id_prd,
+          qta: this.qta.value,
+          note: this.note.value,
+          qta_approvata: this.qta_approvata.value,
+          costo_unitario: this.costo_unitario.value,
+          isSubmitted: this.isSubmitted
+        }
+      );
+      return;
+    }
+    this.isBadForecast = true;
+  }
+
+  invalidFields(): boolean {
+    if(this.anno.value == "" ||
+    this.username == "" ||
+    this.id_prd == "" ||
+    this.qta.value == "" ||
+    this.qta_approvata.value == "" ||
+    this.costo_unitario.value == "")
+      return true;
+    return false;
   }
 
   //BEGIN functions for autocomplete - USERS

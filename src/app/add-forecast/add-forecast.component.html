@@ -1,11 +1,14 @@
 <h3 mat-dialog-title>{{ 'Add a new forecast' | translate }}</h3>
 
+
+
 <div mat-dialog-content>
 	<p>
 		<mat-form-field>
 			<input
 			placeholder="{{ 'Year' | translate }}"
 			[formControl]="anno"
+			type="number"
 			matInput>
 		</mat-form-field>
 	</p>
@@ -53,14 +56,7 @@
 			matInput>
 		</mat-form-field>
 	</p>
-	<p>
-		<mat-form-field>
-			<textarea
-			placeholder="{{ 'Notes' | translate }}"
-			[formControl]="note"
-			matInput></textarea>
-		</mat-form-field>
-	</p>
+
 	<p>
 		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
 			<input
@@ -70,6 +66,7 @@
 			matInput>
 		</mat-form-field>
 	</p>
+
 	<p>
 		<mat-form-field *ngIf="loginService.getUserCode() == '220'">
 			<input
@@ -79,9 +76,21 @@
 			matInput>
 		</mat-form-field>
 	</p>
+
+	<p>
+		<mat-form-field>
+			<textarea
+			placeholder="{{ 'Notes' | translate }}"
+			[formControl]="note"
+			matInput></textarea>
+		</mat-form-field>
+	</p>
 </div>
 
-<div mat-form-actions>
+<div mat-form-actions align="center">
+	<p 
+	*ngIf="isBadForecast"
+	style="color: red;">{{ 'Please fill in all compulsory fields' | translate }}!</p>
 	<button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
 	<button mat-raised-button mat-dialog-close color="primary">{{ 'Cancel' | translate }}</button>
 </div>

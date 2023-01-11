@@ -65,6 +65,8 @@ export class SuppliesComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 
+  
+
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
     this.columnApi = params.columnApi;
@@ -74,7 +76,7 @@ export class SuppliesComponent implements OnInit {
     this.listProducts();
     this.listOrders(this.year);
     //this.api.sizeColumnsToFit();
-    //this.autoSizeColumns(false);
+    this.autoSizeColumns(false);
     //this.columnApi.autoSizeAllColumns();
   }
 

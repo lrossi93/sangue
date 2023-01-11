@@ -24,7 +24,13 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
     this.dialog = dialog;
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    //console.log(this.data);
+    
+    if(this.data.b_to_supplier){
+      this.isLocked = true;
+    }
+  }
 
   override toggleCheckbox(event: any): void {
     this.openSendToSupplierDialog();
@@ -32,7 +38,7 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
 
   openSendToSupplierDialog() {
     const dialogConfig = new MatDialogConfig();
-    
+    console.log(this.data);
     dialogConfig.data = {
       orderId: this.data.id,
       isValidated: this.data.b_validato
@@ -48,17 +54,22 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
     this.dialogRef.afterClosed().subscribe(
       (result: any) => {
         
-        if(result !== undefined){
+        if(result !== undefined && this.data.status != "inviato al fornitore"){
           if(result.isSubmitted !== undefined && result.isSubmitted){
           this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
-          
+          /*
+          let b_extra: boolean;
+          if(this.data.b_extra === undefined) {
+            b_extra = false;
+          }
+          */
           let orderSent = {
             id: this.data.id,
             anno: this.data.anno,
             username: this.data.username,
             d_ordine: this.data.d_ordine,
             n_ordine: this.data.n_ordine,
-            b_urgente: this.currentValue,
+            b_urgente: this.data.b_urgente,
             b_extra: this.data.b_extra, 
             b_validato: this.data.b_validato,
             d_validato: this.data.d_validato,
@@ -75,8 +86,11 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
             b_sto: false
           }
           
+          //this.isLocked = true;
+
           this.ordersComponent.setOrder(orderSent, orderStatus, false);
           this.checked = true;
+          this.isLocked = true;
         }
         if(result.isCancelled !== undefined && result.isCancelled){
           this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;

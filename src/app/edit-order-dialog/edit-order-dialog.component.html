@@ -102,3 +102,13 @@
         {{ 'Ok' | translate }}
     </button>
 </div>
+<div 
+*ngIf="userCode == '220' && !isValidated"
+mat-dialog-actions align="center">
+    <button 
+    mat-raised-button
+    color="primary"
+    (click)="validateOrder()">
+        {{'Validate' | translate}}
+    </button>
+</div>

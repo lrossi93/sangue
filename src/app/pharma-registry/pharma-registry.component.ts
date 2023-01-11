@@ -2,7 +2,7 @@ import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment, Product } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, RowDataUpdatedEvent } from 'ag-grid-community';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
@@ -57,7 +57,8 @@ export class PharmaRegistryComponent implements OnInit {
   columnApi: any;
 
   isLoading: boolean = false;
-  
+  selectedRow: any;
+
   /*
   
     CONSTRUCTOR
@@ -78,10 +79,14 @@ export class PharmaRegistryComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        //console.log(event);
+        console.log(event);
         if(event.column.getColId() == "valido_a" || event.column.getColId() == "valido_da") {
           //open dialog and pass date parameter to it
           this.openEditDateDialog(event);
+        }
+        if(event.column.getColId() == "action") {
+          console.log(this.api.getSelectedRows());
+          this.selectedRow = this.api.getSelectedRows();//event.rowIndex;
         }
       },
 
@@ -106,6 +111,10 @@ export class PharmaRegistryComponent implements OnInit {
         this.product.valido_a = new Date(event.data.valido_a).toLocaleString('it-IT', {timeZone: 'UTC'}).substring(0, 10);
         
         this.setProduct(this.product, false); //edit product from grid
+      },
+
+      onRowDataUpdated: (event: RowDataUpdatedEvent) => {
+        console.log(event);
       }
     }
 
@@ -121,6 +130,7 @@ export class PharmaRegistryComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("sangue_username");
           this.loginService.logged = false;
           this.router.navigate(['login']);
         }
@@ -168,8 +178,9 @@ export class PharmaRegistryComponent implements OnInit {
     this.pharmaRegistryService.setProductPromise(product).subscribe(
       res => {
         if(res[0] == "OK"){
-          //console.log("Product with ID " + res[1] + "successfully set!");
           if(isAdding){
+            console.log("aaaaaaa");
+            
             let newProduct = product;
             newProduct.id = res[1];
             this.addLocally(newProduct);
@@ -187,10 +198,46 @@ export class PharmaRegistryComponent implements OnInit {
 
   addLocally(product: Product){
     this.products.push(product);
+    this.api.applyTransaction({
+      add: [{
+        id: product.id,
+        cod: product.cod,
+        des: product.des,
+        ord: product.ord,
+        unita: product.unita,
+        confezionamento: product.confezionamento,
+        multiplo_confezionamento: product.multiplo_confezionamento,
+        multiplo_imballo: product.multiplo_imballo,
+        attivo: product.attivo,
+        extra: product.extra,
+        min_ord: product.min_ord,
+        valido_da: product.valido_da,
+        valido_a: product.valido_a
+      }]
+    });
+    /*
+    this.agGrid.api.updateRowData({
+      add: [{
+        id: product.id,
+        cod: product.cod,
+        des: product.des,
+        ord: product.ord,
+        unita: product.unita,
+        confezionamento: product.confezionamento,
+        multiplo_confezionamento: product.multiplo_confezionamento,
+        multiplo_imballo: product.multiplo_imballo,
+        attivo: product.attivo,
+        extra: product.extra,
+        min_ord: product.min_ord,
+        valido_da: product.valido_da,
+        valido_a: product.valido_a
+      }]
+    });
+    */
+    console.log(this.products);
     //console.log(this.products);
-    this.updateGrid();
+    //this.updateGrid();
     this.api.ensureIndexVisible(this.products.length - 1);
-    //this.api.refreshCells();
   }
 
   rmProduct(id: string): void{
@@ -225,6 +272,13 @@ export class PharmaRegistryComponent implements OnInit {
           }
         }
         this.updateGrid();
+        /*
+        this.api.applyTransaction({
+          remove: this.selectedRow
+        });
+        */
+        this.selectedRow = null;
+
         this.api.ensureIndexVisible(visible);
         return;
       }
@@ -261,7 +315,7 @@ export class PharmaRegistryComponent implements OnInit {
         let newProduct = result.newProduct;
         newProduct.id = "-1";
         this.setProduct(newProduct, true);
-        this.updateGrid();
+        //this.updateGrid();
       }});
   }
 
@@ -366,7 +420,24 @@ export class PharmaRegistryComponent implements OnInit {
         this.products[i].min_ord = product.min_ord;
         this.products[i].valido_da = product.valido_da;
         this.products[i].valido_a = product.valido_a;
-        this.updateGrid();
+        //this.updateGrid();
+        this.api.applyTransaction({
+          set: [{
+            id: product.id,
+            cod: product.cod,
+            des: product.des,
+            ord: product.ord,
+            unita: product.unita,
+            confezionamento: product.confezionamento,
+            multiplo_confezionamento: product.multiplo_confezionamento,
+            multiplo_imballo: product.multiplo_imballo,
+            attivo: product.attivo,
+            extra: product.extra,
+            min_ord: product.min_ord,
+            valido_da: product.valido_da,
+            valido_a: product.valido_a
+          }]
+        });
         this.api.ensureIndexVisible(i);
         return;
       }

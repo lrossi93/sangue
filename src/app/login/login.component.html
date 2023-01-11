@@ -1,8 +1,10 @@
 <div 
 layout="row" 
 layout-align="center" 
-align="center" 
-style="min-height: 50px; margin: 10%;">
+align="center"
+style="margin: 10%;">
+<mat-card
+style="width: fit-content;">
 	<h1>Login</h1>
 	<p>
 		<mat-form-field>
@@ -11,6 +13,7 @@ style="min-height: 50px; margin: 10%;">
 			placeholder="Username" 
 			[(ngModel)]="username" 
 			(click)="onClick()" 
+			(keyup.enter)="login(username, password)"
 			matInput>
 		</mat-form-field>
 	</p>
@@ -33,4 +36,5 @@ style="min-height: 50px; margin: 10%;">
 	<button mat-raised-button color="primary" (click)="login(username, password)">
 		{{ 'Login' | translate }}
 	</button>
+</mat-card>
 </div>

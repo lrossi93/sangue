@@ -98,6 +98,7 @@ export class OrdersReceivedCheckboxComponent extends CellCheckboxComponent imple
             }
           );
           this.checked = true;
+          this.isLocked = true;
         }
         if(result.isCancelled !== undefined && result.isCancelled){
           this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;

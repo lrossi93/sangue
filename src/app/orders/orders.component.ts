@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, CellValueChangedEvent, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
 import { Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
 import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
@@ -65,6 +65,13 @@ export class OrdersComponent implements OnInit {
   loading: boolean = true;
   visibleIndex: number = 0;
   
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    // the code is unique, so perfect for the id
+    console.log("=========> GET ROW ID");
+    
+    console.log(params);
+    return params.data.id;
+  };
 
   //loading animation
   //loadingCellRenderer: LoadingCellRendererComponent;
@@ -110,10 +117,15 @@ export class OrdersComponent implements OnInit {
           }
         }
       },
-      onCellValueChanged: (event: CellValueChangedEvent) => {        
+      onCellValueChanged: (event: CellValueChangedEvent) => {     
+        console.log("aaaaaaaaaaa");
+           
         //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         //if row is not locked and an update is received, perform update
         //TODO: se imposto una data di validazione, deve essere MAGGIORE o UGUALE alla data dell'ordine
+        console.log("isRowLocked: " + event.node.data.isRowLocked);
+        console.log("isDateLocked: " + this.isDateLocked);
+        
         if(!event.node.data.isRowLocked && !this.isDateLocked){
           console.log("the order was not locked, so I modify it!");
           
@@ -141,9 +153,11 @@ export class OrdersComponent implements OnInit {
           }
 
           this.setOrder(this.order, orderStatus, isAdding);
-          this.api.ensureIndexVisible(event.rowIndex, "middle");
+          console.log(this.api);
+          //this.api.ensureIndexVisible(event.rowIndex, "middle");
+          this.api.setFocusedCell(event.rowIndex, event.column.getColId(), "top");
         }
-        this.updateGrid();
+        //this.updateGrid();
       }
     }
   }
@@ -156,12 +170,21 @@ export class OrdersComponent implements OnInit {
     console.log(this.api);
     this.listForecasts(this.year);
     this.listProducts();
+    this.autoSizeColumns(false);
     /*
     this.api.ensureIndexVisible(this.visibleIndex);
     console.log("visible index: " + this.visibleIndex);
     this.updateGrid();
     this.visibleIndex = 0;
     */
+  }
+
+  autoSizeColumns(skipHeader: boolean) {
+    const allColumnIds: string[] = [];
+    this.columnApi.getColumns()!.forEach((column: { getId: () => string; }) => {
+      allColumnIds.push(column.getId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 
   ngOnInit(): void {
@@ -220,6 +243,8 @@ export class OrdersComponent implements OnInit {
     console.log(newOrder);
     console.log("newOrderRows");
     console.log(newOrderRows);
+    console.log("validato: "+ newOrder.b_validato ? "confermato" : "inviato");
+    
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
@@ -230,8 +255,8 @@ export class OrdersComponent implements OnInit {
             username: localStorage.getItem('sangue_username')!,
             id_order: newOrder.id,
             d_status: newOrder.d_ordine,           
-            status: "inviato",          //order has just been created
-            note: "ordine appena creato",
+            status: newOrder.b_validato ? "confermato" : "inviato",          //order has just been created
+            note: "ordine appena creato da " + localStorage.getItem('sangue_username'),
             b_sto: false
           }
           
@@ -311,22 +336,30 @@ export class OrdersComponent implements OnInit {
     //this.loading = true;
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
-        if(res[0] == "KO")
+        if(res[0] == "KO"){
           console.error("Error setting order status for order " + order.id);
-        
-        this.ordersService.setOrderPromise(order, isAdding).subscribe(
-          res2 => {
-            if(res2 == "KO") 
-              console.error("Error setting order with id " + order.id);
-              this.setOrderLocally(order, orderStatus, isAdding);
-          }
-        );
+        }
+        else{
+          this.ordersService.setOrderPromise(order, isAdding).subscribe(
+            res2 => {
+              if(res2 == "KO"){
+                console.error("Error setting order with id " + order.id);
+              }
+              else{  
+                this.setOrderLocally(order, orderStatus, isAdding);
+              }
+            }
+          );
+        }
       }
     );
   }
 
-  setOrderLocally(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
+  setOrderLocally(order: Order, orderStatus: OrderStatus, isAdding: boolean) {    
     if(!isAdding) {
+      //if(orderStatus.status == "inviato al fornitore")
+      //console.log("inviato al fornitoreeeeeeeeeeeeeeeeeeeeeeeeee");
+      
       for(let i = 0; i < this.orders.length; ++i) {
         if(order.id == this.orders[i].id) {
           this.orders[i].anno = order.anno;
@@ -338,25 +371,141 @@ export class OrdersComponent implements OnInit {
           this.orders[i].d_validato = order.d_validato;
           this.orders[i].note = order.note;
           this.orderStatusArr[i].status = orderStatus.status;
-          this.createOrderGridRowData();
-          this.logAPI();
-          this.visibleIndex = i;
-          this.updateGrid(i);
-          console.log("index: " + i);
-          console.log("row index: " + this.api.getDisplayedRowAtIndex(i).rowIndex);
-          this.api.ensureIndexVisible(this.api.getDisplayedRowAtIndex(i).rowIndex, "middle");
-          //this.makeRowVisible(i, "top");
+
+          let isLockedCondition: boolean;
+          if(this.loginService.getUserCode() == "210") {
+            isLockedCondition = orderStatus.status != "inviato";
+          }
+          if(this.loginService.getUserCode() == "220") {
+            isLockedCondition = !(orderStatus.status == "inviato" || orderStatus.status == "confermato");
+          }
+
+          this.orderGridRowData[i].id = order.id;
+          this.orderGridRowData[i].anno = order.anno;
+          this.orderGridRowData[i].username = order.username;
+          this.orderGridRowData[i].full_username = this.getFullUsernameById(order.username); //per permettere di filtrare sullo username (client)
+          this.orderGridRowData[i].d_ordine = order.d_ordine;
+          this.orderGridRowData[i].n_ordine = order.n_ordine;
+          this.orderGridRowData[i].b_urgente = order.b_urgente;
+          this.orderGridRowData[i].b_extra = order.b_extra;
+          this.orderGridRowData[i].b_validato = order.b_validato;
+          this.orderGridRowData[i].b_to_supplier = (orderStatus.status == "inviato al fornitore");
+          this.orderGridRowData[i].d_validato = order.d_validato;
+          this.orderGridRowData[i].status = orderStatus.status;
+          this.orderGridRowData[i].note = order.note;
+          this.orderGridRowData[i].isRowLocked = isLockedCondition!; 
+          //this.createOrderGridRowData();
+          //this.logAPI();
+          //this.visibleIndex = i;
+          //this.updateGrid(i);
+          //console.log("index: " + i);
+          //console.log("row index: " + this.api.getDisplayedRowAtIndex(i).rowIndex);
+          
+          //console.log("===ROW ID=== " + this.getRowId(this.api.getRowNode(i).data));
+          console.log("=====new order");
+          console.log(this.orderGridRowData[i]);
+          
+          
+          this.updateRow(this.orderGridRowData[i]);
+          this.api.ensureIndexVisible(i);
           return;
         }
       }
     }
     else {  
+      console.log("===SETORDERLOCALLY===");
+      console.log("order");
+      console.log(order);
+      console.log("orderStatus");
+      console.log(orderStatus);
+
       //if the id is not present, append the new element
+      let newOrderGridRowData = {
+        id: order.id,
+        anno: order.anno,
+        username: order.username,
+        full_username: this.getFullUsernameById(order.username), //per permettere di filtrare sullo username (client)
+        d_ordine: order.d_ordine,
+        n_ordine: order.n_ordine,
+        b_urgente: order.b_urgente,
+        b_extra: order.b_extra,
+        b_validato: order.b_validato,
+        b_to_supplier: (orderStatus.status == "inviato al fornitore"),
+        d_validato: order.d_validato,
+        status: orderStatus.status,
+        note: order.note,
+        isRowLocked: false,
+      }
+      console.log("===newOrderGridRowData===");
+      console.log(newOrderGridRowData);
+
+      this.orderGridRowData.push(newOrderGridRowData);
       this.orders.push(order);
-      this.createOrderGridRowData();
+      this.api.applyTransaction({
+        add: [{
+          id: order.id,
+          anno: order.anno,
+          username: order.username,
+          full_username: this.getFullUsernameById(order.username),
+          d_ordine: order.d_ordine,
+          n_ordine: order.n_ordine,
+          b_urgente: order.b_urgente,
+          b_extra: order.b_extra,
+          b_validato: order.b_validato,
+          b_to_supplier: false,
+          d_validato: order.d_validato,
+          status: newOrderGridRowData.status,
+          note: order.note,
+          isRowLocked: false
+        }]
+      });
+      this.api.ensureIndexVisible(this.orderGridRowData.length - 1);
+      //this.createOrderGridRowData();
     }
-    //update order grid
-    this.updateGrid();
+  }
+
+  updateRow(order: OrderGridRowData) {
+    const toBeUpdated: any = [];
+    const rowNodes: any = [];
+    this.api.forEachNodeAfterFilterAndSort(function (rowNode: { data: any; }) {
+      // only do first 2
+      if (rowNode.data.id != order.id) {
+        return;
+      }
+      //console.log("========before update:");
+      //console.log(rowNode.data);
+      
+      console.log("======> ROW NODE");
+      console.log(rowNode);
+      
+      const data = rowNode.data;
+      data.anno = order.anno;
+      data.username = order.username;
+      data.full_username = order.full_username;
+      data.d_ordine = order.d_ordine;
+      data.n_ordine = order.n_ordine;
+      data.b_urgente = order.b_urgente;
+      data.b_extra = order.b_extra;
+      data.b_validato = order.b_validato;
+      data.b_to_supplier = order.b_to_supplier;
+      data.d_validato = order.d_validato;
+      data.status = order.status;
+      data.note = order.note;
+      data.isRowLocked = order.isRowLocked;
+
+      //console.log("========after update:");
+      //console.log(rowNode.data);
+
+      toBeUpdated.push(data);
+      rowNodes.push(rowNode);
+    });
+
+    const res = this.api.applyTransaction({ update: toBeUpdated})!;
+    //this.api.redrawRow(order.id);
+    
+    
+    this.api.redrawRows(rowNodes);
+    console.log(res);
   }
 
   createOrderGridRowData() {
@@ -402,7 +551,7 @@ export class OrdersComponent implements OnInit {
         d_ordine: this.orders[i].d_ordine,
         n_ordine: this.orders[i].n_ordine,
         b_urgente: this.orders[i].b_urgente,
-        b_extra: this.orders[i].b_extra,
+        b_extra: this.orders[i].b_extra,// === undefined || this.orders[i].b_extra == null || this.orders[i].b_extra == false ? false : true,
         b_validato: this.orders[i].b_validato,
         b_to_supplier: toSupplierCondition,
         d_validato: this.orders[i].d_validato,
@@ -413,6 +562,8 @@ export class OrdersComponent implements OnInit {
       this.orderGridRowData.push(newOrderGridRowData);    
       this.visibleIndex = i;  
     }
+    console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+    
     console.log(this.orderGridRowData);
     this.loading = false;
   }
@@ -587,8 +738,7 @@ export class OrdersComponent implements OnInit {
           console.log("setting: " + this.order.d_validato);
           this.setOrder(this.order, orderStatus, false);
         }
-        
-        this.updateGrid();
+        //this.updateGrid();
       }
     });
   }

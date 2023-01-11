@@ -130,10 +130,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         orderRows: OrderRow[],
         isSubmitted: boolean,
         isClosing: boolean,
-        deleteOrder: boolean
+        deleteOrder: boolean,
+        isValidated: boolean,
     }) => {
+      console.log(result);
       if(result !== undefined && result.isSubmitted){
-        //console.log(result);
         this.rmOrderAndOrderRows(this.data.id, result.orderRows);
         
         let orderStatus: OrderStatus = {
@@ -174,6 +175,41 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         */
         this.ordersComponent.setOrderStatus(orderStatus);
       }
+      if(result !== undefined && result.isValidated) {
+        let orderStatus: OrderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: this.currentOrder.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "confermato",
+          note: "confermato da " + localStorage.getItem('sangue_username'),
+          b_sto: false
+        }
+        /*
+        console.log("orderStatus");
+        console.log(orderStatus);
+        console.log("order");
+        let order = result.order;
+        order.b_validato = true;
+        order.d_validato = this.getFormattedDate(new Date());
+        console.log(order);
+        */
+        
+        
+        this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
+          res => {
+            if(res[0] == "OK"){
+              let order = result.order;
+              order.b_validato = true;
+              order.d_validato = this.getFormattedDate(new Date());
+              this.ordersComponent.setOrder(order, orderStatus, false);
+            }
+            else {
+              console.error("Error setting status for order " + this.data.id);
+            }
+          }
+        );
+      } 
     });
   }
 
@@ -184,7 +220,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   assignOrderData() {
     this.currentOrder.id = this.data.id;
     this.currentOrder.anno = this.data.anno;
-    this.currentOrder.b_extra = this.data.extra;
+    this.currentOrder.b_extra = this.data.b_extra;
     this.currentOrder.b_urgente = this.data.b_urgente;
     this.currentOrder.b_validato = this.data.b_validato;
     this.currentOrder.d_ordine = this.data.d_ordine;
@@ -192,6 +228,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.currentOrder.n_ordine = this.data.n_ordine;
     this.currentOrder.note = this.data.note;
     this.currentOrder.username = this.data.username;
+    console.log(this.currentOrder);
   }
 
   listUsers() {

@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Forecast, Order, OrderRow, OrderStatus } from 'src/environments/environment';
+import { Forecast, Order, OrderRow, OrderStatus, Product } from 'src/environments/environment';
 import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
 import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.component';
+import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 
 @Component({
@@ -35,13 +36,16 @@ export class EditOrderDialogComponent implements OnInit {
 
   isLocked!: boolean;
   qtaRicevuta: number[] = [];
+  isValidated!: boolean;
+
+  userCode!: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       order: Order,
       orderRows: OrderRow[],
       users: any,
-      products: any,
+      products: Product[],
       isLocked: boolean,
       forecasts: Forecast[],
       status: string
@@ -49,8 +53,10 @@ export class EditOrderDialogComponent implements OnInit {
     private _builder: UntypedFormBuilder,
     dialog: MatDialog,
     private thisDialogRef: MatDialogRef<AreYouSureOrderComponent>,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private loginService: LoginService
   ) { 
+    /*
     this.annoFormControl = _builder.control(data.order.anno, Validators.required);
     this.dOrdineFormControl = _builder.control(data.order.d_ordine, Validators.required);
     this.nOrdineFormControl = _builder.control(data.order.n_ordine, Validators.required);
@@ -59,16 +65,26 @@ export class EditOrderDialogComponent implements OnInit {
     this.validatoFormControl = _builder.control(data.order.b_validato, Validators.required);
     this.dValidatoFormControl = _builder.control(data.order.d_validato, Validators.required);
     this.noteFormControl = _builder.control(data.order.note); //not required
+    */
     this.order = data.order;
     this.orderRows = data.orderRows;
     this.dialog = dialog;
     this.users = data.users;
     this.products = data.products;
+    //console.log(this.products);
+    
     this.isLocked = data.isLocked;
     this.forecasts = data.forecasts;
+    this.isValidated = data.status != "inviato";
+    console.log("isvalidated?" + this.isValidated);
+    
+    //TODO: correggere: validato???
+
+    this.userCode = this.loginService.getUserCode()!;
   }
 
   ngOnInit(): void {
+    console.log(this.order);
     console.log(this.orderRows);
     this.assignQtaRicevuta();
   }
@@ -182,7 +198,8 @@ export class EditOrderDialogComponent implements OnInit {
         orderRow: newOrderRow,
         users: this.users,
         products: this.products,
-        forecasts: this.forecasts
+        forecasts: this.forecasts,
+        orderRows: this.orderRows
       }
     }
     else {
@@ -345,5 +362,13 @@ export class EditOrderDialogComponent implements OnInit {
         }
       }
     );
+  }
+
+  validateOrder(){
+    this.isValidated = true;
+    this.thisDialogRef.close({
+      order: this.order,
+      isValidated: this.isValidated
+    });
   }
 }
