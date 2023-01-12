@@ -28,7 +28,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     b_urgente: false,
     b_extra: false,
     b_validato: false,
-    d_validato: 'string', //data di validazione dell'ordine
+    d_validato: 'string',
     note: ''
   };
   
@@ -91,12 +91,6 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         }
         else {
           this.orderRows = res[1];
-          //console.log(this.orderRows);
-          /*
-          this.orderRows.forEach(orderRow => {
-            console.log(orderRow.qta_ricevuta);
-          });
-          */
         }
       }
     );
@@ -135,23 +129,17 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     }) => {
       console.log(result);
       if(result !== undefined && result.isSubmitted){
-        this.rmOrderAndOrderRows(this.data.id, result.orderRows);
-        
         let orderStatus: OrderStatus = {
           id: "0",
           username: localStorage.getItem('sangue_username')!,
-          id_order: result.order.id,
+          id_order: this.data.id,
           d_status: this.getFormattedDate(new Date()),
           status: "eliminato",
           note: "eliminato da " + localStorage.getItem('sangue_username'),
           b_sto: false
         }
 
-        /*
-        console.log("setting status:");
-        console.log(orderStatus);
-        */
-
+        this.rmOrderAndOrderRows(this.data.id, result.orderRows);
         this.ordersComponent.setOrderStatus(orderStatus);
       }
       if(result !== undefined && result.isClosing) {       
@@ -169,10 +157,6 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           b_sto: false
         }
 
-        /*
-        console.log("setting status:");
-        console.log(orderStatus);
-        */
         this.ordersComponent.setOrderStatus(orderStatus);
       }
       if(result !== undefined && result.isValidated) {
@@ -184,17 +168,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           status: "confermato",
           note: "confermato da " + localStorage.getItem('sangue_username'),
           b_sto: false
-        }
-        /*
-        console.log("orderStatus");
-        console.log(orderStatus);
-        console.log("order");
-        let order = result.order;
-        order.b_validato = true;
-        order.d_validato = this.getFormattedDate(new Date());
-        console.log(order);
-        */
-        
+        }        
         
         this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
           res => {

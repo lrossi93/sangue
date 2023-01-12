@@ -25,12 +25,12 @@ export class OrdersComponent implements OnInit {
     id: "",
     anno: 0,
     username: "",
-    d_ordine: "", //data di piazzamento dell'ordine
-    n_ordine: 0, //numero dell'ordine
+    d_ordine: "", 
+    n_ordine: 0,
     b_urgente: false,
-    b_extra: false, //ordine in più rispetto a quello dell'anno corrente
+    b_extra: false,
     b_validato: false,
-    d_validato: "", //data di validazione dell'ordine
+    d_validato: "",
     note: ""
   }
   orders: any = [];
@@ -39,7 +39,7 @@ export class OrdersComponent implements OnInit {
   users: any = [];
   products: any = [];
   forecasts: Forecast[] = [];
-  orderStatusArr: any[] = []; //array di array di orderStatus
+  orderStatusArr: any[] = [];
 
   day: number = parseInt(new Date().toLocaleString('it-IT').split(",", 2)[0].split("/", 2)[0]);
   gg_min!: number;
@@ -66,10 +66,6 @@ export class OrdersComponent implements OnInit {
   visibleIndex: number = 0;
   
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
-    // the code is unique, so perfect for the id
-    console.log("=========> GET ROW ID");
-    
-    console.log(params);
     return params.data.id;
   };
 
@@ -86,28 +82,13 @@ export class OrdersComponent implements OnInit {
     private router: Router,
     private orderablePeriodService: OrderablePeriodService,
     private forecastService: ForecastService,
-    //loadingCellRenderer: LoadingCellRendererComponent
   ) {    
-    //this.ordersService = ordersService;
-    //this.usersService = usersService;
-    //this.pharmaRegistryService = pharmaRegistryService;
-    //
-    //this.usersService.listUsers("210"); //get all customer asl users
     this.dialog = dialog;
-
-    /*
-    this.loadingCellRenderer = new LoadingCellRendererComponent();
-    this.loadingCellRendererParams = this.loadingCellRenderer.params;
-    */
-
     this.loading = true;
-
 
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        //console.log(event);
-        //this.api.ensureIndexVisible(event.rowIndex, "top");
         if(!event.node.data.isRowLocked) {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);
@@ -153,30 +134,18 @@ export class OrdersComponent implements OnInit {
           }
 
           this.setOrder(this.order, orderStatus, isAdding);
-          console.log(this.api);
-          //this.api.ensureIndexVisible(event.rowIndex, "middle");
-          this.api.setFocusedCell(event.rowIndex, event.column.getColId(), "top");
+          //this.api.setFocusedCell(event.rowIndex, event.column.getColId(), "top");
         }
-        //this.updateGrid();
       }
     }
   }
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
-    console.log("onGridReady================");
-    
     this.api = params.api;
     this.columnApi = params.columnApi;
-    console.log(this.api);
     this.listForecasts(this.year);
     this.listProducts();
     this.autoSizeColumns(false);
-    /*
-    this.api.ensureIndexVisible(this.visibleIndex);
-    console.log("visible index: " + this.visibleIndex);
-    this.updateGrid();
-    this.visibleIndex = 0;
-    */
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -327,6 +296,76 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  getOrderGridRowDataById(id: string): OrderGridRowData | null {
+    for(var i = 0; i < this.orderGridRowData.length; ++i) {
+      if(this.orderGridRowData[i].id == id){
+        return this.orderGridRowData[i];
+      }
+    }
+    console.error("ID " + id + " not found!");
+    return null;
+  }
+
+  rmOrderLocally(id: string) {
+    let visible = 0;
+    for(let i = 0; i < this.orders.length; ++i) {
+      if(id == this.orders[i].id){
+        this.orders.splice(i, 1);
+        if(this.orders.length == 0) {
+          //no-op
+        }
+        else {
+          //if it was the last index, make the current last index visible
+          if(i == this.orders.length){
+            visible = this.orders.length - 1;
+          }
+          //if it was not the last index, make the current i index visible
+          else{
+            visible = i;
+          }
+        }
+        //this.createOrderGridRowData();
+        //this.updateGrid();
+        this.removeRow(this.getOrderGridRowDataById(id)!);
+        this.api.ensureIndexVisible(visible);
+        return;
+      }
+    }
+    console.error("Order ID " + id + " not found: order not deleted!");
+  }
+
+  removeRow(order: OrderGridRowData) {
+    const toBeRemoved: any = [];
+    const rowNodes: any = [];
+    this.api.forEachNodeAfterFilterAndSort(function (rowNode: { data: any; }) {
+      if (rowNode.data.id != order.id) {
+        return;
+      }
+      
+      const data = rowNode.data;
+      data.anno = order.anno;
+      data.username = order.username;
+      data.full_username = order.full_username;
+      data.d_ordine = order.d_ordine;
+      data.n_ordine = order.n_ordine;
+      data.b_urgente = order.b_urgente;
+      data.b_extra = order.b_extra;
+      data.b_validato = order.b_validato;
+      data.b_to_supplier = order.b_to_supplier;
+      data.d_validato = order.d_validato;
+      data.status = order.status;
+      data.note = order.note;
+      data.isRowLocked = order.isRowLocked;
+
+      toBeRemoved.push(data);
+      rowNodes.push(rowNode);
+    });
+
+    const res = this.api.applyTransaction({ remove: toBeRemoved})!;
+    //this.api.redrawRows(rowNodes);
+    console.log(res);
+  }
+
   rmOrderRow(id: string){
     this.ordersService.rmOrderRow(id);
   }
@@ -357,9 +396,6 @@ export class OrdersComponent implements OnInit {
 
   setOrderLocally(order: Order, orderStatus: OrderStatus, isAdding: boolean) {    
     if(!isAdding) {
-      //if(orderStatus.status == "inviato al fornitore")
-      //console.log("inviato al fornitoreeeeeeeeeeeeeeeeeeeeeeeeee");
-      
       for(let i = 0; i < this.orders.length; ++i) {
         if(order.id == this.orders[i].id) {
           this.orders[i].anno = order.anno;
@@ -394,20 +430,9 @@ export class OrdersComponent implements OnInit {
           this.orderGridRowData[i].status = orderStatus.status;
           this.orderGridRowData[i].note = order.note;
           this.orderGridRowData[i].isRowLocked = isLockedCondition!; 
-          //this.createOrderGridRowData();
-          //this.logAPI();
-          //this.visibleIndex = i;
-          //this.updateGrid(i);
-          //console.log("index: " + i);
-          //console.log("row index: " + this.api.getDisplayedRowAtIndex(i).rowIndex);
-          
-          //console.log("===ROW ID=== " + this.getRowId(this.api.getRowNode(i).data));
-          console.log("=====new order");
-          console.log(this.orderGridRowData[i]);
-          
           
           this.updateRow(this.orderGridRowData[i]);
-          this.api.ensureIndexVisible(i);
+          //this.api.ensureIndexVisible(i);
           return;
         }
       }
@@ -467,16 +492,11 @@ export class OrdersComponent implements OnInit {
   updateRow(order: OrderGridRowData) {
     const toBeUpdated: any = [];
     const rowNodes: any = [];
+    var isSentToSupplier: boolean = false;
     this.api.forEachNodeAfterFilterAndSort(function (rowNode: { data: any; }) {
-      // only do first 2
       if (rowNode.data.id != order.id) {
         return;
       }
-      //console.log("========before update:");
-      //console.log(rowNode.data);
-      
-      console.log("======> ROW NODE");
-      console.log(rowNode);
       
       const data = rowNode.data;
       data.anno = order.anno;
@@ -488,23 +508,19 @@ export class OrdersComponent implements OnInit {
       data.b_extra = order.b_extra;
       data.b_validato = order.b_validato;
       data.b_to_supplier = order.b_to_supplier;
+      isSentToSupplier = order.b_to_supplier;
       data.d_validato = order.d_validato;
       data.status = order.status;
       data.note = order.note;
       data.isRowLocked = order.isRowLocked;
-
-      //console.log("========after update:");
-      //console.log(rowNode.data);
 
       toBeUpdated.push(data);
       rowNodes.push(rowNode);
     });
 
     const res = this.api.applyTransaction({ update: toBeUpdated})!;
-    //this.api.redrawRow(order.id);
-    
-    
-    this.api.redrawRows(rowNodes);
+    if(isSentToSupplier)
+      this.api.redrawRows(rowNodes);//necessary to update checkboxes to "disabled"
     console.log(res);
   }
 
@@ -562,37 +578,7 @@ export class OrdersComponent implements OnInit {
       this.orderGridRowData.push(newOrderGridRowData);    
       this.visibleIndex = i;  
     }
-    console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
-    
-    console.log(this.orderGridRowData);
     this.loading = false;
-  }
-
-  rmOrderLocally(id: string) {
-    let visible = 0;
-    for(let i = 0; i < this.orders.length; ++i) {
-      if(id == this.orders[i].id){
-        this.orders.splice(i, 1);
-        if(this.orders.length == 0) {
-          //no-op
-        }
-        else {
-          //if it was the last index, make the current last index visible
-          if(i == this.orders.length){
-            visible = this.orders.length - 1;
-          }
-          //if it was not the last index, make the current i index visible
-          else{
-            visible = i;
-          }
-        }
-        this.createOrderGridRowData();
-        this.updateGrid();
-        this.api.ensureIndexVisible(visible);
-        return;
-      }
-    }
-    alert("Order ID " + id + " not found, order not deleted!");
   }
   
   /*
@@ -610,7 +596,7 @@ export class OrdersComponent implements OnInit {
       }
     );
   }
-
+/*
   setOrderRowLocally(orderRow: OrderRow, isAdding: boolean) {
     if(!isAdding) {
       for(let i = 0; i < this.orders.length; ++i) {
@@ -634,9 +620,9 @@ export class OrdersComponent implements OnInit {
       this.orders.push(orderRow);
     }
   }
+  */
   
   openAddOrderDialog() {
-    //this.logAPI();
     const dialogConfig = new MatDialogConfig();
     
     dialogConfig.data = {
@@ -671,6 +657,10 @@ export class OrdersComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
+    console.log(this.gg_min);
+    console.log(this.gg_max);
+    
+
     switch(event.colDef.field){
       case "d_ordine":
         dialogConfig.data = {
@@ -696,8 +686,6 @@ export class OrdersComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe( (result: {date: string, isOrderDate: boolean, isValidationDate: boolean, isSubmitted: boolean}) => {
       if(result !== undefined && result.isSubmitted){
-        //console.log("received date: " + result.date);
-        //console.log("formatted date: " + new Date(result.date).toLocaleString('it-IT', {timeZone: 'UTC'}).split(",")[0]);
         
         this.order.id = event.data.id;
         this.order.anno = event.data.anno;
@@ -723,7 +711,7 @@ export class OrdersComponent implements OnInit {
         //when setting order date, just set order date
         if(result.isOrderDate){
           this.order.d_ordine = result.date;
-          orderStatus.status = "inviato"
+          orderStatus.status = event.data.status; //keep existing status
           orderStatus.note = "Data ordine modificata da " + localStorage.getItem('sangue_username');
           console.log("setting: " + this.order.d_ordine);
           this.setOrder(this.order, orderStatus, false);
@@ -733,12 +721,11 @@ export class OrdersComponent implements OnInit {
         else if(result.isValidationDate) {
           this.order.d_validato = result.date;
           this.order.b_validato = true;
-          orderStatus.status = "confermato";
+          orderStatus.status = "confermato"; //confirm status
           orderStatus.note = "Ordine confermato da " + localStorage.getItem('sangue_username');
           console.log("setting: " + this.order.d_validato);
           this.setOrder(this.order, orderStatus, false);
         }
-        //this.updateGrid();
       }
     });
   }

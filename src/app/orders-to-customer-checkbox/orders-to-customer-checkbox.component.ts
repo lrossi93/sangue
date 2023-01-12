@@ -50,7 +50,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
         if(result !== undefined){
           if(result.isSubmitted !== undefined && result.isSubmitted){
           this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
-          /*
+          
           let orderSent = {
             id: this.data.id,
             anno: this.data.anno,
@@ -63,7 +63,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
             d_validato: this.data.d_validato,
             note: this.data.note
           }
-          */
+
           let orderStatus = {
             id: "0",
             username: localStorage.getItem('sangue_username')!,
@@ -74,8 +74,6 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
             b_sto: false
           }
           
-          //non serve, basta solo un cambio di stato ed un conseguente aggiornamento della view
-          //this.ordersComponent.setOrder(orderSent, orderStatus, false);
           this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
             res => {
               if(res[0] == "OK"){
@@ -86,7 +84,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
                     break;
                   }
                 }
-                this.suppliesComponent.createSupplyGridRowData();
+                this.suppliesComponent.updateRow(this.data.id);
               }
               else {
                 console.error("Error setting orderStatus!");

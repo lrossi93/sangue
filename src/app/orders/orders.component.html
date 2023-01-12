@@ -55,17 +55,16 @@
 		</div>
 	
 		<ag-grid-angular 
-			style="width: 100%; height: 400px;"
+			style="width: 100%; height: 100vh;"
 			class="ag-theme-material"
 			[rowData]="orderGridRowData"
 			[columnDefs]="ordersGridConfig"
 			[defaultColDef]="defaultColDef"
 			[gridOptions]="gridOptions"
 			(gridReady)="onGridReady($event)"
-			[enableCellChangeFlash]="true"
 			[getRowId]="getRowId"
-			[animateRows]="true"
-			[enableCellChangeFlash]="true">
+			[animateRows]="true">
+			<!--to see flashing cells, add [enableCellChangeFlash]="true"-->
 		</ag-grid-angular>
 	</div>
 </div>

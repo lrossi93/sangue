@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { GridApi } from 'ag-grid-community';
+import { GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
 import { Order, OrderGridRowData, OrderStatus, Product, SupplyGridRowData, User } from 'src/environments/environment';
 import { defaultColDef, gridConfigSupplies } from 'src/environments/grid-configs';
 import { OrdersService } from '../orders.service';
@@ -24,7 +24,7 @@ export class SuppliesComponent implements OnInit {
   orderStatusArr: any[] = [];
   supplyGridRowData: SupplyGridRowData[] = [];
 
-  suppliesGridConfig = gridConfigSupplies
+  suppliesGridConfig = gridConfigSupplies;
 
   //agGrid config
   ordersGridConfig!: any;
@@ -40,6 +40,10 @@ export class SuppliesComponent implements OnInit {
   //spinner boolean
   //isLoading = true;//qui mostra lo spinner senza caricare nulla
   isLoading = false;
+
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    return params.data.id;
+  };
 
   constructor(
     private ordersService: OrdersService,
@@ -75,9 +79,7 @@ export class SuppliesComponent implements OnInit {
     this.getAllData();
     this.listProducts();
     this.listOrders(this.year);
-    //this.api.sizeColumnsToFit();
     this.autoSizeColumns(false);
-    //this.columnApi.autoSizeAllColumns();
   }
 
   getAllData() {
@@ -176,47 +178,38 @@ export class SuppliesComponent implements OnInit {
     this.supplyGridRowData = [];
     for(var i = 0; i < this.orders.length; ++i) {
       //aggiungo solo gli ordini con stato "inviato al fornitore" o "inviato al cliente"
+      var lock: boolean = false;
+      let toCustomerCondition = false;
 
-      /*if(
-        this.orderStatusArr[i].status == "inviato al fornitore" ||
-        this.orderStatusArr[i].status == "inviato al cliente" ||
-        this.orderStatusArr[i].status == "ricevuto"){
-          */
-        var lock: boolean = false;
-        let toCustomerCondition = false;
-        console.log("Stato:");
-        console.log(this.orderStatusArr[i]);
-
-        switch(this.orderStatusArr[i].status){
-          case "inviato al fornitore":
-            toCustomerCondition = false;
-            break;
-          default:
-            toCustomerCondition = true;
-            lock = true;
+      switch(this.orderStatusArr[i].status){
+        case "inviato al fornitore":
+          toCustomerCondition = false;
           break;
-        }
+        default:
+          toCustomerCondition = true;
+          lock = true;
+        break;
+      }
 
-        var newSupplyGridRowData = {
-          id: this.orders[i].id,
-          anno: this.orders[i].anno,
-          username: this.orders[i].username,
-          full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
-          d_ordine: this.orders[i].d_ordine,
-          n_ordine: this.orders[i].n_ordine,
-          b_urgente: this.orders[i].b_urgente,
-          b_extra: this.orders[i].b_extra,
-          b_validato: this.orders[i].b_validato,
-          //prossimo campo non presente in orderGridRowData... sistemare
-          b_to_customer: toCustomerCondition,
-          d_validato: this.orders[i].d_validato,
-          status: this.orderStatusArr[i].status,
-          note: this.orders[i].note,
-          isRowLocked: lock
-        };
+      var newSupplyGridRowData = {
+        id: this.orders[i].id,
+        anno: this.orders[i].anno,
+        username: this.orders[i].username,
+        full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
+        d_ordine: this.orders[i].d_ordine,
+        n_ordine: this.orders[i].n_ordine,
+        b_urgente: this.orders[i].b_urgente,
+        b_extra: this.orders[i].b_extra,
+        b_validato: this.orders[i].b_validato,
+        //prossimo campo non presente in orderGridRowData... sistemare
+        b_to_customer: toCustomerCondition,
+        d_validato: this.orders[i].d_validato,
+        status: this.orderStatusArr[i].status,
+        note: this.orders[i].note,
+        isRowLocked: lock
+      };
 
-        this.supplyGridRowData.push(newSupplyGridRowData);
-      //}
+      this.supplyGridRowData.push(newSupplyGridRowData);
     }
     this.isLoading = false;
     console.log(this.supplyGridRowData);
@@ -245,6 +238,38 @@ export class SuppliesComponent implements OnInit {
       month = "0" + month;
     }
     return year + "-" + month + "-" + day;  
+  }
+
+  getSupplyGridRowDataById(id: string): SupplyGridRowData | null {
+    for(var i = 0; i < this.supplyGridRowData.length; ++i) {
+      if(this.supplyGridRowData[i].id == id){
+        return this.supplyGridRowData[i];
+      }
+    }
+    console.error("ID " + id + " not found!");
+    return null;
+  }
+
+  updateRow(id: string) {
+    const toBeUpdated: any = [];
+    const rowNodes: any = [];
+    const supply = this.getSupplyGridRowDataById(id)!;
+    this.api.forEachNodeAfterFilterAndSort(function (rowNode: { data: any; }) {
+      if (rowNode.data.id != supply.id) {
+        return;
+      }
+      const data = rowNode.data;
+      data.b_to_customer = true;
+      data.status = "inviato al cliente";
+      data.isRowLocked = true;
+      
+      toBeUpdated.push(data);
+      rowNodes.push(rowNode);
+    });
+
+    const res = this.api.applyTransaction({ update: toBeUpdated})!;
+    //this.api.redrawRows(rowNodes);
+    console.log(res);
   }
 }
 

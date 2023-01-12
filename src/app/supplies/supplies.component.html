@@ -34,13 +34,16 @@
 		</button>
 		
 		<ag-grid-angular 
-			style="width: 100%; height: 400px;"
+			style="width: 100%; height: 100vh;"
 			class="ag-theme-material"
 			[rowData]="supplyGridRowData"
 			[columnDefs]="suppliesGridConfig"
 			[defaultColDef]="defaultColDef"
 			[gridOptions]="gridOptions"
-			(gridReady)="onGridReady($event)">
+			(gridReady)="onGridReady($event)"
+			[getRowId]="getRowId"
+			[animateRows]="true">
+			<!--to see flashing cells, add [enableCellChangeFlash]="true"-->
 		</ag-grid-angular>
 	</div>
 </div>

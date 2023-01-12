@@ -32,7 +32,10 @@ export class DatepickerProductsDialogComponent {
     if(loginService.getUserCode() == '210' && data.isOrderDate){
       var auxDate = new Date();
       this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(data.gg_min));
+      console.log(this.minDate);
+      
       this.maxDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(data.gg_max));
+      console.log(this.maxDate);
     }
   }
 
