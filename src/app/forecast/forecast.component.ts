@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { CellClickedEvent, CellValueChangedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
 import { environment, Forecast, ForecastGridRowData } from 'src/environments/environment';
 import { AddForecastComponent } from '../add-forecast/add-forecast.component';
 import { AreYouSureForecastComponent } from '../are-you-sure-forecast/are-you-sure-forecast.component';
@@ -37,7 +37,6 @@ export class ForecastComponent implements OnInit {
   year: string = new Date().getFullYear().toString();
   
   //agGrid configuration
-  api: any;
   forecastGridConfig: any;
   forecasts: Forecast[] = [];
   forecastGridRowData: ForecastGridRowData[] = [];
@@ -52,12 +51,19 @@ export class ForecastComponent implements OnInit {
 
   //agGrid API handle
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
+  gridApi!: GridApi;
+  api: any;
+  columnApi: any;
 
   //for dialog autocomplete
   users: any = []; 
   products: any = [];
 
   isLoading: boolean = false;
+
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    return params.data.id;
+  };
 
 /*
 
@@ -73,43 +79,60 @@ export class ForecastComponent implements OnInit {
     private usersService: UsersService,
     private router: Router
     ) { 
-      //columnDef
-      switch(this.loginService.getProfile()){
-        case '210':
-          this.forecastGridConfig = gridConfigForecast210;
-          break;
-        case '220':
-          this.forecastGridConfig = gridConfigForecast220;
-          break;
-      }
-      
-      //gridOptions
-      this.gridOptions = {
-        onGridInit: () => {
-          this.createForecastGridRowData();
-          this.updateGrid();
-        },
-        onCellClicked: (event: CellClickedEvent) => {
-          //console.log(event);
-        },
-        onCellValueChanged: (event: CellValueChangedEvent) => {
-          console.log("Changed from " + event.oldValue + " to " + event.newValue);
-          this.setForecast(
-            event.data.id,
-            event.data.anno,
-            event.data.username,
-            event.data.id_prd,
-            event.data.qta,
-            event.data.note,
-            event.data.qta_approvata,
-            event.data.costo_unitario
-          );
-          console.log("changed!");
-          
-          //this.updateGrid();
-        }
+    //columnDef
+    switch(this.loginService.getProfile()){
+      case '210':
+        this.forecastGridConfig = gridConfigForecast210;
+        break;
+      case '220':
+        this.forecastGridConfig = gridConfigForecast220;
+        break;
+    }
+    
+    //gridOptions
+    this.gridOptions = {
+      /*onGridInit: () => {
+        this.createForecastGridRowData();
+        this.updateGrid();
+      },
+      */
+      onCellClicked: (event: CellClickedEvent) => {
+        //console.log(event);
+      },
+      onCellValueChanged: (event: CellValueChangedEvent) => {
+        console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        this.setForecast(
+          event.data.id,
+          event.data.anno,
+          event.data.username,
+          event.data.id_prd,
+          event.data.qta,
+          event.data.note,
+          event.data.qta_approvata,
+          event.data.costo_unitario
+        );
+        console.log("changed!");
+        
+        //this.updateGrid();
       }
     }
+  }
+
+  onGridReady = (params: { api: any; columnApi: any; }) => {
+    this.api = params.api;
+    this.columnApi = params.columnApi;    
+    this.getAllForecastData();
+    
+    //this.autoSizeColumns(false);
+  }
+
+  autoSizeColumns(skipHeader: boolean) {
+    const allColumnIds: string[] = [];
+    this.columnApi.getColumns()!.forEach((column: { getId: () => string; }) => {
+      allColumnIds.push(column.getId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+  }
 
   ngOnInit(): void {
     this.loginService.checkPromise().subscribe(
@@ -122,10 +145,6 @@ export class ForecastComponent implements OnInit {
     );
 
     //retrieve data from db
-    this.isLoading = true;
-    this.listForecasts(this.year);
-    this.listUsers("210");
-    this.listProducts();
 
     setTimeout(
       () => {
@@ -142,6 +161,47 @@ export class ForecastComponent implements OnInit {
     this.id = id;
   }
 
+  getAllForecastData() {
+    this.isLoading = true;
+    this.forecastService.listForecastsPromise(this.year).subscribe(
+      res1 => {
+        if(res1[0] == "KO") {
+          console.error("Error retrieving forecasts for year " + this.year) + "!";
+        }
+        else {
+          this.forecasts = res1[1];
+          console.log(this.forecasts);
+          this.usersService.listUsersPromise("210").subscribe(
+            res2 => {
+              if(res2[0] == "KO") {
+                console.error("Error retrieving users with code 210!");
+              }
+              else {
+                this.users = res2[1];
+                console.log(this.users);
+                this.pharmaRegistryService.listProductsPromise().subscribe(
+                  res3 => {
+                    if(res3[0] == "KO") {
+                      console.error("Error retrieving products!");
+                    }
+                    else {
+                      this.products = res3[1];
+                      console.log(this.products);
+                      this.createForecastGridRowData();
+                      this.autoSizeColumns(false);
+                      this.isLoading = false;
+                    }
+                  }
+                )
+              }
+            }
+          )
+        }
+      }
+    )
+  }
+ 
+
   listForecasts(year: string): void {    
     this.forecastService.listForecastsPromise(year).subscribe(
       res => {
@@ -151,15 +211,12 @@ export class ForecastComponent implements OnInit {
         }
         else{ 
           this.forecasts = res[1];
-          console.log("forecasts:");
-          console.log(this.forecasts);
-          
-          this.loaded++;
-          this.everythingLoaded();
+          this.createForecastGridRowData();
         }
       }
     );
   }
+   /*
   listUsers(userlevel: string): void{
     this.usersService.listUsersPromise(userlevel).subscribe(res => {
       if(res[0] == "KO"){
@@ -190,20 +247,8 @@ export class ForecastComponent implements OnInit {
       }
     });
   }
+*/
 
-  everythingLoaded() {
-    //when all 3 resources have loaded, enter if branch
-    if(this.loaded >= 3){
-      //console.log("LOADED!");
-      console.log(this.users);
-      console.log(this.products);
-      console.log(this.forecasts);
-      
-      this.createForecastGridRowData();
-      this.updateGrid();
-      this.isLoading = false;
-    }
-  }
 
   createForecastGridRowData() {
     this.forecastGridRowData = [];
@@ -301,14 +346,28 @@ export class ForecastComponent implements OnInit {
   addLocally(newForecast: any){
     //console.log(newForecast);
     this.forecasts.push(newForecast);
-    //this.createForecastGridRowData();
-    //this.updateGrid();
+    this.forecastGridRowData.push({
+      id: newForecast.id,
+      anno: newForecast.anno,
+      username: newForecast.username,
+      full_username: this.getFullUsernameById(newForecast.username),
+      id_prd: newForecast.id_prd,
+      product_name: this.getProductNameById(newForecast.id_prd),
+      qta: newForecast.qta,
+      note: newForecast.note,
+      qta_approvata: newForecast.qta_approvata,
+      costo_unitario: newForecast.costo_unitario
+    });
+
+    //devo aggiungere un ForecastGridRowData
     this.api.applyTransaction({
       add: [{
         id: newForecast.id,
         anno: newForecast.anno,
         username: newForecast.username,
+        full_username: this.getFullUsernameById(newForecast.username),
         id_prd: newForecast.id_prd,
+        product_name: this.getProductNameById(newForecast.id_prd),
         qta: newForecast.qta,
         note: newForecast.note,
         qta_approvata: newForecast.qta_approvata,
@@ -335,6 +394,7 @@ export class ForecastComponent implements OnInit {
     for(let i = 0; i < this.forecasts.length; ++i){
       if(id == this.forecasts[i].id){
         this.forecasts.splice(i, 1);
+        this.forecastGridRowData.splice(i, 1);
         if(this.forecasts.length == 0){
           //no-op
         }
@@ -348,12 +408,44 @@ export class ForecastComponent implements OnInit {
             visible = i;
           }
         }
-        this.createForecastGridRowData();
+        //this.createForecastGridRowData();
         //this.updateGrid();
-        this.api.ensureIndexVisible(visible);
+        this.removeRow(id);
+        //this.api.ensureIndexVisible(visible);
         return;
       }
     }
+  }
+
+  removeRow(id: string) {
+    const toBeRemoved: any = [];
+    const rowNodes: any = [];
+    var forecast = this.getForecastGridRowDataById(id)!;
+    this.api.forEachNodeAfterFilterAndSort(function (rowNode: { data: any; }) {
+      console.log(rowNode);
+
+      if (rowNode.data.id != id) {
+        return;
+      }
+      
+      const data = rowNode.data;
+
+      toBeRemoved.push(data);
+      rowNodes.push(rowNode);
+    });
+
+    const res = this.api.applyTransaction({ remove: toBeRemoved})!;
+    //this.api.redrawRows(rowNodes);
+    console.log(res);
+  }
+
+  getForecastGridRowDataById(id: string): ForecastGridRowData | null {
+    for(var i = 0; i < this.forecastGridRowData.length; ++i) {
+      if(this.forecastGridRowData[i].id == id) {
+        return this.forecastGridRowData[i];
+      }
+    }
+    return null;
   }
 
   openAddForecastDialog(){
@@ -431,7 +523,7 @@ export class ForecastComponent implements OnInit {
 
   closeDialog(){
     this.dialog.closeAll();
-    this.listForecasts(this.year);
+    //this.listForecasts(this.year);
     this.api.setRowData(this.forecasts);
   }
 

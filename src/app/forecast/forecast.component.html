@@ -28,7 +28,7 @@
 			placeholder="{{'Year' | translate}}" 
 			[(ngModel)]="year" 
 			(change)="listForecasts(year)" 
-			style="width: 50%;">
+			style="width: 80%;">
 		</div>
 
 		<button 
@@ -45,6 +45,9 @@
 		[columnDefs]="forecastGridConfig"
 		[defaultColDef]="defaultColDef"
 		[gridOptions]="gridOptions"
+		(gridReady)="onGridReady($event)"
+		[getRowId]="getRowId"
+		[animateRows]="true"
 		>
 	</ag-grid-angular>
 </div>
