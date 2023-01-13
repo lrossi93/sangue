@@ -111,5 +111,6 @@
     "Warning: once set, the received quantity cannot be modified": "Attenzione: una volta impostata, la quantità ricevuta non è modificabile",
     "Delete product with ID": "Elimina il prodotto con ID",
     "Please fill in all compulsory fields": "Compilare tutti i campi obbligatori",
-    "Validate": "Convalida"
+    "Validate": "Convalida",
+    "Some fields are empty of invalid": "Alcuni campi obbligatori sono vuoti o non validi"
 }

@@ -129,9 +129,14 @@ export class AddForecastComponent implements OnInit{
     if(this.anno.value == "" ||
     this.username == "" ||
     this.id_prd == "" ||
+    this.qta.value == 0 ||
     this.qta.value == "" ||
     this.qta_approvata.value == "" ||
-    this.costo_unitario.value == "")
+    this.qta_approvata.value == 0 ||
+    this.costo_unitario.value == "" ||
+    this.costo_unitario.value == 0 ||
+    !this.isAmongUsers(this.userFormControl.value) ||
+    !this.isAmongProducts(this.productFormControl.value))
       return true;
     return false;
   }
@@ -161,6 +166,15 @@ export class AddForecastComponent implements OnInit{
       this.username = this.getUserId(event);
     }
   }
+
+  isAmongUsers(inputValue: string): boolean {
+    for(var i = 0; i < this.userNames.length; ++i) {
+      if(inputValue == this.userNames[i]) {
+        return true;
+      }
+    }
+    return false;
+  }
   //END functions for autocomplete - USERS
 
   //BEGIN functions for autocomplete - PRODUCTS
@@ -187,6 +201,15 @@ export class AddForecastComponent implements OnInit{
     if(event.source._selected){
       this.id_prd = this.getProductId(event);
     }
+  }
+
+  isAmongProducts(inputValue: string): boolean {
+    for(var i = 0; i < this.productNames.length; ++i) {
+      if(inputValue == this.productNames[i]) {
+        return true;
+      }
+    }
+    return false;
   }
   //END functions for autocomplete - PRODUCTS
 }
