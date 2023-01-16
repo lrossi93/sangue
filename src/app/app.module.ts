@@ -61,7 +61,7 @@ import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-ch
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 import { LoadingCellRendererComponent } from './loading-cell-renderer/loading-cell-renderer.component';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OrdersSentCheckboxComponent } from './orders-sent-checkbox/orders-sent-checkbox.component';
 import { SendToSupplierDialogComponent } from './send-to-supplier-dialog/send-to-supplier-dialog.component';
 import { SuppliesComponent } from './supplies/supplies.component';
@@ -173,5 +173,5 @@ import { MatIconModule } from "@angular/material/icon";
 export class AppModule { }
 
 export function httpTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
