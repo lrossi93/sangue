@@ -1,7 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Forecast, Order, OrderRow, OrderStatus, Product } from 'src/environments/environment';
+import { AgGridAngular } from 'ag-grid-angular';
+import { CellClickedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
+import { Forecast, Order, OrderRow, OrderRowGridRowData, OrderStatus, Product } from 'src/environments/environment';
+import { defaultColDef, gridConfigOrderRows } from 'src/environments/grid-configs';
 import { AddOrderRowComponent } from '../add-order-row/add-order-row.component';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-order.component';
@@ -27,6 +30,7 @@ export class EditOrderDialogComponent implements OnInit {
 
   order!: Order;
   orderRows: OrderRow[] = [];
+  orderRowGridRowData: OrderRowGridRowData[] = [];
   users: any = [];
   products: any = [];
   forecasts: Forecast[] = [];
@@ -39,6 +43,22 @@ export class EditOrderDialogComponent implements OnInit {
   isValidated!: boolean;
 
   userCode!: string;
+
+  //agGrid config
+  orderRowsGridConfig!: any;
+  defaultColDef: any = defaultColDef;
+  gridOptions: any;
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    return params.data.id;
+  };
+
+  //agGrid API handles
+  @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
+  gridApi!: GridApi;
+  api: any;
+  columnApi: any;
+
+  displayedColumns: string[] = ['id', 'n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -71,6 +91,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.dialog = dialog;
     this.users = data.users;
     this.products = data.products;
+    this.createOrderRowGridRowData();
     //console.log(this.products);
     
     this.isLocked = data.isLocked;
@@ -81,6 +102,33 @@ export class EditOrderDialogComponent implements OnInit {
     //TODO: correggere: validato???
 
     this.userCode = this.loginService.getUserCode()!;
+
+
+
+    //AgGrid initialization
+    this.orderRowsGridConfig = gridConfigOrderRows;
+    this.gridOptions = {
+      onCellClicked: (event: CellClickedEvent) => {
+        console.log(event);
+      },
+    }
+  }
+
+  onGridReady = (params: { api: any; columnApi: any; }) => {
+    this.api = params.api;
+    this.columnApi = params.columnApi;
+    this.api.setRowData(this.orderRows);
+    this.autoSizeColumns(false);
+    
+    //this.api.setDomLayout('autoHeight');
+  }
+
+  autoSizeColumns(skipHeader: boolean) {
+    const allColumnIds: string[] = [];
+    this.columnApi.getColumns()!.forEach((column: { getId: () => string; }) => {
+      allColumnIds.push(column.getId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 
   ngOnInit(): void {
@@ -93,7 +141,9 @@ export class EditOrderDialogComponent implements OnInit {
     for(let i = 0; i < this.orderRows.length; ++i){
       if(this.orderRows[i].id == id){
         this.orderRows.splice(i, 1);
+        this.orderRowGridRowData.splice(i, 1);
         this.ordersService.rmOrderRow(id);
+        this.createOrderRowGridRowData();
         return;
       }
     }
@@ -237,6 +287,10 @@ export class EditOrderDialogComponent implements OnInit {
                   if(newOrderRow.id == "") {
                     newOrderRow.id = res[1];
                     this.orderRows.push(newOrderRow);
+                    this.createOrderRowGridRowData();
+                  }
+                  else {
+                    this.updateOrderRow(result.orderRow);
                   }
 
                   let orderStatus: OrderStatus = {
@@ -307,7 +361,9 @@ export class EditOrderDialogComponent implements OnInit {
 
   productIdToDes(id: string): string {
     for(var i = 0; i < this.products.length; ++i){
+      console.log(this.products[i]);
       if(id == this.products[i].id) {
+        console.log(this.products[i].des);
         return this.products[i].des;
       }
     }
@@ -370,5 +426,33 @@ export class EditOrderDialogComponent implements OnInit {
       order: this.order,
       isValidated: this.isValidated
     });
+  }
+
+  createOrderRowGridRowData() {
+    this.orderRowGridRowData = [];
+    for(var i = 0; i < this.orderRows.length; ++i) {
+      var newOrderRow = {
+        id: this.orderRows[i].id,
+        id_ordine: this.orderRows[i].id_ordine,
+        n_riga: this.orderRows[i].n_riga,
+        product_name: this.productIdToDes(this.orderRows[i].id_prd),
+        full_username: "",
+        qta: this.orderRows[i].qta,
+        motivazione: this.orderRows[i].motivazione,
+        qta_validata: this.orderRows[i].qta_validata,
+        qta_ricevuta: this.orderRows[i].qta_ricevuta,
+        note: this.orderRows[i].note,
+      }
+      this.orderRowGridRowData.push(newOrderRow);
+    }
+  }
+
+  updateOrderRow(orderRow: OrderRow) {
+    for(var i = 0; i < this.orderRows.length; ++i) {
+      if(this.orderRows[i].id == orderRow.id){
+        this.orderRows[i] = orderRow;
+      }
+    }
+    this.createOrderRowGridRowData();
   }
 }

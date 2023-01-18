@@ -7,6 +7,7 @@ import { TranslateService } from "@ngx-translate/core";
 export const environment = {
   production: false,
   basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
+  reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/',
   currentLanguage: 'it',
 };
 
@@ -114,7 +115,9 @@ export interface OrderRowGridRowData {
   product_name: string;
   full_username: string;
   qta: number;
+  motivazione: string;
   qta_validata: number;
+  qta_ricevuta: number;
   note: string;
 }
 

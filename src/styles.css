@@ -41,6 +41,7 @@ nav{
 	top: 0;
 	padding: 15px;
 	z-index: 1;
+	max-height: 40px;
 }
 
 section{
@@ -70,4 +71,8 @@ a {
 /*decidere stile dei link*/
 	text-decoration: none;	
 	cursor: pointer;
+}
+
+ag-grid-angular{
+	
 }

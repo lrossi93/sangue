@@ -1,6 +1,7 @@
 import { ButtonDeleteForecastComponent } from "src/app/button-delete-forecast/button-delete-forecast.component";
 import { ButtonDeleteProductComponent } from "src/app/button-delete-product/button-delete-product.component";
 import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-order.component";
+import { ButtonOrderReportComponent } from "src/app/button-order-report/button-order-report.component";
 import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/button-supply-details.component";
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
@@ -198,7 +199,8 @@ export const gridConfigForecast210 = [
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'product_name',
       cellRenderer: DropdownProductsForecastComponent,
-      editable: false
+      editable: false,
+      minWidth: 250,
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
@@ -247,13 +249,15 @@ export const gridConfigForecast220 = [
       headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
       field: 'full_username',
       cellRenderer: DropdownUsersForecastComponent,
-      editable: false
+      editable: false,
+      minWidth: 350,
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
       field: 'product_name',
       //cellRenderer: DropdownProductsForecastComponent,
-      editable: false
+      editable: false,
+      minWidth: 250,
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
@@ -303,7 +307,8 @@ export const orderGridHeaders = {
     Status: "Stato",
     SentToSupplier: "Inviato al fornitore",
     SentToCustomer: "Inviato al cliente",
-    Received: "Ricevuto"
+    Received: "Ricevuto",
+    Report: "Report"
   },
   en: {
     ID: "ID",
@@ -322,7 +327,8 @@ export const orderGridHeaders = {
     Status: "Status",
     SentToSupplier: "Sent to supplier",
     SentToCustomer: "Sent to customer",
-    Received: "Received"
+    Received: "Received",
+    Report: "Report"
   }
 }
 
@@ -339,13 +345,6 @@ export const gridConfigOrders210 = [
     editable: false
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
-    field: 'anno', 
-    editable: (params: { data: { isRowLocked: boolean; }; }) => {
-      return !params.data.isRowLocked;
-    }
-  },
-  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
@@ -359,7 +358,8 @@ export const gridConfigOrders210 = [
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
       return new Date(params.value).toLocaleDateString('it-IT');
-    }
+    },
+    sort: 'desc'
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
@@ -386,7 +386,6 @@ export const gridConfigOrders210 = [
     editable: false,
     cellRenderer: OrdersValidatedCheckboxComponent
   },
-  //TODO: b_to_supplier??
   {
     headerName: localeLang == 'it' ? orderGridHeaders.it.Received : orderGridHeaders.en.Received,
     field: 'b_received',
@@ -416,6 +415,11 @@ export const gridConfigOrders210 = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonEditOrderComponent,
     autoHeight: true
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    cellRenderer: ButtonOrderReportComponent,
+    autoHeight: true
   }
 ];
 
@@ -432,19 +436,9 @@ export const gridConfigOrders210Locked = [
     editable: false
   },
   { 
-      headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
-      field: 'anno', 
-      editable: false
-  },
-  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
-    /*
-    cellRenderer: (params: { value: string }) => {
-      return params.value === undefined ? "inviato" : params.value;
-    }
-    */
   },
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
@@ -452,7 +446,8 @@ export const gridConfigOrders210Locked = [
       editable: false,
       cellRenderer: (params: { value: string | number | Date; }) => {
         return new Date(params.value).toLocaleDateString('it-IT');
-      }
+      },
+      sort: 'desc'
   },
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
@@ -477,7 +472,6 @@ export const gridConfigOrders210Locked = [
       editable: false,
       cellRenderer: OrdersValidatedCheckboxComponent
   },
-  //TODO: b_to_supplier?
   {
     headerName: localeLang == 'it' ? orderGridHeaders.it.Received : orderGridHeaders.en.Received,
     field: 'b_received',
@@ -505,6 +499,11 @@ export const gridConfigOrders210Locked = [
       headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
       cellRenderer: ButtonEditOrderComponent,
       autoHeight: true
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    cellRenderer: ButtonOrderReportComponent,
+    autoHeight: true
   }
 ];
 
@@ -522,21 +521,9 @@ export const gridConfigOrders220 = [
     editable: false
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
-    field: 'anno', 
-    editable: (params: { data: { isRowLocked: boolean; }; }) => {
-      return !params.data.isRowLocked;
-    }
-  },
-  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
-    /*
-    cellRenderer: (params: { data: { b_validato: any; }; value: undefined; }) => {
-      return params.value;
-    }
-    */
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
@@ -544,7 +531,8 @@ export const gridConfigOrders220 = [
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
       return new Date(params.value).toLocaleDateString('it-IT');
-    }
+    },
+    sort: 'desc'
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
@@ -601,6 +589,11 @@ export const gridConfigOrders220 = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonEditOrderComponent,
     autoHeight: true
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    cellRenderer: ButtonOrderReportComponent,
+    autoHeight: true
   }
 ];
 
@@ -617,11 +610,6 @@ export const gridConfigOrders220Locked = [
     editable: false
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
-    field: 'anno', 
-    editable: false
-  },
-  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
@@ -635,7 +623,8 @@ export const gridConfigOrders220Locked = [
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
       return new Date(params.value).toLocaleDateString('it-IT');
-    }
+    },
+    sort: 'desc'
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
@@ -692,6 +681,63 @@ export const gridConfigOrders220Locked = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonEditOrderComponent,
     autoHeight: true
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    cellRenderer: ButtonOrderReportComponent,
+    autoHeight: true
+  }
+];
+
+//AgGrid config for orderRows
+export const gridConfigOrderRows = [
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
+    field: 'id', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      console.log(params);
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
+    field: 'id_ordine', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'full_username', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'n_riga', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'product_name', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'qta', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'qta_validata', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'qta_ricevuta', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
+    field: 'note', 
+    editable: false
   }
 ];
 
@@ -718,11 +764,6 @@ export const gridConfigSupplies = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
-    /*
-    cellRenderer: (params: { value: string }) => {
-      return params.value === undefined ? "inviato" : params.value;
-    }
-    */
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
@@ -749,22 +790,6 @@ export const gridConfigSupplies = [
     editable: false,
     cellRenderer: OrdersExtraCheckboxComponent
   },
-  /*
-  { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Validated : orderGridHeaders.en.Validated, 
-    field: 'b_validato', 
-    editable: false,
-    cellRenderer: OrdersValidatedCheckboxComponent
-  },
-  */
- /*
-  {
-    headerName: localeLang == 'it' ? orderGridHeaders.it.SentToSupplier : orderGridHeaders.en.SentToSupplier,
-    field: 'b_to_supplier',
-    editable: false,
-    cellRenderer: OrdersSentCheckboxComponent
-  },
-  */
   {
     headerName: localeLang == 'it' ? orderGridHeaders.it.SentToCustomer : orderGridHeaders.en.SentToCustomer,
     field: 'b_to_customer',

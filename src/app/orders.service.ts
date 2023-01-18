@@ -10,6 +10,7 @@ import { LoginService } from './login.service';
 export class OrdersService {
   
   url = environment.basePath + 'order.php';
+  reportUrl = environment.reportPath + 'order.php';
   orders: any = [];
   orderRows: any = [];
   lastOrderId: string = "";
@@ -399,5 +400,23 @@ export class OrdersService {
         note: orderStatus.note
       }
     )
+  }
+
+  /**
+   * 
+   * ORDER PDF MANAGEMENT
+   * 
+   */
+  getOrderPdfPromise(id_order: string) {
+    let request = 'getOrderPDF';
+    let id_session = localStorage.getItem('id_session');
+    let path = this.url + '?request='+ request + '&id_session=' + id_session + '&id_order=' + id_order;
+    console.log(path)
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    );
   }
 }

@@ -112,5 +112,9 @@
     "Delete product with ID": "Elimina il prodotto con ID",
     "Please fill in all compulsory fields": "Compilare tutti i campi obbligatori",
     "Validate": "Convalida",
-    "Some fields are empty of invalid": "Alcuni campi obbligatori sono vuoti o non validi"
+    "Some compulsory fields are either empty or invalid": "Alcuni campi obbligatori sono vuoti o non validi",
+    "Orders placed now are automatically marked as \"extra\"": "Gli ordini piazzati ora sono automaticamente contrassegnati come \"extra\"",
+    "Add extra order": "Aggiungi un ordine extra",
+    "Download report": "Scarica report",
+    "View report": "Visualizza report"
 }

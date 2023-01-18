@@ -6,18 +6,29 @@ import { ForecastComponent } from '../forecast/forecast.component';
 @Component({
   selector: 'app-button-delete-forecast',
   template: `
-    <button mat-raised-button color="primary" style="width: 100%;" (click)="onClickOpenDialog($event)">{{ 'Delete' | translate }}</button>
+    <button 
+    mat-mini-fab 
+    class="mat-elevation-z0"
+    disabled="{{isApproved}}"
+    color="warn"
+    matTooltip="{{ 'Delete' | translate }}" 
+    (click)="onClickOpenDialog($event)">
+      <i class="material-icons">delete</i>
+    </button>
   `,
   styleUrls: ['./button-delete-forecast.component.css']
 })
 export class ButtonDeleteForecastComponent implements ICellRendererAngularComp {
-  
+  isApproved: boolean = false;
   data: any;
   
   constructor(private forecastComponent: ForecastComponent) { }
 
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
+    if(this.data.qta_approvata > 0) {
+      this.isApproved = true;
+    }
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {

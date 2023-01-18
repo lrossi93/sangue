@@ -130,9 +130,10 @@ export class AddForecastComponent implements OnInit{
     this.username == "" ||
     this.id_prd == "" ||
     this.qta.value == 0 ||
+    this.qta.value < 0 ||
     this.qta.value == "" ||
     this.qta_approvata.value == "" ||
-    this.qta_approvata.value == 0 ||
+    this.qta_approvata.value < 0 ||
     this.costo_unitario.value == "" ||
     this.costo_unitario.value == 0 ||
     !this.isAmongUsers(this.userFormControl.value) ||

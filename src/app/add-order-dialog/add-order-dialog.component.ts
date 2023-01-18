@@ -44,6 +44,7 @@ export class AddOrderDialogComponent implements OnInit {
   b_validato!: UntypedFormControl;
   d_validato!: UntypedFormControl;
   note!: UntypedFormControl;
+  isExtra!: boolean;
 
 
   //BEGIN: autocomplete - users
@@ -67,7 +68,8 @@ export class AddOrderDialogComponent implements OnInit {
       products: Product[],
       forecasts: Forecast[],
       gg_min: string,
-      gg_max: string
+      gg_max: string,
+      isExtra: boolean,
     },
     private thisDialogRef: MatDialogRef<AddOrderDialogComponent>,
     dialog: MatDialog,
@@ -78,12 +80,13 @@ export class AddOrderDialogComponent implements OnInit {
     //this.dialogRef = thisDialogRef;
     this.dialog = dialog;
     this.loginService = loginService;
-
+    //this.isExtra = data.isExtra
     //creation of formControls from _builder
     this.d_ordine = _builder.control(new Date(), Validators.required);
     this.n_ordine = _builder.control(0);
     this.b_urgente = _builder.control(false);
-    this.b_extra = _builder.control(false);
+    //this.b_extra = _builder.control(this.isExtra);
+    this.isExtra = this.data.isExtra;
     this.b_validato = _builder.control(false);
     this.d_validato = _builder.control("");
     this.note = _builder.control("");
@@ -130,7 +133,7 @@ export class AddOrderDialogComponent implements OnInit {
     this.newOrder = {
       id: "",
       anno: this.d_ordine.value.getFullYear(),
-      b_extra: this.b_extra.value,
+      b_extra: this.isExtra,
       b_urgente:this.b_urgente.value,
       b_validato: this.b_validato.value,
       d_ordine: this.formatDate(this.d_ordine.value.toLocaleString('it-IT').split(",", 2)[0]),
@@ -209,7 +212,7 @@ export class AddOrderDialogComponent implements OnInit {
     //TODO: check fields
     this.assignNewOrderValues();
     let isSubmitted = true;
-    
+
     for(var i = 0; i < this.newOrderRows.length; ++i) {
       this.newOrderRows[i].username = this.newOrder.username
     }

@@ -1,16 +1,18 @@
 <button 
-    mat-raised-button
+    mat-mini-fab
     color="primary"
     *ngIf="!isLocked"
-    style="width: 100%;" 
+    class="mat-elevation-z0"
+    matTooltip="{{ 'Edit' | translate }}"
     (click)="openEditOrderDialog($event)">
-    {{ 'Edit' | translate }}
+        <i class="material-icons">edit</i>
 </button>
 <button 
-    mat-raised-button
-    color="accent"
+    mat-mini-fab
+    color="basic"
     *ngIf="isLocked" 
-    style="width: 100%;" 
+    class="mat-elevation-z0"
+    matTooltip="{{ 'View' | translate }}"
     (click)="openEditOrderDialog($event)">
-    {{ 'View' | translate }}
+        <i class="material-icons">remove_red_eye</i>
 </button>

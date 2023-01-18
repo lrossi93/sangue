@@ -127,11 +127,15 @@ export class ForecastComponent implements OnInit {
   }
 
   autoSizeColumns(skipHeader: boolean) {
+    /*
     const allColumnIds: string[] = [];
     this.columnApi.getColumns()!.forEach((column: { getId: () => string; }) => {
       allColumnIds.push(column.getId());
     });
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+    */
+   this.columnApi.autoSizeAllColumns(skipHeader);
+   //this.api.sizeColumnsToFit();
   }
 
   ngOnInit(): void {
@@ -189,6 +193,7 @@ export class ForecastComponent implements OnInit {
                       console.log(this.products);
                       this.createForecastGridRowData();
                       this.autoSizeColumns(false);
+                      this.api.setDomLayout('autoHeight');
                       this.isLoading = false;
                     }
                   }
@@ -460,6 +465,9 @@ export class ForecastComponent implements OnInit {
       users: this.users,        //array of users
       products: this.products   //array of products
     }
+    
+    dialogConfig.width = "95%";
+    dialogConfig.maxHeight = "500px";
 
     this.dialogRef = this.dialog.open(
       AddForecastComponent, 

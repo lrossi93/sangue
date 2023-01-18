@@ -73,7 +73,8 @@ import { OrdersReceivedCheckboxComponent } from './orders-received-checkbox/orde
 import { MarkAsReceivedDialogComponent } from './mark-as-received-dialog/mark-as-received-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from "@angular/material/icon";
-
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { ButtonOrderReportComponent } from './button-order-report/button-order-report.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { MatIconModule } from "@angular/material/icon";
     SendToCustomerDialogComponent,
     ButtonSupplyDetailsComponent,
     OrdersReceivedCheckboxComponent,
-    MarkAsReceivedDialogComponent
+    MarkAsReceivedDialogComponent,
+    ButtonOrderReportComponent
   ],
   providers: [
     AddProductComponent,
@@ -165,7 +167,8 @@ import { MatIconModule } from "@angular/material/icon";
     }),
     MatProgressSpinnerModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   bootstrap: [AppComponent]
 })

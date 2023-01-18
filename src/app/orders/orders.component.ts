@@ -8,7 +8,6 @@ import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConf
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 import { ForecastService } from '../forecast.service';
-import { LoadingCellRendererComponent } from '../loading-cell-renderer/loading-cell-renderer.component';
 import { LoginService } from '../login.service';
 import { OrderablePeriodService } from '../orderable-period.service';
 import { OrdersService } from '../orders.service';
@@ -65,6 +64,8 @@ export class OrdersComponent implements OnInit {
   loading: boolean = true;
   visibleIndex: number = 0;
   
+  //public domLayout: DomLayoutType = 'autoHeight';
+
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.id;
   };
@@ -146,6 +147,7 @@ export class OrdersComponent implements OnInit {
     this.listForecasts(this.year);
     this.listProducts();
     this.autoSizeColumns(false);
+    this.api.setDomLayout('autoHeight');
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -327,7 +329,7 @@ export class OrdersComponent implements OnInit {
         //this.createOrderGridRowData();
         //this.updateGrid();
         this.removeRow(this.getOrderGridRowDataById(id)!);
-        this.api.ensureIndexVisible(visible);
+        //this.api.ensureIndexVisible(visible);
         return;
       }
     }
@@ -438,12 +440,6 @@ export class OrdersComponent implements OnInit {
       }
     }
     else {  
-      console.log("===SETORDERLOCALLY===");
-      console.log("order");
-      console.log(order);
-      console.log("orderStatus");
-      console.log(orderStatus);
-
       //if the id is not present, append the new element
       let newOrderGridRowData = {
         id: order.id,
@@ -461,8 +457,6 @@ export class OrdersComponent implements OnInit {
         note: order.note,
         isRowLocked: false,
       }
-      console.log("===newOrderGridRowData===");
-      console.log(newOrderGridRowData);
 
       this.orderGridRowData.push(newOrderGridRowData);
       this.orders.push(order);
@@ -484,7 +478,7 @@ export class OrdersComponent implements OnInit {
           isRowLocked: false
         }]
       });
-      this.api.ensureIndexVisible(this.orderGridRowData.length - 1);
+      //this.api.ensureIndexVisible(this.orderGridRowData.length - 1);
       //this.createOrderGridRowData();
     }
   }
@@ -622,7 +616,7 @@ export class OrdersComponent implements OnInit {
   }
   */
   
-  openAddOrderDialog() {
+  openAddOrderDialog(isExtra: boolean) {
     const dialogConfig = new MatDialogConfig();
     
     dialogConfig.data = {
@@ -630,8 +624,10 @@ export class OrdersComponent implements OnInit {
       products: this.products,
       forecasts: this.forecasts,
       gg_min: this.gg_min,
-      gg_max: this.gg_max
+      gg_max: this.gg_max,
+      isExtra: isExtra
     }
+
     dialogConfig.width = "95%";
     dialogConfig.maxHeight = "500px";
         
@@ -885,9 +881,7 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           this.orders = res[1];
-          this.getAllOrderStatusRec(this.orders, 0);
-          console.log(this.orderStatusArr);
-          
+          this.getAllOrderStatusRec(this.orders, 0); 
         }
         else {
           console.error("Error retrieving orders!");

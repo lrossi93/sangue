@@ -110,6 +110,10 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       forecasts: this.filteredForecasts,
       status: this.data.status
     }
+
+    dialogConfig.width = "95%";
+    dialogConfig.maxHeight = "500px";
+
     if(this.data.status == "inviato")
       dialogConfig.disableClose = true;
     
