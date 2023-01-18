@@ -6,7 +6,13 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
 @Component({
   selector: 'app-button-cell',
   template: `
-    <button mat-raised-button color="primary" style="width: 100%" (click)="onClickOpenDialog($event)">{{ 'Delete' | translate }}</button>
+    <button 
+    mat-mini-fab 
+    color="warn" 
+    matTooltip="{{ 'Delete' | translate }}"
+    (click)="onClickOpenDialog($event)">
+      <i class="material-icons">delete</i>
+    </button>
   `
 })
 export class ButtonDeleteProductComponent implements ICellRendererAngularComp {

@@ -2,7 +2,7 @@ import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment, Product } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CellClickedEvent, CellValueChangedEvent, RowDataUpdatedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, RowDataUpdatedEvent } from 'ag-grid-community';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
@@ -58,6 +58,11 @@ export class PharmaRegistryComponent implements OnInit {
 
   isLoading: boolean = false;
   selectedRow: any;
+
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    return params.data.id;
+  };
+
 
   /*
   
@@ -123,6 +128,21 @@ export class PharmaRegistryComponent implements OnInit {
       sortable: true,
       filter: true,
     };
+  }
+
+  onGridReady = (params: { api: any; columnApi: any; }) => {
+    this.api = params.api;
+    this.columnApi = params.columnApi;
+    this.autoSizeColumns(false);
+    this.api.setDomLayout('autoHeight');
+  }
+
+  autoSizeColumns(skipHeader: boolean) {
+    const allColumnIds: string[] = [];
+    this.columnApi.getColumns()!.forEach((column: { getId: () => string; }) => {
+      allColumnIds.push(column.getId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 
   ngOnInit(): void {

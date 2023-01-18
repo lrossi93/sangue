@@ -134,8 +134,8 @@ export class ForecastComponent implements OnInit {
     });
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
     */
-   this.columnApi.autoSizeAllColumns(skipHeader);
-   //this.api.sizeColumnsToFit();
+    this.api.sizeColumnsToFit();
+    //this.columnApi.autoSizeAllColumns(skipHeader);
   }
 
   ngOnInit(): void {
@@ -221,39 +221,6 @@ export class ForecastComponent implements OnInit {
       }
     );
   }
-   /*
-  listUsers(userlevel: string): void{
-    this.usersService.listUsersPromise(userlevel).subscribe(res => {
-      if(res[0] == "KO"){
-        //instructions for when listUsers fails
-      }
-      else{
-        this.users = res[1];
-        console.log("users:");
-        console.log(this.users);
-        this.loaded++;
-        this.everythingLoaded();
-      }
-    });
-  }
-
-  listProducts(): void{
-    this.pharmaRegistryService.listProductsPromise().subscribe(res => {
-      if(res[0] == "KO"){
-        //instructions for when listProducts fails
-      }
-      else{
-        this.products = res[1];
-        console.log("products:");
-        console.log(this.products);
-        this.loaded++;
-        this.everythingLoaded();
-        this.isLoading = false;
-      }
-    });
-  }
-*/
-
 
   createForecastGridRowData() {
     this.forecastGridRowData = [];

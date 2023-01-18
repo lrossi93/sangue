@@ -72,7 +72,7 @@ export class AddForecastComponent implements OnInit{
         this.userFormControl = _builder.control('', Validators.required);
         this.qta_approvata = _builder.control(0, Validators.required);
         this.costo_unitario = _builder.control(0, Validators.required);        
-      }
+      }      
 
       this.productFormControl = _builder.control('', Validators.required);
       this.qta = _builder.control(0, Validators.required);
@@ -85,13 +85,16 @@ export class AddForecastComponent implements OnInit{
     this.products = this.data.products;
 
     //specific user settings
-    if(this.loginService.getUserCode() == "210"){
-      
-    }
-    else if(this.loginService.getUserCode() == "220"){
-      this.getUserNames();
-      this.users = this.data.users;
-    }
+    //if(this.loginService.getUserCode() == "210"){
+    this.getUserNames();
+    this.users = this.data.users;
+    console.log(this.userFormControl.value);
+    console.log(this.users);
+    //}
+    //else if(this.loginService.getUserCode() == "220"){
+    //  this.getUserNames();
+    //  this.users = this.data.users;
+    //}
 
     //filter input for users
     this.filteredUsers = this.userFormControl.valueChanges.pipe(
@@ -126,19 +129,84 @@ export class AddForecastComponent implements OnInit{
   }
 
   invalidFields(): boolean {
-    if(this.anno.value == "" ||
-    this.username == "" ||
-    this.id_prd == "" ||
-    this.qta.value == 0 ||
-    this.qta.value < 0 ||
-    this.qta.value == "" ||
-    this.qta_approvata.value == "" ||
-    this.qta_approvata.value < 0 ||
-    this.costo_unitario.value == "" ||
-    this.costo_unitario.value == 0 ||
-    !this.isAmongUsers(this.userFormControl.value) ||
-    !this.isAmongProducts(this.productFormControl.value))
-      return true;
+    //sangueaslno
+    if(this.loginService.getUserCode() == "220"){
+      if(this.anno.value == "" ){
+        console.log(1);
+        return true;
+      }
+      if(this.username == ""){
+        console.log(2);
+        return true;
+      }
+      if(this.id_prd == ""){
+        console.log(3);
+        return true;
+      }
+      if(this.qta.value == 0){
+        console.log(4);
+        return true;
+      }
+      if(this.qta.value < 0){
+        console.log(5);
+        return true;
+      }
+      if(this.qta.value == ""){
+        console.log(6);
+        return true;
+      } 
+      if(this.qta_approvata.value == ""){
+        console.log(7);
+        return true;
+      }
+      if(this.qta_approvata.value < 0){
+        console.log(8);
+        return true;
+      }
+      if(this.costo_unitario.value == ""){
+        console.log(9);
+        return true;
+      } 
+      if(this.costo_unitario.value < 0){
+        console.log(10);
+        return true;
+      }
+      if(!this.isAmongUsers(this.userFormControl.value)){
+        console.log(11);
+        return true;
+      }
+      if(!this.isAmongProducts(this.productFormControl.value)){
+        console.log(12);
+        return true;
+      }
+    }
+    //sangueasl
+    if(this.loginService.getUserCode() == "210"){
+      if(this.anno.value == "" ){
+        console.log(1);
+        return true;
+      }
+      if(this.id_prd == ""){
+        console.log(3);
+        return true;
+      }
+      if(this.qta.value == 0){
+        console.log(4);
+        return true;
+      }
+      if(this.qta.value < 0){
+        console.log(5);
+        return true;
+      }
+      if(this.qta.value == ""){
+        console.log(6);
+        return true;
+      } 
+      if(!this.isAmongProducts(this.productFormControl.value)){
+        console.log(12);
+        return true;
+      }
+    }
     return false;
   }
 
@@ -155,6 +223,15 @@ export class AddForecastComponent implements OnInit{
       }
     }
   }
+  
+  getUserName(id: string): string | null {
+    for(let i = 0; i < this.users.length; ++i){
+      if(this.users[i].id == id){
+        return this.users[i].client;
+      }
+    }
+    return null;
+  }
 
   getUserNames(): void {
     for(let i = 0; i < this.data.users.length; ++i){
@@ -169,6 +246,7 @@ export class AddForecastComponent implements OnInit{
   }
 
   isAmongUsers(inputValue: string): boolean {
+    console.log(this.userFormControl.value);
     for(var i = 0; i < this.userNames.length; ++i) {
       if(inputValue == this.userNames[i]) {
         return true;

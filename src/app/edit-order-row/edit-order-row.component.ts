@@ -120,14 +120,7 @@ export class EditOrderRowComponent implements OnInit {
       startWith(''),
       map(value => this._filterProducts(value || '')),
     );
-
-    //second filter
-/*
-    this.filteredUserOptions = this.usersFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterUsers(value || '')),
-    );
-*/ 
+    this.checkFields();
   }
 
   private _filterProducts(value: string): string[] {
@@ -204,6 +197,7 @@ export class EditOrderRowComponent implements OnInit {
     if(event.source.selected){    
     let productId = this.productDesToId(event.source.value);
     this.productsFormControl.setValue(event.source.value);
+    console.log("qta approvata: " + this.getQtaApprovataByProductId(productId));
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
     this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
     this.checkFields(event);
@@ -215,8 +209,9 @@ export class EditOrderRowComponent implements OnInit {
       if(this.forecasts[i].id_prd == id){
         //this.qtyThreshold = Math.floor(this.forecasts[i].qta_approvata / 12);
         //console.log(this.forecasts[i].qta_approvata / 12);
-        
-        return this.forecasts[i].qta_approvata;
+        if(this.forecasts[i].qta_approvata > 0){
+          return this.forecasts[i].qta_approvata;
+        }
       }
     }
     return -1;
@@ -226,7 +221,6 @@ export class EditOrderRowComponent implements OnInit {
     for(var i = 0; i < this.products.length; ++i) {
       if(this.products[i].id == id){
         console.log("minimum order quantity: " + this.products[i].min_ord);
-        
         return this.products[i].min_ord;
       }
     }
@@ -277,7 +271,7 @@ export class EditOrderRowComponent implements OnInit {
     }
   }
 
-  checkFields(event: Event) {
+  checkFields(event?: Event) {
     //console.log(event);
     
     this.isSubmitEnabled = false;

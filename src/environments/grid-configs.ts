@@ -186,7 +186,8 @@ export const forecastGridHeaders = {
 export const gridConfigForecast210 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
-      field: 'id'
+      field: 'id',
+      minWidth: 100,
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
@@ -238,7 +239,8 @@ export const gridConfigForecast210 = [
 export const gridConfigForecast220 = [
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
-      field: 'id'
+      field: 'id',
+      minWidth: 100,
     },
     { 
       headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 

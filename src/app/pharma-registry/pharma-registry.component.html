@@ -37,7 +37,7 @@
 		</p-->
 
 		<ag-grid-angular 
-			style="width: 100%; height: 100vh;"
+			style="width: 100%;"
 			class="ag-theme-material"
 			[rowData]="this.products"
 			[columnDefs]="pharmaRegistryGridConfig"
@@ -45,7 +45,9 @@
 			[gridOptions]="gridOptions"
 			[enableCellChangeFlash]="true"
 			[animateRows]="true"
-			[rowSelection]="'multiple'">
+			[alwaysShowHorizontalScroll]="true"
+			(gridReady)="onGridReady($event)"
+			[getRowId]="getRowId">
 		</ag-grid-angular>
 	</div>
 </div>
