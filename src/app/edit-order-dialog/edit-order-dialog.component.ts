@@ -159,6 +159,7 @@ export class EditOrderDialogComponent implements OnInit {
     if(qtaRicevuta > 0){
       console.log(orderRow);
       orderRow.qta_ricevuta = qtaRicevuta;
+      this.setQtaRicevutaInOrderRowGridRowData(orderRow);
       this.ordersService.setOrderRowPromise(orderRow, false).subscribe(
         res => {
           if(res[0] == "OK"){
@@ -183,6 +184,16 @@ export class EditOrderDialogComponent implements OnInit {
     else {
       qtaRicevuta = orderRow.qta_ricevuta;
     }
+  }
+
+  setQtaRicevutaInOrderRowGridRowData(orderRow: OrderRow){
+    for(var i = 0; i < this.orderRowGridRowData.length; ++i) {
+      if(this.orderRowGridRowData[i].id == orderRow.id){
+        this.orderRowGridRowData[i].qta_ricevuta = orderRow.qta_ricevuta;
+        this.orderRowGridRowData[i].isQtaRicevutaSet = true;
+      }
+    }
+    //this.createOrderRowGridRowData();
   }
 
   getOrderRowById(id: string): OrderRow | undefined {
@@ -251,6 +262,8 @@ export class EditOrderDialogComponent implements OnInit {
         forecasts: this.forecasts,
         orderRows: this.orderRows
       }
+      console.log("Sending data: ")
+      console.log(dialogConfig.data);
     }
     else {
       let editedOrderRow = this.getOrderRowById(id);
@@ -262,8 +275,12 @@ export class EditOrderDialogComponent implements OnInit {
         products: this.products,
         forecasts: this.forecasts
       }
+      console.log("Sending data: ")
+      console.log(dialogConfig.data);
     }
-          
+
+    
+    
     this.dialogRef = this.dialog.open(
       EditOrderRowComponent, 
       dialogConfig
@@ -361,9 +378,7 @@ export class EditOrderDialogComponent implements OnInit {
 
   productIdToDes(id: string): string {
     for(var i = 0; i < this.products.length; ++i){
-      console.log(this.products[i]);
       if(id == this.products[i].id) {
-        console.log(this.products[i].des);
         return this.products[i].des;
       }
     }
@@ -424,6 +439,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.isValidated = true;
     this.thisDialogRef.close({
       order: this.order,
+      orderRows: this.orderRows,
       isValidated: this.isValidated
     });
   }
@@ -435,13 +451,16 @@ export class EditOrderDialogComponent implements OnInit {
         id: this.orderRows[i].id,
         id_ordine: this.orderRows[i].id_ordine,
         n_riga: this.orderRows[i].n_riga,
+        id_prd: this.orderRows[i].id_prd,
         product_name: this.productIdToDes(this.orderRows[i].id_prd),
+        username: this.orderRows[i].username,
         full_username: "",
         qta: this.orderRows[i].qta,
         motivazione: this.orderRows[i].motivazione,
         qta_validata: this.orderRows[i].qta_validata,
         qta_ricevuta: this.orderRows[i].qta_ricevuta,
         note: this.orderRows[i].note,
+        isQtaRicevutaSet: this.orderRows[i].qta_ricevuta > 0
       }
       this.orderRowGridRowData.push(newOrderRow);
     }
@@ -454,5 +473,13 @@ export class EditOrderDialogComponent implements OnInit {
       }
     }
     this.createOrderRowGridRowData();
+  }
+
+  isQtaRicevutaSetAND(): boolean {
+    var auxBool: boolean = false;
+    for(var i = 0; i < this.orderRowGridRowData.length; ++i){
+      auxBool = auxBool && this.orderRowGridRowData[i].isQtaRicevutaSet;
+    }
+    return auxBool;
   }
 }

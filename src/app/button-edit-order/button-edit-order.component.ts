@@ -174,6 +174,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           b_sto: false
         }        
         
+        this.ordersComponent.validateOrderRowsRec(result.orderRows, 0);
+
         this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
           res => {
             if(res[0] == "OK"){

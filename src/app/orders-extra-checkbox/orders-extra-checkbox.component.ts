@@ -21,13 +21,12 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
       this.isLocked = true;
     }
     */
-
     switch(localStorage.getItem("id_profile")) {
       case '220':
         this.isLocked = this.data.b_to_supplier;
         break;
       case '210':
-        this.isLocked = (this.data.status != "inviato");
+        this.isLocked = true;//(this.data.status != "inviato" );
         break;
       case '230':
         this.isLocked = true;

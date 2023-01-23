@@ -112,13 +112,16 @@ export interface OrderRowGridRowData {
   id: string;
   id_ordine: string;
   n_riga: number;
+  id_prd: string;
   product_name: string;
+  username: string;
   full_username: string;
   qta: number;
   motivazione: string;
   qta_validata: number;
   qta_ricevuta: number;
   note: string;
+  isQtaRicevutaSet: boolean;
 }
 
 export interface OrderStatus {

@@ -73,7 +73,9 @@ export class EditOrderRowComponent implements OnInit {
     this.orderRows = data.orderRows;
     this.users = data.users;    
     this.forecasts = data.forecasts;
-    console.log(this.forecasts);
+    //console.log("Forecasts:");
+    //console.log(this.forecasts);
+    this.isMotivazioneVisible = this.orderRow.motivazione != "";
 
 
     
@@ -99,19 +101,22 @@ export class EditOrderRowComponent implements OnInit {
 
     //products
     this.products = data.products;    
-    console.log(this.products);
+    //console.log("Received:");
+    //console.log(this.data);
     
     this.productsFormControl = _builder.control(this.productIdToDes(this.orderRow.id_prd), Validators.required);
     this.productOptions = this.productsToOptions(this.products);
     
     //this.n_riga = _builder.control(this.orderRow.n_riga == null ? 0 : this.orderRow.n_riga, Validators.required);
-    console.log("RIGA: " +  this.orderRow.n_riga == "0" ? this.orderRows.length + 1 : this.orderRow.n_riga);
+    //console.log("RIGA: " +  this.orderRow.n_riga == "0" ? this.orderRows.length + 1 : this.orderRow.n_riga);
     
     this.n_riga = _builder.control(this.orderRow.n_riga == 0 ? this.orderRows.length + 1 : this.orderRow.n_riga, Validators.required);
     this.qta = _builder.control(this.orderRow.qta, Validators.required);
     this.motivazione = _builder.control(this.orderRow.motivazione, Validators.required);
     this.qta_validata = _builder.control(this.orderRow.qta_validata, Validators.required);
     this.note = _builder.control(this.orderRow.note);
+
+    this.selectProductAtStart(this.data.orderRow.id_prd);
   }
 
   ngOnInit(): void {
@@ -127,12 +132,7 @@ export class EditOrderRowComponent implements OnInit {
     const filterValue = value.toLowerCase();
     return this.productOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
-/*
-  private _filterUsers(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.userOptions.filter(option => option.toLowerCase().includes(filterValue));
-  }
-*/
+
   productsToOptions(products: Product[]): string[] {
     var productOptions: string[] = [];
     for(var i = 0; i < products.length; ++i) {
@@ -197,18 +197,22 @@ export class EditOrderRowComponent implements OnInit {
     if(event.source.selected){    
     let productId = this.productDesToId(event.source.value);
     this.productsFormControl.setValue(event.source.value);
-    console.log("qta approvata: " + this.getQtaApprovataByProductId(productId));
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
     this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
     this.checkFields(event);
     }
   }
 
+  selectProductAtStart(productId: string) {
+    this.productsFormControl.setValue(this.productIdToDes(productId));
+    this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
+    this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
+    this.checkFields();
+  }
+
   getQtaApprovataByProductId(id: string): number {
     for(var i = 0; i < this.forecasts.length; ++i) {
       if(this.forecasts[i].id_prd == id){
-        //this.qtyThreshold = Math.floor(this.forecasts[i].qta_approvata / 12);
-        //console.log(this.forecasts[i].qta_approvata / 12);
         if(this.forecasts[i].qta_approvata > 0){
           return this.forecasts[i].qta_approvata;
         }
@@ -220,7 +224,6 @@ export class EditOrderRowComponent implements OnInit {
   getMinOrdByProductId(id: string): number {
     for(var i = 0; i < this.products.length; ++i) {
       if(this.products[i].id == id){
-        console.log("minimum order quantity: " + this.products[i].min_ord);
         return this.products[i].min_ord;
       }
     }

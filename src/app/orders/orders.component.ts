@@ -253,19 +253,41 @@ export class OrdersComponent implements OnInit {
 
   setOrderRowRec(newOrderRows: OrderRow[], index: number) {
     if(index >= newOrderRows.length) {
-      console.log("Exiting setOrderRowRec()");
+      //console.log("Exiting setOrderRowRec()");
       return;
     }
     else {
       this.ordersService.setOrderRowPromise(newOrderRows[index], true).subscribe(
         res => {
           if(res[0] == "OK") {
-            console.log("You saved the following orderRow:");
-            console.log(newOrderRows[index]);
+            //console.log("You saved the following orderRow:");
+            //console.log(newOrderRows[index]);
             this.setOrderRowRec(newOrderRows, index + 1);
           }
           else {
             console.error("Error saving orderRow!");
+          }
+        }
+      );
+    }
+  }
+
+  validateOrderRowsRec(orderRows: OrderRow[], index: number) {
+    if(index >= orderRows.length){
+      console.log("Exiting validateOrderRowsRec()");
+      return;
+    }
+    else {
+      if(orderRows[index].qta_validata == 0){
+        orderRows[index].qta_validata = orderRows[index].qta;
+      }
+      this.ordersService.setOrderRowPromise(orderRows[index], false).subscribe(
+        res => {
+          if(res[0] == "OK") {
+            this.validateOrderRowsRec(orderRows, index + 1);
+          }
+          else {
+            console.error("Error validating orderRow!");
           }
         }
       );

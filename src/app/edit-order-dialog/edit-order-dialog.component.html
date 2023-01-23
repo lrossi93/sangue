@@ -1,4 +1,5 @@
-<h1 
+<h1
+mat-dialog-title 
 align="center" 
 style="text-align: center;">
     {{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}
@@ -28,8 +29,8 @@ class="typography">
       
         <!-- Position Column -->
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> {{ 'ID' | translate }} </th>
-          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          <th mat-header-cell *matHeaderCellDef align="center"> {{ 'ID' | translate }} </th>
+          <td mat-cell *matCellDef="let element" align="center"> {{element.id}} </td>
         </ng-container>
       
         <!-- Name Column -->
@@ -40,8 +41,8 @@ class="typography">
       
         <!-- Weight Column -->
         <ng-container matColumnDef="n_riga">
-          <th mat-header-cell *matHeaderCellDef> {{ 'Row number' | translate }} </th>
-          <td mat-cell *matCellDef="let element"> {{element.n_riga}} </td>
+          <th mat-header-cell *matHeaderCellDef align="center"> {{ 'Row number' | translate }} </th>
+          <td mat-cell *matCellDef="let element" align="center"> {{element.n_riga}} </td>
         </ng-container>
       
         <!-- Symbol Column -->
@@ -70,18 +71,41 @@ class="typography">
           <td mat-cell *matCellDef="let element"> {{element.qta_validata}} </td>
         </ng-container>
     
-        <ng-container matColumnDef="qta_ricevuta">
+        <!--when product has NOT been received-->
+        <ng-container 
+        *ngIf="this.data.status != 'ricevuto'"
+        matColumnDef="qta_ricevuta">
           <th mat-header-cell *matHeaderCellDef> {{ 'Received quantity' | translate }} </th>
           <td mat-cell *matCellDef="let element"> {{element.qta_ricevuta}} </td>
         </ng-container>
+
+        <!--when product has been received-->
+        <ng-container
+        matColumnDef="qta_ricevuta"
+        *ngIf="this.data.status == 'ricevuto'">
+            <th mat-header-cell *matHeaderCellDef> {{ 'Received quantity' | translate }} </th>
+            <td
+            mat-cell 
+            *matCellDef="let element">
+                <input 
+                style="max-width: 50px;"
+                matInput
+                type="number"
+                disabled="{{element.isQtaRicevutaSet}}"
+                [(ngModel)]="element.qta_ricevuta"
+                (keyup.enter)="onQtaRicevutaSet(element, element.qta_ricevuta)"
+                (keyup.tab_next)="onQtaRicevutaSet(element, element.qta_ricevuta)">
+            </td>
+          </ng-container>
     
-        <ng-container matColumnDef="note">
+        <ng-container
+        matColumnDef="note">
           <th mat-header-cell *matHeaderCellDef> {{ 'Notes' | translate }} </th>
           <td mat-cell *matCellDef="let element"> {{element.note}} </td>
         </ng-container>
 
         <ng-container matColumnDef="edit">
-            <th mat-header-cell *matHeaderCellDef></th>
+            <th mat-header-cell *matHeaderCellDef ></th>
             <td mat-cell *matCellDef="let element"> 
                 <button
                 *ngIf="!isLocked"
@@ -165,6 +189,13 @@ class="typography">
         </div>
     </mat-card--> 
 </mat-dialog-content>
+
+<h5 
+*ngIf="this.isQtaRicevutaSetAND()"
+align="center" 
+style="color: red">
+    {{ 'Warning: once set, the received quantity cannot be modified' | translate}}!
+</h5>
 
 <div mat-dialog-actions align="center">
     <button 
