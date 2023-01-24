@@ -14,30 +14,37 @@
 	<h1>{{ 'Forecast registry' | translate }}</h1>
 	<div align="center">
 		<button 
-		mat-raised-button 
-		color="primary" 
-		style="width: 90%; margin: 15px;" 
+		mat-fab
+		color="primary"
+		matTooltip="{{ 'Add forecast' | translate }}"
+		style="margin: 5px;" 
 		(click)="openAddForecastDialog()">
-			{{ 'Add forecast' | translate }}
+			<i class="material-icons">playlist_add</i>
 		</button>
-		<div align="center" style=" padding: 10px; margin: 5px;">
-			<p>{{ 'Reference year' | translate }}:</p>
-			<input 
-			matInput
-			type="number" 
-			placeholder="{{'Year' | translate}}" 
-			[(ngModel)]="year" 
-			(change)="listForecasts(year)" 
-			style="width: 80%;">
-		</div>
 
 		<button 
-		mat-raised-button 
-		(click)="listForecasts(year)" 
-		style="width: 90%; margin: 15px;">
-			{{ 'List' | translate }}
+		mat-fab
+		matTooltip="{{ 'Refresh' | translate }}"
+		style="margin: 5px;"
+		color="basic"
+		(click)="listForecasts(year)">
+			<i class="material-icons">refresh</i>
 		</button>
+
+		<div align="center" style=" padding: 10px; margin: 5px;">
+			<p>
+				{{ 'Reference year' | translate }}:
+				<input 
+				matInput
+				type="number" 
+				placeholder="{{'Year' | translate}}" 
+				[(ngModel)]="year" 
+				(change)="listForecasts(year)" 
+				style="width: 100px;">
+			</p>
+		</div>		
 	</div>
+
 	<ag-grid-angular 
 		style="width: 100%;"
 		class="ag-theme-material"
@@ -46,6 +53,7 @@
 		[defaultColDef]="defaultColDef"
 		[alwaysShowHorizontalScroll]="true"
 		[gridOptions]="gridOptions"
+		[localeText]="localeText"
 		(gridReady)="onGridReady($event)"
 		[getRowId]="getRowId"
 		[animateRows]="true"

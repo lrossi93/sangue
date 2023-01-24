@@ -9,7 +9,7 @@ import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
 import { AgGridAngular } from 'ag-grid-angular';
 import { UsersService } from '../users.service';
-import { defaultColDef, gridConfigForecast210, gridConfigForecast220 } from 'src/environments/grid-configs'
+import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigForecast210, gridConfigForecast220 } from 'src/environments/grid-configs'
 import { Router } from '@angular/router';
 import { PharmaRegistryService } from '../pharma-registry.service';
 @Component({
@@ -64,6 +64,8 @@ export class ForecastComponent implements OnInit {
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.id;
   };
+
+  localeText = (environment.currentLanguage == 'it' ? AG_GRID_LOCALE_IT : AG_GRID_LOCALE_EN);
 
 /*
 
@@ -174,7 +176,7 @@ export class ForecastComponent implements OnInit {
         }
         else {
           this.forecasts = res1[1];
-          console.log(this.forecasts);
+          //console.log(this.forecasts);
           this.usersService.listUsersPromise("210").subscribe(
             res2 => {
               if(res2[0] == "KO") {
@@ -182,7 +184,7 @@ export class ForecastComponent implements OnInit {
               }
               else {
                 this.users = res2[1];
-                console.log(this.users);
+                //console.log(this.users);
                 this.pharmaRegistryService.listProductsPromise().subscribe(
                   res3 => {
                     if(res3[0] == "KO") {
@@ -190,7 +192,7 @@ export class ForecastComponent implements OnInit {
                     }
                     else {
                       this.products = res3[1];
-                      console.log(this.products);
+                      //console.log(this.products);
                       this.createForecastGridRowData();
                       this.autoSizeColumns(false);
                       this.api.setDomLayout('autoHeight');

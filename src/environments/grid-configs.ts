@@ -67,11 +67,13 @@ export const pharmaRegistryGridHeaders = {
 
 //AgGrid config for PharmaRegistryComponent and userlevel 200
 export const pharmaRegistryGridConfig = [
+  /*
   { 
     headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.ID : pharmaRegistryGridHeaders.en.ID, 
     field: 'id',
     editable: false
   },
+  */
   { 
     headerName: localeLang == 'it' ? pharmaRegistryGridHeaders.it.Code : pharmaRegistryGridHeaders.en.Code, 
     field: 'cod', 
@@ -184,108 +186,112 @@ export const forecastGridHeaders = {
 
 //AgGrid config for ForecastComponent and userlevel 210
 export const gridConfigForecast210 = [
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
-      field: 'id',
-      minWidth: 100,
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
-      field: 'anno', 
-      editable: (params: { data: { qta_approvata: string; }; })  => {
-        return (params.data.qta_approvata == "In attesa" || params.data.qta_approvata == "in attesa" || params.data.qta_approvata == "0");
-      }
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
-      field: 'product_name',
-      cellRenderer: DropdownProductsForecastComponent,
-      editable: false,
-      minWidth: 250,
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
-      field: 'qta', 
-      editable: (params: { data: { qta_approvata: string; }; })  => {
-        return (params.data.qta_approvata == "In attesa" || params.data.qta_approvata == "in attesa" || params.data.qta_approvata == "0");
-      }
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
-      field: 'note', 
-      editable: true
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
-      field: 'qta_approvata', 
-      editable: false,
-      cellRenderer: (params: { value: string | number; }) => {
-        if(params.value == "0" || params.value == null || params.value == 0) {
-          return localeLang == 'it' ? forecastGridHeaders.it.Pending : forecastGridHeaders.en.Pending;
-        }
-        else {
-          return params.value;
-        }
-      }
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
-      cellRenderer: ButtonDeleteForecastComponent,
-      autoHeight: true
+  /*
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
+    field: 'id',
+    minWidth: 100,
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
+    field: 'anno', 
+    editable: (params: { data: { qta_approvata: string; }; })  => {
+      return (params.data.qta_approvata == "In attesa" || params.data.qta_approvata == "in attesa" || params.data.qta_approvata == "0");
     }
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
+    field: 'product_name',
+    cellRenderer: DropdownProductsForecastComponent,
+    editable: false,
+    minWidth: 350,
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
+    field: 'qta', 
+    editable: (params: { data: { qta_approvata: string; }; })  => {
+      return (params.data.qta_approvata == "In attesa" || params.data.qta_approvata == "in attesa" || params.data.qta_approvata == "0");
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
+    field: 'qta_approvata', 
+    editable: false,
+    cellRenderer: (params: { value: string | number; }) => {
+      if(params.value == "0" || params.value == null || params.value == 0) {
+        return localeLang == 'it' ? forecastGridHeaders.it.Pending : forecastGridHeaders.en.Pending;
+      }
+      else {
+        return params.value;
+      }
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
+    field: 'note', 
+    editable: true
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
+    cellRenderer: ButtonDeleteForecastComponent,
+    autoHeight: true
+  }
 ];
 
 //AgGrid config for ForecastComponent and userlevel 220
 export const gridConfigForecast220 = [
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
-      field: 'id',
-      minWidth: 100,
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
-      field: 'anno', 
-      editable: false
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
-      field: 'full_username',
-      cellRenderer: DropdownUsersForecastComponent,
-      editable: false,
-      minWidth: 350,
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
-      field: 'product_name',
-      //cellRenderer: DropdownProductsForecastComponent,
-      editable: false,
-      minWidth: 250,
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
-      field: 'qta', 
-      editable: false
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
-      field: 'note', 
-      editable: true
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
-      field: 'qta_approvata', 
-      editable: true
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.CostPerUnit : forecastGridHeaders.en.CostPerUnit, 
-      field: 'costo_unitario', 
-      editable: true
-    },
-    { 
-      headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
-      cellRenderer: ButtonDeleteForecastComponent,
-      autoHeight: true
-    }
+  /*
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.ID : forecastGridHeaders.en.ID, 
+    field: 'id',
+    minWidth: 100,
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Year : forecastGridHeaders.en.Year, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.User : forecastGridHeaders.en.User, 
+    field: 'full_username',
+    cellRenderer: DropdownUsersForecastComponent,
+    editable: false,
+    minWidth: 300,
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.ProductName : forecastGridHeaders.en.ProductName, 
+    field: 'product_name',
+    //cellRenderer: DropdownProductsForecastComponent,
+    editable: false,
+    minWidth: 350,
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Quantity : forecastGridHeaders.en.Quantity, 
+    field: 'qta', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.ApprovedQuantity : forecastGridHeaders.en.ApprovedQuantity, 
+    field: 'qta_approvata', 
+    editable: true
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.CostPerUnit : forecastGridHeaders.en.CostPerUnit, 
+    field: 'costo_unitario', 
+    editable: true
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Notes : forecastGridHeaders.en.Notes, 
+    field: 'note', 
+    editable: true
+  },
+  { 
+    headerName: localeLang == 'it' ? forecastGridHeaders.it.Action : forecastGridHeaders.en.Action, 
+    cellRenderer: ButtonDeleteForecastComponent,
+    autoHeight: true
+  }
 ];
 
 //===============================================================================================================
@@ -310,7 +316,8 @@ export const orderGridHeaders = {
     SentToSupplier: "Inviato al fornitore",
     SentToCustomer: "Inviato al cliente",
     Received: "Ricevuto",
-    Report: "Report"
+    Report: "Report",
+    PDF: "PDF"
   },
   en: {
     ID: "ID",
@@ -330,16 +337,26 @@ export const orderGridHeaders = {
     SentToSupplier: "Sent to supplier",
     SentToCustomer: "Sent to customer",
     Received: "Received",
-    Report: "Report"
+    Report: "Report",
+    PDF: "PDF"
   }
 }
 
 //AgGrid config for OrdersComponent and userlevel 210
 export const gridConfigOrders210 = [
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
     editable: false
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
+    field: 'n_ordine', 
+    editable: (params: { data: { isRowLocked: boolean; }; }) => {
+      return !params.data.isRowLocked;
+    }
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
@@ -362,13 +379,6 @@ export const gridConfigOrders210 = [
       return new Date(params.value).toLocaleDateString('it-IT');
     },
     sort: 'desc'
-  },
-  { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
-    field: 'n_ordine', 
-    editable: (params: { data: { isRowLocked: boolean; }; }) => {
-      return !params.data.isRowLocked;
-    }
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
@@ -419,7 +429,7 @@ export const gridConfigOrders210 = [
     autoHeight: true
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.PDF : orderGridHeaders.en.PDF, 
     cellRenderer: ButtonOrderReportComponent,
     autoHeight: true
   }
@@ -427,10 +437,17 @@ export const gridConfigOrders210 = [
 
 //same as above but all locked
 export const gridConfigOrders210Locked = [
+  /*
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
       field: 'id', 
       editable: false
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
+    field: 'n_ordine', 
+    editable: false
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
@@ -450,11 +467,6 @@ export const gridConfigOrders210Locked = [
         return new Date(params.value).toLocaleDateString('it-IT');
       },
       sort: 'desc'
-  },
-  { 
-      headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
-      field: 'n_ordine', 
-      editable: false
   },
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
@@ -503,7 +515,7 @@ export const gridConfigOrders210Locked = [
       autoHeight: true
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.PDF : orderGridHeaders.en.PDF, 
     cellRenderer: ButtonOrderReportComponent,
     autoHeight: true
   }
@@ -511,10 +523,17 @@ export const gridConfigOrders210Locked = [
 
 //AgGrid config for OrdersComponent and userlevel 220
 export const gridConfigOrders220 = [
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
     editable: false
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
+    field: 'n_ordine', 
+    editable: true
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
@@ -535,11 +554,6 @@ export const gridConfigOrders220 = [
       return new Date(params.value).toLocaleDateString('it-IT');
     },
     sort: 'desc'
-  },
-  { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
-    field: 'n_ordine', 
-    editable: true
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
@@ -593,7 +607,7 @@ export const gridConfigOrders220 = [
     autoHeight: true
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.PDF : orderGridHeaders.en.PDF, 
     cellRenderer: ButtonOrderReportComponent,
     autoHeight: true
   }
@@ -601,9 +615,16 @@ export const gridConfigOrders220 = [
 
 //same as above but all locked
 export const gridConfigOrders220Locked = [
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
+    editable: false
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
+    field: 'n_ordine', 
     editable: false
   },
   { 
@@ -627,11 +648,6 @@ export const gridConfigOrders220Locked = [
       return new Date(params.value).toLocaleDateString('it-IT');
     },
     sort: 'desc'
-  },
-  { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
-    field: 'n_ordine', 
-    editable: false
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
@@ -685,7 +701,7 @@ export const gridConfigOrders220Locked = [
     autoHeight: true
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.Report : orderGridHeaders.en.Report, 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.PDF : orderGridHeaders.en.PDF, 
     cellRenderer: ButtonOrderReportComponent,
     autoHeight: true
   }
@@ -693,6 +709,7 @@ export const gridConfigOrders220Locked = [
 
 //AgGrid config for orderRows
 export const gridConfigOrderRows = [
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
@@ -701,6 +718,7 @@ export const gridConfigOrderRows = [
       console.log(params);
     }
   },
+  */
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id_ordine', 
@@ -747,11 +765,13 @@ export const gridConfigOrderRows = [
 //SUPPLIES
 //grid config for user 230
 export const gridConfigSupplies = [
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
     editable: false
   },
+  */
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
@@ -831,4 +851,675 @@ export const defaultColDef = {
   sortable: true,
   filter: true,
   resizable: true
+}
+
+//===============================================================================================================
+/**
+ * 
+ * GRID LOCALE
+ * 
+ */
+export const AG_GRID_LOCALE_EN = {
+  // Set Filter
+  selectAll: '(Select All)',
+  selectAllSearchResults: '(Select All Search Results)',
+  searchOoo: 'Search...',
+  blanks: '(Blanks)',
+  noMatches: 'No matches',
+
+  // Number Filter & Text Filter
+  filterOoo: 'Filter...',
+  equals: 'Equals',
+  notEqual: 'Not equal',
+  blank: 'Blank',
+  notBlank: 'Not blank',
+  empty: 'Choose One',
+
+  // Number Filter
+  lessThan: 'Less than',
+  greaterThan: 'Greater than',
+  lessThanOrEqual: 'Less than or equal',
+  greaterThanOrEqual: 'Greater than or equal',
+  inRange: 'In range',
+  inRangeStart: 'from',
+  inRangeEnd: 'to',
+
+  // Text Filter
+  contains: 'Contains',
+  notContains: 'Not contains',
+  startsWith: 'Starts with',
+  endsWith: 'Ends with',
+
+  // Date Filter
+  dateFormatOoo: 'yyyy-mm-dd',
+
+  // Filter Conditions
+  andCondition: 'AND',
+  orCondition: 'OR',
+
+  // Filter Buttons
+  applyFilter: 'Apply',
+  resetFilter: 'Reset',
+  clearFilter: 'Clear',
+  cancelFilter: 'Cancel',
+
+  // Filter Titles
+  textFilter: 'Text Filter',
+  numberFilter: 'Number Filter',
+  dateFilter: 'Date Filter',
+  setFilter: 'Set Filter',
+
+  // Side Bar
+  columns: 'Columns',
+  filters: 'Filters',
+
+  // columns tool panel
+  pivotMode: 'Pivot Mode',
+  groups: 'Row Groups',
+  rowGroupColumnsEmptyMessage: 'Drag here to set row groups',
+  values: 'Values',
+  valueColumnsEmptyMessage: 'Drag here to aggregate',
+  pivots: 'Column Labels',
+  pivotColumnsEmptyMessage: 'Drag here to set column labels',
+
+  // Header of the Default Group Column
+  group: 'Group',
+
+  // Row Drag
+  rowDragRow: 'row',
+  rowDragRows:'rows',
+
+  // Other
+  loadingOoo: 'Loading...',
+  loadingError: 'ERR',
+  noRowsToShow: 'No Rows To Show',
+  enabled: 'Enabled',
+
+  // Menu
+  pinColumn: 'Pin Column',
+  pinLeft: 'Pin Left',
+  pinRight: 'Pin Right',
+  noPin: 'No Pin',
+  valueAggregation: 'Value Aggregation',
+  noAggregation: 'None',
+  autosizeThiscolumn: 'Autosize This Column',
+  autosizeAllColumns: 'Autosize All Columns',
+  groupBy: 'Group by',
+  ungroupBy: 'Un-Group by',
+  addToValues: 'Add ${variable} to values',
+  removeFromValues: 'Remove ${variable} from values',
+  addToLabels: 'Add ${variable} to labels',
+  removeFromLabels: 'Remove ${variable} from labels',
+  resetColumns: 'Reset Columns',
+  expandAll: 'Expand All',
+  collapseAll: 'Close All',
+  copy: 'Copy',
+  ctrlC: 'Ctrl+C',
+  copyWithHeaders: 'Copy With Headers',
+  copyWithGroupHeaders: 'Copy with Group Headers',
+  paste: 'Paste',
+  ctrlV: 'Ctrl+V',
+  export: 'Export',
+  csvExport: 'CSV Export',
+  excelExport: 'Excel Export',
+
+  // Enterprise Menu Aggregation and Status Bar
+  sum: 'Sum',
+  first: 'First',
+  last: 'Last',
+  min: 'Min',
+  max: 'Max',
+  none: 'None',
+  count: 'Count',
+  avg: 'Average',
+  filteredRows: 'Filtered',
+  selectedRows: 'Selected',
+  totalRows: 'Total Rows',
+  totalAndFilteredRows: 'Rows',
+  more: 'More',
+  to: 'to',
+  of: 'of',
+  page: 'Page',
+  nextPage: 'Next Page',
+  lastPage: 'Last Page',
+  firstPage: 'First Page',
+  previousPage: 'Previous Page',
+
+  // Pivoting
+  pivotColumnGroupTotals: 'Total',
+
+  // Enterprise Menu (Charts)
+  pivotChartAndPivotMode: 'Pivot Chart & Pivot Mode',
+  pivotChart: 'Pivot Chart',
+  chartRange: 'Chart Range',
+
+  columnChart: 'Column',
+  groupedColumn: 'Grouped',
+  stackedColumn: 'Stacked',
+  normalizedColumn: '100% Stacked',
+
+  barChart: 'Bar',
+  groupedBar: 'Grouped',
+  stackedBar: 'Stacked',
+  normalizedBar: '100% Stacked',
+
+  pieChart: 'Pie',
+  pie: 'Pie',
+  doughnut: 'Doughnut',
+
+  line: 'Line',
+
+  xyChart: 'X Y (Scatter)',
+  scatter: 'Scatter',
+  bubble: 'Bubble',
+
+  areaChart: 'Area',
+  area: 'Area',
+  stackedArea: 'Stacked',
+  normalizedArea: '100% Stacked',
+
+  histogramChart: 'Histogram',
+  histogramFrequency: "Frequency",
+
+  combinationChart: 'Combination',
+  columnLineCombo: 'Column & Line',
+  AreaColumnCombo: 'Area & Column',
+
+  // Charts
+  pivotChartTitle: 'Pivot Chart',
+  rangeChartTitle: 'Range Chart',
+  settings: 'Settings',
+  data: 'Data',
+  format: 'Format',
+  categories: 'Categories',
+  defaultCategory: '(None)',
+  series: 'Series',
+  xyValues: 'X Y Values',
+  paired: 'Paired Mode',
+  axis: 'Axis',
+  navigator: 'Navigator',
+  color: 'Color',
+  thickness: 'Thickness',
+  xType: 'X Type',
+  automatic: 'Automatic',
+  category: 'Category',
+  number: 'Number',
+  time: 'Time',
+  autoRotate: 'Auto Rotate',
+  xRotation: 'X Rotation',
+  yRotation: 'Y Rotation',
+  ticks: 'Ticks',
+  width: 'Width',
+  height: 'Height',
+  length: 'Length',
+  padding: 'Padding',
+  spacing: 'Spacing',
+  chart: 'Chart',
+  title: 'Title',
+  titlePlaceholder: 'Chart title - double click to edit',
+  background: 'Background',
+  font: 'Font',
+  top: 'Top',
+  right: 'Right',
+  bottom: 'Bottom',
+  left: 'Left',
+  labels: 'Labels',
+  size: 'Size',
+  minSize: 'Minimum Size',
+  maxSize: 'Maximum Size',
+  legend: 'Legend',
+  position: 'Position',
+  markerSize: 'Marker Size',
+  markerStroke: 'Marker Stroke',
+  markerPadding: 'Marker Padding',
+  itemSpacing: 'Item Spacing',
+  itemPaddingX: 'Item Padding X',
+  itemPaddingY: 'Item Padding Y',
+  layoutHorizontalSpacing: 'Horizontal Spacing',
+  layoutVerticalSpacing: 'Vertical Spacing',
+  strokeWidth: 'Stroke Width',
+  lineDash: 'Line Dash',
+  offset: 'Offset',
+  offsets: 'Offsets',
+  tooltips: 'Tooltips',
+  callout: 'Callout',
+  markers: 'Markers',
+  shadow: 'Shadow',
+  blur: 'Blur',
+  xOffset: 'X Offset',
+  yOffset: 'Y Offset',
+  lineWidth: 'Line Width',
+  normal: 'Normal',
+  bold: 'Bold',
+  italic: 'Italic',
+  boldItalic: 'Bold Italic',
+  predefined: 'Predefined',
+  fillOpacity: 'Fill Opacity',
+  strokeOpacity: 'Line Opacity',
+  histogramBinCount: 'Bin count',
+  columnGroup: 'Column',
+  barGroup: 'Bar',
+  pieGroup: 'Pie',
+  lineGroup: 'Line',
+  scatterGroup: 'X Y (Scatter)',
+  areaGroup: 'Area',
+  histogramGroup: 'Histogram',
+  combinationGroup: 'Combination',
+  groupedColumnTooltip: 'Grouped',
+  stackedColumnTooltip: 'Stacked',
+  normalizedColumnTooltip: '100% Stacked',
+  groupedBarTooltip: 'Grouped',
+  stackedBarTooltip: 'Stacked',
+  normalizedBarTooltip: '100% Stacked',
+  pieTooltip: 'Pie',
+  doughnutTooltip: 'Doughnut',
+  lineTooltip: 'Line',
+  groupedAreaTooltip: 'Area',
+  stackedAreaTooltip: 'Stacked',
+  normalizedAreaTooltip: '100% Stacked',
+  scatterTooltip: 'Scatter',
+  bubbleTooltip: 'Bubble',
+  histogramTooltip: 'Histogram',
+  columnLineComboTooltip: 'Column & Line',
+  areaColumnComboTooltip: 'Area & Column',
+  customComboTooltip: 'Custom Combination',
+  noDataToChart: 'No data available to be charted.',
+  pivotChartRequiresPivotMode: 'Pivot Chart requires Pivot Mode enabled.',
+  chartSettingsToolbarTooltip: 'Menu',
+  chartLinkToolbarTooltip: 'Linked to Grid',
+  chartUnlinkToolbarTooltip: 'Unlinked from Grid',
+  chartDownloadToolbarTooltip: 'Download Chart',
+  seriesChartType: 'Series Chart Type',
+  seriesType: 'Series Type',
+  secondaryAxis: 'Secondary Axis',
+
+  // ARIA
+  ariaChecked: 'checked',
+  ariaColumn: 'Column',
+  ariaColumnGroup: 'Column Group',
+  ariaColumnList: 'Column List',
+  ariaColumnSelectAll: 'Toggle Select All Columns',
+  ariaDateFilterInput: 'Date Filter Input',
+  ariaDefaultListName: 'List',
+  ariaFilterColumnsInput: 'Filter Columns Input',
+  ariaFilterFromValue: 'Filter from value',
+  ariaFilterInput: 'Filter Input',
+  ariaFilterList: 'Filter List',
+  ariaFilterToValue: 'Filter to value',
+  ariaFilterValue: 'Filter Value',
+  ariaFilteringOperator: 'Filtering Operator',
+  ariaHidden: 'hidden',
+  ariaIndeterminate:'indeterminate',
+  ariaInputEditor: 'Input Editor',
+  ariaMenuColumn: 'Press CTRL ENTER to open column menu.',
+  ariaRowDeselect: 'Press SPACE to deselect this row',
+  ariaRowSelectAll: 'Press Space to toggle all rows selection',
+  ariaRowToggleSelection: 'Press Space to toggle row selection',
+  ariaRowSelect: 'Press SPACE to select this row',
+  ariaSearch: 'Search',
+  ariaSortableColumn: 'Press ENTER to sort',
+  ariaToggleVisibility: 'Press SPACE to toggle visibility',
+  ariaUnchecked: 'unchecked',
+  ariaVisible: 'visible',
+  ariaSearchFilterValues: 'Search filter values',
+
+  // ARIA Labels for Drop Zones
+
+  ariaRowGroupDropZonePanelLabel: 'Row Groups',
+  ariaValuesDropZonePanelLabel: 'Values',
+  ariaPivotDropZonePanelLabel: 'Column Labels',
+  ariaDropZoneColumnComponentDescription: 'Press DELETE to remove',
+  ariaDropZoneColumnValueItemDescription: 'Press ENTER to change the aggregation type',
+  ariaDropZoneColumnGroupItemDescription: 'Press ENTER to sort',
+  // used for aggregate drop zone, format: {aggregation}{ariaDropZoneColumnComponentAggFuncSeperator}{column name}
+  ariaDropZoneColumnComponentAggFuncSeperator: ' of ',
+  ariaDropZoneColumnComponentSortAscending: 'ascending',
+  ariaDropZoneColumnComponentSortDescending: 'descending',
+
+  // ARIA Labels for Dialogs
+  ariaLabelColumnMenu: 'Column Menu',
+  ariaLabelCellEditor: 'Cell Editor',
+  ariaLabelDialog: 'Dialog',
+  ariaLabelSelectField: 'Select Field',
+  ariaLabelTooltip: 'Tooltip',
+  ariaLabelContextMenu: 'Context Menu',
+  ariaLabelSubMenu: 'SubMenu',
+  ariaLabelAggregationFunction: 'Aggregation Function',
+
+  // Number Format (Status Bar, Pagination Panel)
+  thousandSeparator: ',',
+  decimalSeparator: '.'
+
+}
+
+export const AG_GRID_LOCALE_IT = {
+  // Set Filter
+  selectAll: '(Seleziona tutti)',
+  selectAllSearchResults: '(Seleziona tutti i risultati)',
+  searchOoo: 'Cerca...',
+  blanks: '(Vuoti)',
+  noMatches: 'Nessuna corrispondenza',
+
+  // Number Filter & Text Filter
+  filterOoo: 'Filtra...',
+  equals: 'Uguale a',
+  notEqual: 'Diverso da',
+  blank: 'Vuoto',
+  notBlank: 'Non vuoto',
+  empty: 'Scegli un filtro',
+
+  // Number Filter
+  lessThan: 'Minore di',
+  greaterThan: 'Maggiore di',
+  lessThanOrEqual: 'Minore o uguale a',
+  greaterThanOrEqual: 'Maggiore o uguale a',
+  inRange: 'Nel range',
+  inRangeStart: 'da',
+  inRangeEnd: 'a',
+
+  // Text Filter
+  contains: 'Contiene',
+  notContains: 'Non contiene',
+  startsWith: 'Inizia con',
+  endsWith: 'Finisce con',
+
+  // Date Filter
+  dateFormatOoo: 'yyyy-mm-dd',
+
+  // Filter Conditions
+  andCondition: 'AND',
+  orCondition: 'OR',
+
+  // Filter Buttons
+  applyFilter: 'Applica',
+  resetFilter: 'Reimposta',
+  clearFilter: 'Pulisci',
+  cancelFilter: 'Annulla',
+
+  // Filter Titles
+  textFilter: 'Filtro testuale',
+  numberFilter: 'Filtro numerico',
+  dateFilter: 'Filtro date',
+  setFilter: 'Imposta filtro',
+
+  // Side Bar
+  columns: 'Colonne',
+  filters: 'Filtri',
+
+  // columns tool panel
+  pivotMode: 'Modalità Pivot',
+  groups: 'Gruppi di righe',
+  rowGroupColumnsEmptyMessage: 'Trascina qui per impostare un gruppo di righe',
+  values: 'Valori',
+  valueColumnsEmptyMessage: 'Trascina qui per aggregare',
+  pivots: 'Etichette colonne',
+  pivotColumnsEmptyMessage: 'Trascina qui per applicare le etichette alle colonne',
+
+  // Header of the Default Group Column
+  group: 'Gruppo',
+
+  // Row Drag
+  rowDragRow: 'riga',
+  rowDragRows:'righe',
+
+  // Other
+  loadingOoo: 'Caricamento...',
+  loadingError: 'ERR',
+  noRowsToShow: 'Nessuna riga da mostrare',
+  enabled: 'Abilitato',
+
+  // Menu
+  pinColumn: 'Fissa colonna',
+  pinLeft: 'Fissa a sinistra',
+  pinRight: 'Fissa a destra',
+  noPin: 'Non fissare',
+  valueAggregation: 'Aggregazione di valori',
+  noAggregation: 'Nessuna',
+  autosizeThiscolumn: 'Ridimensiona automaticamente la colonna',
+  autosizeAllColumns: 'Ridimensiona automaticamente tutte le colonne',
+  groupBy: 'Raggruppa per',
+  ungroupBy: 'Non raggruppare per',
+  addToValues: 'Aggiungi ${variable} ai valori',
+  removeFromValues: 'Rimuovi ${variable} dai valori',
+  addToLabels: 'Aggiungi ${variable} alle etichette',
+  removeFromLabels: 'Rimuovi ${variable} dalle etichette',
+  resetColumns: 'Reimposta colonne',
+  expandAll: 'Espandi tutto',
+  collapseAll: 'Chiudi tutto',
+  copy: 'Copia',
+  ctrlC: 'Ctrl+C',
+  copyWithHeaders: 'Copia con intestazioni',
+  copyWithGroupHeaders: 'Copia con intestazioni di gruppo',
+  paste: 'Incolla',
+  ctrlV: 'Ctrl+V',
+  export: 'Esporta',
+  csvExport: 'Esporta come CSV',
+  excelExport: 'Esporta come Excel',
+
+  // Enterprise Menu Aggregation and Status Bar
+  sum: 'Somma',
+  first: 'Primo',
+  last: 'Ultimo',
+  min: 'Min',
+  max: 'Max',
+  none: 'Nessuno',
+  count: 'Conteggio',
+  avg: 'Media',
+  filteredRows: 'Filtrate',
+  selectedRows: 'Selezionate',
+  totalRows: 'Righe totali',
+  totalAndFilteredRows: 'Righe',
+  more: 'Altro',
+  to: 'a',
+  of: 'di',
+  page: 'Pagina',
+  nextPage: 'Pagina successiva',
+  lastPage: 'Ultima pagina',
+  firstPage: 'Prima pagina',
+  previousPage: 'Pagina precedente',
+
+  // Pivoting
+  pivotColumnGroupTotals: 'Totale',
+
+  // Enterprise Menu (Charts)
+  pivotChartAndPivotMode: 'Schema Pivot e Modalità Pivot',
+  pivotChart: 'Schema Pivot',
+  chartRange: 'Schema range',
+
+  columnChart: 'Colonna',
+  groupedColumn: 'Raggruppate',
+  stackedColumn: 'Impilate',
+  normalizedColumn: 'Impilate al 100%',
+
+  barChart: 'Barra',
+  groupedBar: 'Raggruppate',
+  stackedBar: 'Impilate',
+  normalizedBar: 'Impilate al 100%',
+
+  pieChart: 'Torta',
+  pie: 'Torta',
+  doughnut: 'Ciambella',
+
+  line: 'Linea',
+
+  xyChart: 'X Y (Dispersione)',
+  scatter: 'Dispersione',
+  bubble: 'Bolla',
+
+  areaChart: 'Area',
+  area: 'Area',
+  stackedArea: 'Impilata',
+  normalizedArea: 'Impilata al 100%',
+
+  histogramChart: 'Istogramma',
+  histogramFrequency: "Frequenza",
+
+  combinationChart: 'Combinazione',
+  columnLineCombo: 'Colonna e Linea',
+  AreaColumnCombo: 'Area & Colonna',
+
+  // Charts
+  pivotChartTitle: 'Pivot Chart',
+  rangeChartTitle: 'Range Chart',
+  settings: 'Settings',
+  data: 'Data',
+  format: 'Format',
+  categories: 'Categories',
+  defaultCategory: '(None)',
+  series: 'Series',
+  xyValues: 'X Y Values',
+  paired: 'Paired Mode',
+  axis: 'Axis',
+  navigator: 'Navigator',
+  color: 'Color',
+  thickness: 'Thickness',
+  xType: 'X Type',
+  automatic: 'Automatic',
+  category: 'Category',
+  number: 'Number',
+  time: 'Time',
+  autoRotate: 'Auto Rotate',
+  xRotation: 'X Rotation',
+  yRotation: 'Y Rotation',
+  ticks: 'Ticks',
+  width: 'Width',
+  height: 'Height',
+  length: 'Length',
+  padding: 'Padding',
+  spacing: 'Spacing',
+  chart: 'Chart',
+  title: 'Title',
+  titlePlaceholder: 'Chart title - double click to edit',
+  background: 'Background',
+  font: 'Font',
+  top: 'Top',
+  right: 'Right',
+  bottom: 'Bottom',
+  left: 'Left',
+  labels: 'Labels',
+  size: 'Size',
+  minSize: 'Minimum Size',
+  maxSize: 'Maximum Size',
+  legend: 'Legend',
+  position: 'Position',
+  markerSize: 'Marker Size',
+  markerStroke: 'Marker Stroke',
+  markerPadding: 'Marker Padding',
+  itemSpacing: 'Item Spacing',
+  itemPaddingX: 'Item Padding X',
+  itemPaddingY: 'Item Padding Y',
+  layoutHorizontalSpacing: 'Horizontal Spacing',
+  layoutVerticalSpacing: 'Vertical Spacing',
+  strokeWidth: 'Stroke Width',
+  lineDash: 'Line Dash',
+  offset: 'Offset',
+  offsets: 'Offsets',
+  tooltips: 'Tooltips',
+  callout: 'Callout',
+  markers: 'Markers',
+  shadow: 'Shadow',
+  blur: 'Blur',
+  xOffset: 'X Offset',
+  yOffset: 'Y Offset',
+  lineWidth: 'Line Width',
+  normal: 'Normal',
+  bold: 'Bold',
+  italic: 'Italic',
+  boldItalic: 'Bold Italic',
+  predefined: 'Predefined',
+  fillOpacity: 'Fill Opacity',
+  strokeOpacity: 'Line Opacity',
+  histogramBinCount: 'Bin count',
+  columnGroup: 'Column',
+  barGroup: 'Bar',
+  pieGroup: 'Pie',
+  lineGroup: 'Line',
+  scatterGroup: 'X Y (Scatter)',
+  areaGroup: 'Area',
+  histogramGroup: 'Histogram',
+  combinationGroup: 'Combination',
+  groupedColumnTooltip: 'Grouped',
+  stackedColumnTooltip: 'Stacked',
+  normalizedColumnTooltip: '100% Stacked',
+  groupedBarTooltip: 'Grouped',
+  stackedBarTooltip: 'Stacked',
+  normalizedBarTooltip: '100% Stacked',
+  pieTooltip: 'Pie',
+  doughnutTooltip: 'Doughnut',
+  lineTooltip: 'Line',
+  groupedAreaTooltip: 'Area',
+  stackedAreaTooltip: 'Stacked',
+  normalizedAreaTooltip: '100% Stacked',
+  scatterTooltip: 'Scatter',
+  bubbleTooltip: 'Bubble',
+  histogramTooltip: 'Histogram',
+  columnLineComboTooltip: 'Column & Line',
+  areaColumnComboTooltip: 'Area & Column',
+  customComboTooltip: 'Custom Combination',
+  noDataToChart: 'No data available to be charted.',
+  pivotChartRequiresPivotMode: 'Pivot Chart requires Pivot Mode enabled.',
+  chartSettingsToolbarTooltip: 'Menu',
+  chartLinkToolbarTooltip: 'Linked to Grid',
+  chartUnlinkToolbarTooltip: 'Unlinked from Grid',
+  chartDownloadToolbarTooltip: 'Download Chart',
+  seriesChartType: 'Series Chart Type',
+  seriesType: 'Series Type',
+  secondaryAxis: 'Secondary Axis',
+
+  // ARIA
+  ariaChecked: 'checked',
+  ariaColumn: 'Column',
+  ariaColumnGroup: 'Column Group',
+  ariaColumnList: 'Column List',
+  ariaColumnSelectAll: 'Toggle Select All Columns',
+  ariaDateFilterInput: 'Date Filter Input',
+  ariaDefaultListName: 'List',
+  ariaFilterColumnsInput: 'Filter Columns Input',
+  ariaFilterFromValue: 'Filter from value',
+  ariaFilterInput: 'Filter Input',
+  ariaFilterList: 'Filter List',
+  ariaFilterToValue: 'Filter to value',
+  ariaFilterValue: 'Filter Value',
+  ariaFilteringOperator: 'Filtering Operator',
+  ariaHidden: 'hidden',
+  ariaIndeterminate:'indeterminate',
+  ariaInputEditor: 'Input Editor',
+  ariaMenuColumn: 'Press CTRL ENTER to open column menu.',
+  ariaRowDeselect: 'Press SPACE to deselect this row',
+  ariaRowSelectAll: 'Press Space to toggle all rows selection',
+  ariaRowToggleSelection: 'Press Space to toggle row selection',
+  ariaRowSelect: 'Press SPACE to select this row',
+  ariaSearch: 'Search',
+  ariaSortableColumn: 'Press ENTER to sort',
+  ariaToggleVisibility: 'Press SPACE to toggle visibility',
+  ariaUnchecked: 'unchecked',
+  ariaVisible: 'visible',
+  ariaSearchFilterValues: 'Search filter values',
+
+  // ARIA Labels for Drop Zones
+
+  ariaRowGroupDropZonePanelLabel: 'Row Groups',
+  ariaValuesDropZonePanelLabel: 'Values',
+  ariaPivotDropZonePanelLabel: 'Column Labels',
+  ariaDropZoneColumnComponentDescription: 'Press DELETE to remove',
+  ariaDropZoneColumnValueItemDescription: 'Press ENTER to change the aggregation type',
+  ariaDropZoneColumnGroupItemDescription: 'Press ENTER to sort',
+  // used for aggregate drop zone, format: {aggregation}{ariaDropZoneColumnComponentAggFuncSeperator}{column name}
+  ariaDropZoneColumnComponentAggFuncSeperator: ' of ',
+  ariaDropZoneColumnComponentSortAscending: 'ascending',
+  ariaDropZoneColumnComponentSortDescending: 'descending',
+
+  // ARIA Labels for Dialogs
+  ariaLabelColumnMenu: 'Column Menu',
+  ariaLabelCellEditor: 'Cell Editor',
+  ariaLabelDialog: 'Dialog',
+  ariaLabelSelectField: 'Select Field',
+  ariaLabelTooltip: 'Tooltip',
+  ariaLabelContextMenu: 'Context Menu',
+  ariaLabelSubMenu: 'SubMenu',
+  ariaLabelAggregationFunction: 'Aggregation Function',
+
+  // Number Format (Status Bar, Pagination Panel)
+  thousandSeparator: ',',
+  decimalSeparator: '.'
 }

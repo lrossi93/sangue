@@ -24,20 +24,31 @@ style="height: 100%;"
 		<div align="center">
 			<button 
 			*ngIf="!isDateLocked"
-			mat-raised-button 
-			color="primary" 
-			style="width: 90%; margin: 5px;" 
+			mat-fab
+			style="margin: 5px;"
+			matTooltip="{{ 'Add order' | translate }}" 
+			color="primary"
 			(click)="openAddOrderDialog(false)">
-				{{ 'Add order' | translate }}
+				<i class="material-icons">playlist_add</i>
 			</button>
 
 			<button 
 			*ngIf="isDateLocked"
-			mat-raised-button 
-			color="primary" 
-			style="width: 90%; margin: 5px;" 
+			mat-fab
+			style="margin: 5px;"
+			matTooltip="{{ 'Add extra order' | translate }}"
+			color="accent"
 			(click)="openAddOrderDialog(true)">
-				{{ 'Add extra order' | translate }}
+				<i class="material-icons">playlist_add</i>
+			</button>
+			
+			<button 
+			mat-fab
+			style="margin: 5px;"
+			matTooltip="{{ 'Refresh' | translate }}" 
+			color="basic"
+			(click)="listOrders(year)">
+				<i class="material-icons">refresh</i>
 			</button>
 			
 			<p 
@@ -47,21 +58,18 @@ style="height: 100%;"
 			</p>
 
 			<div align="center" style=" padding: 10px; margin: 5px;">
-				<p>{{ 'Reference year' | translate }}:</p>
-				<input 
-				matInput 
-				type="number"
-				placeholder="{{ 'Reference year' | translate }}" 
-				[(ngModel)]="year" 
-				style="width: 50%;" 
-				(change)="listOrders(year)">
+				<p
+				style="margin: 5px;">
+					{{ 'Reference year' | translate }}:
+					<input 
+					matInput 
+					type="number"
+					placeholder="{{ 'Reference year' | translate }}" 
+					[(ngModel)]="year" 
+					style="width: 100px;" 
+					(change)="listOrders(year)">
+				</p>
 			</div>
-			<button 
-			mat-raised-button 
-			(click)="listOrders(year)" 
-			style="width: 90%; margin: 5px;">
-				{{ 'List orders' | translate }}
-			</button>
 		</div>
 	
 		<ag-grid-angular 
@@ -72,6 +80,7 @@ style="height: 100%;"
 			[defaultColDef]="defaultColDef"
 			[alwaysShowHorizontalScroll]="true"
 			[gridOptions]="gridOptions"
+			[localeText]="localeText"
 			(gridReady)="onGridReady($event)"
 			[getRowId]="getRowId"
 			[animateRows]="true">

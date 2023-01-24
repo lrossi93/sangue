@@ -8,7 +8,7 @@ import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
 import { AgGridAngular } from 'ag-grid-angular';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
-import { pharmaRegistryGridConfig } from 'src/environments/grid-configs';
+import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, pharmaRegistryGridConfig } from 'src/environments/grid-configs';
 import { Router } from '@angular/router';
 import { PharmaRegistryService } from '../pharma-registry.service';
 
@@ -63,6 +63,7 @@ export class PharmaRegistryComponent implements OnInit {
     return params.data.id;
   };
 
+  localeText = (environment.currentLanguage == 'it' ? AG_GRID_LOCALE_IT : AG_GRID_LOCALE_EN);
 
   /*
   

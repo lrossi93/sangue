@@ -75,7 +75,7 @@ export class EditOrderRowComponent implements OnInit {
     this.forecasts = data.forecasts;
     //console.log("Forecasts:");
     //console.log(this.forecasts);
-    this.isMotivazioneVisible = this.orderRow.motivazione != "";
+    this.isMotivazioneVisible = this.orderRow.motivazione != "";//TODO: sistemare qui
 
 
     

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
-import { Order, OrderGridRowData, OrderStatus, Product, SupplyGridRowData, User } from 'src/environments/environment';
-import { defaultColDef, gridConfigSupplies } from 'src/environments/grid-configs';
+import { environment, Order, OrderGridRowData, OrderStatus, Product, SupplyGridRowData, User } from 'src/environments/environment';
+import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigSupplies } from 'src/environments/grid-configs';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { UsersService } from '../users.service';
@@ -44,6 +44,8 @@ export class SuppliesComponent implements OnInit {
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.id;
   };
+
+  localeText = (environment.currentLanguage == 'it' ? AG_GRID_LOCALE_IT : AG_GRID_LOCALE_EN);
 
   constructor(
     private ordersService: OrdersService,

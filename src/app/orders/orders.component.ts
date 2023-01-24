@@ -3,8 +3,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
-import { Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
-import { defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
+import { environment, Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
+import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
 import { ForecastService } from '../forecast.service';
@@ -69,6 +69,8 @@ export class OrdersComponent implements OnInit {
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.id;
   };
+
+  localeText = (environment.currentLanguage == 'it' ? AG_GRID_LOCALE_IT : AG_GRID_LOCALE_EN);
 
   //loading animation
   //loadingCellRenderer: LoadingCellRendererComponent;

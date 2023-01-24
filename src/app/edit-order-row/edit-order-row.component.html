@@ -121,17 +121,21 @@
 
 <div mat-dialog-actions align="center">
     <button 
-	mat-raised-button 
+	mat-mini-fab
 	[disabled]="!isSubmitEnabled"
-	color="primary" 
+	color="primary"
+	matTooltip="{{ 'Submit' | translate }}"
+	style="margin: 5px;" 
 	(click)="onSubmit()">
-		{{ 'Submit' | translate }}
+		<i class="material-icons">check</i>
 	</button>
     
 	<button 
-	mat-raised-button 
+	mat-mini-fab
+	matTooltip="{{ 'Cancel' | translate }}"
+	style="margin: 5px;" 
 	matDialogClose="true" 
-	color="warn">
-		{{ 'Cancel' | translate }}
+	color="accent">
+		<i class="material-icons">close</i>
 	</button>
 </div>

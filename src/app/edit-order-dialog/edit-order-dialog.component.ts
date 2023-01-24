@@ -58,7 +58,7 @@ export class EditOrderDialogComponent implements OnInit {
   api: any;
   columnApi: any;
 
-  displayedColumns: string[] = ['id', 'n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
+  displayedColumns: string[] = ['n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {

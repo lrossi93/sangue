@@ -91,7 +91,7 @@
 
     <!--ORDERROWS-->
     <mat-card *ngFor="let orderRow of newOrderRows; let i = index" style="margin-bottom: 20px;">
-        <mat-card-title>ID: {{ i }}</mat-card-title>
+        <!--mat-card-title>ID: {{ i }}</mat-card-title-->
         <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
         <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
         <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
@@ -102,32 +102,51 @@
         <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
         <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
         <div mat-dialog-actions align="center">
-            <button mat-raised-button color="primary" (click)="openEditOrderRowDialog(orderRow.id, false)">{{ 'Edit' | translate }}</button>
-            <button mat-raised-button color="warn" (click)="openAreYouSureOrderRowDialog(i)">{{ 'Delete' | translate }}</button>
+            <button 
+            mat-mini-fab
+            matTooltip="{{ 'Edit' | translate }}" 
+            color="primary" 
+            style="margin: 5px;"
+            (click)="openEditOrderRowDialog(orderRow.id, false)">
+                <i class="material-icons">edit</i>
+            </button>
+
+            <button 
+            mat-mini-fab
+            matTooltip="{{ 'Delete' | translate }}"
+            style="margin: 5px;" 
+            color="warn" 
+            (click)="openAreYouSureOrderRowDialog(i)">
+                <i class="material-icons">delete</i>
+            </button>
         </div>
     </mat-card>
 
     <div mat-dialog-actions align="center">
     <button 
-    mat-raised-button 
+    mat-mini-fab 
+    color="basic" 
+    matTooltip="{{ 'Add row' | translate }}"
     [disabled]="!isAddRowEnabled"
     (click)="openEditOrderRowDialog('', true)">
-        {{ 'Add row' | translate }}
+        <i class="material-icons">add</i>
     </button>
     
     <button 
     *ngIf="newOrderRows.length > 0" 
-    mat-raised-button
+    mat-mini-fab
+    matTooltip="{{ 'Submit' | translate }}"
     [disabled]="!isSubmitEnabled" 
     color="primary" 
     (click)="onSubmit($event)">
-        {{ 'Submit' | translate }}
+        <i class="material-icons">check</i>
     </button>
     
     <button 
-    mat-raised-button 
-    color="warn" 
+    mat-mini-fab
+    color="accent" 
+    matTooltip="{{ 'Cancel' | translate }}"
     mat-dialog-close="true">
-        {{ 'Cancel' | translate }}
+        <i class="material-icons">close</i>
     </button>
 </div>
