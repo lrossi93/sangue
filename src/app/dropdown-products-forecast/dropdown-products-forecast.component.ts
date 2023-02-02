@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit} from '@angular/core';
+import { Component, Injectable, OnInit} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
@@ -13,7 +13,8 @@ import { LoginService } from '../login.service';
 @Component({
   selector: 'app-dropdown-products-forecast',
   templateUrl: './dropdown-products-forecast.component.html',
-  styleUrls: ['./dropdown-products-forecast.component.css']
+  styleUrls: ['./dropdown-products-forecast.component.css'],
+  providers: [PharmaRegistryService]
 })
 export class DropdownProductsForecastComponent implements ICellRendererAngularComp, OnInit {
 
@@ -42,6 +43,11 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
     this.getProducts();
     this.options = this.productNames;
     this.loginService = loginService;
+    this.pharmaRegistryService.getProducts();
+    console.log("pharmaregistry=============================");
+    
+    console.log(this.pharmaRegistryService.products);
+    
   }
 
   ngOnInit(): void {

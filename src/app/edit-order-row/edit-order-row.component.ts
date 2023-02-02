@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
-import { environment, Forecast, OrderRow, Product, User, alerts } from 'src/environments/environment';
+import { environment, Forecast, OrderRow, Product, User, translations } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 
 @Component({
@@ -268,7 +268,7 @@ export class EditOrderRowComponent implements OnInit {
     }
     
     if(this.qtyValue > this.qtyThreshold){
-      alert(environment.currentLanguage == 'it' ? alerts.it.ThresholdSurpassed : alerts.en.ThresholdSurpassed);
+      alert(environment.currentLanguage == 'it' ? translations.it.ThresholdSurpassed : translations.en.ThresholdSurpassed);
       this.isMotivazioneVisible = true;
       return;
     }

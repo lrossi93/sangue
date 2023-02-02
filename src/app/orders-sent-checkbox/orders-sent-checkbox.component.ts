@@ -1,6 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { OrdersService } from '../orders.service';
 import { OrdersComponent } from '../orders/orders.component';
@@ -19,8 +20,9 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
     private ordersService: OrdersService,
     private ordersComponent: OrdersComponent,
     private dialog: MatDialog,
+    snackbar: MatSnackBar
   ) {
-    super();
+    super(snackbar);
     this.dialog = dialog;
   }
 

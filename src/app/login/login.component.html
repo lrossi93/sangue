@@ -33,8 +33,12 @@ style="width: fit-content;">
 		{{ 'Incorrect username and\/or password' | translate }}!
 	</p>
 
-	<button mat-raised-button color="primary" (click)="login(username, password)">
-		{{ 'Login' | translate }}
+	<button 
+	mat-fab
+	color="primary" 
+	matTooltip="{{ 'Login' | translate }}"
+	(click)="login(username, password)">
+		<i class="material-icons">login</i>
 	</button>
 </mat-card>
 </div>

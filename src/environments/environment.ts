@@ -9,6 +9,8 @@ export const environment = {
   basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
   reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/',
   currentLanguage: 'it',
+  globalUsers: [],
+  globalProducts: []
 };
 
 export interface AreYouSureData {
@@ -152,12 +154,20 @@ export interface SupplyGridRowData {
   isRowLocked: boolean;
 }
 
-export const alerts = {
+export const translations = {
   it: {
-    ThresholdSurpassed: "Soglia superata! Si prega di giustificare la quantità in eccesso nel box 'Motivazione'."
+    ThresholdSurpassed: "Soglia superata! Si prega di giustificare la quantità in eccesso nel box 'Motivazione'.",
+    CreateSuccessful: "Elemento creato con successo!",
+    UpdateSuccessful: "Elemento aggiornato con successo!",
+    DeleteSuccessful: "Elemento eliminato con successo!",
+    ValidateSuccessful: "Elemento validato!",
   },
   en: {
-    ThresholdSurpassed: "Threshold surpassed! Please justify the exceeding quantity in the 'Reason' text box."
+    ThresholdSurpassed: "Threshold surpassed! Please justify the exceeding quantity in the 'Reason' text box.",
+    CreateSuccessful: "Created successfully!",
+    UpdateSuccessful: "Updated successfully!",
+    DeleteSuccessful: "Deleted successfully!",
+    ValidateSuccessful: "Validated!"
   }
 }
 

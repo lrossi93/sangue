@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
@@ -12,6 +13,7 @@ import { LoginService } from '../login.service';
 import { OrderablePeriodService } from '../orderable-period.service';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
+import { SnackbarService } from '../snackbar.service';
 import { UsersService } from '../users.service';
 
 @Component({
@@ -85,6 +87,7 @@ export class OrdersComponent implements OnInit {
     private router: Router,
     private orderablePeriodService: OrderablePeriodService,
     private forecastService: ForecastService,
+    private snackbarService: SnackbarService
   ) {    
     this.dialog = dialog;
     this.loading = true;
@@ -101,9 +104,7 @@ export class OrdersComponent implements OnInit {
           }
         }
       },
-      onCellValueChanged: (event: CellValueChangedEvent) => {     
-        console.log("aaaaaaaaaaa");
-           
+      onCellValueChanged: (event: CellValueChangedEvent) => {                
         //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         //if row is not locked and an update is received, perform update
         //TODO: se imposto una data di validazione, deve essere MAGGIORE o UGUALE alla data dell'ordine
@@ -142,6 +143,7 @@ export class OrdersComponent implements OnInit {
       }
     }
   }
+
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
@@ -212,12 +214,13 @@ export class OrdersComponent implements OnInit {
 
   addOrderAndOrderRows(newOrder: Order, newOrderRows: OrderRow[]) {
     //this.ordersService.setOrder(newOrder, true);
+    /*
     console.log("newOrder");
     console.log(newOrder);
     console.log("newOrderRows");
     console.log(newOrderRows);
     console.log("validato: "+ newOrder.b_validato ? "confermato" : "inviato");
-    
+    */
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
@@ -256,6 +259,7 @@ export class OrdersComponent implements OnInit {
   setOrderRowRec(newOrderRows: OrderRow[], index: number) {
     if(index >= newOrderRows.length) {
       //console.log("Exiting setOrderRowRec()");
+      this.snackbarService.onCreate();
       return;
     }
     else {
@@ -276,7 +280,8 @@ export class OrdersComponent implements OnInit {
 
   validateOrderRowsRec(orderRows: OrderRow[], index: number) {
     if(index >= orderRows.length){
-      console.log("Exiting validateOrderRowsRec()");
+      //console.log("Exiting validateOrderRowsRec()");
+      this.snackbarService.onValidate();
       return;
     }
     else {
@@ -354,6 +359,7 @@ export class OrdersComponent implements OnInit {
         //this.updateGrid();
         this.removeRow(this.getOrderGridRowDataById(id)!);
         //this.api.ensureIndexVisible(visible);
+        this.snackbarService.onDelete();
         return;
       }
     }
@@ -459,6 +465,7 @@ export class OrdersComponent implements OnInit {
           
           this.updateRow(this.orderGridRowData[i]);
           //this.api.ensureIndexVisible(i);
+          this.snackbarService.onUpdate();
           return;
         }
       }
@@ -504,6 +511,7 @@ export class OrdersComponent implements OnInit {
       });
       //this.api.ensureIndexVisible(this.orderGridRowData.length - 1);
       //this.createOrderGridRowData();
+      this.snackbarService.onCreate();
     }
   }
 
@@ -539,7 +547,7 @@ export class OrdersComponent implements OnInit {
     const res = this.api.applyTransaction({ update: toBeUpdated})!;
     if(isSentToSupplier)
       this.api.redrawRows(rowNodes);//necessary to update checkboxes to "disabled"
-    console.log(res);
+    //console.log(res);
   }
 
   createOrderGridRowData() {
@@ -614,31 +622,6 @@ export class OrdersComponent implements OnInit {
       }
     );
   }
-/*
-  setOrderRowLocally(orderRow: OrderRow, isAdding: boolean) {
-    if(!isAdding) {
-      for(let i = 0; i < this.orders.length; ++i) {
-        if(orderRow.id == this.orderRows[i].id) {
-          this.orderRows[i].id_ordine = orderRow.id_ordine;
-          this.orderRows[i].username = orderRow.username;
-          this.orderRows[i].n_riga = orderRow.n_riga;
-          this.orderRows[i].motivazione = orderRow.motivazione;
-          this.orderRows[i].id_prd = orderRow.id_prd;
-          this.orderRows[i].qta = orderRow.qta;
-          this.orderRows[i].qta_validata = orderRow.qta_validata;
-          this.orderRows[i].note = orderRow.note;
-          //no need to update grid here
-          //this.updateGrid();
-          return;
-        }
-      }
-    }
-    else {  
-      //if the id is not present, append the new element
-      this.orders.push(orderRow);
-    }
-  }
-  */
   
   openAddOrderDialog(isExtra: boolean) {
     const dialogConfig = new MatDialogConfig();

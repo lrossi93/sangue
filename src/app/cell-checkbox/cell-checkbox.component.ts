@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community'
+import { environment, translations } from 'src/environments/environment';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
+import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'app-cell-checkbox',
@@ -15,8 +18,7 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
   headerName: string | undefined = '';
   checked: boolean = false;
   isLocked!: boolean;
-
-  constructor( ) { 
+  constructor(private snackbar: MatSnackBar) { 
   }
 
   agInit(params: ICellRendererParams<any, any>): void {
@@ -41,6 +43,14 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
 
   refresh(params: ICellRendererParams<any, any>): boolean {
     return false;
+  }
+
+  onValueChange(event: any) {
+    this.snackbar.open(environment.currentLanguage == "it" ? translations.it.UpdateSuccessful : translations.en.UpdateSuccessful);
+  }
+
+  openSnackbar() {
+    this.snackbar.open(environment.currentLanguage == "it" ? translations.it.UpdateSuccessful : translations.en.UpdateSuccessful);
   }
 
   toggleCheckbox(event: any): void {

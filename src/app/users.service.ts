@@ -56,4 +56,19 @@ export class UsersService {
       }
     }
   }
+
+  getUsersGlobally() {
+    this.listUsersPromise("210").subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.users = res[1];
+          environment.globalUsers = res[1];
+          console.log(environment.globalUsers);
+        }
+        else{
+          console.error("Error retrieving users!");
+        }
+      }
+    );
+  }
 }

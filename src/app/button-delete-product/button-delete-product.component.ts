@@ -9,6 +9,7 @@ import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.comp
     <button 
     mat-mini-fab 
     color="warn" 
+    class="mat-elevation-z0"
     matTooltip="{{ 'Delete' | translate }}"
     (click)="onClickOpenDialog($event)">
       <i class="material-icons">delete</i>

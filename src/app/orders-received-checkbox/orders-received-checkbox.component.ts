@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { LoginService } from '../login.service';
 import { MarkAsReceivedDialogComponent } from '../mark-as-received-dialog/mark-as-received-dialog.component';
@@ -19,8 +20,9 @@ export class OrdersReceivedCheckboxComponent extends CellCheckboxComponent imple
     private ordersComponent: OrdersComponent,
     private loginService: LoginService,
     private dialog: MatDialog,
+    snackbar: MatSnackBar
   ) {
-    super();
+    super(snackbar);
     this.loginService = loginService;
   }
 

@@ -22,8 +22,22 @@ style="min-height: 100px; margin: 10%;">
         </mat-date-range-input>
         <mat-date-range-picker #picker>
           <mat-date-range-picker-actions>
-            <button mat-button matDateRangePickerCancel>{{'Cancel' | translate}}</button>
-            <button mat-raised-button color="primary" matDateRangePickerApply>{{'Submit' | translate}}</button>
+            <button 
+            mat-mini-fab
+            style="margin: 5px;"
+            color="primary"
+            matTooltip="{{'Submit' | translate}}" 
+            matDateRangePickerApply>
+              <i class="material-icons">check</i>
+            </button>
+            
+            <button 
+            mat-mini-fab
+            style="margin: 5px;"
+            matTooltip="{{'Cancel' | translate}}" 
+            matDateRangePickerCancel>
+              <i class="material-icons">close</i>
+            </button>
           </mat-date-range-picker-actions>
         </mat-date-range-picker>
       
@@ -31,6 +45,12 @@ style="min-height: 100px; margin: 10%;">
         <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">{{ 'Invalid end date' | translate }}</mat-error>
       </mat-form-field>
       <p>
-        <button mat-raised-button color="primary" (click)="picker.open()">{{'Edit' | translate}}</button>
+        <button 
+        mat-fab 
+        color="primary"
+        matTooltip="{{'Edit' | translate}}"
+        (click)="picker.open()">
+          <i class="material-icons">edit</i>
+        </button>
       </p>
 </div>

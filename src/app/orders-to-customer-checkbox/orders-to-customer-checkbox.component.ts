@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { OrdersService } from '../orders.service';
 import { SendToCustomerDialogComponent } from '../send-to-customer-dialog/send-to-customer-dialog.component';
@@ -17,8 +18,9 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
     private ordersService: OrdersService,
     private suppliesComponent: SuppliesComponent,
     private dialog: MatDialog,
+    snackbar: MatSnackBar
   ) {
-    super();
+    super(snackbar);
     this.dialog = dialog;
   }
 
@@ -81,6 +83,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
                 for(var i = 0; i < this.suppliesComponent.orderStatusArr.length; ++i) {
                   if(this.data.id == this.suppliesComponent.orderStatusArr[i].id_order) {
                     this.suppliesComponent.orderStatusArr[i].status = "inviato al cliente";
+                    this.openSnackbar();
                     break;
                   }
                 }

@@ -7,7 +7,7 @@ import { LoginService } from '../login.service';
   styleUrls: ['./logged.component.css']
 })
 export class LoggedComponent implements OnInit {
-
+  //TODO: DELETEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeee
   constructor(public loginService: LoginService) { }
 
   ngOnInit(): void {

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
@@ -12,6 +11,7 @@ import { UsersService } from '../users.service';
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigForecast210, gridConfigForecast220 } from 'src/environments/grid-configs'
 import { Router } from '@angular/router';
 import { PharmaRegistryService } from '../pharma-registry.service';
+import { SnackbarService } from '../snackbar.service';
 @Component({
   selector: 'app-forecast',
   templateUrl: './forecast.component.html',
@@ -73,13 +73,13 @@ export class ForecastComponent implements OnInit {
 
 */
   constructor(
-    private http: HttpClient,
     public loginService: LoginService,
     private forecastService: ForecastService,
     private pharmaRegistryService: PharmaRegistryService,
     private dialog: MatDialog,
     private usersService: UsersService,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
     ) { 
     //columnDef
     switch(this.loginService.getProfile()){
@@ -90,6 +90,14 @@ export class ForecastComponent implements OnInit {
         this.forecastGridConfig = gridConfigForecast220;
         break;
     }
+
+    if(environment.globalUsers.length == 0) {
+      //get users and populate globalUsers
+      this.usersService.getUsersGlobally();
+    }
+    if(environment.globalProducts.length == 0) {
+      this.pharmaRegistryService.getProductsGlobally();
+    }    
     
     //gridOptions
     this.gridOptions = {
@@ -102,7 +110,7 @@ export class ForecastComponent implements OnInit {
         //console.log(event);
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {
-        console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         this.setForecast(
           event.data.id,
           event.data.anno,
@@ -113,7 +121,7 @@ export class ForecastComponent implements OnInit {
           event.data.qta_approvata,
           event.data.costo_unitario
         );
-        console.log("changed!");
+        //console.log("changed!");
         
         //this.updateGrid();
       }
@@ -214,7 +222,7 @@ export class ForecastComponent implements OnInit {
       res => {
         //console.log(res);
         if(res[0] == "KO"){
-          //instructions for when listforecasts fails
+          console.error("Error retrieving forecasts!");
         }
         else{ 
           this.forecasts = res[1];
@@ -241,8 +249,8 @@ export class ForecastComponent implements OnInit {
       };
       this.forecastGridRowData.push(newForecastGridRowData);
     }
-    console.log("forecastGridRowData");
-    console.log(this.forecastGridRowData);
+    //console.log("forecastGridRowData");
+    //console.log(this.forecastGridRowData);
   }
 
   getFullUsernameById(id: string): string {
@@ -313,6 +321,7 @@ export class ForecastComponent implements OnInit {
           costo_unitario: costo_unitario
         }
         this.addLocally(newForecast);
+        this.snackbarService.onCreate();
       }
     );
   }
@@ -358,6 +367,7 @@ export class ForecastComponent implements OnInit {
         res => {
           console.log("forecast with id " + res[1] + " successfully removed!");
           this.rmLocally(id);
+          this.snackbarService.onDelete();
         }
       );
     }
@@ -493,7 +503,7 @@ export class ForecastComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe((result: {id: string, isSubmitted: boolean}) =>{
       if(result !== undefined && result.isSubmitted){
         this.rmForecast(result.id);
-        this.updateGrid();
+        //this.updateGrid();
       }
     });
   }

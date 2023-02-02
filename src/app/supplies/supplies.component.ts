@@ -5,6 +5,7 @@ import { environment, Order, OrderGridRowData, OrderStatus, Product, SupplyGridR
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigSupplies } from 'src/environments/grid-configs';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
+import { SnackbarService } from '../snackbar.service';
 import { UsersService } from '../users.service';
 
 @Component({
@@ -51,6 +52,7 @@ export class SuppliesComponent implements OnInit {
     private ordersService: OrdersService,
     private pharmaRegistryService: PharmaRegistryService,
     private usersService: UsersService,
+    private snackbarService: SnackbarService
   ) { 
     this.gridOptions = {
       //functions for managing the grid
@@ -271,7 +273,8 @@ export class SuppliesComponent implements OnInit {
 
     const res = this.api.applyTransaction({ update: toBeUpdated})!;
     //this.api.redrawRows(rowNodes);
-    console.log(res);
+    //console.log(res);
+    this.snackbarService.onUpdate();
   }
 }
 

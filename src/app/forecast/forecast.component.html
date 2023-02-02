@@ -45,18 +45,19 @@
 		</div>		
 	</div>
 
-	<ag-grid-angular 
-		style="width: 100%;"
-		class="ag-theme-material"
-		[rowData]="forecastGridRowData"
-		[columnDefs]="forecastGridConfig"
-		[defaultColDef]="defaultColDef"
-		[alwaysShowHorizontalScroll]="true"
-		[gridOptions]="gridOptions"
-		[localeText]="localeText"
-		(gridReady)="onGridReady($event)"
-		[getRowId]="getRowId"
-		[animateRows]="true"
-		>
-	</ag-grid-angular>
+		<ag-grid-angular 
+			style="width: 100%; position: sticky; top: 35px;"
+			class="ag-theme-material"
+			[rowData]="forecastGridRowData"
+			[columnDefs]="forecastGridConfig"
+			[defaultColDef]="defaultColDef"
+			[alwaysShowHorizontalScroll]="true"
+			[alwaysShowVerticalScroll]="true"
+			[gridOptions]="gridOptions"
+			[localeText]="localeText"
+			(gridReady)="onGridReady($event)"
+			[getRowId]="getRowId"
+			[animateRows]="true"
+			>
+		</ag-grid-angular>
 </div>

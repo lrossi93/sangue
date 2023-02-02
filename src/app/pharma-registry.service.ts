@@ -47,6 +47,20 @@ export class PharmaRegistryService {
     )
   }
 
+  getProductsGlobally() {
+    this.listProductsPromise().subscribe(
+      res => {
+        if(res[0] == "OK") {
+          environment.globalProducts = res[1];
+          console.log(environment.globalProducts);
+        }
+        else{
+          console.error("Error retrieving users!");
+        }
+      }
+    );
+  }
+
   setProduct(
     id: string, 
     cod: string, 

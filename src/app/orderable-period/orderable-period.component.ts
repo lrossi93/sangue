@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment, translations } from 'src/environments/environment';
 import { OrderablePeriodService } from '../orderable-period.service';
+import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'app-orderable-period',
@@ -22,7 +25,8 @@ export class OrderablePeriodComponent implements OnInit {
   currentEndDate!: Date;
 
   constructor(
-    private orderablePeriodService: OrderablePeriodService
+    private orderablePeriodService: OrderablePeriodService,
+    private snackbarService: SnackbarService
   ) { 
     this.year = new Date().getFullYear().toString();
     this.month = new Date().getMonth().toString();
@@ -47,6 +51,7 @@ export class OrderablePeriodComponent implements OnInit {
           this.gg_min = min;
           this.range.controls['end'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(max)));
           this.gg_max = max;
+          this.snackbarService.onUpdate();
         }
         else {
           console.error("Error setting orderPeriod!");

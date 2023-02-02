@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Product } from 'src/environments/environment';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
-import { PharmaRegistryService } from '../pharma-registry.service';
+import { PharmaRegistryComponent } from '../pharma-registry/pharma-registry.component';
 
 @Component({
   selector: 'app-pharma-registry-extra-checkbox',
@@ -10,9 +12,10 @@ import { PharmaRegistryService } from '../pharma-registry.service';
 export class PharmaRegistryExtraCheckboxComponent extends CellCheckboxComponent implements OnInit {
 
   constructor(
-    private pharmaRegistryService: PharmaRegistryService
+    private pharmaRegistry: PharmaRegistryComponent,
+    snackbar: MatSnackBar
   ) {
-    super();
+    super(snackbar);
   }
 
   ngOnInit(): void {
@@ -20,22 +23,24 @@ export class PharmaRegistryExtraCheckboxComponent extends CellCheckboxComponent 
 
   override toggleCheckbox(event: any): void {
     this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
-    console.log("current checkbox value: " + this.currentValue);
+    //console.log("current checkbox value: " + this.currentValue);
 
-    this.pharmaRegistryService.setProduct(
-      this.data.id,
-      this.data.cod,
-      this.data.des,
-      this.data.unita,
-      this.data.confezionamento,
-      this.data.multiplo_confezionamento,
-      this.data.multiplo_imballo,
-      this.data.attivo,
-      this.currentValue,  //set the current value of the checkbox
-      this.data.min_ord,
-      this.data.valido_da,
-      this.data.valido_a,
-      this.data.isAdding,
-    );
+    let newProduct: Product = {
+      id: this.data.id,
+      cod: this.data.cod,
+      des: this.data.des,
+      unita: this.data.unita,
+      confezionamento: this.data.confezionamento,
+      multiplo_confezionamento: this.data.multiplo_confezionamento,
+      multiplo_imballo: this.data.multiplo_imballo,
+      attivo: this.data.attivo,
+      extra: this.currentValue,
+      min_ord: this.data.min_ord,
+      valido_da: this.data.valido_da,
+      valido_a: this.data.valido_a,
+      ord: this.data.ord
+    }
+    
+    this.pharmaRegistry.setProduct(newProduct, false);
   }
 }

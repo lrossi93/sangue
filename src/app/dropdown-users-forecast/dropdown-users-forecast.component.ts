@@ -8,11 +8,12 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs';
 import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
+import { WelcomeComponent } from '../welcome/welcome.component';
 
 @Component({
   selector: 'app-dropdown-users-forecast',
   templateUrl: './dropdown-users-forecast.component.html',
-  styleUrls: ['./dropdown-users-forecast.component.css']
+  styleUrls: ['./dropdown-users-forecast.component.css'],
 })
 export class DropdownUsersForecastComponent implements ICellRendererAngularComp, OnInit {
 
@@ -43,7 +44,12 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
     
     //retrieve product names
     this.getUsers('210');
-    
+    /*
+    this.users = environment.globalUsers;
+    console.log(this.users);
+    this.getUserNames();
+    this.assignUserName();
+    */
     this.options = this.userNames;
     this.loginService = loginService;
 
@@ -56,6 +62,9 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
         this.formControl = new UntypedFormControl({value: this.userName, disabled: false});
         break;
     }
+
+    //console.log(environment.globalUsers);
+    
   }
 
   ngOnInit(): void {
@@ -68,6 +77,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
   }
 
   agInit(params: ICellRendererParams<any, any>): void {
+    //console.log(params.data);
     this.data = params.data;
     this.value = params.value; //user id
   }
@@ -89,6 +99,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
   }
 
   getUserNames(): void {
+    console.log(this.users);
     for(let i = 0; i < this.users.length; ++i){
       this.userNames.push(this.users[i].client);
     }

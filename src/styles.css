@@ -39,9 +39,9 @@ nav{
 	background-color: #33AAFF;
 	position: sticky;
 	top: 0;
-	padding: 15px;
+	padding: 5px;
 	z-index: 1;
-	max-height: 40px;
+	max-height: 35px;
 }
 
 section{
@@ -73,6 +73,8 @@ a {
 	cursor: pointer;
 }
 
-ag-grid-angular{
-	
+.ag-div{
+	position: fixed;
+	top: 35px;
+	z-index: 100;
 }

@@ -17,11 +17,12 @@
 		<p
 		align="center">
 			<button
-				mat-raised-button 
-				color="primary" 
-				(click)="openAddProductDialog()"
-				style="width: 90%; margin: 15px;">
-					{{ 'Add product' | translate }}
+			mat-fab
+			style="margin: 5px;"
+			matTooltip="{{ 'Add product' | translate }}" 
+			color="primary"
+			(click)="openAddProductDialog()">
+				<i class="material-icons">playlist_add</i>
 			</button>
 		</p>
 
@@ -43,7 +44,6 @@
 			[columnDefs]="pharmaRegistryGridConfig"
 			[defaultColDef]="defaultColDef"
 			[gridOptions]="gridOptions"
-			[enableCellChangeFlash]="true"
 			[animateRows]="true"
 			[alwaysShowHorizontalScroll]="true"
 			[localeText]="localeText"

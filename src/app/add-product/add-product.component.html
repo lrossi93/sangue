@@ -89,6 +89,19 @@
 </div>
 
 <div mat-dialog-actions align="center">
-	<button mat-raised-button (click)="onSubmit()">{{ 'Submit' | translate }}</button>
-	<button mat-raised-button mat-dialog-close color="primary">{{ 'Cancel' | translate }}</button>
+	<button 
+	mat-mini-fab
+	color="primary" 
+	matTooltip="{{ 'Submit' | translate }}"
+	(click)="onSubmit()">
+		<i class="material-icons">check</i>
+	</button>
+	
+	<button 
+	mat-mini-fab 
+	mat-dialog-close
+	matTooltip="{{ 'Cancel' | translate }}" 
+	color="accent">
+		<i class="material-icons">close</i>
+	</button>
 </div>

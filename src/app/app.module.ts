@@ -53,12 +53,12 @@ import { DropdownUsersOrdersComponent } from './dropdown-users-orders/dropdown-u
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { OrdersExtraCheckboxComponent } from './orders-extra-checkbox/orders-extra-checkbox.component';
+import OrdersExtraCheckboxComponent from './orders-extra-checkbox/orders-extra-checkbox.component';
 import { OrdersUrgentCheckboxComponent } from './orders-urgent-checkbox/orders-urgent-checkbox.component';
 import { OrdersValidatedCheckboxComponent } from './orders-validated-checkbox/orders-validated-checkbox.component';
 import { PharmaRegistryActiveCheckboxComponent } from './pharma-registry-active-checkbox/pharma-registry-active-checkbox.component';
 import { PharmaRegistryExtraCheckboxComponent } from './pharma-registry-extra-checkbox/pharma-registry-extra-checkbox.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 import { LoadingCellRendererComponent } from './loading-cell-renderer/loading-cell-renderer.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -125,7 +125,8 @@ import { ButtonOrderReportComponent } from './button-order-report/button-order-r
     ButtonSupplyDetailsComponent,
     OrdersReceivedCheckboxComponent,
     MarkAsReceivedDialogComponent,
-    ButtonOrderReportComponent
+    ButtonOrderReportComponent,
+
   ],
   providers: [
     AddProductComponent,
@@ -136,6 +137,12 @@ import { ButtonOrderReportComponent } from './button-order-report/button-order-r
       provide: MAT_DATE_LOCALE,
       useValue: 'it-IT'
     },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: 3000
+      }
+    }
   ],
   imports: [
     BrowserModule,
@@ -168,7 +175,8 @@ import { ButtonOrderReportComponent } from './button-order-report/button-order-r
     MatProgressSpinnerModule,
     MatToolbarModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   bootstrap: [AppComponent]
 })

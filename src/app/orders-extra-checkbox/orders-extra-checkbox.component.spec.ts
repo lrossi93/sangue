@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrdersExtraCheckboxComponent } from './orders-extra-checkbox.component';
+import OrdersExtraCheckboxComponent from './orders-extra-checkbox.component';
 
 describe('OrdersExtraCheckboxComponent', () => {
   let component: OrdersExtraCheckboxComponent;

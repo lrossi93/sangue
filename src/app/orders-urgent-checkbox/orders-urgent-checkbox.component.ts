@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { OrdersService } from '../orders.service';
 
@@ -10,9 +11,10 @@ import { OrdersService } from '../orders.service';
 export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent implements OnInit {
   loading = false;
   constructor(
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    snackbar: MatSnackBar
   ) {
-    super();
+    super(snackbar);
   }
 
   ngOnInit(): void {
@@ -72,6 +74,7 @@ export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent impleme
               if(res2[0] == "OK"){
                 this.loading = false;
                 console.log("OrderStatus set");
+                this.openSnackbar();
               }
               else {
                 console.error("Error setting order!");

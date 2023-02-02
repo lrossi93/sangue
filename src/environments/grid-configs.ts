@@ -6,7 +6,7 @@ import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/butt
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
-import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
+import OrdersExtraCheckboxComponent from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
 import { OrdersReceivedCheckboxComponent } from "src/app/orders-received-checkbox/orders-received-checkbox.component";
 import { OrdersSentCheckboxComponent } from "src/app/orders-sent-checkbox/orders-sent-checkbox.component";
 import { OrdersToCustomerCheckboxComponent } from "src/app/orders-to-customer-checkbox/orders-to-customer-checkbox.component";

@@ -11,6 +11,7 @@ import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, pharmaRegistryGridConfig } from 'src/environments/grid-configs';
 import { Router } from '@angular/router';
 import { PharmaRegistryService } from '../pharma-registry.service';
+import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'app-pharma-registry',
@@ -75,7 +76,8 @@ export class PharmaRegistryComponent implements OnInit {
     private http: HttpClient,
     private dialog: MatDialog,
     private router: Router,
-    private pharmaRegistryService: PharmaRegistryService
+    private pharmaRegistryService: PharmaRegistryService,
+    private snackbarService: SnackbarService
   )
   { 
 
@@ -205,9 +207,11 @@ export class PharmaRegistryComponent implements OnInit {
             let newProduct = product;
             newProduct.id = res[1];
             this.addLocally(newProduct);
+            this.snackbarService.onCreate();
           }
           else{
             this.setLocally(product);
+            this.snackbarService.onUpdate();
           }
         }
         else {
@@ -255,7 +259,7 @@ export class PharmaRegistryComponent implements OnInit {
       }]
     });
     */
-    console.log(this.products);
+    //console.log(this.products);
     //console.log(this.products);
     //this.updateGrid();
     this.api.ensureIndexVisible(this.products.length - 1);
@@ -266,6 +270,7 @@ export class PharmaRegistryComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           this.rmLocally(res[1]);
+          this.snackbarService.onDelete();
         }
         else {
           console.error("Error removing product with ID = " + id);
