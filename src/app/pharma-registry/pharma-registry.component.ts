@@ -87,21 +87,15 @@ export class PharmaRegistryComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        console.log(event);
         if(event.column.getColId() == "valido_a" || event.column.getColId() == "valido_da") {
-          //open dialog and pass date parameter to it
           this.openEditDateDialog(event);
         }
         if(event.column.getColId() == "action") {
-          console.log(this.api.getSelectedRows());
-          this.selectedRow = this.api.getSelectedRows();//event.rowIndex;
+          this.selectedRow = this.api.getSelectedRows();
         }
       },
 
       onCellValueChanged: (event: CellValueChangedEvent) => {
-        //console.log('onCellValueChanged\n\n\n\n');
-        //console.log(event);
-        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         this.product.id = event.data.id;
         this.product.cod = event.data.cod;
         this.product.des = event.data.des;
@@ -165,7 +159,6 @@ export class PharmaRegistryComponent implements OnInit {
     setTimeout(
       () => {
         this.api = this.agGrid.api;
-        //console.log(this.api);
       }, 300);
   }
 

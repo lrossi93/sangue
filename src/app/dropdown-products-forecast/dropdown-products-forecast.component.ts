@@ -40,14 +40,11 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
     private forecastService: ForecastService,
     private pharmaRegistryService: PharmaRegistryService
   ) { 
-    this.getProducts();
+    //this.getProducts();
+    this.products = environment.globalProducts;
+    this.getProductNames();
     this.options = this.productNames;
     this.loginService = loginService;
-    this.pharmaRegistryService.getProducts();
-    console.log("pharmaregistry=============================");
-    
-    console.log(this.pharmaRegistryService.products);
-    
   }
 
   ngOnInit(): void {
@@ -72,6 +69,8 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
         this.formControl = new UntypedFormControl({value: this.productName, disabled: true});
         break;
     }
+
+    this.assignProductName();
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -89,12 +88,14 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
+  //OK
   getProductNames(): void {
     for(let i = 0; i < this.products.length; ++i){
       this.productNames.push(this.products[i].des);
     }
   }
 
+  //non dovrebbe più servire
   getProducts(): void{
     this.loading = true;
     this.pharmaRegistryService.listProductsPromise().subscribe(res => {
@@ -114,6 +115,7 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
     for(let i = 0; i < this.products.length; ++i){
       if(this.data.id_prd == this.products[i].id){
         this.productName = this.products[i].des;
+        this.formControl.setValue(this.productName);
         return;
       }
     }
@@ -142,16 +144,5 @@ export class DropdownProductsForecastComponent implements ICellRendererAngularCo
         return this.products[i].id;
       }
     }
-  }
-
-  logData(){
-    console.log('id: ' + this.data.id);
-    console.log('anno: ' + this.data.anno);
-    console.log('username: ' + this.data.username);
-    console.log('id_prd: ' + this.data.id_prd);
-    console.log('qta: ' + this.data.qta);
-    console.log('note: ' + this.data.note);
-    console.log('qta_approvata: ' + this.data.qta_approvata);
-    console.log('costo_unitario: ' + this.data.costo_unitario);
   }
 }

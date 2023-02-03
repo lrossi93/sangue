@@ -37,16 +37,20 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
     private ordersService: OrdersService,
     private http: HttpClient
   ) { 
-    this.listUsers('210');
-     //adapt dropdown to user type
-     
+    //this.listUsers('210');
+    //adapt dropdown to user type
+    this.users = environment.globalUsers;
+    this.getUserNames();
+    this.options = this.userNames;
+    
   }
   
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
-    this.isLocked = this.data.isRowLocked;
     this.value = params.value;
 
+    this.isLocked = this.data.isRowLocked;
+    
     switch(this.loginService.getUserCode()){
       case "210":
         this.formControl = new UntypedFormControl({value: this.userName, disabled: this.isLocked});
@@ -55,6 +59,8 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
         this.formControl = new UntypedFormControl({value: this.userName, disabled: this.isLocked});
         break;
     }
+
+    this.assignUserName();
   }
   
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -77,29 +83,6 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
   
-  /*
-  getUsers(userlevel: string): void{
-    let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
-    //console.log(path);
-    
-    this.http.get<String[]>(
-      path,
-      {
-        responseType: "json"
-      }
-    ).subscribe(res => {
-      if(res[0] == "KO"){
-        alert("Error retrieving products!");
-      }
-      else{
-        this.users = res[1];
-        this.getUserNames();
-        this.assignUserName();
-      }
-    });
-  }
-  */
-
   listUsers(userlevel: string) {
     this.loading = true;
     this.usersService.listUsersPromise(userlevel)
@@ -122,6 +105,7 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
     for(let i = 0; i < this.users.length; ++i){
       if(this.data.username == this.users[i].id){
         this.userName = this.users[i].client;
+        this.formControl.setValue(this.userName);
         return;
       }
     }
@@ -143,7 +127,8 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
           d_validato: this.data.d_validato,
           note: this.data.note
         }
-        this.ordersService.setOrderPromise(updatedOrder, false).subscribe(
+        this.ordersService.setOrder(updatedOrder, false);
+        /*.subscribe(
           res => {
             if(res[0] == "OK") {
               //also set updatedOrder.username to all orderRows with
@@ -152,6 +137,7 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
             }
           }
         );
+        */
     }
   }
 

@@ -775,7 +775,8 @@ export const gridConfigSupplies = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
-    editable: false
+    editable: false,
+    minWidth: 400,
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 

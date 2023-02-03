@@ -92,6 +92,14 @@ export class OrdersComponent implements OnInit {
     this.dialog = dialog;
     this.loading = true;
 
+    if(environment.globalUsers.length == 0) {
+      //get users and populate globalUsers
+      this.usersService.getUsersGlobally();
+    }
+    if(environment.globalProducts.length == 0) {
+      this.pharmaRegistryService.getProductsGlobally();
+    }    
+
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {

@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs';
 import { ForecastService } from '../forecast.service';
 import { LoginService } from '../login.service';
-import { WelcomeComponent } from '../welcome/welcome.component';
 
 @Component({
   selector: 'app-dropdown-users-forecast',
@@ -19,7 +18,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
 
   pharmaRegistryUrl: string = environment.basePath + 'anag.php';
   forecastsUrl: string = environment.basePath + 'forecasts.php';
-  loginService!: LoginService;
+  //loginService!: LoginService;
 
   data: any;
   value: any;
@@ -37,34 +36,20 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
 
   //constructor is called when cells are hidden and then re-displayed
   constructor(
-    loginService: LoginService,
+    private loginService: LoginService,
     private forecastService: ForecastService,
     private http: HttpClient,
   ) { 
     
     //retrieve product names
-    this.getUsers('210');
-    /*
-    this.users = environment.globalUsers;
-    console.log(this.users);
-    this.getUserNames();
-    this.assignUserName();
-    */
-    this.options = this.userNames;
-    this.loginService = loginService;
-
-    //adapt dropdown to user type
-    switch(loginService.getUserCode()){
-      case "210":
-        this.formControl = new UntypedFormControl({value: this.userName, disabled: true});
-        break;
-      case "220":
-        this.formControl = new UntypedFormControl({value: this.userName, disabled: false});
-        break;
-    }
-
-    //console.log(environment.globalUsers);
+    //this.getUsers('210');
     
+    this.users = environment.globalUsers;
+    this.getUserNames();
+    //this.assignUserName();
+    
+    this.options = this.userNames;
+    //this.loginService = loginService;  
   }
 
   ngOnInit(): void {
@@ -77,9 +62,20 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
   }
 
   agInit(params: ICellRendererParams<any, any>): void {
-    //console.log(params.data);
     this.data = params.data;
     this.value = params.value; //user id
+
+    //adapt dropdown to user type
+    switch(this.loginService.getUserCode()){
+      case "210":
+        this.formControl = new UntypedFormControl({value: this.userName, disabled: true});
+        break;
+      case "220":
+        this.formControl = new UntypedFormControl({value: this.userName, disabled: false});
+        break;
+    }  
+
+    this.assignUserName();
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -98,13 +94,14 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
+  //OK
   getUserNames(): void {
-    console.log(this.users);
     for(let i = 0; i < this.users.length; ++i){
       this.userNames.push(this.users[i].client);
     }
   }
 
+  //non dovrebbe più servire
   getUsers(userlevel: string): void{
     let path = this.pharmaRegistryUrl + '?request=listUsers&id_session='+localStorage.getItem('id_session')+'&userlevel='+userlevel;
     //console.log(path);
@@ -131,6 +128,7 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
     for(let i = 0; i < this.users.length; ++i){
       if(this.data.username == this.users[i].id){
         this.userName = this.users[i].client;
+        this.formControl.setValue(this.userName);
         return;
       }
     }
@@ -160,16 +158,5 @@ export class DropdownUsersForecastComponent implements ICellRendererAngularComp,
         return this.users[i].id;
       }
     }
-  }
-
-  logData(){
-    console.log('id: ' + this.data.id);
-    console.log('anno: ' + this.data.anno);
-    console.log('username: ' + this.data.username);
-    console.log('id_prd: ' + this.data.id_prd);
-    console.log('qta: ' + this.data.qta);
-    console.log('note: ' + this.data.note);
-    console.log('qta_approvata: ' + this.data.qta_approvata);
-    console.log('costo_unitario: ' + this.data.costo_unitario);
   }
 }
