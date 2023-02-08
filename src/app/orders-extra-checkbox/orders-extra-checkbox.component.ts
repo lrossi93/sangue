@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { OrdersService } from '../orders.service';
-import { SnackbarService } from '../snackbar.service';
+import { OrdersComponent } from '../orders/orders.component';
 
 @Component({
   selector: 'app-orders-extra-checkbox',
@@ -13,6 +13,7 @@ export default class OrdersExtraCheckboxComponent extends CellCheckboxComponent 
   loading = false;
   constructor(
     private ordersService: OrdersService,
+    private ordersComponent: OrdersComponent,
     snackbar: MatSnackBar
   ) {
     super(snackbar);
@@ -60,7 +61,11 @@ export default class OrdersExtraCheckboxComponent extends CellCheckboxComponent 
       b_extra: this.currentValue, 
       b_validato: this.data.b_validato,
       d_validato: this.data.d_validato,
-      note: this.data.note
+      note: this.data.note,
+      d_consegna_prevista: "0000-00-00",
+      n_ddt: "",
+      d_ddt: "",
+      note_consegna: "",
     }
 
     let orderStatus = {
@@ -73,6 +78,8 @@ export default class OrdersExtraCheckboxComponent extends CellCheckboxComponent 
       b_sto: false
     };
 
+    //this.ordersComponent.setOrder(orderExtra, orderStatus, false);
+    
     this.ordersService.setOrderPromise(orderExtra, false).subscribe(
       res => {
         if(res[0] == "OK"){

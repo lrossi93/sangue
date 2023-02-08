@@ -68,20 +68,24 @@ export interface Order {
   id: string;
   anno: number;
   username: string;
-  d_ordine: string; //data di piazzamento dell'ordine
-  n_ordine: number; //numero dell'ordine
+  d_ordine: string;
+  n_ordine: number;
   b_urgente: boolean;
-  b_extra: boolean; //ordine in più rispetto a quello dell'anno corrente
+  b_extra: boolean;
   b_validato: boolean;
-  d_validato: string; //data di validazione dell'ordine
+  d_validato: string;
   note: string;
+  d_consegna_prevista: string;
+  n_ddt: string;
+  d_ddt: string;
+  note_consegna: string;
 }
 
 export interface OrderGridRowData {
   id: string;
   anno: number;
   username: string;
-  full_username: string; //per permettere di filtrare sullo username (client)
+  full_username: string;
   d_ordine: string;
   n_ordine: number;
   b_urgente: boolean;
@@ -91,6 +95,10 @@ export interface OrderGridRowData {
   d_validato: string;
   status: string;
   note: string;
+  d_consegna_prevista: string;
+  n_ddt: string;
+  d_ddt: string;
+  note_consegna: string;
   isRowLocked: boolean;
 }
 
@@ -161,13 +169,15 @@ export const translations = {
     UpdateSuccessful: "Elemento aggiornato con successo!",
     DeleteSuccessful: "Elemento eliminato con successo!",
     ValidateSuccessful: "Elemento validato!",
+    UrgentOrderAlert: "Dato che quest'ordine è urgente, si prega di avvertire il fornitore entro 24h.",
   },
   en: {
     ThresholdSurpassed: "Threshold surpassed! Please justify the exceeding quantity in the 'Reason' text box.",
     CreateSuccessful: "Created successfully!",
     UpdateSuccessful: "Updated successfully!",
     DeleteSuccessful: "Deleted successfully!",
-    ValidateSuccessful: "Validated!"
+    ValidateSuccessful: "Validated!",
+    UrgentOrderAlert: "Since this order is urgent, you are required to warn the supplier within 24h."
   }
 }
 

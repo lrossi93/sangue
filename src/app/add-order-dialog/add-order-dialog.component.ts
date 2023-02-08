@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
-import { Forecast, Order, OrderRow, Product, User } from 'src/environments/environment';
+import { environment, Forecast, Order, OrderRow, Product, translations, User } from 'src/environments/environment';
 import { AreYouSureOrderRowComponent } from '../are-you-sure-order-row/are-you-sure-order-row.component';
 import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.component';
 import { LoginService } from '../login.service';
@@ -85,7 +85,7 @@ export class AddOrderDialogComponent implements OnInit {
     this.d_ordine = _builder.control(new Date(), Validators.required);
     this.n_ordine = _builder.control(0);
     this.b_urgente = _builder.control(false);
-    //this.b_extra = _builder.control(this.isExtra);
+    this.b_extra = _builder.control(this.isExtra);
     this.isExtra = this.data.isExtra;
     this.b_validato = _builder.control(false);
     this.d_validato = _builder.control("");
@@ -140,7 +140,11 @@ export class AddOrderDialogComponent implements OnInit {
       d_validato: this.formatDate(this.d_validato.value.toLocaleString('it-IT').split(",", 2)[0]),
       n_ordine: this.n_ordine.value,
       note: this.note.value,
-      username: this.username
+      username: this.username,
+      d_consegna_prevista: "0000-00-00",
+      n_ddt: "",
+      d_ddt: "",
+      note_consegna: "",
     }
   }
 
@@ -219,6 +223,10 @@ export class AddOrderDialogComponent implements OnInit {
 
     if(this.newOrder.d_validato == "") {
       this.newOrder.d_validato = "0000-00-00";
+    }
+
+    if(this.b_urgente.value){
+      alert(environment.currentLanguage == 'it' ? translations.it.UrgentOrderAlert : translations.en.UrgentOrderAlert);
     }
 
     this.thisDialogRef.close({
@@ -316,14 +324,19 @@ export class AddOrderDialogComponent implements OnInit {
         note: ""
       }
 
+      console.log("OpenEditOrderRowDialog: ID = " + id);
+
       dialogConfig.data = {
         orderRow: newOrderRow,
         products: this.products,
         forecasts: this.currentUserForecasts,
-        orderRows: this.newOrderRows
+        orderRows: this.newOrderRows,
+        isUrgent: this.b_urgente.value
       }
+      console.log("OpenEditOrderRowDialog: ID = " + id);
     }
     else {
+      console.log("OpenEditOrderRowDialog: ID = " + id);
       let editedOrderRow = this.getOrderRowById(id);
       console.log(editedOrderRow);
       dialogConfig.data = {
@@ -333,10 +346,13 @@ export class AddOrderDialogComponent implements OnInit {
       }
     }
           
+    console.log("OpenEditOrderRowDialog: ID = " + id);
     this.dialogRef = this.dialog.open(
       EditOrderRowComponent, 
       dialogConfig
     );
+    
+    console.log("OpenEditOrderRowDialog: ID = " + id);
 
     this.dialogRef.afterClosed().subscribe(
       (result: { orderRow: OrderRow, isSubmitted: boolean }) => {

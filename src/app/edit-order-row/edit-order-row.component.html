@@ -59,6 +59,7 @@
 		<input
 		placeholder="{{ 'Quantity' | translate }} (max: {{qtyThreshold}})"
 		[formControl]="qta"
+		step="{{step}}"
 		matInput
 		(blur)="onBlur($event)"
 		(keyup)="checkFields($event)"
@@ -70,6 +71,7 @@
 		<input
 		placeholder="{{ 'Quantity' | translate }} (min: {{minQty}}, max: {{qtyThreshold}})"
 		[formControl]="qta"
+		step="{{step}}"
 		matInput
 		(blur)="onBlur($event)"
 		(keyup)="checkFields($event)"
@@ -81,6 +83,7 @@
 		<input
 		placeholder="{{ 'Quantity' | translate }} (min: {{minQty}})"
 		[formControl]="qta"
+		step="{{step}}"
 		matInput
 		(blur)="onBlur($event)"
 		(keyup)="checkFields($event)"
@@ -94,6 +97,7 @@
 		placeholder="{{ 'Reason' | translate }}"
 		[formControl]="motivazione"
 		matInput
+		(blur)="onBlur($event)"
 		(keyup)="checkFields($event)"
 		type="text"
 		(focus)="true">

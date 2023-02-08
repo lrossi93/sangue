@@ -50,13 +50,13 @@
         </mat-checkbox>
     </p>
 
-    <!--p>
+    <p>
         <mat-checkbox 
             labelPosition="before"
             (click)="toggleExtra()">
             {{ 'Extra' | translate }}
         </mat-checkbox>
-    </p-->
+    </p>
 
     <!--sangueaslno only-->
     <p>
@@ -89,40 +89,46 @@
     </mat-form-field>
 </div>
 
-    <!--ORDERROWS-->
-    <mat-card *ngFor="let orderRow of newOrderRows; let i = index" style="margin-bottom: 20px;">
-        <!--mat-card-title>ID: {{ i }}</mat-card-title-->
-        <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
-        <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
-        <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
-        <h5
-        *ngIf="orderRow.motivazione != null">
-            <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
-        </h5>
-        <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
-        <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
-        <div mat-dialog-actions align="center">
-            <button 
-            mat-mini-fab
-            matTooltip="{{ 'Edit' | translate }}" 
-            color="primary" 
-            style="margin: 5px;"
-            (click)="openEditOrderRowDialog(orderRow.id, false)">
-                <i class="material-icons">edit</i>
-            </button>
-
-            <button 
-            mat-mini-fab
-            matTooltip="{{ 'Delete' | translate }}"
-            style="margin: 5px;" 
-            color="warn" 
-            (click)="openAreYouSureOrderRowDialog(i)">
-                <i class="material-icons">delete</i>
-            </button>
-        </div>
-    </mat-card>
-
+<!--ORDERROWS-->
+<mat-card *ngFor="let orderRow of newOrderRows; let i = index" style="margin-bottom: 20px;">
+    <!--mat-card-title>ID: {{ i }}</mat-card-title-->
+    <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
+    <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
+    <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
+    <h5
+    *ngIf="orderRow.motivazione != null">
+        <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
+    </h5>
+    <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
+    <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
     <div mat-dialog-actions align="center">
+        <button 
+        mat-mini-fab
+        matTooltip="{{ 'Edit' | translate }}" 
+        color="primary" 
+        style="margin: 5px;"
+        (click)="openEditOrderRowDialog(orderRow.id, false)">
+            <i class="material-icons">edit</i>
+        </button>
+
+        <button 
+        mat-mini-fab
+        matTooltip="{{ 'Delete' | translate }}"
+        style="margin: 5px;" 
+        color="warn" 
+        (click)="openAreYouSureOrderRowDialog(i)">
+            <i class="material-icons">delete</i>
+        </button>
+    </div>
+</mat-card>
+
+<p 
+*ngIf="(b_urgente.value == true && note.value == '')"
+style="color: red;">
+    {{ 'An urgent order requires valid annotations' | translate }}.
+</p>
+
+<div mat-dialog-actions align="center">
     <button 
     mat-mini-fab 
     color="basic" 
@@ -133,7 +139,7 @@
     </button>
     
     <button 
-    *ngIf="newOrderRows.length > 0" 
+    *ngIf="newOrderRows.length > 0 && ((b_urgente.value == true && note.value != '') || (b_urgente.value == false))" 
     mat-mini-fab
     matTooltip="{{ 'Submit' | translate }}"
     [disabled]="!isSubmitEnabled" 

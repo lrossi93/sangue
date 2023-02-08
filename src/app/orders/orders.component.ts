@@ -22,6 +22,7 @@ import { UsersService } from '../users.service';
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit {
+  
   order: Order = {
     id: "",
     anno: 0,
@@ -32,7 +33,11 @@ export class OrdersComponent implements OnInit {
     b_extra: false,
     b_validato: false,
     d_validato: "",
-    note: ""
+    note: "",
+    d_consegna_prevista: "0000-00-00",
+    n_ddt: "",
+    d_ddt: "",
+    note_consegna: "",
   }
   orders: any = [];
   orderGridRowData: OrderGridRowData[] = [];
@@ -411,8 +416,9 @@ export class OrdersComponent implements OnInit {
   }
 
   setOrder(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
-    //set order status
-    //this.loading = true;
+    console.log("Order:");
+    console.log(order);
+
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
         if(res[0] == "KO"){
@@ -494,6 +500,10 @@ export class OrdersComponent implements OnInit {
         d_validato: order.d_validato,
         status: orderStatus.status,
         note: order.note,
+        d_consegna_prevista: "0000-00-00",
+        n_ddt: "",
+        d_ddt: "",
+        note_consegna: "",  
         isRowLocked: false,
       }
 
@@ -607,6 +617,10 @@ export class OrdersComponent implements OnInit {
         d_validato: this.orders[i].d_validato,
         status: this.orderStatusArr[i].status,
         note: this.orders[i].note,
+        d_consegna_prevista: "0000-00-00",
+        n_ddt: "",
+        d_ddt: "",
+        note_consegna: "",  
         isRowLocked: lock
       };
       this.orderGridRowData.push(newOrderGridRowData);    
@@ -724,7 +738,7 @@ export class OrdersComponent implements OnInit {
           this.order.d_ordine = result.date;
           orderStatus.status = event.data.status; //keep existing status
           orderStatus.note = "Data ordine modificata da " + localStorage.getItem('sangue_username');
-          console.log("setting: " + this.order.d_ordine);
+          //console.log("setting: " + this.order.d_ordine);
           this.setOrder(this.order, orderStatus, false);
         }
 
@@ -734,7 +748,7 @@ export class OrdersComponent implements OnInit {
           this.order.b_validato = true;
           orderStatus.status = "confermato"; //confirm status
           orderStatus.note = "Ordine confermato da " + localStorage.getItem('sangue_username');
-          console.log("setting: " + this.order.d_validato);
+          //console.log("setting: " + this.order.d_validato);
           this.setOrder(this.order, orderStatus, false);
         }
       }
@@ -901,7 +915,6 @@ export class OrdersComponent implements OnInit {
         else {
           console.error("Error retrieving orders!");
         }
-        
       }
     );
     //getAllOrderStatus, then

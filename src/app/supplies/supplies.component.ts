@@ -112,7 +112,7 @@ export class SuppliesComponent implements OnInit {
     if(i >= orders.length) {
       //this.isLoading = true;//qui continua a scaricare dati
       this.listUsers();
-      console.log(this.orderStatusArr);
+      //console.log(this.orderStatusArr);
       return;
     }
     this.ordersService.getOrderStatusPromise(orders[i].id).subscribe(
@@ -137,7 +137,7 @@ export class SuppliesComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           this.orders = res[1];
-          console.log(this.orders);
+//          console.log(this.orders);
           this.createSupplyGridRowData();
         }
         else {
@@ -167,7 +167,7 @@ export class SuppliesComponent implements OnInit {
         this.isLoading = true;//QUI FUNZIONAAAAAAAAAAAAAAAAAAAAAA
         if(res[0] == "OK") {
           this.users = res[1];
-          console.log(this.users);
+          //console.log(this.users);
           //this.isLoading = false;
           this.createSupplyGridRowData();
         }

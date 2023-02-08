@@ -54,6 +54,9 @@ export class EditOrderRowComponent implements OnInit {
 
   loginService: LoginService
   minQty: number = 0;
+  isUrgent: boolean = false;
+
+  step: number = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { 
@@ -61,7 +64,8 @@ export class EditOrderRowComponent implements OnInit {
       users: any,
       products: Product[],
       forecasts: Forecast[],
-      orderRows: OrderRow[]
+      orderRows: OrderRow[],
+      isUrgent: boolean
     },
     private dialogRef: MatDialogRef<EditOrderRowComponent>,
     private _builder: UntypedFormBuilder,
@@ -76,8 +80,10 @@ export class EditOrderRowComponent implements OnInit {
     //console.log("Forecasts:");
     //console.log(this.forecasts);
     this.isMotivazioneVisible = this.orderRow.motivazione != "";//TODO: sistemare qui
-
-
+    if(data.isUrgent){
+      this.isUrgent = data.isUrgent;
+      this.isMotivazioneVisible = true;
+    }
     
     //se sangueaslno
     if(loginService.getUserCode() == "220") {
@@ -146,7 +152,8 @@ export class EditOrderRowComponent implements OnInit {
     
     for(var i = 0; i < this.products.length; ++i){
       if(des == this.products[i].des) {
-        //console.log("found! returning product id: " + this.products[i].id);
+        console.log("step " + this.products[i].multiplo_confezionamento);
+        this.step = this.products[i].multiplo_confezionamento;
         return this.products[i].id;
       }
     }
@@ -193,6 +200,14 @@ export class EditOrderRowComponent implements OnInit {
     console.log(this.userClientToId(event.source.value));
   }
 
+  adjustQta() {
+    this.qtyValue = this.qta.value;
+    while(this.qtyValue % this.step != 0) {
+      this.qtyValue++;
+    }
+    this.qta.setValue(this.qtyValue);
+  }
+
   onProductSelected(event: any) {
     if(event.source.selected){    
     let productId = this.productDesToId(event.source.value);
@@ -208,6 +223,10 @@ export class EditOrderRowComponent implements OnInit {
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
     this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
     this.checkFields();
+  }
+
+  setQtyStepByProductId(productId: string) {
+
   }
 
   getQtaApprovataByProductId(id: string): number {
@@ -241,6 +260,7 @@ export class EditOrderRowComponent implements OnInit {
   }
 
   onSubmit() {
+    this.adjustQta();
     this.isSubmitted = true;
     this.assignOrderRowValues();
     //console.log(this.orderRow);
@@ -253,24 +273,32 @@ export class EditOrderRowComponent implements OnInit {
   }
   
   onBlur(event: Event) {
-    //console.log(event);
-    if(this.qta.value == null){
-      this.qta.setValue(0);
-      this.isMotivazioneVisible = false;
-    }
+    console.log(event);
+    {
+      if(this.qta.value == null){
+        this.qta.setValue(0);
+        this.isMotivazioneVisible = false;
+      }
 
-    this.qtyValue = this.qta.value;
-    
-    if(this.qtyThreshold == -1 || this.qtyValue <= this.qtyThreshold){
-      this.isMotivazioneVisible = false;
-      this.motivazione.setValue(null);
-      return;
-    }
-    
-    if(this.qtyValue > this.qtyThreshold){
-      alert(environment.currentLanguage == 'it' ? translations.it.ThresholdSurpassed : translations.en.ThresholdSurpassed);
-      this.isMotivazioneVisible = true;
-      return;
+      this.qtyValue = this.qta.value;
+      
+      if(this.isUrgent) {
+        this.isMotivazioneVisible = true;
+        console.log(this.isMotivazioneVisible);
+      }
+      else {
+        if(this.qtyThreshold == -1 || this.qtyValue <= this.qtyThreshold){
+          this.isMotivazioneVisible = false;
+          this.motivazione.setValue(null);
+          return;
+        }
+        
+        if(this.qtyValue > this.qtyThreshold){
+          alert(environment.currentLanguage == 'it' ? translations.it.ThresholdSurpassed : translations.en.ThresholdSurpassed);
+          this.isMotivazioneVisible = true;
+          return;
+        }
+      }
     }
   }
 
@@ -294,40 +322,48 @@ export class EditOrderRowComponent implements OnInit {
     if(this.isAmongProducts(this.productsFormControl.value) && this.n_riga.value > 0) {
       //console.log("the product exists");
       
-      //ha una soglia
-      if(this.qtyThreshold != -1 && this.minQty >= 0){
-
-        //se la soglia è stata superata, serve una motivazione
-        if(this.qta.value > this.qtyThreshold) {
-          //console.log("\tthreshold surpassed, enabling motivazione");
-
-          //non ha una motivazione --> submit disabilitato
-          if(this.motivazione.value == null || this.motivazione.value == undefined || this.motivazione.value == "") {
-            //console.log("\treason EMPTY --> disabling submit");
-            this.isSubmitEnabled = false;
-          }
-
-          //ha una motivazione --> submit abilitato
-          else if(this.motivazione.value != null && this.motivazione.value != "" && this.motivazione.value != undefined) {
-            //console.log("\treason not empty --> enabling submit");
-            this.isSubmitEnabled = true;
-          }
-        }
-
-        //se la soglia non è stata superata, non serve una motivazione MA serve vedere che sia stata superata la minQty
-        else {
-          //console.log("threshold not surpassed, enabling submit independently from motivazione");
-          if(this.qta.value >= this.minQty)
-            this.isSubmitEnabled = true;
-          else 
-            this.isSubmitEnabled = false;
+      //l'ordine è urgente
+      if(this.isUrgent){
+        if(this.motivazione.value != "" && this.motivazione.value != null){
+          this.isSubmitEnabled = true;
         }
       }
-      //non ha una soglia --> abilito submit
+      //se non è urgente
       else {
-        //console.log("threshold not set");
-        if(this.qta.value > 0 && this.qta.value >= this.minQty) {
-          this.isSubmitEnabled = true;
+        //ha una soglia
+        if(this.qtyThreshold != -1 && this.minQty >= 0){
+
+          //se la soglia è stata superata, serve una motivazione
+          if(this.qta.value > this.qtyThreshold) {
+
+            //non ha una motivazione --> submit disabilitato
+            if(this.motivazione.value == null || this.motivazione.value == undefined || this.motivazione.value == "") {
+              //console.log("\treason EMPTY --> disabling submit");
+              this.isSubmitEnabled = false;
+            }
+
+            //ha una motivazione --> submit abilitato
+            else if(this.motivazione.value != null && this.motivazione.value != "" && this.motivazione.value != undefined) {
+              //console.log("\treason not empty --> enabling submit");
+              this.isSubmitEnabled = true;
+            }
+          }
+
+          //se la soglia non è stata superata, non serve una motivazione MA serve vedere che sia stata superata la minQty
+          else {
+            //console.log("threshold not surpassed, enabling submit independently from motivazione");
+            if(this.qta.value >= this.minQty)
+              this.isSubmitEnabled = true;
+            else 
+              this.isSubmitEnabled = false;
+          }
+        }
+        //non ha una soglia --> abilito submit
+        else {
+          //console.log("threshold not set");
+          if(this.qta.value > 0 && this.qta.value >= this.minQty) {
+            this.isSubmitEnabled = true;
+          }
         }
       }
     }

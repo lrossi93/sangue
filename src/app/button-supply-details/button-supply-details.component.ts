@@ -32,7 +32,12 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
     b_extra: false,
     b_validato: false,
     d_validato: 'string', //data di validazione dell'ordine
-    note: ''
+    note: '',
+    d_consegna_prevista: "0000-00-00",
+    n_ddt: "",
+    d_ddt: "",
+    note_consegna: "",
+
   };
 
   constructor(

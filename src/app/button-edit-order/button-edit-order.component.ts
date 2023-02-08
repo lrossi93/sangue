@@ -29,7 +29,11 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     b_extra: false,
     b_validato: false,
     d_validato: 'string',
-    note: ''
+    note: '',
+    d_consegna_prevista: "0000-00-00",
+    n_ddt: "",
+    d_ddt: "",
+    note_consegna: "",
   };
   
   orderRows: OrderRow[] = [];

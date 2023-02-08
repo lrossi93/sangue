@@ -3,9 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community'
 import { environment, translations } from 'src/environments/environment';
-import { OrdersService } from '../orders.service';
-import { PharmaRegistryService } from '../pharma-registry.service';
-import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'app-cell-checkbox',

@@ -51,7 +51,7 @@ export class UsersService {
   getUserById(id: string, users: any) {
     for(var i = 0; i < users.length; ++i) {
       if(id == users[i].client) {
-        console.log("Returning " + users[i].client);
+        //console.log("Returning " + users[i].client);
         return users[i].client;
       }
     }
@@ -63,7 +63,7 @@ export class UsersService {
         if(res[0] == "OK") {
           this.users = res[1];
           environment.globalUsers = res[1];
-          console.log(environment.globalUsers);
+          //console.log(environment.globalUsers);
         }
         else{
           console.error("Error retrieving users!");

@@ -117,5 +117,7 @@
     "Add extra order": "Aggiungi un ordine extra",
     "Download report": "Scarica report",
     "View report": "Visualizza report",
-    "Refresh": "Aggiorna"
+    "Refresh": "Aggiorna",
+    "An urgent order requires valid annotations": "Un ordine urgente necessita di annotazioni valide",
+    "Forecast report": "Report delle previsioni"
 }

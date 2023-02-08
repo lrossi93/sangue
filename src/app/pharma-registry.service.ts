@@ -52,7 +52,7 @@ export class PharmaRegistryService {
       res => {
         if(res[0] == "OK") {
           environment.globalProducts = res[1];
-          console.log(environment.globalProducts);
+          //console.log(environment.globalProducts);
         }
         else{
           console.error("Error retrieving users!");

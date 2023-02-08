@@ -106,7 +106,7 @@ export class DropdownUsersOrdersComponentComponent implements ICellRendererAngul
           d_validato: this.data.d_validato,
           note: this.data.note
         }
-        this.ordersService.setOrder(updatedOrder, false);
+        //this.ordersService.setOrder(updatedOrder, false);
     }
   }
 
