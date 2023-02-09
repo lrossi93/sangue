@@ -58,7 +58,9 @@ export class EditOrderDialogComponent implements OnInit {
   api: any;
   columnApi: any;
 
-  displayedColumns: string[] = ['n_riga', 'product', 'qta', 'max_mese', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
+  displayedColumns220: string[] = ['n_riga', 'product', 'qta', 'max_mese', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
+  displayedColumns230: string[] = ['n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta',  'diff', 'note'];
+  displayedColumns: string[] = localStorage.getItem('sangue_username') == 'sanguefornitore' ? this.displayedColumns230 : this.displayedColumns220;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -100,8 +102,7 @@ export class EditOrderDialogComponent implements OnInit {
     //console.log("isvalidated?" + this.isValidated);
 
     this.userCode = this.loginService.getUserCode()!;
-
-    
+   
     this.createOrderRowGridRowData();
     //AgGrid initialization
     this.orderRowsGridConfig = gridConfigOrderRows;

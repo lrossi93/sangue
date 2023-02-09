@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { Order } from 'src/environments/environment';
+import { environment, Forecast, Order, OrderRow, Product, User } from 'src/environments/environment';
 import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
+import { ForecastService } from '../forecast.service';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { SuppliesComponent } from '../supplies/supplies.component';
@@ -16,9 +17,10 @@ import { UsersService } from '../users.service';
 })
 export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngularComp{
   data: any;
-  orderRows: any = [];
-  users: any = [];
-  products: any = [];
+  orderRows: OrderRow[] = [];
+  users: User[] = [];
+  products: Product[] = [];
+  forecasts: Forecast[] = [];
   dialogRef: any;
   dialog: MatDialog;
 
@@ -45,16 +47,23 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
     private usersService: UsersService,
     private pharmaRegistryService: PharmaRegistryService,
     private ordersService: OrdersService,
-    private suppliesComponent: SuppliesComponent
+    private forecastService: ForecastService
   ) {
     this.dialog = dialog;
    }
 
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
+    console.log(this.data);
+    
     this.listOrderRows(this.data.id);
     this.listProducts();
     this.listUsers();
+    if(environment.globalForecasts.length == 0) {
+      this.forecastService.getForecastsGlobally(this.data.anno);
+    }
+    console.log(environment.globalForecasts);
+    
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -116,6 +125,10 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
     this.currentOrder.n_ordine = this.data.n_ordine;
     this.currentOrder.note = this.data.note;
     this.currentOrder.username = this.data.username;
+    this.currentOrder.n_ddt = this.data.n_ddt;
+    this.currentOrder.d_ddt = this.data.d_ddt;
+    this.currentOrder.d_consegna_prevista = this.data.d_consegna_prevista;
+    this.currentOrder.note_consegna = this.data.note_consegna;
   }
 
   openEditOrderDialog(event: Event) {
@@ -127,7 +140,9 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
       orderRows: this.orderRows,
       users: this.users,
       products: this.products,
-      isLocked: true
+      isLocked: true,
+      forecasts: this.forecasts,
+      status: this.data.status
     }
     dialogConfig.disableClose = false;
     this.dialogRef = this.dialog.open(

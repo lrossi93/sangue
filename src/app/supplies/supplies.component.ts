@@ -72,9 +72,6 @@ export class SuppliesComponent implements OnInit {
     if(environment.globalProducts.length == 0) {
       this.pharmaRegistryService.getProductsGlobally();
     }    
-    if(environment.globalForecasts.length == 0) {
-      this.forecastService.getForecastsGlobally(this.year);
-    }
 
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
@@ -99,8 +96,6 @@ export class SuppliesComponent implements OnInit {
     });
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
-
-  
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
@@ -172,27 +167,6 @@ export class SuppliesComponent implements OnInit {
         }
       }
     );
-  }
-
-  listForecasts(year: string) {
-    this.forecastService.listForecastsPromise(year).subscribe(
-      res => {
-        //console.log(res);
-        if(res[0] == "OK") {
-          this.forecasts = res[1];
-          environment.globalForecasts = res[1];
-          console.log(this.forecasts);
-        }
-        else {
-          console.error("Error retrieving forecasts!");
-        }
-      }
-    );
-  }
-
-  listOrdersAndForecasts(year: string) {
-    this.listOrders(year);
-    this.listForecasts(year);//also globally
   }
 
   listProducts() {

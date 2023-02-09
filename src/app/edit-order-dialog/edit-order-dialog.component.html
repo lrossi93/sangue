@@ -87,7 +87,7 @@ class="typography">
         <!--when product has been received-->
         <ng-container
         matColumnDef="qta_ricevuta"
-        *ngIf="this.data.status == 'ricevuto'">
+        *ngIf="this.data.status == 'ricevuto' && userCode == '220'">
             <th mat-header-cell *matHeaderCellDef> {{ 'Received quantity' | translate }} </th>
             <td
             mat-cell 
@@ -101,7 +101,25 @@ class="typography">
                 (keyup.enter)="onQtaRicevutaSet(element, element.qta_ricevuta)"
                 (keyup.tab_next)="onQtaRicevutaSet(element, element.qta_ricevuta)">
             </td>
-          </ng-container>
+        </ng-container>
+
+        <ng-container
+        matColumnDef="qta_ricevuta"
+        *ngIf="this.data.status == 'ricevuto' && userCode == '230'">
+            <th mat-header-cell *matHeaderCellDef> {{ 'Received quantity' | translate }} </th>
+            <td
+            mat-cell 
+            *matCellDef="let element">
+                <input 
+                style="max-width: 50px;"
+                matInput
+                type="number"
+                disabled="true"
+                [(ngModel)]="element.qta_ricevuta"
+                (keyup.enter)="onQtaRicevutaSet(element, element.qta_ricevuta)"
+                (keyup.tab_next)="onQtaRicevutaSet(element, element.qta_ricevuta)">
+            </td>
+        </ng-container>
     
         <ng-container
         matColumnDef="note">
@@ -135,6 +153,12 @@ class="typography">
                     <i class="material-icons">delete</i>
                 </button>
             </td>
+        </ng-container>
+
+        <ng-container
+        matColumnDef="diff">
+          <th mat-header-cell *matHeaderCellDef> {{ 'Missing units' | translate }} </th>
+          <td mat-cell *matCellDef="let element"> {{element.qta_validata - element.qta_ricevuta}} </td>
         </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
