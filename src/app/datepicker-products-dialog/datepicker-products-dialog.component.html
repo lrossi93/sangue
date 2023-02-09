@@ -57,6 +57,7 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
     <mat-form-field
     *ngIf="loginService.getUserCode() == '220' && data.isValidationDate"
     appearance="fill">
@@ -70,8 +71,33 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
+    <mat-form-field 
+    *ngIf="loginService.getUserCode() == '230'"
+    appearance="fill">
+        <mat-label>{{ 'Edit date' | translate }}</mat-label>
+        <input 
+        matInput 
+        [value]="date.value"
+        [matDatepicker]="picker"
+        (dateChange)="onDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
     <div mat-dialog-actions align="center">
-        <button mat-raised-button color="primary" (click)="onSubmit()">{{ 'Submit' | translate }}</button>
-        <button mat-raised-button mat-dialog-close>{{ 'Cancel' | translate }}</button>
+        <button 
+        mat-mini-fab 
+        color="primary" 
+        matTooltip="{{ 'Submit' | translate }}"
+        (click)="onSubmit()">
+            <i class="material-icons">check</i>
+        </button>
+        <button 
+        mat-mini-fab
+        color="accent"
+        matTooltip="{{ 'Cancel' | translate }}" 
+        mat-dialog-close>
+            <i class="material-icons">close</i>
+        </button>
     </div>
 </div>

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
@@ -104,6 +103,9 @@ export class OrdersComponent implements OnInit {
     if(environment.globalProducts.length == 0) {
       this.pharmaRegistryService.getProductsGlobally();
     }    
+    if(environment.globalForecasts.length == 0) {
+      this.forecastService.getForecastsGlobally(this.year);
+    }
 
     //gridOptions
     this.gridOptions = {
@@ -216,6 +218,11 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  listOrdersAndForecasts(year: string) {
+    this.listOrders(year);
+    this.listForecasts(year);
+  }
+
   getFullUsernameById(id: string): string {
     for(var i = 0; i < this.users.length; ++i) {
       if(this.users[i].username == id) {
@@ -237,7 +244,7 @@ export class OrdersComponent implements OnInit {
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
-          newOrder.id = res[1];
+          newOrder.id = res[1][0];
           //set order status
           let orderStatus = {
             id: "0",
@@ -251,7 +258,7 @@ export class OrdersComponent implements OnInit {
           
           //set orderId and username for all orderRows before submitting
           for(var i = 0; i < newOrderRows.length; ++i) {
-            newOrderRows[i].id_ordine = res[1];
+            newOrderRows[i].id_ordine = res[1][0];
             newOrderRows[i].username = newOrder.username;
           }
 
@@ -308,6 +315,28 @@ export class OrdersComponent implements OnInit {
           }
           else {
             console.error("Error validating orderRow!");
+          }
+        }
+      );
+    }
+  }
+
+  confirmQtaRicevutaOrderRowsRec(orderRows: OrderRow[], index: number) {
+    if(index >= orderRows.length){
+      this.snackbarService.onUpdate();
+      return;
+    }
+    else {
+      if(orderRows[index].qta_ricevuta == 0){
+        orderRows[index].qta_ricevuta == orderRows[index].qta_validata;
+      }
+      this.ordersService.setOrderRowPromise(orderRows[index], false).subscribe(
+        res => {
+          if(res[0] == "OK") {
+            this.confirmQtaRicevutaOrderRowsRec(orderRows, index + 1);
+          }
+          else {
+            console.error("Error confirming received quantity on orderRow!");
           }
         }
       );
@@ -858,7 +887,9 @@ export class OrdersComponent implements OnInit {
         //console.log(res);
         if(res[0] == "OK") {
           this.forecasts = res[1];
-          //console.log(this.forecasts);
+          environment.globalForecasts = res[1];
+          //this.forecastService.getForecastsGlobally(year);
+          console.log(this.forecasts);
         }
         else {
           console.error("Error retrieving forecasts!");

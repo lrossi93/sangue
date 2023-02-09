@@ -82,7 +82,11 @@ export class OrdersService {
           b_extra: order.b_extra,
           b_validato: order.b_validato,
           d_validato: order.d_validato,
-          note: order.note
+          note: order.note,
+          d_consegna_prevista: order.d_consegna_prevista,
+          n_ddt: order.n_ddt,
+          d_ddt: order.d_ddt,
+          note_consegna: order.note_consegna
         }
       ).subscribe(res => {
         if(res[0] == "KO"){
@@ -111,7 +115,11 @@ export class OrdersService {
           b_extra: order.b_extra,
           b_validato: order.b_validato,
           d_validato: order.d_validato,
-          note: order.note
+          note: order.note,
+          d_consegna_prevista: order.d_consegna_prevista,
+          n_ddt: order.n_ddt,
+          d_ddt: order.d_ddt,
+          note_consegna: order.note_consegna
         }
       ).subscribe(res => {
         if(res[0] == "KO"){
@@ -148,7 +156,11 @@ export class OrdersService {
           b_extra: order.b_extra,
           b_validato: order.b_validato,
           d_validato: order.d_validato,
-          note: order.note
+          note: order.note,
+          d_consegna_prevista: order.d_consegna_prevista,
+          n_ddt: order.n_ddt,
+          d_ddt: order.d_ddt,
+          note_consegna: order.note_consegna
         }
       )
     }
@@ -167,7 +179,11 @@ export class OrdersService {
           b_extra: order.b_extra,
           b_validato: order.b_validato,
           d_validato: order.d_validato,
-          note: order.note
+          note: order.note,
+          d_consegna_prevista: order.d_consegna_prevista,
+          n_ddt: order.n_ddt,
+          d_ddt: order.d_ddt,
+          note_consegna: order.note_consegna
         }
       )
     }

@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AgGridAngular } from 'ag-grid-angular';
-import { GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
-import { environment, Order, OrderGridRowData, OrderStatus, Product, SupplyGridRowData, User } from 'src/environments/environment';
+import { CellClickedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
+import { environment, Forecast, Order, OrderStatus, Product, SupplyGridRowData, User } from 'src/environments/environment';
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigSupplies } from 'src/environments/grid-configs';
+import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
+import { ForecastService } from '../forecast.service';
+import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { SnackbarService } from '../snackbar.service';
@@ -23,6 +27,7 @@ export class SuppliesComponent implements OnInit {
   products: Product[] = [];
   orders: Order[] = [];
   orderStatusArr: any[] = [];
+  forecasts: Forecast[] = [];
   supplyGridRowData: SupplyGridRowData[] = [];
 
   suppliesGridConfig = gridConfigSupplies;
@@ -52,10 +57,32 @@ export class SuppliesComponent implements OnInit {
     private ordersService: OrdersService,
     private pharmaRegistryService: PharmaRegistryService,
     private usersService: UsersService,
-    private snackbarService: SnackbarService
+    private forecastService: ForecastService,
+    private snackbarService: SnackbarService,
+    private loginService: LoginService,
+    dialog: MatDialog,
   ) { 
+
+    this.dialog = dialog;
+
+    if(environment.globalUsers.length == 0) {
+      //get users and populate globalUsers
+      this.usersService.getUsersGlobally();
+    }
+    if(environment.globalProducts.length == 0) {
+      this.pharmaRegistryService.getProductsGlobally();
+    }    
+    if(environment.globalForecasts.length == 0) {
+      this.forecastService.getForecastsGlobally(this.year);
+    }
+
     this.gridOptions = {
-      //functions for managing the grid
+      onCellClicked: (event: CellClickedEvent) => {
+        //console.log(event);
+        if(event.column.getColId() == "d_consegna_prevista" && (event.data.status == "inviato al cliente" || event.data.status == "inviato al fornitore")) {
+            this.openEditDateDialog(event);
+        }
+      },
     }
     //this.isLoading = true;//qui mostra lo spinner senza caricare nulla
   }
@@ -112,7 +139,7 @@ export class SuppliesComponent implements OnInit {
     if(i >= orders.length) {
       //this.isLoading = true;//qui continua a scaricare dati
       this.listUsers();
-      //console.log(this.orderStatusArr);
+      console.log(this.orderStatusArr);
       return;
     }
     this.ordersService.getOrderStatusPromise(orders[i].id).subscribe(
@@ -145,6 +172,27 @@ export class SuppliesComponent implements OnInit {
         }
       }
     );
+  }
+
+  listForecasts(year: string) {
+    this.forecastService.listForecastsPromise(year).subscribe(
+      res => {
+        //console.log(res);
+        if(res[0] == "OK") {
+          this.forecasts = res[1];
+          environment.globalForecasts = res[1];
+          console.log(this.forecasts);
+        }
+        else {
+          console.error("Error retrieving forecasts!");
+        }
+      }
+    );
+  }
+
+  listOrdersAndForecasts(year: string) {
+    this.listOrders(year);
+    this.listForecasts(year);//also globally
   }
 
   listProducts() {
@@ -210,6 +258,10 @@ export class SuppliesComponent implements OnInit {
         d_validato: this.orders[i].d_validato,
         status: this.orderStatusArr[i].status,
         note: this.orders[i].note,
+        d_consegna_prevista: this.orders[i].d_consegna_prevista,
+        n_ddt: this.orders[i].n_ddt,
+        d_ddt: this.orders[i].d_ddt,
+        note_consegna: this.orders[i].note_consegna,
         isRowLocked: lock
       };
 
@@ -276,6 +328,173 @@ export class SuppliesComponent implements OnInit {
     //console.log(res);
     this.snackbarService.onUpdate();
   }
-}
 
- 
+  openEditDateDialog(event: CellClickedEvent) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+
+    console.log(event.data.d_consegna_prevista);
+    
+    dialogConfig.data = {
+      date: event.data.d_consegna_prevista,
+    }
+
+    this.dialogRef = this.dialog.open(
+      DatepickerProductsDialogComponent, //TODO: generic datepicker dialog
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe( (result: {date: string, isOrderDate: boolean, isValidationDate: boolean, isSubmitted: boolean}) => {
+      if(result !== undefined && result.isSubmitted){
+        let order = {
+          id: event.data.id,
+          anno: event.data.anno,
+          username: event.data.username,
+          d_ordine: event.data.d_ordine,
+          n_ordine: event.data.n_ordine,
+          b_urgente: event.data.b_urgente,
+          b_extra: event.data.b_extra,
+          b_validato: event.data.b_validato,
+          d_validato: event.data.d_validato,
+          note: event.data.note,
+          d_consegna_prevista: result.date, //here the date gets updated
+          n_ddt: event.data.n_ddt,
+          d_ddt: event.data.d_ddt,
+          note_consegna: event.data.note_consegna,
+        }
+          
+
+        let orderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: event.data.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "",
+          note: "",
+          b_sto: false
+        }
+
+        //when setting order date, just set order date
+        order.d_consegna_prevista = result.date;
+        orderStatus.status = event.data.status; //keep existing status
+        orderStatus.note = "Data di consegna prevista impostata a " + order.d_consegna_prevista + " da " + localStorage.getItem('sangue_username');
+        //console.log("setting: " + this.order.d_ordine);
+        this.setOrder(order, orderStatus);
+      }
+    });
+  }
+  
+  setOrder(order: Order, orderStatus: OrderStatus) {
+    console.log("Order:");
+    console.log(order);
+
+    this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
+      res => {
+        if(res[0] == "KO"){
+          console.error("Error setting order status for order " + order.id);
+        }
+        else{
+          this.ordersService.setOrderPromise(order, false).subscribe(
+            res2 => {
+              if(res2 == "KO"){
+                console.error("Error setting order with id " + order.id);
+              }
+              else{  
+                this.setOrderLocally(order, orderStatus);
+              }
+            }
+          );
+        }
+      }
+    );
+  }
+
+  setOrderLocally(order: Order, orderStatus: OrderStatus) {    
+    for(let i = 0; i < this.orders.length; ++i) {
+      if(order.id == this.orders[i].id) {
+        this.orders[i].anno = order.anno;
+        this.orders[i].username = order.username;
+        this.orders[i].d_ordine = order.d_ordine;
+        this.orders[i].b_urgente = order.b_urgente;
+        this.orders[i].b_extra = order.b_extra;
+        this.orders[i].b_validato = order.b_validato;
+        this.orders[i].d_validato = order.d_validato;
+        this.orders[i].note = order.note;
+        this.orders[i].d_consegna_prevista = order.d_consegna_prevista;
+        this.orders[i].n_ddt = order.n_ddt;
+        this.orders[i].d_ddt = order.d_ddt;
+        this.orders[i].note_consegna = order.note_consegna;
+        this.orderStatusArr[i].status = orderStatus.status;
+
+        let isLockedCondition: boolean;
+        if(this.loginService.getUserCode() == "210") {
+          isLockedCondition = orderStatus.status != "inviato";
+        }
+        if(this.loginService.getUserCode() == "220") {
+          isLockedCondition = !(orderStatus.status == "inviato" || orderStatus.status == "confermato");
+        }
+
+        this.supplyGridRowData[i].id = order.id;
+        this.supplyGridRowData[i].anno = order.anno;
+        this.supplyGridRowData[i].username = order.username;
+        this.supplyGridRowData[i].full_username = this.getFullUsernameById(order.username); //per permettere di filtrare sullo username (client)
+        this.supplyGridRowData[i].d_ordine = order.d_ordine;
+        this.supplyGridRowData[i].n_ordine = order.n_ordine;
+        this.supplyGridRowData[i].b_urgente = order.b_urgente;
+        this.supplyGridRowData[i].b_extra = order.b_extra;
+        this.supplyGridRowData[i].b_validato = order.b_validato;
+        //this.supplyGridRowData[i].b_to_supplier = (orderStatus.status == "inviato al fornitore");
+        this.supplyGridRowData[i].d_validato = order.d_validato;
+        this.supplyGridRowData[i].status = orderStatus.status;
+        this.supplyGridRowData[i].note = order.note;
+        this.supplyGridRowData[i].d_consegna_prevista = order.d_consegna_prevista;
+        this.supplyGridRowData[i].n_ddt = order.n_ddt;
+        this.supplyGridRowData[i].d_ddt = order.d_ddt;
+        this.supplyGridRowData[i].note_consegna = order.note_consegna;
+        this.supplyGridRowData[i].isRowLocked = isLockedCondition!; 
+        
+        this.updateRow(this.supplyGridRowData[i].id);
+        //this.api.ensureIndexVisible(i);
+        this.snackbarService.onUpdate();
+        return;
+      }
+    }
+/*
+      updateRow(order: OrderGridRowData) {
+        const toBeUpdated: any = [];
+        const rowNodes: any = [];
+        var isSentToSupplier: boolean = false;
+        this.api.forEachNodeAfterFilterAndSort(function (rowNode: { data: any; }) {
+          if (rowNode.data.id != order.id) {
+            return;
+          }
+          
+          const data = rowNode.data;
+          data.anno = order.anno;
+          data.username = order.username;
+          data.full_username = order.full_username;
+          data.d_ordine = order.d_ordine;
+          data.n_ordine = order.n_ordine;
+          data.b_urgente = order.b_urgente;
+          data.b_extra = order.b_extra;
+          data.b_validato = order.b_validato;
+          data.b_to_supplier = order.b_to_supplier;
+          isSentToSupplier = order.b_to_supplier;
+          data.d_validato = order.d_validato;
+          data.status = order.status;
+          data.note = order.note;
+          data.isRowLocked = order.isRowLocked;
+
+          toBeUpdated.push(data);
+          rowNodes.push(rowNode);
+        });
+
+        const res = this.api.applyTransaction({ update: toBeUpdated})!;
+        if(isSentToSupplier)
+          this.api.redrawRows(rowNodes);//necessary to update checkboxes to "disabled"
+        //console.log(res);
+      }
+      */
+  }
+}

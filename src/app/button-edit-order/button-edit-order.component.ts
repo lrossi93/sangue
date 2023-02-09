@@ -121,6 +121,9 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     if(this.data.status == "inviato")
       dialogConfig.disableClose = true;
     
+    console.log(this.filteredForecasts);
+    
+    
     this.dialogRef = this.dialog.open(
       EditOrderDialogComponent, 
       dialogConfig
@@ -134,6 +137,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         isClosing: boolean,
         deleteOrder: boolean,
         isValidated: boolean,
+        isQtaRicevutaConfirmed: boolean
     }) => {
       console.log(result);
       if(result !== undefined && result.isSubmitted){
@@ -194,6 +198,33 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           }
         );
       } 
+      if(result !== undefined && result.isQtaRicevutaConfirmed) {
+        let orderStatus: OrderStatus = {
+          id: "0",
+          username: localStorage.getItem('sangue_username')!,
+          id_order: this.currentOrder.id,
+          d_status: this.getFormattedDate(new Date()),
+          status: "ricevuto",
+          note: "quantità ricevuta aggiornata da " + localStorage.getItem('sangue_username'),
+          b_sto: false
+        }
+
+        this.ordersComponent.confirmQtaRicevutaOrderRowsRec(result.orderRows, 0);
+
+        this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
+          res => {
+            if(res[0] == "OK"){
+              let order = result.order;
+              order.b_validato = true;
+              order.d_validato = this.getFormattedDate(new Date());
+              this.ordersComponent.setOrder(order, orderStatus, false);
+            }
+            else {
+              console.error("Error setting status for order " + this.data.id);
+            }
+          }
+        );
+      }
     });
   }
 

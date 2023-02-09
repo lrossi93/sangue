@@ -7,10 +7,11 @@ import { TranslateService } from "@ngx-translate/core";
 export const environment = {
   production: false,
   basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
-  reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/',
+  reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
   currentLanguage: 'it',
   globalUsers: [],
-  globalProducts: []
+  globalProducts: [],
+  globalForecasts: [],
 };
 
 export interface AreYouSureData {
@@ -127,6 +128,7 @@ export interface OrderRowGridRowData {
   username: string;
   full_username: string;
   qta: number;
+  max_mese: number;
   motivazione: string;
   qta_validata: number;
   qta_ricevuta: number;
@@ -159,6 +161,10 @@ export interface SupplyGridRowData {
   d_validato: string;
   status: string;
   note: string;
+  d_consegna_prevista: string;
+  n_ddt: string;
+  d_ddt: string;
+  note_consegna: string;
   isRowLocked: boolean;
 }
 

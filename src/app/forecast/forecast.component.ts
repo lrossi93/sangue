@@ -518,4 +518,17 @@ export class ForecastComponent implements OnInit {
     console.log(this.api);
     this.api.setRowData(this.forecastGridRowData);
   }
+
+  getReport(year: string) {
+    this.forecastService.getForecastPdfPromise(year).subscribe(
+      (res: any) => {
+        if(res[0] == "KO"){
+          console.error("Error retrieving report for user " + localStorage.getItem('sangue_username'));
+        }
+        else{
+          window.open(environment.reportPath + res[1][0].filename, "_blank");
+        }
+      }
+    );
+  }
 }

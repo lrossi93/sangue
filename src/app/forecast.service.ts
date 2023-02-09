@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment, Forecast } from 'src/environments/environment';
 import { LoginService } from './login.service';
 
 @Injectable({
@@ -9,7 +9,9 @@ import { LoginService } from './login.service';
 })
 export class ForecastService {
   url = environment.basePath + 'forecast.php';
+  reportUrl = environment.reportPath + 'forecast.php';
   forecast: any;
+  forecasts: Forecast[] = [];
 
   constructor(
     private loginService: LoginService,
@@ -225,5 +227,33 @@ export class ForecastService {
         id: id
       }
     )
+  }
+
+  getForecastsGlobally(year: string) {
+    this.listForecastsPromise(year).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          this.forecasts = res[1];
+          environment.globalForecasts = res[1];
+          //console.log(environment.globalForecasts);
+        }
+        else{
+          console.error("Error retrieving users!");
+        }
+      }
+    );
+  }
+
+  getForecastPdfPromise(year: string) {
+    let request = 'getForecastPDF';
+    let username = localStorage.getItem('sangue_username');
+    let path = this.url + '?request='+ request + '&username=' + username + '&year=' + year;
+    console.log(path)
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    );
   }
 }

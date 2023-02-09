@@ -9,7 +9,7 @@ import { OrdersComponent } from '../orders/orders.component';
   templateUrl: './orders-extra-checkbox.component.html',
   styleUrls: ['./orders-extra-checkbox.component.css']
 })
-export default class OrdersExtraCheckboxComponent extends CellCheckboxComponent implements OnInit {
+export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implements OnInit {
   loading = false;
   constructor(
     private ordersService: OrdersService,

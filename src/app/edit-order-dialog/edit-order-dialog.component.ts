@@ -58,7 +58,7 @@ export class EditOrderDialogComponent implements OnInit {
   api: any;
   columnApi: any;
 
-  displayedColumns: string[] = ['n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
+  displayedColumns: string[] = ['n_riga', 'product', 'qta', 'max_mese', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -91,20 +91,18 @@ export class EditOrderDialogComponent implements OnInit {
     this.dialog = dialog;
     this.users = data.users;
     this.products = data.products;
-    this.createOrderRowGridRowData();
+    this.forecasts = data.forecasts;
+    
     //console.log(this.products);
     
     this.isLocked = data.isLocked;
-    this.forecasts = data.forecasts;
     this.isValidated = data.status != "inviato";
-    console.log("isvalidated?" + this.isValidated);
-    
-    //TODO: correggere: validato???
+    //console.log("isvalidated?" + this.isValidated);
 
     this.userCode = this.loginService.getUserCode()!;
 
-
-
+    
+    this.createOrderRowGridRowData();
     //AgGrid initialization
     this.orderRowsGridConfig = gridConfigOrderRows;
     this.gridOptions = {
@@ -444,6 +442,15 @@ export class EditOrderDialogComponent implements OnInit {
     });
   }
 
+  confirmQtaRicevuta() {
+    var isQtaRicevutaConfirmed = true;
+    this.thisDialogRef.close({
+      order: this.order,
+      orderRows: this.orderRows,
+      isQtaRicevutaConfirmed: isQtaRicevutaConfirmed
+    });
+  }
+
   createOrderRowGridRowData() {
     this.orderRowGridRowData = [];
     for(var i = 0; i < this.orderRows.length; ++i) {
@@ -453,17 +460,30 @@ export class EditOrderDialogComponent implements OnInit {
         n_riga: this.orderRows[i].n_riga,
         id_prd: this.orderRows[i].id_prd,
         product_name: this.productIdToDes(this.orderRows[i].id_prd),
-        username: this.orderRows[i].username,
+        username: this.order.username,
         full_username: "",
         qta: this.orderRows[i].qta,
+        max_mese: this.getMaxMeseByProdIdAndUsername(this.orderRows[i].id_prd, this.order.username),
         motivazione: this.orderRows[i].motivazione,
         qta_validata: this.orderRows[i].qta_validata,
         qta_ricevuta: this.orderRows[i].qta_ricevuta,
         note: this.orderRows[i].note,
         isQtaRicevutaSet: this.orderRows[i].qta_ricevuta > 0
       }
+      //console.log(newOrderRow);
       this.orderRowGridRowData.push(newOrderRow);
     }
+  }
+
+  getMaxMeseByProdIdAndUsername(id_prd: string, username: string): number {    
+    for(var i = 0; i < this.forecasts.length; ++i) {
+      if(this.forecasts[i].id_prd == id_prd) {
+        if(this.forecasts[i].username == username) {
+          return Math.floor(this.forecasts[i].qta_approvata / 12);
+        }
+      }
+    }
+    return -1;
   }
 
   updateOrderRow(orderRow: OrderRow) {

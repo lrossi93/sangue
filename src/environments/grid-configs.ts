@@ -6,7 +6,7 @@ import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/butt
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
-import OrdersExtraCheckboxComponent from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
+import { OrdersExtraCheckboxComponent } from "src/app/orders-extra-checkbox/orders-extra-checkbox.component";
 import { OrdersReceivedCheckboxComponent } from "src/app/orders-received-checkbox/orders-received-checkbox.component";
 import { OrdersSentCheckboxComponent } from "src/app/orders-sent-checkbox/orders-sent-checkbox.component";
 import { OrdersToCustomerCheckboxComponent } from "src/app/orders-to-customer-checkbox/orders-to-customer-checkbox.component";
@@ -317,7 +317,8 @@ export const orderGridHeaders = {
     SentToCustomer: "Inviato al cliente",
     Received: "Ricevuto",
     Report: "Report",
-    PDF: "PDF"
+    PDF: "PDF",
+    EstimatedDeliveryDate: "Data di consegna prevista"
   },
   en: {
     ID: "ID",
@@ -338,7 +339,8 @@ export const orderGridHeaders = {
     SentToCustomer: "Sent to customer",
     Received: "Received",
     Report: "Report",
-    PDF: "PDF"
+    PDF: "PDF",
+    EstimatedDeliveryDate: "Estimated delivery date"
   }
 }
 
@@ -811,7 +813,7 @@ export const gridConfigSupplies = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Extra : orderGridHeaders.en.Extra, 
     field: 'b_extra', 
     editable: false,
-    cellRenderer: OrdersExtraCheckboxComponent
+    //cellRenderer: OrdersExtraCheckboxComponent
   },
   {
     headerName: localeLang == 'it' ? orderGridHeaders.it.SentToCustomer : orderGridHeaders.en.SentToCustomer,
@@ -822,6 +824,17 @@ export const gridConfigSupplies = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ValidationDate : orderGridHeaders.en.ValidationDate, 
     field: 'd_validato', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+    if(params.value == "0000-00-00")
+      return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+    else
+      return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  {
+    headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
+    field: 'd_consegna_prevista', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
     if(params.value == "0000-00-00")

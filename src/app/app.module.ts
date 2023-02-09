@@ -53,7 +53,7 @@ import { DropdownUsersOrdersComponent } from './dropdown-users-orders/dropdown-u
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import OrdersExtraCheckboxComponent from './orders-extra-checkbox/orders-extra-checkbox.component';
+import { OrdersExtraCheckboxComponent } from './orders-extra-checkbox/orders-extra-checkbox.component';
 import { OrdersUrgentCheckboxComponent } from './orders-urgent-checkbox/orders-urgent-checkbox.component';
 import { OrdersValidatedCheckboxComponent } from './orders-validated-checkbox/orders-validated-checkbox.component';
 import { PharmaRegistryActiveCheckboxComponent } from './pharma-registry-active-checkbox/pharma-registry-active-checkbox.component';

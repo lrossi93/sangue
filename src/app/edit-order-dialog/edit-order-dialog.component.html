@@ -2,7 +2,7 @@
 mat-dialog-title 
 align="center" 
 style="text-align: center;">
-    {{ 'Order' | translate }} {{ data.order.id }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}
+    {{ 'Order' | translate }} {{ data.order.n_ordine }} {{ 'placed by user' | translate }} {{ usernameToClient(data.order.username) }}
 </h1>
 
 <h3 
@@ -60,6 +60,11 @@ class="typography">
           <th mat-header-cell *matHeaderCellDef> {{ 'Quantity' | translate }} </th>
           <td mat-cell *matCellDef="let element"> {{element.qta}} </td>
         </ng-container>
+
+        <ng-container matColumnDef="max_mese">
+            <th mat-header-cell *matHeaderCellDef> {{ 'Max/month' | translate }} </th>
+            <td mat-cell *matCellDef="let element"> {{element.max_mese}} </td>
+          </ng-container>
     
         <ng-container matColumnDef="motivazione">
           <th mat-header-cell *matHeaderCellDef> {{ 'Reason' | translate }} </th>
@@ -225,6 +230,17 @@ style="color: red">
     color="primary"
     (click)="validateOrder()">
         <i class="material-icons">check</i>
+    </button>
+
+    <!--se ho ricevuto l'ordine e devo solo -->
+    <button 
+    style="margin: 5px;"
+    *ngIf="(userCode == '220' || userCode == '210') && data.status == 'ricevuto'"
+    mat-mini-fab
+    matTooltip="{{'Confirm all received quantities' | translate}}"
+    color="primary"
+    (click)="confirmQtaRicevuta()">
+        <i class="material-icons">checklist_rtl</i>
     </button>
 
     <!--se non è bloccato e ci sono orderRows-->

@@ -28,7 +28,13 @@ export class DatepickerProductsDialogComponent {
     private dialogRef: MatDialogRef<DatepickerProductsDialogComponent>,
     public loginService: LoginService
   ) {
-    this.date = new UntypedFormControl(data.date, Validators.required);
+
+    console.log(data);
+    
+    this.date = new UntypedFormControl((data.date == null ? "1970-01-01" : data.date), Validators.required);
+    
+    console.log(this.date);
+
     if(loginService.getUserCode() == '210' && data.isOrderDate){
       var auxDate = new Date();
       this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(data.gg_min));
