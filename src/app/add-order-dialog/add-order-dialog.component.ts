@@ -43,6 +43,8 @@ export class AddOrderDialogComponent implements OnInit {
   b_extra!: UntypedFormControl;
   b_validato!: UntypedFormControl;
   d_validato!: UntypedFormControl;
+  n_ddt!: UntypedFormControl;
+  d_ddt!: UntypedFormControl;
   note!: UntypedFormControl;
   isExtra!: boolean;
 
@@ -89,6 +91,8 @@ export class AddOrderDialogComponent implements OnInit {
     this.isExtra = this.data.isExtra;
     this.b_validato = _builder.control(false);
     this.d_validato = _builder.control("");
+    this.n_ddt = _builder.control(0);
+    this.d_ddt = _builder.control(new Date());
     this.note = _builder.control("");
 
     if(loginService.getUserCode() == "210"){
@@ -141,9 +145,9 @@ export class AddOrderDialogComponent implements OnInit {
       n_ordine: this.n_ordine.value,
       note: this.note.value,
       username: this.username,
-      d_consegna_prevista: "0000-00-00",
-      n_ddt: "",
-      d_ddt: "",
+      d_consegna_prevista: "",
+      n_ddt: this.n_ddt.value,
+      d_ddt: this.formatDate(this.d_ddt.value.toLocaleString('it-IT').split(",", 2)[0]),
       note_consegna: "",
     }
   }
@@ -212,6 +216,11 @@ export class AddOrderDialogComponent implements OnInit {
     console.log(this.d_validato.value);
   }
 
+  //if needed...
+  onDDTDateChange(event: any) {
+    console.log(this.d_ddt.value);
+  }
+
   onSubmit(event: any) {
     //TODO: check fields
     this.assignNewOrderValues();
@@ -228,6 +237,12 @@ export class AddOrderDialogComponent implements OnInit {
     if(this.b_urgente.value){
       alert(environment.currentLanguage == 'it' ? translations.it.UrgentOrderAlert : translations.en.UrgentOrderAlert);
     }
+
+    console.log(this.newOrder);
+    console.log(this.newOrderRows);
+    console.log(isSubmitted);
+    
+    
 
     this.thisDialogRef.close({
       newOrder: this.newOrder,
@@ -320,7 +335,7 @@ export class AddOrderDialogComponent implements OnInit {
         qta: 0,
         motivazione: "",
         qta_validata: 0,
-        qta_ricevuta: 0,
+        qta_ricevuta: -1,
         note: ""
       }
 

@@ -318,7 +318,10 @@ export const orderGridHeaders = {
     Received: "Ricevuto",
     Report: "Report",
     PDF: "PDF",
-    EstimatedDeliveryDate: "Data di consegna prevista"
+    EstimatedDeliveryDate: "Data di consegna prevista",
+    DDTDate: "Data DDT",
+    DDTNumber: "n° DDT",
+    DeliveryNotes: "Note di consegna"
   },
   en: {
     ID: "ID",
@@ -340,7 +343,10 @@ export const orderGridHeaders = {
     Received: "Received",
     Report: "Report",
     PDF: "PDF",
-    EstimatedDeliveryDate: "Estimated delivery date"
+    EstimatedDeliveryDate: "Estimated delivery date",
+    DDTDate: "DDT date",
+    DDTNumber: "DDT no.",
+    DeliveryNotes: "Delivery notes"
   }
 }
 
@@ -424,6 +430,40 @@ export const gridConfigOrders210 = [
     editable: (params: { data: { isRowLocked: boolean; }; }) => {
       return !params.data.isRowLocked;
     }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
+    field: 'n_ddt', 
+    editable: true,
+  },
+  {  
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTDate : orderGridHeaders.en.DDTDate, 
+    field: 'd_ddt',
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00" || params.value == "")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
+    field: 'd_consegna_prevista', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DeliveryNotes : orderGridHeaders.en.DeliveryNotes, 
+    field: 'note_consegna', 
+    editable: false,
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
@@ -510,6 +550,40 @@ export const gridConfigOrders210Locked = [
       headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
       field: 'note', 
       editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
+    field: 'n_ddt', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTDate : orderGridHeaders.en.DDTDate, 
+    field: 'd_ddt',
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00" || params.value == "")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
+    field: 'd_consegna_prevista', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DeliveryNotes : orderGridHeaders.en.DeliveryNotes, 
+    field: 'note_consegna', 
+    editable: false,
   },
   { 
       headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
@@ -604,6 +678,40 @@ export const gridConfigOrders220 = [
     editable: true,
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
+    field: 'n_ddt', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTDate : orderGridHeaders.en.DDTDate, 
+    field: 'd_ddt',
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00" || params.value == "")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
+    field: 'd_consegna_prevista', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DeliveryNotes : orderGridHeaders.en.DeliveryNotes, 
+    field: 'note_consegna', 
+    editable: false,
+  },
+  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonEditOrderComponent,
     autoHeight: true
@@ -695,6 +803,40 @@ export const gridConfigOrders220Locked = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
     field: 'note', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
+    field: 'n_ddt', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTDate : orderGridHeaders.en.DDTDate, 
+    field: 'd_ddt',
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00" || params.value == "")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
+    field: 'd_consegna_prevista', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DeliveryNotes : orderGridHeaders.en.DeliveryNotes, 
+    field: 'note_consegna', 
     editable: false,
   },
   { 
@@ -796,7 +938,8 @@ export const gridConfigSupplies = [
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
       return new Date(params.value).toLocaleDateString('it-IT');
-    }
+    },
+    sort: 'desc'
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
@@ -846,6 +989,34 @@ export const gridConfigSupplies = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
     field: 'note', 
+    editable: false,
+  },
+  //chi può modificarlo?
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
+    field: 'n_ddt', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTDate : orderGridHeaders.en.DDTDate, 
+    field: 'd_ddt',
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      //if date is awaiting validation
+      if(params.value == "0000-00-00" || params.value == "")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
+    field: 'd_consegna_prevista', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DeliveryNotes : orderGridHeaders.en.DeliveryNotes, 
+    field: 'note_consegna', 
     editable: false,
   },
   { 

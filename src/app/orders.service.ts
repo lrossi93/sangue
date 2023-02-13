@@ -165,6 +165,9 @@ export class OrdersService {
       )
     }
     else{
+      console.log("isAdding: " + isAdding);
+      console.log(order);
+      
       return this.http.post<String[]>(
         this.url, 
         {

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi, ILoadingCellRendererParams } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
 import { environment, Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
@@ -110,6 +110,7 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
+        console.log(event);
         if(!event.node.data.isRowLocked) {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);
@@ -117,10 +118,13 @@ export class OrdersComponent implements OnInit {
           if(event.column.getColId() == "d_validato" && loginService.getUserCode() == "220") {
             this.openEditDateDialog(event);
           }
+          if(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210") {
+            this.openEditDateDialog(event);
+          }
         }
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {                
-        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        console.log("Changed from " + event.oldValue + " to " + event.newValue);
         //if row is not locked and an update is received, perform update
         //TODO: se imposto una data di validazione, deve essere MAGGIORE o UGUALE alla data dell'ordine
         console.log("isRowLocked: " + event.node.data.isRowLocked);
@@ -138,7 +142,11 @@ export class OrdersComponent implements OnInit {
           this.order.b_extra = event.data.b_extra;
           this.order.b_validato = event.data.b_validato;
           this.order.d_validato = event.data.d_validato;
+          this.order.n_ddt = event.data.n_ddt;
+          this.order.d_ddt = event.data.d_ddt;
+          this.order.d_consegna_prevista = event.data.d_consegna_prevista;
           this.order.note = event.data.note;   
+          this.order.note_consegna = event.data.note_consegna
           
           //not adding but editing
           let isAdding = false;
@@ -327,7 +335,7 @@ export class OrdersComponent implements OnInit {
       return;
     }
     else {
-      if(orderRows[index].qta_ricevuta == 0){
+      if(orderRows[index].qta_ricevuta == -1){
         orderRows[index].qta_ricevuta == orderRows[index].qta_validata;
       }
       this.ordersService.setOrderRowPromise(orderRows[index], false).subscribe(
@@ -429,6 +437,10 @@ export class OrdersComponent implements OnInit {
       data.d_validato = order.d_validato;
       data.status = order.status;
       data.note = order.note;
+      data.n_ddt = order.n_ddt;
+      data.d_ddt = order.d_ddt;
+      data.d_consegna_prevista = order.d_consegna_prevista;
+      data.note_consegna = order.note_consegna;
       data.isRowLocked = order.isRowLocked;
 
       toBeRemoved.push(data);
@@ -481,6 +493,10 @@ export class OrdersComponent implements OnInit {
           this.orders[i].b_validato = order.b_validato;
           this.orders[i].d_validato = order.d_validato;
           this.orders[i].note = order.note;
+          this.orders[i].n_ddt = order.n_ddt;
+          this.orders[i].d_ddt = order.d_ddt;
+          this.orders[i].d_consegna_prevista = order.d_consegna_prevista;
+          this.orders[i].note_consegna = order.note_consegna;
           this.orderStatusArr[i].status = orderStatus.status;
 
           let isLockedCondition: boolean;
@@ -504,6 +520,10 @@ export class OrdersComponent implements OnInit {
           this.orderGridRowData[i].d_validato = order.d_validato;
           this.orderGridRowData[i].status = orderStatus.status;
           this.orderGridRowData[i].note = order.note;
+          this.orderGridRowData[i].n_ddt = order.n_ddt;
+          this.orderGridRowData[i].d_ddt = order.d_ddt;
+          this.orderGridRowData[i].d_consegna_prevista = order.d_consegna_prevista;
+          this.orderGridRowData[i].note_consegna = order.note_consegna;
           this.orderGridRowData[i].isRowLocked = isLockedCondition!; 
           
           this.updateRow(this.orderGridRowData[i]);
@@ -529,10 +549,10 @@ export class OrdersComponent implements OnInit {
         d_validato: order.d_validato,
         status: orderStatus.status,
         note: order.note,
-        d_consegna_prevista: "0000-00-00",
-        n_ddt: "",
-        d_ddt: "",
-        note_consegna: "",  
+        d_consegna_prevista: order.d_consegna_prevista,
+        n_ddt: order.n_ddt,
+        d_ddt: order.d_ddt,
+        note_consegna: order.note_consegna,  
         isRowLocked: false,
       }
 
@@ -553,6 +573,10 @@ export class OrdersComponent implements OnInit {
           d_validato: order.d_validato,
           status: newOrderGridRowData.status,
           note: order.note,
+          d_consegna_prevista: order.d_consegna_prevista,
+          n_ddt: order.n_ddt,
+          d_ddt: order.d_ddt,
+          note_consegna: order.note_consegna,
           isRowLocked: false
         }]
       });
@@ -585,6 +609,10 @@ export class OrdersComponent implements OnInit {
       data.d_validato = order.d_validato;
       data.status = order.status;
       data.note = order.note;
+      data.n_ddt = order.n_ddt;
+      data.d_ddt = order.d_ddt;
+      data.d_consegna_prevista = order.d_consegna_prevista;
+      data.note_consegna = order.note_consegna;
       data.isRowLocked = order.isRowLocked;
 
       toBeUpdated.push(data);
@@ -646,10 +674,10 @@ export class OrdersComponent implements OnInit {
         d_validato: this.orders[i].d_validato,
         status: this.orderStatusArr[i].status,
         note: this.orders[i].note,
-        d_consegna_prevista: "0000-00-00",
-        n_ddt: "",
-        d_ddt: "",
-        note_consegna: "",  
+        d_consegna_prevista: this.orders[i].d_consegna_prevista,
+        n_ddt: this.orders[i].n_ddt == "" ? "0" : this.orders[i].n_ddt,
+        d_ddt: this.orders[i].d_ddt == "" ? "0000-00-00" : this.orders[i].d_ddt,
+        note_consegna: this.orders[i].note_consegna,  
         isRowLocked: lock
       };
       this.orderGridRowData.push(newOrderGridRowData);    
@@ -731,6 +759,12 @@ export class OrdersComponent implements OnInit {
           isValidationDate: true
         }
         break;
+      case "d_ddt":
+        dialogConfig.data = {
+          date: event.data.d_ddt,
+          isDDTDate: true
+        }
+        break;
     }
 
     this.dialogRef = this.dialog.open(
@@ -738,9 +772,15 @@ export class OrdersComponent implements OnInit {
       dialogConfig
     );
 
-    this.dialogRef.afterClosed().subscribe( (result: {date: string, isOrderDate: boolean, isValidationDate: boolean, isSubmitted: boolean}) => {
+    this.dialogRef.afterClosed().subscribe( 
+      (result: {
+        date: string, 
+        isOrderDate: boolean, 
+        isValidationDate: boolean,
+        isDDTDate: boolean, 
+        isSubmitted: boolean
+      }) => {
       if(result !== undefined && result.isSubmitted){
-        
         this.order.id = event.data.id;
         this.order.anno = event.data.anno;
         this.order.username = event.data.username;
@@ -751,6 +791,10 @@ export class OrdersComponent implements OnInit {
         this.order.b_validato = event.data.b_validato;
         this.order.d_validato = event.data.d_validato;
         this.order.note = event.data.note;   
+        this.order.n_ddt = event.data.n_ddt;
+        this.order.d_ddt = event.data.d_ddt;
+        this.order.d_consegna_prevista = event.data.d_consegna_prevista;
+        this.order.note_consegna = event.data.note_consegna;
 
         let orderStatus = {
           id: "0",
@@ -778,6 +822,14 @@ export class OrdersComponent implements OnInit {
           orderStatus.status = "confermato"; //confirm status
           orderStatus.note = "Ordine confermato da " + localStorage.getItem('sangue_username');
           //console.log("setting: " + this.order.d_validato);
+          this.setOrder(this.order, orderStatus, false);
+        }
+
+        else if(result.isDDTDate){
+          this.order.d_ddt = result.date;
+          orderStatus.status = "inviato"; //confirm status
+          orderStatus.note = "Data DDT impostata da " + localStorage.getItem('sangue_username');
+          //console.log("setting: " + this.order.d_ddt);
           this.setOrder(this.order, orderStatus, false);
         }
       }

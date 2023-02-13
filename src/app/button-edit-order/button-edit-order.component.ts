@@ -62,7 +62,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.data = params.data;
     this.isLocked = this.data.isRowLocked;
     this.listOrderRows(this.data.id);
-    this.listForecasts(this.data.anno);
+    this.listForecasts(this.data.anno);    
   }
   
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -121,7 +121,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     if(this.data.status == "inviato")
       dialogConfig.disableClose = true;
     
-    console.log(this.filteredForecasts);
+    //console.log(this.filteredForecasts);
     
     
     this.dialogRef = this.dialog.open(
@@ -139,7 +139,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         isValidated: boolean,
         isQtaRicevutaConfirmed: boolean
     }) => {
-      console.log(result);
+      //console.log(result.order);
       if(result !== undefined && result.isSubmitted){
         let orderStatus: OrderStatus = {
           id: "0",
@@ -178,7 +178,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           id_order: this.currentOrder.id,
           d_status: this.getFormattedDate(new Date()),
           status: "confermato",
-          note: "confermato da " + localStorage.getItem('sangue_username'),
+          note: "Ordine validato da " + localStorage.getItem('sangue_username'),
           b_sto: false
         }        
         
@@ -243,6 +243,10 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.currentOrder.n_ordine = this.data.n_ordine;
     this.currentOrder.note = this.data.note;
     this.currentOrder.username = this.data.username;
+    this.currentOrder.n_ddt = this.data.n_ddt;
+    this.currentOrder.d_ddt = this.data.d_ddt;
+    this.currentOrder.d_consegna_prevista = this.data.d_consegna_prevista;
+    this.currentOrder.note_consegna = this.data.note_consegna;
     console.log(this.currentOrder);
   }
 

@@ -22,6 +22,7 @@ export class DatepickerProductsDialogComponent {
       isValidoA: boolean,
       isOrderDate: boolean,
       isValidationDate: boolean,
+      isDDTDate: boolean,
       gg_min: string,
       gg_max: string
     },
@@ -79,6 +80,7 @@ export class DatepickerProductsDialogComponent {
         isValidoA: this.data.isValidoA,
         isOrderDate: this.data.isOrderDate,
         isValidationDate: this.data.isValidationDate,
+        isDDTDate: this.data.isDDTDate,
         isSubmitted: this.isSubmitted
       }
     )

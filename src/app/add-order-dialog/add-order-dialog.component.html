@@ -79,6 +79,28 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
+    <mat-form-field>
+        <input
+        placeholder="{{'DDT number' | translate }}"
+        type="number"
+        [formControl]="n_ddt"
+        matInput>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input 
+        matInput 
+        placeholder="{{'DDT date' | translate }}"
+        [matDatepicker]="pickerDDTDate" 
+        [value]="d_ddt.value"
+        [min]="minDate"
+        [max]="maxDate"
+        [formControl]="d_ddt"
+        (dateChange)="onOrderDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="pickerDDTDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDDTDate></mat-datepicker>
+    </mat-form-field>
     
     <mat-form-field>
         <input 
@@ -88,6 +110,12 @@
         [formControl]="note">
     </mat-form-field>
 </div>
+
+<p 
+*ngIf="(b_urgente.value == true && note.value == '')"
+style="color: red;">
+    {{ 'An urgent order requires valid annotations' | translate }}.
+</p>
 
 <!--ORDERROWS-->
 <mat-card *ngFor="let orderRow of newOrderRows; let i = index" style="margin-bottom: 20px;">
@@ -121,12 +149,6 @@
         </button>
     </div>
 </mat-card>
-
-<p 
-*ngIf="(b_urgente.value == true && note.value == '')"
-style="color: red;">
-    {{ 'An urgent order requires valid annotations' | translate }}.
-</p>
 
 <div mat-dialog-actions align="center">
     <button 

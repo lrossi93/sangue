@@ -84,7 +84,7 @@ class="typography">
           <td mat-cell *matCellDef="let element"> {{element.qta_ricevuta}} </td>
         </ng-container>
 
-        <!--when product has been received-->
+        <!--when product has been received - sangueaslno pov-->
         <ng-container
         matColumnDef="qta_ricevuta"
         *ngIf="this.data.status == 'ricevuto' && userCode == '220'">

@@ -89,6 +89,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.noteFormControl = _builder.control(data.order.note); //not required
     */
     this.order = data.order;
+    console.log(this.order)
     this.orderRows = data.orderRows;
     this.dialog = dialog;
     this.users = data.users;
@@ -435,8 +436,11 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   validateOrder(){
+    console.log(this.order);
+    
     this.isValidated = true;
-    this.thisDialogRef.close({
+       
+      this.thisDialogRef.close({
       order: this.order,
       orderRows: this.orderRows,
       isValidated: this.isValidated

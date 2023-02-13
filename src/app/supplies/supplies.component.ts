@@ -30,7 +30,7 @@ export class SuppliesComponent implements OnInit {
   forecasts: Forecast[] = [];
   supplyGridRowData: SupplyGridRowData[] = [];
 
-  suppliesGridConfig = gridConfigSupplies;
+  suppliesGridConfig: any;
 
   //agGrid config
   ordersGridConfig!: any;
@@ -72,6 +72,8 @@ export class SuppliesComponent implements OnInit {
     if(environment.globalProducts.length == 0) {
       this.pharmaRegistryService.getProductsGlobally();
     }    
+
+    this.suppliesGridConfig = gridConfigSupplies;
 
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {

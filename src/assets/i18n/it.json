@@ -121,5 +121,7 @@
     "An urgent order requires valid annotations": "Un ordine urgente necessita di annotazioni valide",
     "Forecast report": "Report delle previsioni",
     "Confirm all received quantities": "Conferma tutte le quantità ricevute",
-    "Missing units": "Mancanti"
+    "Missing units": "Mancanti",
+    "DDT number": "Numero DDT",
+    "DDT date": "Data DDT"
 }
