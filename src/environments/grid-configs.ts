@@ -909,13 +909,11 @@ export const gridConfigOrderRows = [
 //SUPPLIES
 //grid config for user 230
 export const gridConfigSupplies = [
-  /*
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
-    field: 'id', 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
+    field: 'n_ordine', 
     editable: false
   },
-  */
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
@@ -942,11 +940,6 @@ export const gridConfigSupplies = [
     sort: 'desc'
   },
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderNumber : orderGridHeaders.en.OrderNumber, 
-    field: 'n_ordine', 
-    editable: false
-  },
-  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Urgent : orderGridHeaders.en.Urgent, 
     field: 'b_urgente', 
     editable: false,
@@ -956,7 +949,7 @@ export const gridConfigSupplies = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.Extra : orderGridHeaders.en.Extra, 
     field: 'b_extra', 
     editable: false,
-    //cellRenderer: OrdersExtraCheckboxComponent
+    cellRenderer: OrdersExtraCheckboxComponent
   },
   {
     headerName: localeLang == 'it' ? orderGridHeaders.it.SentToCustomer : orderGridHeaders.en.SentToCustomer,
@@ -980,8 +973,6 @@ export const gridConfigSupplies = [
     field: 'd_consegna_prevista', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
-      //console.log("d_consegna_prevista: " + new Date(params.value).toLocaleDateString('it-IT'));
-      
       if(params.value == "0000-00-00") {
         return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       }
@@ -995,7 +986,6 @@ export const gridConfigSupplies = [
     field: 'note', 
     editable: false,
   },
-  //chi può modificarlo?
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
     field: 'n_ddt', 
@@ -1006,7 +996,6 @@ export const gridConfigSupplies = [
     field: 'd_ddt',
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
-      //if date is awaiting validation
       if(params.value == "0000-00-00" || params.value == "")
         return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
@@ -1017,11 +1006,17 @@ export const gridConfigSupplies = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.EstimatedDeliveryDate : orderGridHeaders.en.EstimatedDeliveryDate, 
     field: 'd_consegna_prevista', 
     editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      if(params.value == "0000-00-00" || params.value == "")
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      else
+        return new Date(params.value).toLocaleDateString('it-IT');
+    }
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.DeliveryNotes : orderGridHeaders.en.DeliveryNotes, 
     field: 'note_consegna', 
-    editable: false,
+    editable: true,
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 

@@ -241,18 +241,12 @@ export class OrdersComponent implements OnInit {
   }
 
   addOrderAndOrderRows(newOrder: Order, newOrderRows: OrderRow[]) {
-    //this.ordersService.setOrder(newOrder, true);
-    /*
-    console.log("newOrder");
-    console.log(newOrder);
-    console.log("newOrderRows");
-    console.log(newOrderRows);
-    console.log("validato: "+ newOrder.b_validato ? "confermato" : "inviato");
-    */
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
           newOrder.id = res[1][0];
+          newOrder.n_ordine = res[1][1];
+          
           //set order status
           let orderStatus = {
             id: "0",
@@ -472,6 +466,9 @@ export class OrdersComponent implements OnInit {
                 console.error("Error setting order with id " + order.id);
               }
               else{  
+                if(isAdding) {
+                  order.n_ordine = res2[1][1];
+                }
                 this.setOrderLocally(order, orderStatus, isAdding);
               }
             }

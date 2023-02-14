@@ -11,7 +11,7 @@
         matInput
         [formControl]="userFormControl"
         [matAutocomplete]="auto"
-        (keyup)="enableAddRowAndSubmit(userFormControl.value)">
+        (keyup)="enableSubmit(userFormControl.value)">
         <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)' onchange="">
             {{ option }}
@@ -33,14 +33,14 @@
         <mat-datepicker #pickerOrderDate></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field>
+    <!--mat-form-field>
         <input
         placeholder="{{'Order number' | translate }}"
         type="number"
         [formControl]="n_ordine"
         (keyup)="enableAddRowAndSubmit(userFormControl.value)"
         matInput>
-    </mat-form-field>
+    </mat-form-field-->
 
     <p>
         <mat-checkbox 

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { OrdersService } from '../orders.service';
-import { OrdersComponent } from '../orders/orders.component';
 
 @Component({
   selector: 'app-orders-extra-checkbox',
@@ -13,24 +12,18 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
   loading = false;
   constructor(
     private ordersService: OrdersService,
-    private ordersComponent: OrdersComponent,
     snackbar: MatSnackBar
   ) {
     super(snackbar);
   }
 
   ngOnInit(): void {
-    /*
-    if(this.data.status != "inviato" && localStorage.getItem("id_profile") != '220') {
-      this.isLocked = true;
-    }
-    */
     switch(localStorage.getItem("id_profile")) {
       case '220':
         this.isLocked = this.data.b_to_supplier;
         break;
       case '210':
-        this.isLocked = true;//(this.data.status != "inviato" );
+        this.isLocked = (this.data.status != "inviato" );
         break;
       case '230':
         this.isLocked = true;
@@ -78,8 +71,6 @@ export class OrdersExtraCheckboxComponent extends CellCheckboxComponent implemen
       b_sto: false
     };
 
-    //this.ordersComponent.setOrder(orderExtra, orderStatus, false);
-    
     this.ordersService.setOrderPromise(orderExtra, false).subscribe(
       res => {
         if(res[0] == "OK"){

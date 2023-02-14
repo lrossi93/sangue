@@ -82,7 +82,7 @@ export class AddOrderDialogComponent implements OnInit {
     //this.dialogRef = thisDialogRef;
     this.dialog = dialog;
     this.loginService = loginService;
-    //this.isExtra = data.isExtra
+    this.isExtra = data.isExtra == undefined ? false : data.isExtra;
     //creation of formControls from _builder
     this.d_ordine = _builder.control(new Date(), Validators.required);
     this.n_ordine = _builder.control(0);
@@ -102,6 +102,8 @@ export class AddOrderDialogComponent implements OnInit {
     else if(loginService.getUserCode() == "220"){
       this.userFormControl = _builder.control('', Validators.required);
     }
+
+    this.enableSubmit(this.userFormControl.value);
 
     var auxDate = new Date();
     this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_min));
@@ -137,7 +139,7 @@ export class AddOrderDialogComponent implements OnInit {
     this.newOrder = {
       id: "",
       anno: this.d_ordine.value.getFullYear(),
-      b_extra: this.isExtra,
+      b_extra: this.b_extra.value,
       b_urgente:this.b_urgente.value,
       b_validato: this.b_validato.value,
       d_ordine: this.formatDate(this.d_ordine.value.toLocaleString('it-IT').split(",", 2)[0]),
@@ -191,6 +193,7 @@ export class AddOrderDialogComponent implements OnInit {
 
   toggleExtra(): void {
     this.b_extra.value ? this.b_extra = this._builder.control(false) : this.b_extra = this._builder.control(true);
+    console.log(this.b_extra.value);
   }
 
   toggleValidato() {
@@ -224,10 +227,11 @@ export class AddOrderDialogComponent implements OnInit {
   onSubmit(event: any) {
     //TODO: check fields
     this.assignNewOrderValues();
+    console.log(this.newOrder);
     let isSubmitted = true;
 
     for(var i = 0; i < this.newOrderRows.length; ++i) {
-      this.newOrderRows[i].username = this.newOrder.username
+      this.newOrderRows[i].username = this.newOrder.username;
     }
 
     if(this.newOrder.d_validato == "") {
@@ -243,7 +247,7 @@ export class AddOrderDialogComponent implements OnInit {
       newOrderRows: this.newOrderRows,
       isSubmitted: isSubmitted
     });
-    
+
     return;
   }
 
@@ -273,7 +277,7 @@ export class AddOrderDialogComponent implements OnInit {
     this.isInputAmongUsers = false;
     if(event.source._selected){
       this.username = this.getUserId(event);
-      this.enableAddRowAndSubmit(event.source.value);
+      this.enableSubmit(event.source.value);
       this.filterForecastsByUsername(this.username);
     }
   }
@@ -405,20 +409,21 @@ export class AddOrderDialogComponent implements OnInit {
     return false;
   }
 
-  enableAddRowAndSubmit(selectedUser: string) {
+  enableSubmit(selectedUser: string) {
     if(this.loginService.getUserCode() == '220') {
       this.isAddRowEnabled = false;
       this.isSubmitEnabled = false;
       
-      if(this.isAmongUsers(selectedUser) && this.n_ordine.value > 0) {
+      if(this.isAmongUsers(selectedUser)) {
         this.isAddRowEnabled = true;
         this.isSubmitEnabled = true;
       }
     }
-    if(this.loginService.getUserCode() == '210' && this.n_ordine.value > 0) {
+    
+    if(this.loginService.getUserCode() == '210') {
       this.isAddRowEnabled = true;
       this.isSubmitEnabled = true;
-    }
+    } 
   }
 
   filterForecastsByUsername(username: string) {
