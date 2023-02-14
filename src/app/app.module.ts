@@ -75,6 +75,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from "@angular/material/icon";
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ButtonOrderReportComponent } from './button-order-report/button-order-report.component';
+import { ForecastReportComponent } from './forecast-report/forecast-report.component';
+import { LoansComponent } from './loans/loans.component';
 
 @NgModule({
   declarations: [
@@ -126,6 +128,8 @@ import { ButtonOrderReportComponent } from './button-order-report/button-order-r
     OrdersReceivedCheckboxComponent,
     MarkAsReceivedDialogComponent,
     ButtonOrderReportComponent,
+    ForecastReportComponent,
+    LoansComponent,
 
   ],
   providers: [

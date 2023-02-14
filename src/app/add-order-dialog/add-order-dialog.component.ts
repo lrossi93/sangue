@@ -236,13 +236,7 @@ export class AddOrderDialogComponent implements OnInit {
 
     if(this.b_urgente.value){
       alert(environment.currentLanguage == 'it' ? translations.it.UrgentOrderAlert : translations.en.UrgentOrderAlert);
-    }
-
-    console.log(this.newOrder);
-    console.log(this.newOrderRows);
-    console.log(isSubmitted);
-    
-    
+    }  
 
     this.thisDialogRef.close({
       newOrder: this.newOrder,

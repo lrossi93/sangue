@@ -980,10 +980,14 @@ export const gridConfigSupplies = [
     field: 'd_consegna_prevista', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
-    if(params.value == "0000-00-00")
-      return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
-    else
-      return new Date(params.value).toLocaleDateString('it-IT');
+      //console.log("d_consegna_prevista: " + new Date(params.value).toLocaleDateString('it-IT'));
+      
+      if(params.value == "0000-00-00") {
+        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+      }
+      else {
+        return new Date(params.value).toLocaleDateString('it-IT');
+      }
     }
   },
   { 

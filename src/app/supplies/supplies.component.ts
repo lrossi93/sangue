@@ -241,6 +241,7 @@ export class SuppliesComponent implements OnInit {
         isRowLocked: lock
       };
 
+      console.log(newSupplyGridRowData);
       this.supplyGridRowData.push(newSupplyGridRowData);
     }
     this.isLoading = false;

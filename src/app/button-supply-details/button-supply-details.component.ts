@@ -54,7 +54,7 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
 
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
-    console.log(this.data);
+    //console.log(this.data);
     
     this.listOrderRows(this.data.id);
     this.listProducts();
@@ -62,8 +62,7 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
     if(environment.globalForecasts.length == 0) {
       this.forecastService.getForecastsGlobally(this.data.anno);
     }
-    console.log(environment.globalForecasts);
-    
+    //console.log(environment.globalForecasts);
   }
 
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -144,6 +143,10 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
       forecasts: this.forecasts,
       status: this.data.status
     }
+
+    dialogConfig.width = "95%";
+    dialogConfig.maxHeight = "500px";
+
     dialogConfig.disableClose = false;
     this.dialogRef = this.dialog.open(
       EditOrderDialogComponent, 

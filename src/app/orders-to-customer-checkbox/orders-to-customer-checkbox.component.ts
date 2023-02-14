@@ -63,7 +63,11 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
             b_extra: this.data.b_extra, 
             b_validato: this.data.b_validato,
             d_validato: this.data.d_validato,
-            note: this.data.note
+            note: this.data.note,
+            d_consegna_prevista: this.data.d_consegna_prevista,
+            n_ddt: this.data.n_ddt,
+            d_ddt: this.data.d_ddt,
+            note_consegna: this.data.note_consegna,      
           }
 
           let orderStatus = {

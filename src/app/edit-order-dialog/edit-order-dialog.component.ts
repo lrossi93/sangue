@@ -57,10 +57,9 @@ export class EditOrderDialogComponent implements OnInit {
   gridApi!: GridApi;
   api: any;
   columnApi: any;
-
-  displayedColumns220: string[] = ['n_riga', 'product', 'qta', 'max_mese', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
-  displayedColumns230: string[] = ['n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta',  'diff', 'note'];
-  displayedColumns: string[] = localStorage.getItem('sangue_username') == 'sanguefornitore' ? this.displayedColumns230 : this.displayedColumns220;
+  displayedColumnsASL: string[] = ['n_riga', 'product', 'qta', 'max_mese', 'motivazione', 'qta_validata', 'qta_ricevuta', 'note', 'edit', 'delete'];
+  displayedColumnsSUP: string[] = ['n_riga', 'product', 'qta', 'motivazione', 'qta_validata', 'qta_ricevuta',  'diff', 'note'];
+  displayedColumns: string[] = localStorage.getItem('sangue_username') == 'sanguefornitore' ? this.displayedColumnsSUP : this.displayedColumnsASL;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -89,7 +88,6 @@ export class EditOrderDialogComponent implements OnInit {
     this.noteFormControl = _builder.control(data.order.note); //not required
     */
     this.order = data.order;
-    console.log(this.order)
     this.orderRows = data.orderRows;
     this.dialog = dialog;
     this.users = data.users;
@@ -132,9 +130,9 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.order);
-    console.log(this.orderRows);
-    this.assignQtaRicevuta();
+    //console.log(this.order);
+    //console.log(this.orderRows);
+    //this.assignQtaRicevuta();
   }
 
   deleteOrderRowById(id: string) {
@@ -156,7 +154,7 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   onQtaRicevutaSet(orderRow: OrderRow, qtaRicevuta: number) {
-    if(qtaRicevuta > 0){
+    if(qtaRicevuta >= 0){
       console.log(orderRow);
       orderRow.qta_ricevuta = qtaRicevuta;
       this.setQtaRicevutaInOrderRowGridRowData(orderRow);
@@ -448,7 +446,15 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   confirmQtaRicevuta() {
+    for(var i = 0; i < this.orderRows.length; ++i) {
+      if(this.orderRowGridRowData[i].qta_ricevuta == -1){
+        this.orderRowGridRowData[i].qta_ricevuta = this.orderRowGridRowData[i].qta_validata;
+      }
+      this.onQtaRicevutaSet(this.orderRows[i], this.orderRowGridRowData[i].qta_ricevuta);
+    }
+
     var isQtaRicevutaConfirmed = true;
+    
     this.thisDialogRef.close({
       order: this.order,
       orderRows: this.orderRows,
@@ -473,11 +479,12 @@ export class EditOrderDialogComponent implements OnInit {
         qta_validata: this.orderRows[i].qta_validata,
         qta_ricevuta: this.orderRows[i].qta_ricevuta,
         note: this.orderRows[i].note,
-        isQtaRicevutaSet: this.orderRows[i].qta_ricevuta > 0
+        isQtaRicevutaSet: this.orderRows[i].qta_ricevuta >= 0
       }
       //console.log(newOrderRow);
       this.orderRowGridRowData.push(newOrderRow);
     }
+    //console.log(this.orderRowGridRowData);
   }
 
   getMaxMeseByProdIdAndUsername(id_prd: string, username: string): number {    
@@ -501,7 +508,7 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   isQtaRicevutaSetAND(): boolean {
-    var auxBool: boolean = false;
+    var auxBool: boolean = true;
     for(var i = 0; i < this.orderRowGridRowData.length; ++i){
       auxBool = auxBool && this.orderRowGridRowData[i].isQtaRicevutaSet;
     }

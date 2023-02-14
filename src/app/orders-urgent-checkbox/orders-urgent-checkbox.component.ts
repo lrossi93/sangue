@@ -53,10 +53,10 @@ export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent impleme
       b_validato: this.data.b_validato,
       d_validato: this.data.d_validato,
       note: this.data.note,
-      d_consegna_prevista: "0000-00-00",
-      n_ddt: "",
-      d_ddt: "",
-      note_consegna: "",
+      d_consegna_prevista: this.data.d_consegna_prevista,
+      n_ddt: this.data.n_ddt,
+      d_ddt: this.data.d_ddt,
+      note_consegna: this.data.note_consegna,      
     };
 
     let orderStatus = {

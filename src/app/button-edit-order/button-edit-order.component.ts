@@ -60,6 +60,9 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
+    //console.log("DATA:");
+    //console.log(this.data);
+    
     this.isLocked = this.data.isRowLocked;
     this.listOrderRows(this.data.id);
     this.listForecasts(this.data.anno);    
