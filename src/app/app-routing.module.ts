@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ForecastReportComponent } from './forecast-report/forecast-report.component';
 import { ForecastComponent } from './forecast/forecast.component';
-//import { HomeComponent } from './home/home.component';
+import { LoansComponent } from './loans/loans.component';
 import { LoginComponent } from './login/login.component';
 import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 import { OrdersComponent } from './orders/orders.component';
@@ -11,16 +12,17 @@ import { SuppliesComponent } from './supplies/supplies.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
-  //{path: '', component: HomeComponent},
   {path: 'login', redirectTo: '', pathMatch: 'full'},
   {path: 'welcome', redirectTo: '', pathMatch: 'full'},
   {path: '', component: LoginComponent},
   {path: 'home', component: WelcomeComponent},
   {path: 'pharma-registry', component: PharmaRegistryComponent},
   {path: 'forecast', component: ForecastComponent},
+  {path: 'forecast-report', component: ForecastReportComponent},
   {path: 'orders', component: OrdersComponent},
   {path: 'order-period', component: OrderablePeriodComponent},
   {path: 'supplies', component: SuppliesComponent},
+  {path: 'loans', component: LoansComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

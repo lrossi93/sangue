@@ -244,11 +244,11 @@ export class ForecastService {
     );
   }
 
-  getForecastPdfPromise(year: string) {
+  getForecastPdfPromise(username: string, year: string) {
     let request = 'getForecastPDF';
-    let username = localStorage.getItem('sangue_username');
-    let path = this.url + '?request='+ request + '&username=' + username + '&year=' + year;
-    console.log(path)
+    let id_session = localStorage.getItem('id_session');
+    let path = this.url + '?request='+ request + '&id_session=' + id_session + '&username=' + username + '&year=' + year;
+    //console.log(path)
     return this.http.get<String[]>(
       path,
       {

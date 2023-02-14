@@ -1,1 +1,44 @@
-<p>forecast-report works!</p>
+<h1>{{ "Forecast reports" | translate }}</h1>
+<div 
+align="center">
+    <p>
+        <mat-form-field 
+        style="width: 50%"
+        align="center"
+        *ngIf="loginService.getUserCode()=='220'">
+            <input 
+            align="center"
+            type="text"
+            placeholder="{{ 'User' | translate }}"
+            matInput
+            style="width: 100%"
+            [formControl]="userFormControl"
+            [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)' onchange="">
+                {{ option }}
+            </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </p>
+    <p>
+        {{ "Reference year" | translate }}: 
+        <input
+        matInput
+        style="width: 50px"
+        type="number"
+        [(ngModel)]="year"
+        >
+    </p>
+    <p>
+        <button
+        mat-fab
+        class="mat-elevation-z0"
+        style="margin: 5px;"
+        color="warn"
+        (click)="getReport(username, year)"
+        matTooltip="{{'View report' | translate}}">
+            <i class="material-icons">picture_as_pdf</i>
+        </button>
+    </p>
+</div>    

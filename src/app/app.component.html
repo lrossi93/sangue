@@ -43,10 +43,36 @@
 		</button>
 		<button 
 		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'"
+		[routerLink]="['/loans']">
+			{{ 'Loans' | translate }}
+		</button>
+		<button 
+		mat-menu-item 
 		*ngIf="loginService.getUserCode() != null"
 		(click)="loginService.logout()"
 		[routerLink]="['']">
 			{{ 'Logout' | translate }}
+		</button>
+	</mat-menu>	
+
+	<button 
+	*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'"
+	mat-button 
+	[matMenuTriggerFor]="forecasts"> 
+		{{ 'Forecasts' | translate }}
+	</button>
+	<mat-menu #forecasts="matMenu">
+		<button 
+		mat-menu-item
+		[routerLink]="['/forecast']">
+			{{ 'Forecasts' | translate }}
+		</button>
+
+		<button
+		mat-menu-item
+		[routerLink]="['/forecast-report']">
+			{{ 'Reports' | translate }}
 		</button>
 	</mat-menu>	
 	

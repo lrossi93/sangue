@@ -7,7 +7,7 @@ import { TranslateService } from "@ngx-translate/core";
 export const environment = {
   production: false,
   basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
-  reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
+  reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/',
   currentLanguage: 'it',
   globalUsers: [],
   globalProducts: [],
