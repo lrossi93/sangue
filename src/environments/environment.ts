@@ -12,6 +12,7 @@ export const environment = {
   globalUsers: [],
   globalProducts: [],
   globalForecasts: [],
+  globalOrders: [],
 };
 
 export interface AreYouSureData {
@@ -71,6 +72,7 @@ export interface Order {
   username: string;
   d_ordine: string;
   n_ordine: number;
+  status: string;
   b_urgente: boolean;
   b_extra: boolean;
   b_validato: boolean;
@@ -80,6 +82,10 @@ export interface Order {
   n_ddt: string;
   d_ddt: string;
   note_consegna: string;
+  b_prestito: boolean;
+  id_ordine_prestito: string;
+  username_prestito_da: string;
+  username_prestito_a: string;
 }
 
 export interface OrderGridRowData {
@@ -101,6 +107,19 @@ export interface OrderGridRowData {
   d_ddt: string;
   note_consegna: string;
   isRowLocked: boolean;
+}
+
+export interface LoanGridRowData {
+  id: string;
+  anno: number;
+  username: string;
+  full_username_from: string;
+  full_username_to: string;
+  d_ordine: string;
+  n_ordine: number;
+  note: string;
+  b_prestito: boolean;
+  id_ordine_prestito: string;
 }
 
 export interface OrderRow {

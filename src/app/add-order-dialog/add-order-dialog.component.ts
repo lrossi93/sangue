@@ -146,11 +146,16 @@ export class AddOrderDialogComponent implements OnInit {
       d_validato: this.formatDate(this.d_validato.value.toLocaleString('it-IT').split(",", 2)[0]),
       n_ordine: this.n_ordine.value,
       note: this.note.value,
+      status: "",
       username: this.username,
       d_consegna_prevista: "",
       n_ddt: this.n_ddt.value,
       d_ddt: this.formatDate(this.d_ddt.value.toLocaleString('it-IT').split(",", 2)[0]),
       note_consegna: "",
+      b_prestito: false,
+      id_ordine_prestito: "",
+      username_prestito_da: "",
+      username_prestito_a: ""
     }
   }
 

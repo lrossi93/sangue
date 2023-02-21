@@ -1,0 +1,199 @@
+<div>
+    <h1 align="center">{{ 'New loan request'| translate }}</h1>
+    <h2 mat-dialog-title>{{ 'Details' | translate }}</h2>
+
+    <!--autocomplete dropdown for USERS-->
+    <mat-form-field
+    style="width: 100%;">
+        <input 
+        type="text"
+        style="width: 100%;"
+        placeholder="{{ 'Recipient' | translate }}"
+        matInput
+        [formControl]="userFormControl"
+        [matAutocomplete]="autoUsers">
+        <mat-autocomplete #autoUsers="matAutocomplete">
+        <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)' onchange="">
+            {{ option }}
+        </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+   
+    <mat-form-field
+    style="width: 100%;">
+        <input 
+        matInput 
+        placeholder="{{'Request date' | translate }}"
+        [matDatepicker]="pickerOrderDate" 
+        [value]="d_ordine.value"
+        [formControl]="d_ordine"
+        (dateChange)="onLoanDateChange()">
+        <mat-datepicker-toggle matSuffix [for]="pickerOrderDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerOrderDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field 
+    style="width: 100%;">
+		<mat-label>{{ 'Product' | translate }}</mat-label>
+		<input type="text"
+		placeholder="{{'Choose a product' | translate}}"
+		matInput
+		[formControl]="productsFormControl"
+		[matAutocomplete]="autoProducts">
+		<mat-autocomplete 
+		autoActiveFirstOption
+		#autoProducts="matAutocomplete">
+			<mat-option 
+			*ngFor="let optionP of filteredProducts | async" 
+			[value]="optionP" 
+			(onSelectionChange)='onProductSelected($event)'>
+				{{optionP}}
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+
+    <mat-form-field
+    style="width: 100%;">
+        <input 
+        matInput
+        type="number"
+        placeholder="{{ 'Quantity' | translate }}"
+        [formControl]="qta">
+    </mat-form-field>
+
+    <!--mat-form-field>
+        <input
+        placeholder="{{'Order number' | translate }}"
+        type="number"
+        [formControl]="n_ordine"
+        (keyup)="enableAddRowAndSubmit(userFormControl.value)"
+        matInput>
+    </mat-form-field-->
+
+    <!--p>
+        <mat-checkbox 
+            labelPosition="before"
+            (click)="toggleUrgente()">
+            {{ 'Urgent' | translate }}
+        </mat-checkbox>
+    </p-->
+
+    <!--p>
+        <mat-checkbox 
+            labelPosition="before"
+            (click)="toggleExtra()">
+            {{ 'Extra' | translate }}
+        </mat-checkbox>
+    </p-->
+
+    <!--sangueaslno only-->
+    <!--p>
+        <mat-checkbox *ngIf="loginService.getUserCode() == '220'"
+            labelPosition="before"
+            (click)="toggleValidato()">
+            {{ 'Validated' | translate }}
+        </mat-checkbox>
+    </p-->
+
+    <!--sangueaslno only-->
+    <!--mat-form-field *ngIf="loginService.getUserCode() == '220' && b_validato.value">
+        <input 
+        matInput 
+        placeholder="{{ 'Validation date' | translate }}"
+        [matDatepicker]="picker" 
+        [value]="d_validato.value"
+        [formControl]="d_validato"
+        (dateChange)="onValidationDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field-->
+
+    <!--mat-form-field>
+        <input
+        placeholder="{{'DDT number' | translate }}"
+        type="number"
+        [formControl]="n_ddt"
+        matInput>
+    </mat-form-field-->
+
+    <!--mat-form-field>
+        <input 
+        matInput 
+        placeholder="{{'DDT date' | translate }}"
+        [matDatepicker]="pickerDDTDate" 
+        [value]="d_ddt.value"
+        [min]="minDate"
+        [max]="maxDate"
+        [formControl]="d_ddt"
+        (dateChange)="onOrderDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="pickerDDTDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDDTDate></mat-datepicker>
+    </mat-form-field-->
+    
+    <mat-form-field
+    style="width: 100%;">
+        <input 
+        matInput
+        type="text"
+        placeholder="{{ 'Notes' | translate }}"
+        [formControl]="note">
+    </mat-form-field>
+</div>
+
+<!--ORDERROWS-->
+<!--mat-card *ngFor="let orderRow of newOrderRows; let i = index" style="margin-bottom: 20px;">
+    <h5><b>{{ 'Product' | translate }}:</b> {{ productIdToDes(orderRow.id_prd) }}</h5>
+    <h5><b>{{ 'Row number' | translate }}:</b> {{ orderRow.n_riga }}</h5>
+    <h5><b>{{ 'Quantity' | translate }}:</b> {{ orderRow.qta }}</h5>
+    <h5
+    *ngIf="orderRow.motivazione != null">
+        <b>{{ 'Reason' | translate }}:</b> {{ orderRow.motivazione }}
+    </h5>
+    <h5><b>{{ 'Approved quantity' | translate }}:</b> {{ orderRow.qta_validata }}</h5>
+    <h5><b>{{ 'Notes' | translate }}:</b> {{ orderRow.note }}</h5>
+    <div mat-dialog-actions align="center">
+        <button 
+        mat-mini-fab
+        matTooltip="{{ 'Edit' | translate }}" 
+        color="primary" 
+        style="margin: 5px;"
+        (click)="openEditOrderRowDialog(orderRow.id, false)">
+            <i class="material-icons">edit</i>
+        </button>
+
+        <button 
+        mat-mini-fab
+        matTooltip="{{ 'Delete' | translate }}"
+        style="margin: 5px;" 
+        color="warn" 
+        (click)="openAreYouSureOrderRowDialog(i)">
+            <i class="material-icons">delete</i>
+        </button>
+    </div>
+</mat-card-->
+
+<div mat-dialog-actions align="center">
+    <!--button 
+    mat-mini-fab 
+    color="basic" 
+    matTooltip="{{ 'Add row' | translate }}">
+        <i class="material-icons">add</i>
+    </button-->
+    
+    <button 
+    [disabled]="qta.value <= 0"
+    mat-mini-fab
+    matTooltip="{{ 'Submit' | translate }}"
+    color="primary" 
+    (click)="onSubmit($event)">
+        <i class="material-icons">check</i>
+    </button>
+    
+    <button 
+    mat-mini-fab
+    color="accent" 
+    matTooltip="{{ 'Cancel' | translate }}"
+    mat-dialog-close="true">
+        <i class="material-icons">close</i>
+    </button>
+</div>

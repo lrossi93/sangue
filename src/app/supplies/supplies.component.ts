@@ -94,10 +94,15 @@ export class SuppliesComponent implements OnInit {
           b_validato: event.data.b_validato,
           d_validato: event.data.d_validato,
           note: event.data.note,
+          status: event.data.status,
           d_consegna_prevista: event.data.d_consegna_prevista,
           n_ddt: event.data.n_ddt,
           d_ddt: event.data.d_ddt,
-          note_consegna: event.data.note_consegna
+          note_consegna: event.data.note_consegna,
+          b_prestito: event.data.b_prestito,
+          id_ordine_prestito: event.data.id_ordine_prestito,
+          username_prestito_a: event.data.username_prestito_a,
+          username_prestito_da: event.data.username_prestito_da
         }
           
         let orderStatus = {
@@ -131,7 +136,8 @@ export class SuppliesComponent implements OnInit {
     this.getAllData();
     this.listProducts();
     this.listOrders(this.year);
-    this.autoSizeColumns(false);
+    //this.autoSizeColumns(false);
+    this.columnApi.sizeColumnsToFit();
   }
 
   getAllData() {
@@ -336,10 +342,15 @@ export class SuppliesComponent implements OnInit {
           b_validato: event.data.b_validato,
           d_validato: event.data.d_validato,
           note: event.data.note,
+          status: event.data.status,
           d_consegna_prevista: result.date, //here the date gets updated
           n_ddt: event.data.n_ddt,
           d_ddt: event.data.d_ddt,
           note_consegna: event.data.note_consegna,
+          b_prestito: event.data.b_prestito,
+          id_ordine_prestito: event.data.id_ordine_prestito,
+          username_prestito_a: event.data.username_prestito_a,
+          username_prestito_da: event.data.username_prestito_da
         }
 
         let orderStatus = {

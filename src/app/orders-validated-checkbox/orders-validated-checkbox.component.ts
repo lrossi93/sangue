@@ -45,10 +45,15 @@ export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent impl
       b_validato: this.currentValue,
       d_validato: this.data.d_validato,
       note: this.data.note,
+      status: this.data.status,
       d_consegna_prevista: this.data.d_consegna_prevista,
       n_ddt: this.data.n_ddt,
       d_ddt: this.data.d_ddt,
-      note_consegna: this.data.note_consegna,      
+      note_consegna: this.data.note_consegna,
+      b_prestito: this.data.b_prestito,
+      id_ordine_prestito: this.data.id_ordine_prestito,
+      username_prestito_a: this.data.username_prestito_a,
+      username_prestito_da: this.data.username_prestito_da
     }
 
     let orderStatus = {

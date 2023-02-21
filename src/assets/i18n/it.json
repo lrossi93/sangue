@@ -100,7 +100,7 @@
     "Products dashboard": "Pannello di gestione dei prodotti",
     "Supplies dashboard": "Pannello di gestione delle forniture",
     "Order period": "Periodo ordinabile",
-    "Perform logout": "Esegui il logout",
+    "Disconnection": "Disconnessione",
     "Forecasts": "Previsioni",
     "You can now edit the received quantity of each product you ordered": "Ora puoi impostare la quantità ricevuta di ogni prodotto che hai ordinato",
     "marked as received": "segnato come ricevuto",
@@ -126,5 +126,17 @@
     "DDT date": "Data DDT",
     "Loans": "Prestiti",
     "Reports": "Report",
-    "Forecast reports": "Report previsionali"
+    "Forecast reports": "Report previsionali",
+    "Request pharmaceutical products loans": "Richiedi farmaci in prestito",
+    "Add loan": "Aggiungi un nuovo prestito",
+    "New loan request": "Nuova richiesta di prestito",
+    "Loan request recipient": "Destinatario della richiesta",
+    "Loan request date": "Data della richiesta di prestito",
+    "Recipient": "Destinatario",
+    "Request date": "Data della richiesta",
+    "Loan": "Prestito",
+    "granted to": "concesso a",
+    "from": "da",
+    "Granted by": "Concesso da",
+    "To": "A"
 }

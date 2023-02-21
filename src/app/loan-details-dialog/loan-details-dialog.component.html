@@ -1,0 +1,21 @@
+<h1
+mat-dialog-title 
+align="center" 
+style="text-align: center;">
+    {{ 'Loan' | translate }} {{ data.data.id }}
+</h1>
+<div
+align="center">
+    <p>
+        <b>{{ 'Granted by' | translate }}:</b><br>{{data.data.full_username_to}}
+    </p>
+    <p>
+        <b>{{ 'To' | translate}}:</b><br>{{data.data.full_username_from}}
+    </p>
+    <p>
+        <b>{{ 'Product' | translate }}:</b><br>{{this.productIdToDes(data.orderRow.id_prd)}}
+    </p>
+    <p>
+        <b>{{ 'Quantity' | translate }}:</b><br>{{data.orderRow.qta}}
+    </p>
+</div>

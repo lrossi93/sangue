@@ -33,11 +33,17 @@ export class OrdersComponent implements OnInit {
     b_validato: false,
     d_validato: "",
     note: "",
-    d_consegna_prevista: "0000-00-00",
+    status: "",
+    d_consegna_prevista: "",
     n_ddt: "",
     d_ddt: "",
     note_consegna: "",
+    b_prestito: false,
+    id_ordine_prestito: "",
+    username_prestito_a: "",
+    username_prestito_da: ""
   }
+
   orders: any = [];
   orderGridRowData: OrderGridRowData[] = [];
   orderRows: any = [];
@@ -1018,7 +1024,7 @@ export class OrdersComponent implements OnInit {
               id: "0",
               username: localStorage.getItem('sangue_username')!,
               id_order: orders[i].id,
-              d_status: orders[i].d_ordine,           
+              d_status: orders[i].d_ordine,
               status: "inviato",
               note: "",
               b_sto: 0

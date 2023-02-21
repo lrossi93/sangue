@@ -2,6 +2,7 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment, User } from 'src/environments/environment';
 import { LoginService } from '../login.service';
+import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
 
 @Component({
@@ -17,9 +18,11 @@ export class WelcomeComponent implements OnInit {
   constructor(
     public loginService: LoginService, 
     private usersService: UsersService,
+    private ordersService: OrdersService,
     private router: Router
   ) {
     this.getUsersGlobally();
+    this.ordersService.getOrdersGlobally();
   }
 
   ngOnInit(): void {

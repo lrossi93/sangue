@@ -1,0 +1,16 @@
+prestiti: possono fare un prestito
+ordini: si vede che viene creato un ordine in negativo per chi dà e in positivo per chi riceve
+
+quando salvo un ordine come prestito, viene impostato già come consegnato e definitivo, senza valutazione e senza nulla
+
+
+il cliente collegato sceglie a chi dare il farmaco, sceglie il farmaco tra quelli che ha ordinato, la quantità, 
+- oltre a marcare l'ordine come prestito bisognerà indicare su uno dei due ordini il riferimento dell'ordine padre, quindi su ordine b metto id dell'ordine a (metto sul negativo l'id dell'ordine positivo) (nessun altro riferimento all'utente b)
+
+
+prestito 
+- richiesto da: richiedente
+- rivolto a: destinatario
+- farmaco/i: solo un farmaco o ordine come gli altri? (farmaco scelto tra quelli disponibili del "rivolto a");---> UNA riga d'ordine per prestito
+- lo mostro sugli ordini o sui prestiti? --> serve pannello di creazione e gestione dei prestiti
+- la maschera va nel componente prestiti o ordini? --> prestiti

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment, Order, OrderRow, OrderStatus } from 'src/environments/environment';
@@ -30,7 +30,7 @@ export class OrdersService {
   */
   listOrders(year: string): any {
     let path = this.url + '?request=listOrders&id_session=' + this.loginService.getSession() + '&year=' + year;
-    //console.log(path);
+    ////console.log(path);
     
     this.http.get<String[]>(
       path,
@@ -38,13 +38,13 @@ export class OrdersService {
         responseType: "json"
       }
     ).subscribe(res => {
-      //console.log(res);
+      ////console.log(res);
       if(res[0] == "KO"){
         console.error("Error retrieving orders!");
         return null;
       }
       else{
-        //console.log(res[1]);   
+        ////console.log(res[1]);   
         this.orders = res[1];     
         return this.orders;
       }
@@ -93,8 +93,8 @@ export class OrdersService {
           console.error("setOrders() error: " + res[1].toString());
         }
         else{
-          console.log("Result: " + res[0]);
-          console.log("Order with ID " + res[1] + " successfully set!");
+          //console.log("Result: " + res[0]);
+          //console.log("Order with ID " + res[1] + " successfully set!");
           this.lastOrderId = res[1].toString();
         }
       });
@@ -126,8 +126,8 @@ export class OrdersService {
           console.error("setOrders() error: " + res[1].toString());
         }
         else{
-          console.log("Result: " + res[0]);
-          console.log("Order with ID " + res[1] + " successfully added!");
+          //console.log("Result: " + res[0]);
+          //console.log("Order with ID " + res[1] + " successfully added!");
           this.lastOrderId = res[1].toString();
         }
       });
@@ -160,13 +160,17 @@ export class OrdersService {
           d_consegna_prevista: order.d_consegna_prevista,
           n_ddt: order.n_ddt,
           d_ddt: order.d_ddt,
-          note_consegna: order.note_consegna
+          note_consegna: order.note_consegna,
+          b_prestito: order.b_prestito,
+          id_ordine_prestito: order.id_ordine_prestito,
+          username_prestito_da: order.username_prestito_da,
+          username_prestito_a: order.username_prestito_a
         }
       )
     }
     else{
-      console.log("isAdding: " + isAdding);
-      console.log(order);
+      //console.log("isAdding: " + isAdding);
+      //console.log(order);
       
       return this.http.post<String[]>(
         this.url, 
@@ -186,7 +190,11 @@ export class OrdersService {
           d_consegna_prevista: order.d_consegna_prevista,
           n_ddt: order.n_ddt,
           d_ddt: order.d_ddt,
-          note_consegna: order.note_consegna
+          note_consegna: order.note_consegna,
+          b_prestito: order.b_prestito,
+          id_ordine_prestito: order.id_ordine_prestito,
+          username_prestito_da: order.username_prestito_da,
+          username_prestito_a: order.username_prestito_a
         }
       )
     }
@@ -205,8 +213,8 @@ export class OrdersService {
         console.error("setOrderRows() error: " + res[1].toString());
       }
       else{
-        console.log("Result: " + res[0]);
-        console.log("OrderRow with ID " + res[1] + " successfully removed!");
+        //console.log("Result: " + res[0]);
+        //console.log("OrderRow with ID " + res[1] + " successfully removed!");
         this.lastOrderRowId = res[1].toString();
       }
     });
@@ -242,9 +250,9 @@ export class OrdersService {
       }
       else{   
         this.orderRows = res[1];
-        console.log("orderRowssssssssssssssssssssssssssssssssssssssssssssss");
+        //console.log("orderRowssssssssssssssssssssssssssssssssssssssssssssss");
         
-        console.log(res[1]);
+        //console.log(res[1]);
         return this.orderRows;
       }
     });
@@ -286,8 +294,8 @@ export class OrdersService {
           console.error("setOrderRows() error: " + res[1].toString());
         }
         else{
-          console.log("Result: " + res[0]);
-          console.log("OrderRow with ID " + res[1] + "successfully set!");
+          //console.log("Result: " + res[0]);
+          //console.log("OrderRow with ID " + res[1] + "successfully set!");
           this.lastOrderRowId = res[1].toString();
         }
       });
@@ -313,8 +321,8 @@ export class OrdersService {
           console.error("setOrderRows() error: " + res[1].toString());
         }
         else{
-          console.log("Result: " + res[0]);
-          console.log("OrderRow with ID " + res[1] + "successfully added!");
+          //console.log("Result: " + res[0]);
+          //console.log("OrderRow with ID " + res[1] + "successfully added!");
           this.lastOrderRowId = res[1].toString();
         }
       });
@@ -380,8 +388,8 @@ export class OrdersService {
         console.error("setOrderRows() error: " + res[1].toString());
       }
       else{
-        console.log("Result: " + res[0]);
-        console.log("OrderRow with ID " + res[1] + "successfully removed!");
+        //console.log("Result: " + res[0]);
+        //console.log("OrderRow with ID " + res[1] + "successfully removed!");
         this.lastOrderRowId = res[1].toString();
       }
     });
@@ -405,7 +413,7 @@ export class OrdersService {
   }
 
   setOrderStatusPromise(orderStatus: OrderStatus) {
-    console.log("Setting order status for order " + orderStatus.id_order);
+    //console.log("Setting order status for order " + orderStatus.id_order);
     
     return this.http.post<String[]>(
       this.url, 
@@ -430,11 +438,31 @@ export class OrdersService {
     let request = 'getOrderPDF';
     let id_session = localStorage.getItem('id_session');
     let path = this.url + '?request='+ request + '&id_session=' + id_session + '&id_order=' + id_order;
-    console.log(path)
+    //console.log(path)
     return this.http.get<String[]>(
       path,
       {
         responseType: "json"
+      }
+    );
+  }
+
+  /**
+   * 
+   * GLOBAL ORDERS RETRIEVAL
+   * 
+   */
+  getOrdersGlobally() {
+    let year = new Date().getFullYear().toString();
+    this.listOrdersPromise(year).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          //console.log(res[1]);
+          environment.globalOrders = res[1];
+        }
+        else {
+          console.error("Error retrieving global orders!");
+        }
       }
     );
   }

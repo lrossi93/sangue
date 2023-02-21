@@ -1,1 +1,56 @@
-<p>loans works!</p>
+<div
+style="height: 100%;">
+
+    <h1>{{ "Loans" | translate }}</h1>
+	<div>		
+		<div 
+		align="center">
+			<button
+			*ngIf="this.userCode == '210'"
+			mat-fab
+			style="margin: 5px;"
+			matTooltip="{{ 'Add loan' | translate }}" 
+			color="primary"
+			(click)="openAddLoanDialog()">
+				<i class="material-icons">playlist_add</i>
+			</button>
+			
+			<button 
+			mat-fab
+			style="margin: 5px;"
+			matTooltip="{{ 'Refresh' | translate }}" 
+			color="basic"
+			(click)="getData()">
+				<i class="material-icons">refresh</i>
+			</button>
+
+			<div align="center" style=" padding: 10px; margin: 5px;">
+				<p
+				style="margin: 5px;">
+					{{ 'Reference year' | translate }}:
+					<input 
+					matInput 
+					type="number"
+					placeholder="{{ 'Reference year' | translate }}" 
+					[(ngModel)]="year" 
+					style="width: 50px;" 
+					(change)="getData()">
+				</p>
+			</div>
+		</div>
+	
+		<ag-grid-angular 
+			style="width: 100%;"
+			class="ag-theme-material"
+			[rowData]="loanGridRowData"
+			[columnDefs]="ordersGridConfig"
+			[defaultColDef]="defaultColDef"
+			[alwaysShowHorizontalScroll]="true"
+			[gridOptions]="gridOptions"
+			[localeText]="localeText"
+			(gridReady)="onGridReady($event)"
+			[getRowId]="getRowId"
+			[animateRows]="true">
+		</ag-grid-angular>
+	</div>
+</div>

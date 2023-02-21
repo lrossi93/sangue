@@ -1,6 +1,7 @@
 import { ButtonDeleteForecastComponent } from "src/app/button-delete-forecast/button-delete-forecast.component";
 import { ButtonDeleteProductComponent } from "src/app/button-delete-product/button-delete-product.component";
 import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-order.component";
+import { ButtonLoanDetailsComponent } from "src/app/button-loan-details/button-loan-details.component";
 import { ButtonOrderReportComponent } from "src/app/button-order-report/button-order-report.component";
 import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/button-supply-details.component";
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
@@ -321,7 +322,9 @@ export const orderGridHeaders = {
     EstimatedDeliveryDate: "Data di consegna prevista",
     DDTDate: "Data DDT",
     DDTNumber: "n° DDT",
-    DeliveryNotes: "Note di consegna"
+    DeliveryNotes: "Note di consegna",
+    UserFrom: "Effettuato da",
+    Recipient: "Destinatario"
   },
   en: {
     ID: "ID",
@@ -346,7 +349,9 @@ export const orderGridHeaders = {
     EstimatedDeliveryDate: "Estimated delivery date",
     DDTDate: "DDT date",
     DDTNumber: "DDT no.",
-    DeliveryNotes: "Delivery notes"
+    DeliveryNotes: "Delivery notes",
+    UserFrom: "Requested by",
+    Recipient: "Recipient"
   }
 }
 
@@ -1021,6 +1026,104 @@ export const gridConfigSupplies = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonSupplyDetailsComponent,
+    autoHeight: false
+  }
+];
+
+//===============================================================================================================
+//LOANS
+//grid config for user 210
+export const gridConfigLoans210 = [
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
+    field: 'id', 
+    editable: false
+  },
+  /*
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
+    field: 'full_username_from', 
+    editable: false,
+    minWidth: 400,
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Recipient : orderGridHeaders.en.Recipient, 
+    field: 'full_username_to', 
+    editable: false,
+    minWidth: 400,
+  },
+  /*
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
+    field: 'anno', 
+    editable: false
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
+    field: 'd_ordine', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      return new Date(params.value).toLocaleDateString('it-IT');
+    },
+    sort: 'desc'
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
+    field: 'note', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
+    cellRenderer: ButtonLoanDetailsComponent,
+    autoHeight: false
+  }
+];
+
+//grid config for user 220
+export const gridConfigLoans220 = [
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
+    field: 'id', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
+    field: 'full_username_from', 
+    editable: false,
+    minWidth: 400,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Recipient : orderGridHeaders.en.Recipient, 
+    field: 'full_username_to', 
+    editable: false,
+    minWidth: 400,
+  },
+  /*
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
+    field: 'anno', 
+    editable: false
+  },
+  */
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
+    field: 'd_ordine', 
+    editable: false,
+    cellRenderer: (params: { value: string | number | Date; }) => {
+      return new Date(params.value).toLocaleDateString('it-IT');
+    },
+    sort: 'desc'
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
+    field: 'note', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
+    cellRenderer: ButtonLoanDetailsComponent,
     autoHeight: false
   }
 ];
