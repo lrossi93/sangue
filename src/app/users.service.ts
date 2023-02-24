@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment, User } from 'src/environments/environment';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class UsersService {
   url = environment.basePath + 'anag.php';
   users: any = [];
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
 
   listUsers(userlevel: string | null): any[] {
@@ -70,5 +71,19 @@ export class UsersService {
         }
       }
     );
+  }
+  
+  getCurrentUser(users: User[]) {
+    for(var i = 0; i < users.length; ++i) {
+      
+      if(users[i].id == localStorage.getItem("sangue_username")) {
+        console.log(users[i].client);
+        environment.currentUser.id = users[i].id;
+        environment.currentUser.username = users[i].username;
+        environment.currentUser.client = users[i].client;   
+        return;
+      }
+    }
+    environment.currentUser.id = localStorage.getItem("sangue_username")!;
   }
 }

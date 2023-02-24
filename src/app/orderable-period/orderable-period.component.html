@@ -1,4 +1,7 @@
-<h1>{{ 'Orderable period' | translate }}</h1>
+<nav
+class="second-nav">
+  <h1>{{ 'Orderable period' | translate }}</h1>
+</nav>
 <div 
 layout="row" 
 layout-align="center" 
@@ -54,3 +57,15 @@ style="min-height: 100px; margin: 10%;">
         </button>
       </p>
 </div>
+<footer>
+	<p 
+	*ngIf="loginService.getUsername() != null"
+	align="center">
+		{{ 'Logged as' | translate }} <b>{{ loginService.currentUser.client }}</b>.
+	</p>
+	<p 
+	*ngIf="loginService.getUsername() == null"
+	align="center">
+		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
+	</p>	
+</footer>

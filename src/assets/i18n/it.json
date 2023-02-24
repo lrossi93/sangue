@@ -7,7 +7,7 @@
     "Forecast": "Previsioni",
     "Orders": "Ordini",
     "Logout": "Logout",
-    "Logged as": "Loggato come",
+    "Logged as": "Connesso come",
     "You're not logged!": "Non hai effettuato il login!",
     "Logged with": "Loggato con",
     "Profile": "Profilo",
@@ -138,5 +138,7 @@
     "granted to": "concesso a",
     "from": "da",
     "Granted by": "Concesso da",
-    "To": "A"
+    "To": "A",
+    "Lend pharmaceutical products": "Presta farmaci",
+    "Lend a product or view granted and/or received loans": "Presta un prodotto o visualizza prestiti concessi e/o ricevuti"
 }

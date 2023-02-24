@@ -1037,16 +1037,15 @@ export const gridConfigLoans210 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
-    editable: false
+    editable: false,
+    minWidth: 100,
   },
-  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
     field: 'full_username_from', 
     editable: false,
     minWidth: 400,
   },
-  */
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Recipient : orderGridHeaders.en.Recipient, 
     field: 'full_username_to', 
@@ -1077,7 +1076,8 @@ export const gridConfigLoans210 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonLoanDetailsComponent,
-    autoHeight: false
+    autoHeight: false,
+    maxWidth: 150,
   }
 ];
 
@@ -1086,7 +1086,8 @@ export const gridConfigLoans220 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
-    editable: false
+    editable: false,
+    minWidth: 100,
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
@@ -1124,7 +1125,8 @@ export const gridConfigLoans220 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonLoanDetailsComponent,
-    autoHeight: false
+    autoHeight: false,
+    maxWidth: 150,
   }
 ];
 /**

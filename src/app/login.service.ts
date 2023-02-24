@@ -15,7 +15,11 @@ export class LoginService {
   id_session!: string | null;
   id_profile!: string | null;
   logged: boolean = false;
-  currentUser: User = {id: "", username: "", client: ""};
+  currentUser: User = {
+    id: "", 
+    username: "", 
+    client: ""
+  };
   users: User[] = [];
 
   //constructor
@@ -96,6 +100,7 @@ export class LoginService {
         localStorage.removeItem("id_session");
         localStorage.removeItem("id_profile");
         localStorage.removeItem("sangue_username");
+        localStorage.removeItem("sangue_client");
         this.logged = false;
       }
       else{
@@ -137,6 +142,8 @@ export class LoginService {
     });
   }
 
+
+
   loginPromise(username: string, password: string): Observable<any> {
     return this.http.post<String[]>(
       environment.basePath + 'session.php', {
@@ -157,6 +164,7 @@ export class LoginService {
         localStorage.removeItem("id_session");
         localStorage.removeItem("id_profile");
         localStorage.removeItem("sangue_username");
+        localStorage.removeItem("sangue_client")
         console.log("Successfully logged out");
         this.logged = false;
         this.router.navigate(['/']);
@@ -176,47 +184,72 @@ export class LoginService {
     });
   }
 
-  /*
-  getCurrentUser() {
-    this.usersService.listUsersPromise(this.getUserCode()).subscribe(
-      res => {
-        //console.log(res);
-        if(res[0] == "OK") {
-          this.users = res[1];
-          //console.log(this.users);
+  getCurrentUser(users: User[]) {
+    for(var i = 0; i < users.length; ++i) {
+      
+      if(users[i].id == localStorage.getItem("sangue_username")) {
+        console.log(users[i].client);
+        this.currentUser.id = users[i].id;
+        this.currentUser.username = users[i].username;
+        this.currentUser.client = users[i].client;   
+        console.log(this.currentUser.client);
+        return;
+      }
+    }
+    this.currentUser.id = localStorage.getItem("sangue_username")!;
+  }
 
-          for(var i = 0; i < this.users.length; ++i) {
-            console.log(this.users[i]);
-            if(this.users[i].username == localStorage.getItem("sangue_username")){
-              console.log(this.users[i]);
-              this.currentUser.id = this.users[i].id,
-              this.currentUser.username = this.users[i].username,
-              this.currentUser.client = this.users[i].client
+  getCurrentUserSync() {
+    switch(this.getUserCode()) {
+      case "200":
+        this.currentUser.client = "Amministratore Farmaci";
+      break;
 
-              switch(this.getUserCode()){
-                case '200':
-                  this.currentUser.client = "Amministratore";
-                  break;
-                case '220':
-                  this.currentUser.client = "ASL Novara";
-                  break;
-                case '230':
-                  this.currentUser.client = "Fornitore";
-                  break;
-                default:
-                  break;
+      case "220":
+        this.currentUser.client = "ASL Amministratrice";
+        break;
+
+      case "230":
+        this.currentUser.client = "Fornitore";
+        break;
+
+      default: 
+        if(this.users.length == 0) {   
+          this.usersService.listUsersPromise("210").subscribe(
+            res => {
+              if(res[0] == "OK") {
+                this.users = res[1];
+                environment.globalUsers = res[1];
+                
+                for(var i = 0; i < this.users.length; ++i) {
+                  if(this.users[i].id == localStorage.getItem("sangue_username")) {
+                    console.log(this.users[i].client);
+                    this.currentUser.id = this.users[i].id;
+                    this.currentUser.username = this.users[i].username;
+                    this.currentUser.client = this.users[i].client;   
+                  }
+                }
+
+                console.log("client: " + this.currentUser.client);
               }
-              localStorage.setItem("current_client", this.currentUser.client);
-              return;
+              else {
+                console.error("Error retrieving users");
+              }
             }
-          }
-          
+          );
         }
         else {
-          console.error("Error retrieving users!");
+          for(var i = 0; i < this.users.length; ++i) {
+            if(this.users[i].id == localStorage.getItem("sangue_username")) {
+              console.log(this.users[i].client);
+              this.currentUser.id = this.users[i].id;
+              this.currentUser.username = this.users[i].username;
+              this.currentUser.client = this.users[i].client;   
+            }
+          }
+          console.log("client: " + this.currentUser.client);
         }
-      }
-    );
+      break;
+    }
   }
-  */
 }

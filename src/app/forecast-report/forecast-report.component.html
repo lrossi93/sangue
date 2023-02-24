@@ -1,4 +1,7 @@
-<h1>{{ "Forecast reports" | translate }}</h1>
+<div
+class="second-nav">
+    <h1>{{ "Forecast reports" | translate }}</h1>
+</div>
 <div 
 align="center">
     <p>
@@ -42,3 +45,15 @@ align="center">
         </button>
     </p>
 </div>    
+<footer>
+	<p 
+	*ngIf="loginService.getUsername() != null"
+	align="center">
+		{{ 'Logged as' | translate }} <b>{{ loginService.currentUser.client }}</b>.
+	</p>
+	<p 
+	*ngIf="loginService.getUsername() == null"
+	align="center">
+		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
+	</p>	
+</footer>

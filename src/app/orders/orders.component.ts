@@ -101,7 +101,8 @@ export class OrdersComponent implements OnInit {
   ) {    
     this.dialog = dialog;
     this.loading = true;
-
+    this.loginService.getCurrentUserSync();
+    
     if(environment.globalUsers.length == 0) {
       //get users and populate globalUsers
       this.usersService.getUsersGlobally();
@@ -631,60 +632,64 @@ export class OrdersComponent implements OnInit {
   createOrderGridRowData() {
     this.orderGridRowData = [];
     for(var i = 0; i < this.orders.length; ++i) {
-      var lock: boolean = false;
+      if(this.orders[i].status != "prestito") {
+        //if(this.orders[i].status != "prestito) {
+        var lock: boolean = false;
 
-      //lock cells ONLY if customer!
-      if(this.loginService.getUserCode() == "210"){
-        //locked row conditions:
-        //if date is locked, everything is locked
-        if(this.isDateLocked == true){
-          lock = true;
+        //lock cells ONLY if customer!
+        if(this.loginService.getUserCode() == "210"){
+          //locked row conditions:
+          //if date is locked, everything is locked
+          if(this.isDateLocked == true){
+            lock = true;
+          }
+          //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
+          if(
+            (this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine) ||
+            this.orderStatusArr[i].status == "inviato al fornitore") {
+            lock = true;
+          }
         }
-        //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
-        if(
-          (this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine) ||
-          this.orderStatusArr[i].status == "inviato al fornitore") {
-          lock = true;
+
+        let toSupplierCondition = false;
+
+        switch(this.orderStatusArr[i].status){
+          case "inviato":
+            toSupplierCondition = false;
+            break;
+          case "confermato":
+            toSupplierCondition = false;
+            break;
+          default:
+            toSupplierCondition = true;
+            lock = true;
+          break;
         }
+
+        
+        var newOrderGridRowData = {
+          id: this.orders[i].id,
+          anno: this.orders[i].anno,
+          username: this.orders[i].username,
+          full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
+          d_ordine: this.orders[i].d_ordine,
+          n_ordine: this.orders[i].n_ordine,
+          b_urgente: this.orders[i].b_urgente,
+          b_extra: this.orders[i].b_extra,// === undefined || this.orders[i].b_extra == null || this.orders[i].b_extra == false ? false : true,
+          b_validato: this.orders[i].b_validato,
+          b_to_supplier: toSupplierCondition,
+          d_validato: this.orders[i].d_validato,
+          status: this.orderStatusArr[i].status,
+          note: this.orders[i].note,
+          d_consegna_prevista: this.orders[i].d_consegna_prevista,
+          n_ddt: this.orders[i].n_ddt == "" ? "0" : this.orders[i].n_ddt,
+          d_ddt: this.orders[i].d_ddt == "" ? "0000-00-00" : this.orders[i].d_ddt,
+          note_consegna: this.orders[i].note_consegna,  
+          isRowLocked: lock
+        };
+        this.orderGridRowData.push(newOrderGridRowData);    
+        this.visibleIndex = i;  
       }
-
-      let toSupplierCondition = false;
-
-      switch(this.orderStatusArr[i].status){
-        case "inviato":
-          toSupplierCondition = false;
-          break;
-        case "confermato":
-          toSupplierCondition = false;
-          break;
-        default:
-          toSupplierCondition = true;
-          lock = true;
-        break;
-      }
-
-      var newOrderGridRowData = {
-        id: this.orders[i].id,
-        anno: this.orders[i].anno,
-        username: this.orders[i].username,
-        full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
-        d_ordine: this.orders[i].d_ordine,
-        n_ordine: this.orders[i].n_ordine,
-        b_urgente: this.orders[i].b_urgente,
-        b_extra: this.orders[i].b_extra,// === undefined || this.orders[i].b_extra == null || this.orders[i].b_extra == false ? false : true,
-        b_validato: this.orders[i].b_validato,
-        b_to_supplier: toSupplierCondition,
-        d_validato: this.orders[i].d_validato,
-        status: this.orderStatusArr[i].status,
-        note: this.orders[i].note,
-        d_consegna_prevista: this.orders[i].d_consegna_prevista,
-        n_ddt: this.orders[i].n_ddt == "" ? "0" : this.orders[i].n_ddt,
-        d_ddt: this.orders[i].d_ddt == "" ? "0000-00-00" : this.orders[i].d_ddt,
-        note_consegna: this.orders[i].note_consegna,  
-        isRowLocked: lock
-      };
-      this.orderGridRowData.push(newOrderGridRowData);    
-      this.visibleIndex = i;  
     }
     this.loading = false;
   }

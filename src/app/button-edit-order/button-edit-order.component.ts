@@ -98,6 +98,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   listOrderRows(id: string) {
     this.ordersService.listOrderRowsPromise(id).subscribe(
       res => {
+        console.log(res);
         if(res[0] == "KO") {
           console.error("Error retrieving OrderRows!")
         }
@@ -110,6 +111,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
 
   openEditOrderDialog(event: any) {  
     this.assignOrderData();
+    console.log("orderRows");
+    console.log(this.orderRows);
     
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;

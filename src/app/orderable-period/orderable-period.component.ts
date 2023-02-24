@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment, translations } from 'src/environments/environment';
+import { LoginService } from '../login.service';
 import { OrderablePeriodService } from '../orderable-period.service';
 import { SnackbarService } from '../snackbar.service';
 
@@ -23,13 +24,18 @@ export class OrderablePeriodComponent implements OnInit {
 
   currentStartDate!: Date;
   currentEndDate!: Date;
+  loginService!: LoginService;
+
 
   constructor(
     private orderablePeriodService: OrderablePeriodService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    loginService: LoginService
   ) { 
     this.year = new Date().getFullYear().toString();
     this.month = new Date().getMonth().toString();
+    this.loginService = loginService;
+    this.loginService.getCurrentUserSync();
   }
 
   ngOnInit(): void {

@@ -91,6 +91,8 @@ export class ForecastComponent implements OnInit {
         break;
     }
 
+    this.loginService.getCurrentUserSync();
+
     if(environment.globalUsers.length == 0) {
       //get users and populate globalUsers
       this.usersService.getUsersGlobally();
@@ -130,10 +132,9 @@ export class ForecastComponent implements OnInit {
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
-    this.columnApi = params.columnApi;    
-    this.getAllForecastData();
-    
-    //this.autoSizeColumns(false);
+    //this.columnApi = params.columnApi;    
+    //this.getAllForecastData();
+    this.autoSizeColumns(false);
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -158,13 +159,16 @@ export class ForecastComponent implements OnInit {
       }
     );
 
-    //retrieve data from db
 
-    setTimeout(
+    //retrieve data from db
+    this.getAllForecastData();
+    
+    /*setTimeout(
       () => {
         this.api = this.agGrid.api;
         this.logAPI();
       }, 300);
+      */
   }
 
   logAPI(){
@@ -202,8 +206,8 @@ export class ForecastComponent implements OnInit {
                       this.products = res3[1];
                       //console.log(this.products);
                       this.createForecastGridRowData();
-                      this.autoSizeColumns(false);
-                      this.api.setDomLayout('autoHeight');
+                      //this.autoSizeColumns(false);
+                      //this.api.setDomLayout('autoHeight');
                       this.isLoading = false;
                     }
                   }

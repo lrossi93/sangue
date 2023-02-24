@@ -1,5 +1,7 @@
-<h1>{{ 'Home' | translate }}</h1>
-
+<nav
+class="second-nav">
+	<h1>{{ 'Home' | translate }}</h1>
+</nav>
 <section>	
 	<article
 	*ngIf="loginService.getUserCode() != '200' && loginService.getUserCode() != '230'">
@@ -26,7 +28,7 @@
 		<a [routerLink]="['/loans']">
 			<mat-card>
 				<mat-card-title>{{ 'Loans' | translate}}</mat-card-title>
-				<mat-card-content>{{ 'Request pharmaceutical products loans' | translate}}</mat-card-content>
+				<mat-card-content>{{ 'Lend a product or view granted and/or received loans' | translate}}</mat-card-content>
 			</mat-card>
 		</a>
 	</article>
@@ -71,3 +73,16 @@
 		</a>
 	</article>
 </section>
+
+<footer>
+	<p 
+	*ngIf="loginService.getUsername() != null"
+	align="center">
+		{{ 'Logged as' | translate }} <b>{{ loginService.currentUser.client }}</b>.
+	</p>
+	<p 
+	*ngIf="loginService.getUsername() == null"
+	align="center">
+		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
+	</p>	
+</footer>

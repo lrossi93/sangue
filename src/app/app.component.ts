@@ -16,16 +16,18 @@ export class AppComponent implements OnInit {
   users: User[] = [];
   currentUser!: User;
   localStorage: any;
+  router!: Router;
 
   constructor(
     public loginService: LoginService,
     public translate: TranslateService,
-    private router: Router,
+    router: Router,
     private usersService: UsersService
   ){
+    this.router = router;
     translate.addLangs(['en', 'it']);
-    this.localStorage = localStorage
-    
+    this.localStorage = localStorage;
+    this.loginService.getCurrentUserSync();
     if(
       navigator.language.split("-", 2)[0] == 'it' ||
       navigator.language.split("-", 2)[0] == 'en'

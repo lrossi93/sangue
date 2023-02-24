@@ -1,90 +1,58 @@
 <div
-style="height: 100%;"
->
-    <h1>{{ 'Orders' | translate }}</h1>
-
-	<div 
-	*ngIf="loading"
-	layout="row" 
-	layout-align="center" 
-	align="center" 
-	style="min-height: 50px; margin: 10%;">
-		<p
-		align="center">
-			<mat-spinner></mat-spinner>
-		</p>
-		<h2
-		align="center">
-			{{ 'Loading' | translate }}...
-		</h2>
-	</div>
+*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'">
+	<nav
+	class="second-nav">
+		<h1>
+			{{ "Orders" | translate }}
+		</h1>
 		
-	<div
-	*ngIf="!loading">		
-		<div align="center">
-			<button 
-			*ngIf="!isDateLocked"
-			mat-fab
-			style="margin: 5px;"
-			matTooltip="{{ 'Add order' | translate }}" 
-			color="primary"
-			(click)="openAddOrderDialog(false)">
-				<i class="material-icons">playlist_add</i>
-			</button>
+		<button
+		*ngIf="!loading && !isDateLocked"
+		mat-mini-fab
+		matTooltip="{{ 'Add order' | translate }}" 
+		color="primary"
+		(click)="openAddOrderDialog(false)">
+			<i class="material-icons">playlist_add</i>
+		</button>
 
-			<button 
-			*ngIf="isDateLocked"
-			mat-fab
-			style="margin: 5px;"
-			matTooltip="{{ 'Add extra order' | translate }}"
-			color="accent"
-			(click)="openAddOrderDialog(true)">
-				<i class="material-icons">playlist_add</i>
-			</button>
-			
-			<button 
-			mat-fab
-			style="margin: 5px;"
-			matTooltip="{{ 'Refresh' | translate }}" 
-			color="basic"
-			(click)="listOrders(year)">
-				<i class="material-icons">refresh</i>
-			</button>
-			
-			<p 
-			*ngIf="isDateLocked && loginService.getUserCode() == '210'" 
-			style="color: red;">
-				{{ 'Orders placed now are automatically marked as \"extra\"' | translate }}.
-			</p>
+		<button 
+		*ngIf="!loading && isDateLocked"
+		mat-mini-fab
+		matTooltip="{{ 'Add extra order' | translate }}"
+		color="accent"
+		(click)="openAddOrderDialog(true)">
+			<i class="material-icons">playlist_add</i>
+		</button>
 
-			<div align="center" style=" padding: 10px; margin: 5px;">
-				<p
-				style="margin: 5px;">
-					{{ 'Reference year' | translate }}:
-					<input 
-					matInput 
-					type="number"
-					placeholder="{{ 'Reference year' | translate }}" 
-					[(ngModel)]="year" 
-					style="width: 100px;" 
-					(change)="listOrdersAndForecasts(year)">
-				</p>
-			</div>
-		</div>
-	
-		<ag-grid-angular 
-			style="width: 100%;"
-			class="ag-theme-material"
-			[rowData]="orderGridRowData"
-			[columnDefs]="ordersGridConfig"
-			[defaultColDef]="defaultColDef"
-			[alwaysShowHorizontalScroll]="true"
-			[gridOptions]="gridOptions"
-			[localeText]="localeText"
-			(gridReady)="onGridReady($event)"
-			[getRowId]="getRowId"
-			[animateRows]="true">
-			<!--to see flashing cells, add [enableCellChangeFlash]="true"-->
-		</ag-grid-angular>
-	</div>
+		<button 
+		mat-mini-fab
+		matTooltip="{{ 'Refresh' | translate }}" 
+		color="basic"
+		(click)="listOrders(year)">
+			<i class="material-icons">refresh</i>
+		</button>
+
+		<input 
+		matInput 
+		type="number"
+		placeholder="{{ 'Reference year' | translate }}" 
+		[(ngModel)]="year" 
+		style="width: 50px;" 
+		(change)="listOrders(year)">
+	</nav>
+
+
+	<ag-grid-angular
+		class="ag-theme-material ag-grid-table"
+		[rowData]="orderGridRowData"
+		[columnDefs]="ordersGridConfig"
+		[defaultColDef]="defaultColDef"
+		[alwaysShowHorizontalScroll]="true"
+		[gridOptions]="gridOptions"
+		[localeText]="localeText"
+		(gridReady)="onGridReady($event)"
+		[getRowId]="getRowId"
+		[animateRows]="true">
+		<!--rimosso (gridReady)="onGridReady($event)"-->
+	</ag-grid-angular>
 </div>

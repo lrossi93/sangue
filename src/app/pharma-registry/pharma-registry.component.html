@@ -1,54 +1,30 @@
 <div *ngIf="loginService.getProfile() == '200'">
-	<h1>{{ 'Pharmaceutical registry' | translate }}</h1>
+	<nav
+	class="second-nav">
+		<h1>
+			{{ 'Pharmaceutical registry' | translate }}
+		</h1>
+		
+		<button
+		mat-mini-fab
+		matTooltip="{{ 'Add product' | translate }}" 
+		color="primary"
+		(click)="openAddProductDialog()">
+			<i class="material-icons">playlist_add</i>
+		</button>
+	</nav>
 
-	<p
-	*ngIf="isLoading"
-	align="center">
-		<mat-spinner></mat-spinner>
-	</p>
-	<h2
-	*ngIf="isLoading"
-	align="center">
-		{{ 'Loading' | translate }}...
-	</h2>
-
-	<div
-	*ngIf="!isLoading">
-		<p
-		align="center">
-			<button
-			mat-fab
-			style="margin: 5px;"
-			matTooltip="{{ 'Add product' | translate }}" 
-			color="primary"
-			(click)="openAddProductDialog()">
-				<i class="material-icons">playlist_add</i>
-			</button>
-		</p>
-
-		<!--p
-		align="center">
-			<button
-				mat-raised-button 
-				color="primary" 
-				(click)="addLocally(product)"
-				style="width: 90%; margin: 15px;">
-					{{ 'AddLocally' | translate }}
-			</button>
-		</p-->
-
-		<ag-grid-angular 
-			style="width: 100%;"
-			class="ag-theme-material"
-			[rowData]="this.products"
-			[columnDefs]="pharmaRegistryGridConfig"
-			[defaultColDef]="defaultColDef"
-			[gridOptions]="gridOptions"
-			[animateRows]="true"
-			[alwaysShowHorizontalScroll]="true"
-			[localeText]="localeText"
-			(gridReady)="onGridReady($event)"
-			[getRowId]="getRowId">
-		</ag-grid-angular>
-	</div>
+	<ag-grid-angular 
+		class="ag-theme-material ag-grid-table"
+		[getRowId]="getRowId"
+		[rowData]="this.products"
+		[columnDefs]="pharmaRegistryGridConfig"
+		[defaultColDef]="defaultColDef"
+		[gridOptions]="gridOptions"
+		[animateRows]="true"
+		[alwaysShowHorizontalScroll]="true"
+		[alwaysShowVerticalScroll]="true"
+		[localeText]="localeText">
+		<!--rimosso (gridReady)="onGridReady($event)"-->
+	</ag-grid-angular>
 </div>

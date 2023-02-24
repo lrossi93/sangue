@@ -1,22 +1,27 @@
 
-<header>
+<!--header>
 	<img src="https://ecwmed.asl.novara.it/img/loghi/ico_asl_piemonte_NO.jpg"/>
-</header>
+</header-->
 
-<nav>
+<nav
+style="display: flex; flex-direction: row;">
+
+	<img src="https://ecwmed.asl.novara.it/img/loghi/ico_asl_piemonte_NO.jpg"/>
+
 	<button 
+	*ngIf="loginService.getUsername() != null"
 	mat-button 
 	[matMenuTriggerFor]="menu"
 	> 
 		{{ 'Menu' | translate }}
 	</button>
 	<mat-menu #menu="matMenu">
-		<button 
+		<!--button 
 		mat-menu-item 
 		*ngIf="loginService.getUserCode() == null"
 		[routerLink]="['/login']">
 			{{ 'Login' | translate }}
-		</button>
+		</button-->
 		<button 
 		mat-menu-item 
 		*ngIf="loginService.getUserCode() != null"
@@ -29,12 +34,12 @@
 		[routerLink]="['/pharma-registry']">
 			{{ 'Registry' | translate }}
 		</button>
-		<button 
+		<!--button 
 		mat-menu-item 
 		*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'"
 		[routerLink]="['/forecast']">
 			{{ 'Forecast' | translate }}
-		</button>
+		</button-->
 		<button 
 		mat-menu-item 
 		*ngIf="loginService.getUserCode() == '230'"
@@ -47,13 +52,13 @@
 		[routerLink]="['/loans']">
 			{{ 'Loans' | translate }}
 		</button>
-		<button 
+		<!--button 
 		mat-menu-item 
 		*ngIf="loginService.getUserCode() != null"
 		(click)="loginService.logout()"
 		[routerLink]="['']">
 			{{ 'Logout' | translate }}
-		</button>
+		</button-->
 	</mat-menu>	
 
 	<button 
@@ -70,6 +75,7 @@
 		</button>
 
 		<button
+		*ngIf="loginService.getUserCode() == '220'"
 		mat-menu-item
 		[routerLink]="['/forecast-report']">
 			{{ 'Reports' | translate }}
@@ -115,13 +121,35 @@
 			{{ 'Report 2' | translate }}
 		</button>
 	</mat-menu>	
-</nav>
 
+	<button
+	mat-button
+	*ngIf="loginService.getUsername() != null"
+	[matMenuTriggerFor]="loginMenu"
+	>
+		{{ 'Logged as' | translate }} <b>{{loginService.currentUser.client}}</b>
+	</button>
+	<button 
+	mat-button
+	*ngIf="loginService.getUsername() == null"
+	(click)="router.navigate(['/login'])">
+		{{ 'Login' | translate }}
+	</button>
+	<mat-menu #loginMenu="matMenu">
+		<button 
+		*ngIf="loginService.getUsername() != null"
+		mat-menu-item 
+		(click)="loginService.logout()"
+		>
+			{{ 'Logout' | translate }}
+		</button>
+	</mat-menu>	
+</nav>
 
 <router-outlet></router-outlet>
 
 
-<footer>
+<!--footer>
 	<p 
 	*ngIf="loginService.getUsername() != null"
 	align="center">
@@ -132,6 +160,6 @@
 	align="center">
 		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
 	</p>	
-</footer>
+</footer-->
 
 

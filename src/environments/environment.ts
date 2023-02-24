@@ -13,6 +13,11 @@ export const environment = {
   globalProducts: [],
   globalForecasts: [],
   globalOrders: [],
+  currentUser: {
+    id: "",
+    username: "",
+    client: ""
+  }
 };
 
 export interface AreYouSureData {

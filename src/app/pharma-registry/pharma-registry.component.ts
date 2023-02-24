@@ -84,6 +84,8 @@ export class PharmaRegistryComponent implements OnInit {
     //columnDef
     this.pharmaRegistryGridConfig = pharmaRegistryGridConfig;
 
+    this.loginService.getCurrentUserSync();
+    
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {

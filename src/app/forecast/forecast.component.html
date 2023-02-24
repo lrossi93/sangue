@@ -1,63 +1,46 @@
 <div *ngIf="(loginService.getProfile() == '210' || loginService.getProfile() == '220')">
-	<!--p
-	*ngIf="isLoading"
-	align="center">
-		<mat-spinner></mat-spinner>
-	</p>
-	<h2
-	*ngIf="isLoading"
-	align="center">
-		{{ 'Loading' | translate }}...
-	</h2-->
-
-
-	<h1>{{ 'Forecast registry' | translate }}</h1>
-	<div align="center">
-		<button 
-		mat-fab
+	<nav
+	class="second-nav">
+		<h1>
+			{{ "Forecast registry" | translate }}
+		</h1>
+		
+		<button
+		mat-mini-fab
+		matTooltip="{{ 'Add forecast' | translate }}" 
 		color="primary"
-		matTooltip="{{ 'Add forecast' | translate }}"
-		style="margin: 5px;" 
 		(click)="openAddForecastDialog()">
 			<i class="material-icons">playlist_add</i>
 		</button>
-
+	
 		<button 
-		mat-fab
-		matTooltip="{{ 'Refresh' | translate }}"
-		style="margin: 5px;"
+		mat-mini-fab
+		matTooltip="{{ 'Refresh' | translate }}" 
 		color="basic"
 		(click)="listForecasts(year)">
 			<i class="material-icons">refresh</i>
 		</button>
+	
+		<input 
+		matInput 
+		type="number"
+		placeholder="{{ 'Reference year' | translate }}" 
+		[(ngModel)]="year" 
+		style="width: 50px;" 
+		(change)="listForecasts(year)">
+	</nav>
 
-		<div align="center" style=" padding: 10px; margin: 5px;">
-			<p>
-				{{ 'Reference year' | translate }}:
-				<input 
-				matInput
-				type="number" 
-				placeholder="{{'Year' | translate}}" 
-				[(ngModel)]="year" 
-				(change)="listForecasts(year)" 
-				style="width: 100px;">
-			</p>
-		</div>		
-	</div>
-
-		<ag-grid-angular 
-			style="width: 100%; position: sticky; top: 35px;"
-			class="ag-theme-material"
-			[rowData]="forecastGridRowData"
-			[columnDefs]="forecastGridConfig"
-			[defaultColDef]="defaultColDef"
-			[alwaysShowHorizontalScroll]="true"
-			[alwaysShowVerticalScroll]="true"
-			[gridOptions]="gridOptions"
-			[localeText]="localeText"
-			(gridReady)="onGridReady($event)"
-			[getRowId]="getRowId"
-			[animateRows]="true"
-			>
-		</ag-grid-angular>
+	<ag-grid-angular
+		class="ag-theme-material  ag-grid-table"
+		[getRowId]="getRowId"
+		[rowData]="forecastGridRowData"
+		[columnDefs]="forecastGridConfig"
+		[defaultColDef]="defaultColDef"
+		[alwaysShowHorizontalScroll]="true"
+		[alwaysShowVerticalScroll]="true"
+		[gridOptions]="gridOptions"
+		[localeText]="localeText"
+		[animateRows]="true">
+		<!--rimosso (gridReady)="onGridReady($event)"-->
+	</ag-grid-angular>
 </div>

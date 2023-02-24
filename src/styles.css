@@ -13,6 +13,7 @@ html {
 body { 
 	position: relative;
 	width: 100%;
+	height: 100%;
 	margin: 0; 
 	font-family: Roboto, 
 	"Helvetica Neue", sans-serif; 
@@ -36,12 +37,27 @@ nav{
 	display: flex;
 	flex: wrap;
 	justify-content: left;
-	background-color: #33AAFF;
-	position: sticky;
+	background-color: #00A8A1;
+	width: 100%;
 	top: 0;
-	padding: 5px;
 	z-index: 1;
-	max-height: 35px;
+	height: 50px;
+}
+
+.second-nav{
+	display: flex; 
+	flex-direction: row; 
+	background-color: #00BFB6;
+	top: 50px;
+}
+
+.second-nav>h1 {
+	margin: 10px;
+	color: white;
+}
+
+.second-nav>button {
+	margin: 5px;
 }
 
 section{
@@ -65,8 +81,8 @@ footer{
 	left: 0;
 	right: 0;
 	bottom: 0;
-	padding: 20px;
 }
+
 a {
 /*decidere stile dei link*/
 	text-decoration: none;	
@@ -76,5 +92,12 @@ a {
 .ag-div{
 	position: fixed;
 	top: 35px;
+	z-index: 100;
+}
+
+.ag-grid-table {
+	top: 120px;
+	position: sticky;
+	height: calc(100vh - 100px);
 	z-index: 100;
 }

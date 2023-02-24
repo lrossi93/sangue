@@ -53,16 +53,20 @@ export class SuppliesComponent implements OnInit {
 
   localeText = (environment.currentLanguage == 'it' ? AG_GRID_LOCALE_IT : AG_GRID_LOCALE_EN);
 
+  loginService!: LoginService
   constructor(
     private ordersService: OrdersService,
     private pharmaRegistryService: PharmaRegistryService,
     private usersService: UsersService,
     private forecastService: ForecastService,
     private snackbarService: SnackbarService,
-    private loginService: LoginService,
+    loginService: LoginService,
     dialog: MatDialog,
   ) { 
+    this.loginService = loginService;
     this.dialog = dialog;
+
+    this.loginService.getCurrentUserSync();
 
     if(environment.globalUsers.length == 0) {
       this.usersService.getUsersGlobally();
@@ -136,8 +140,8 @@ export class SuppliesComponent implements OnInit {
     this.getAllData();
     this.listProducts();
     this.listOrders(this.year);
-    //this.autoSizeColumns(false);
-    this.columnApi.sizeColumnsToFit();
+    this.autoSizeColumns(false);
+    //this.columnApi.sizeColumnsToFit();
   }
 
   getAllData() {

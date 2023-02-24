@@ -1,59 +1,41 @@
-<div>
-    <h1>{{ 'Supplies' | translate }}</h1>
+<div
+*ngIf="loginService.getUserCode() == '230'">
+	<nav
+	class="second-nav">
+		<h1>
+			{{ "Supplies" | translate }}
+		</h1>
 
-	<p
-	*ngIf="isLoading"
-	align="center">
-		<mat-spinner></mat-spinner>
-	</p>
-	<h2 
-	*ngIf="isLoading"
-	align="center">
-		{{ 'Loading' | translate }}...
-	</h2>
-	
-	<div 
-	*ngIf="!isLoading">
-		<div align="center">			
-			<button 
-			mat-fab
-			style="margin: 5px;"
-			matTooltip="{{ 'Refresh' | translate }}" 
-			color="basic"
-			(click)="listOrders(year)">
-				<i class="material-icons">refresh</i>
-			</button>
+		<button 
+		mat-mini-fab
+		matTooltip="{{ 'Refresh' | translate }}" 
+		color="basic"
+		(click)="listOrders(year)">
+			<i class="material-icons">refresh</i>
+		</button>
 
+		<input 
+		matInput 
+		type="number"
+		placeholder="{{ 'Reference year' | translate }}" 
+		[(ngModel)]="year" 
+		style="width: 50px;" 
+		(change)="listOrders(year)">
+	</nav>
 
-			<div align="center" style=" padding: 10px; margin: 5px;">
-				<p
-				style="margin: 5px;">
-					{{ 'Reference year' | translate }}:
-					<input 
-					matInput 
-					type="number"
-					placeholder="{{ 'Reference year' | translate }}" 
-					[(ngModel)]="year" 
-					style="width: 100px;" 
-					(change)="listOrders(year)">
-				</p>
-			</div>
-		</div>
 		
-		<ag-grid-angular 
-			style="width: 100%; height: 100vh;"
-			class="ag-theme-material"
-			[rowData]="supplyGridRowData"
-			[columnDefs]="suppliesGridConfig"
-			[alwaysShowHorizontalScroll]="true"
-			[alwaysShowVerticalScroll]="false"
-			[defaultColDef]="defaultColDef"
-			[gridOptions]="gridOptions"
-			[localeText]="localeText"
-			(gridReady)="onGridReady($event)"
-			[getRowId]="getRowId"
-			[animateRows]="true">
-			<!--to see flashing cells, add [enableCellChangeFlash]="true"-->
-		</ag-grid-angular>
-	</div>
+	<ag-grid-angular
+		class="ag-theme-material ag-grid-table"
+		[rowData]="supplyGridRowData"
+		[columnDefs]="suppliesGridConfig"
+		[alwaysShowHorizontalScroll]="true"
+		[alwaysShowVerticalScroll]="false"
+		[defaultColDef]="defaultColDef"
+		[gridOptions]="gridOptions"
+		[localeText]="localeText"
+		(gridReady)="onGridReady($event)"
+		[getRowId]="getRowId"
+		[animateRows]="true">
+		<!--to see flashing cells, add [enableCellChangeFlash]="true"-->
+	</ag-grid-angular>
 </div>

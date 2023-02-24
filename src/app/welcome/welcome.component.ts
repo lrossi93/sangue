@@ -14,6 +14,7 @@ import { UsersService } from '../users.service';
 export class WelcomeComponent implements OnInit {
 
   users: User[] = [];
+  currentClient: string = "";
 
   constructor(
     public loginService: LoginService, 
@@ -22,6 +23,7 @@ export class WelcomeComponent implements OnInit {
     private router: Router
   ) {
     this.getUsersGlobally();
+    
     this.ordersService.getOrdersGlobally();
   }
 
@@ -44,6 +46,8 @@ export class WelcomeComponent implements OnInit {
           this.users = res[1];
           environment.globalUsers = res[1]
           console.log(environment.globalUsers);
+          //this.loginService.getCurrentUser(this.users);
+          this.loginService.getCurrentUserSync();
         }
         else{
           console.error("Error retrieving users!");

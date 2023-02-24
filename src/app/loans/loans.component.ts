@@ -69,13 +69,14 @@ export class LoansComponent implements OnInit {
   gridApi!: GridApi;
   api: any;
   columnApi: any;
+  loginService!: LoginService;
   
   public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
     return params.data.id;
   };
   
   constructor(
-    private loginService: LoginService,
+    loginService: LoginService,
     private pharmaRegistryService: PharmaRegistryService,
     private usersService: UsersService,
     private forecastService: ForecastService,
@@ -84,8 +85,10 @@ export class LoansComponent implements OnInit {
     private router: Router,
     private snackbarService: SnackbarService
   ) { 
+    this.loginService = loginService;
     this.dialog = dialog;
     this.getData();
+    this.loginService.getCurrentUserSync();
 
     this.userCode = this.loginService.getUserCode()!;
 
@@ -138,7 +141,8 @@ export class LoansComponent implements OnInit {
     //console.log(this.api);
     this.columnApi = params.columnApi;
     this.api.setDomLayout('autoHeight');
-    this.autoSizeColumns(false);
+    this.api.sizeColumnsToFit();
+    //this.autoSizeColumns(false);
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -225,6 +229,7 @@ export class LoansComponent implements OnInit {
           environment.globalUsers = res[1];
           this.dataCount++;
           this.createLoanGridRowData();
+          this.loginService.getCurrentUser(this.users);
         }
         else {
           console.error("Error retrieving users globally!");
@@ -396,12 +401,11 @@ export class LoansComponent implements OnInit {
                 loanRowRes.id_ordine = loanRes.id;
                 //console.log(loanRowReq);
 
-                this.setLoanLocally(loanReq);
-
                 this.ordersService.setOrderRowPromise(loanRowReq, isAdding).subscribe(
                   resLrReq => {
                     if(resLrReq[0] == "OK") {
                       loanRowReq.id = resLrReq[1];
+                      this.setLoanLocally(loanReq);
                       //console.log("update>>>loanRowReq");
                       //console.log(loanRowReq);
                     }
