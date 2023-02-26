@@ -324,7 +324,8 @@ export const orderGridHeaders = {
     DDTNumber: "n° DDT",
     DeliveryNotes: "Note di consegna",
     UserFrom: "Effettuato da",
-    Recipient: "Destinatario"
+    Recipient: "Destinatario",
+    LoanDate: "Data prestito",
   },
   en: {
     ID: "ID",
@@ -351,7 +352,8 @@ export const orderGridHeaders = {
     DDTNumber: "DDT no.",
     DeliveryNotes: "Delivery notes",
     UserFrom: "Requested by",
-    Recipient: "Recipient"
+    Recipient: "Recipient",
+    LoanDate: "Loan date"
   }
 }
 
@@ -1060,7 +1062,7 @@ export const gridConfigLoans210 = [
   },
   */
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.LoanDate : orderGridHeaders.en.LoanDate, 
     field: 'd_ordine', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
@@ -1109,7 +1111,7 @@ export const gridConfigLoans220 = [
   },
   */
   { 
-    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderDate : orderGridHeaders.en.OrderDate, 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.LoanDate : orderGridHeaders.en.LoanDate, 
     field: 'd_ordine', 
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {

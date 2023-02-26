@@ -181,7 +181,7 @@ export class OrdersComponent implements OnInit {
     this.listForecasts(this.year);
     this.listProducts();
     this.autoSizeColumns(false);
-    this.api.setDomLayout('autoHeight');
+    //this.api.setDomLayout('autoHeight');
   }
 
   autoSizeColumns(skipHeader: boolean) {

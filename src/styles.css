@@ -101,3 +101,15 @@ a {
 	height: calc(100vh - 100px);
 	z-index: 100;
 }
+
+.container {
+	height: calc(100vh - 120px); 
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.content {
+	width: 100%;
+	margin: auto;
+}

@@ -7,7 +7,7 @@
 		</h1>
 		
 		<button
-		*ngIf="!loading && !isDateLocked"
+		*ngIf="(!loading && !isDateLocked) || loginService.getUserCode() == '220'"
 		mat-mini-fab
 		matTooltip="{{ 'Add order' | translate }}" 
 		color="primary"
@@ -16,7 +16,7 @@
 		</button>
 
 		<button 
-		*ngIf="!loading && isDateLocked"
+		*ngIf="!loading && isDateLocked && loginService.getUserCode() != '220'"
 		mat-mini-fab
 		matTooltip="{{ 'Add extra order' | translate }}"
 		color="accent"

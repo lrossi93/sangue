@@ -2,8 +2,11 @@
 class="second-nav">
     <h1>{{ "Forecast reports" | translate }}</h1>
 </div>
+
+
 <div 
-align="center">
+align="center"
+class="container">
     <p>
         <mat-form-field 
         style="width: 50%"
@@ -45,6 +48,8 @@ align="center">
         </button>
     </p>
 </div>    
+
+
 <footer>
 	<p 
 	*ngIf="loginService.getUsername() != null"

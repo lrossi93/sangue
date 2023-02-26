@@ -75,7 +75,7 @@ export class ForecastReportComponent implements OnInit {
           this.users = res[1];
           environment.globalUsers = res[1];
           this.getUserNames();
-          this.username = this.users[0].username;
+          this.username = this.users[0].id;
           this.userFormControl = this._builder.control(this.users[0].client);
         }
         else{

@@ -24,7 +24,7 @@ class="second-nav">
 	</article>
 
 	<article
-	*ngIf="loginService.getUserCode() == '210'">
+	*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'">
 		<a [routerLink]="['/loans']">
 			<mat-card>
 				<mat-card-title>{{ 'Loans' | translate}}</mat-card-title>
