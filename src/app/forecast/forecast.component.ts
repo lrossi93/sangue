@@ -132,6 +132,8 @@ export class ForecastComponent implements OnInit {
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
+    console.log("log API:");
+    console.log(this.api);
     //this.columnApi = params.columnApi;    
     //this.getAllForecastData();
     this.autoSizeColumns(false);
@@ -345,6 +347,10 @@ export class ForecastComponent implements OnInit {
       qta_approvata: newForecast.qta_approvata,
       costo_unitario: newForecast.costo_unitario
     });
+    
+
+    console.log("log API:");
+    console.log(this.api);
 
     //devo aggiungere un ForecastGridRowData
     this.api.applyTransaction({
@@ -421,7 +427,7 @@ export class ForecastComponent implements OnInit {
       toBeRemoved.push(data);
       rowNodes.push(rowNode);
     });
-
+    
     const res = this.api.applyTransaction({ remove: toBeRemoved})!;
     //this.api.redrawRows(rowNodes);
     console.log(res);

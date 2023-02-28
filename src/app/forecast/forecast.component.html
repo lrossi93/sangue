@@ -40,7 +40,7 @@
 		[alwaysShowVerticalScroll]="true"
 		[gridOptions]="gridOptions"
 		[localeText]="localeText"
-		[animateRows]="true">
-		<!--rimosso (gridReady)="onGridReady($event)"-->
+		[animateRows]="true"
+		(gridReady)="onGridReady($event)">
 	</ag-grid-angular>
 </div>

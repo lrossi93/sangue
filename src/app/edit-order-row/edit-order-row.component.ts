@@ -213,7 +213,7 @@ export class EditOrderRowComponent implements OnInit {
     let productId = this.productDesToId(event.source.value);
     this.productsFormControl.setValue(event.source.value);
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
-    this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
+    this.minQty = this.getMinOrdByProductId(productId);
     this.checkFields(event);
     }
   }
@@ -221,7 +221,7 @@ export class EditOrderRowComponent implements OnInit {
   selectProductAtStart(productId: string) {
     this.productsFormControl.setValue(this.productIdToDes(productId));
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
-    this.minQty = Math.floor(this.getMinOrdByProductId(productId) / 12);
+    this.minQty = this.getMinOrdByProductId(productId);
     this.checkFields();
   }
 
@@ -232,6 +232,8 @@ export class EditOrderRowComponent implements OnInit {
   getQtaApprovataByProductId(id: string): number {
     for(var i = 0; i < this.forecasts.length; ++i) {
       if(this.forecasts[i].id_prd == id){
+        console.log("corresponding forecast:");
+        console.log(this.forecasts[i]);        
         if(this.forecasts[i].qta_approvata > 0){
           return this.forecasts[i].qta_approvata;
         }
@@ -243,6 +245,9 @@ export class EditOrderRowComponent implements OnInit {
   getMinOrdByProductId(id: string): number {
     for(var i = 0; i < this.products.length; ++i) {
       if(this.products[i].id == id){
+        console.log("product for minOrd:");
+        console.log(this.products[i]);
+        console.log("min_ord: " + this.products[i].min_ord);
         return this.products[i].min_ord;
       }
     }

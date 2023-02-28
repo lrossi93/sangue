@@ -353,6 +353,7 @@ export class AddOrderDialogComponent implements OnInit {
       }
       console.log("OpenEditOrderRowDialog: ID = " + id);
     }
+    //id is specified, so edit existing orderRow
     else {
       console.log("OpenEditOrderRowDialog: ID = " + id);
       let editedOrderRow = this.getOrderRowById(id);
@@ -360,7 +361,8 @@ export class AddOrderDialogComponent implements OnInit {
       dialogConfig.data = {
         orderRow: editedOrderRow,
         products: this.products,
-        forecasts: this.currentUserForecasts
+        forecasts: this.currentUserForecasts,
+        isUrgent: this.b_urgente.value
       }
     }
           
