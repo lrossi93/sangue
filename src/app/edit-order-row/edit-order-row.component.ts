@@ -77,9 +77,8 @@ export class EditOrderRowComponent implements OnInit {
     this.orderRows = data.orderRows;
     this.users = data.users;    
     this.forecasts = data.forecasts;
-    //console.log("Forecasts:");
-    //console.log(this.forecasts);
-    this.isMotivazioneVisible = this.orderRow.motivazione != "";//TODO: sistemare qui
+        
+    this.isMotivazioneVisible = (this.orderRow.motivazione != "" && this.orderRow.motivazione != null);//TODO: sistemare qui
     if(data.isUrgent){
       this.isUrgent = data.isUrgent;
       this.isMotivazioneVisible = true;
@@ -123,6 +122,8 @@ export class EditOrderRowComponent implements OnInit {
     this.note = _builder.control(this.orderRow.note);
 
     this.selectProductAtStart(this.data.orderRow.id_prd);
+    this.onProductSelectedByDes(this.productsFormControl.value);
+    this.checkFields();
   }
 
   ngOnInit(): void {
@@ -157,16 +158,20 @@ export class EditOrderRowComponent implements OnInit {
         return this.products[i].id;
       }
     }
+    this.step = 0;
     return "";
   }
 
   productIdToDes(id: string): string {
     for(var i = 0; i < this.products.length; ++i){
       if(id == this.products[i].id) {
+        console.log("returning " + this.products[i].des);
+        
         return this.products[i].des;
       }
     }
-    return "";
+    //return first product of the list
+    return this.products[0].des;
   }
 
   usersToOptions(users: User[]): string[] {
@@ -210,18 +215,30 @@ export class EditOrderRowComponent implements OnInit {
 
   onProductSelected(event: any) {
     if(event.source.selected){    
-    let productId = this.productDesToId(event.source.value);
-    this.productsFormControl.setValue(event.source.value);
+      let productId = this.productDesToId(event.source.value);
+      this.productsFormControl.setValue(event.source.value);
+      this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
+      this.minQty = this.getMinOrdByProductId(productId);
+      this.minQty = (this.minQty > this.step ? this.step : this.minQty); 
+      this.checkFields(event);
+    }
+  }
+
+  onProductSelectedByDes(des: string) {
+    let productId = this.productDesToId(des);
+    this.productsFormControl.setValue(des);
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
     this.minQty = this.getMinOrdByProductId(productId);
-    this.checkFields(event);
-    }
+    this.minQty = (this.minQty > this.step ? this.step : this.minQty); 
+    this.checkFields();
   }
 
   selectProductAtStart(productId: string) {
     this.productsFormControl.setValue(this.productIdToDes(productId));
+    //this.productsFormControl.setValue(this.productIdToDes(productId));
     this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
     this.minQty = this.getMinOrdByProductId(productId);
+    this.minQty = (this.minQty > this.step ? this.step : this.minQty); 
     this.checkFields();
   }
 
@@ -232,8 +249,8 @@ export class EditOrderRowComponent implements OnInit {
   getQtaApprovataByProductId(id: string): number {
     for(var i = 0; i < this.forecasts.length; ++i) {
       if(this.forecasts[i].id_prd == id){
-        console.log("corresponding forecast:");
-        console.log(this.forecasts[i]);        
+        //console.log("corresponding forecast:");
+        //console.log(this.forecasts[i]);        
         if(this.forecasts[i].qta_approvata > 0){
           return this.forecasts[i].qta_approvata;
         }
@@ -245,9 +262,9 @@ export class EditOrderRowComponent implements OnInit {
   getMinOrdByProductId(id: string): number {
     for(var i = 0; i < this.products.length; ++i) {
       if(this.products[i].id == id){
-        console.log("product for minOrd:");
-        console.log(this.products[i]);
-        console.log("min_ord: " + this.products[i].min_ord);
+        //console.log("product for minOrd:");
+        //console.log(this.products[i]);
+        //console.log("min_ord: " + this.products[i].min_ord);
         return this.products[i].min_ord;
       }
     }
@@ -268,7 +285,7 @@ export class EditOrderRowComponent implements OnInit {
     this.adjustQta();
     this.isSubmitted = true;
     this.assignOrderRowValues();
-    //console.log(this.orderRow);
+    console.log(this.orderRow);
     this.dialogRef.close(
       { 
         orderRow: this.orderRow, 
@@ -278,7 +295,7 @@ export class EditOrderRowComponent implements OnInit {
   }
   
   onBlur(event: Event) {
-    console.log(event);
+    //console.log(event);
     {
       if(this.qta.value == null){
         this.qta.setValue(0);
@@ -298,7 +315,7 @@ export class EditOrderRowComponent implements OnInit {
           return;
         }
         
-        if(this.qtyValue > this.qtyThreshold){
+        if(this.qtyValue > this.qtyThreshold && (this.motivazione.value == "" || this.motivazione.value == null)){
           alert(environment.currentLanguage == 'it' ? translations.it.ThresholdSurpassed : translations.en.ThresholdSurpassed);
           this.isMotivazioneVisible = true;
           return;
@@ -374,6 +391,9 @@ export class EditOrderRowComponent implements OnInit {
     }
     //prodotto non esiste o non ha un numero riga --> submit disabilitato a prescindere
     else {
+      this.isSubmitEnabled = false;
+    }
+    if(this.qta.value <= 0) {
       this.isSubmitEnabled = false;
     }
   }

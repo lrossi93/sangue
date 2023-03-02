@@ -69,7 +69,7 @@ export class AddForecastComponent implements OnInit{
       }
       //else, if ASL Novara, set those values to 0 and pick list of users
       else if(loginService.getUserCode() == "220"){
-        this.userFormControl = _builder.control('', Validators.required);
+        this.userFormControl = _builder.control(this.userNames[0], Validators.required);
         this.qta_approvata = _builder.control(0, Validators.required);
         this.costo_unitario = _builder.control(0, Validators.required);        
       }      
@@ -123,6 +123,7 @@ export class AddForecastComponent implements OnInit{
           isSubmitted: this.isSubmitted
         }
       );
+      this.isBadForecast = true;
       return;
     }
     this.isBadForecast = true;

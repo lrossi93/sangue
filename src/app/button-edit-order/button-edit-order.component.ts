@@ -98,7 +98,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   listOrderRows(id: string) {
     this.ordersService.listOrderRowsPromise(id).subscribe(
       res => {
-        console.log(res);
+        //console.log(res);
         if(res[0] == "KO") {
           console.error("Error retrieving OrderRows!")
         }

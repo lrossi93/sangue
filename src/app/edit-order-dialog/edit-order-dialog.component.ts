@@ -11,6 +11,7 @@ import { AreYouSureOrderComponent } from '../are-you-sure-order/are-you-sure-ord
 import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.component';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
+import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'app-edit-order-dialog',
@@ -75,7 +76,8 @@ export class EditOrderDialogComponent implements OnInit {
     dialog: MatDialog,
     private thisDialogRef: MatDialogRef<AreYouSureOrderComponent>,
     private ordersService: OrdersService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private snackbarService: SnackbarService
   ) { 
     /*
     this.annoFormControl = _builder.control(data.order.anno, Validators.required);
@@ -290,6 +292,8 @@ export class EditOrderDialogComponent implements OnInit {
         isSubmitted: boolean
       }) => {
         //confirm edits
+        //console.log(result);
+        
         if(result !== undefined && result.isSubmitted){
           console.log(result);
           this.ordersService
@@ -319,6 +323,7 @@ export class EditOrderDialogComponent implements OnInit {
                   }
           
                   this.setOrderStatus(orderStatus);
+                  isAdding ? this.snackbarService.onCreate() : this.snackbarService.onUpdate();
                 }
                 else {
                   console.error("Error setting orderRow!");

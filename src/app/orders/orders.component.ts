@@ -117,7 +117,7 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        console.log(event);
+        //console.log(event);
         if(!event.node.data.isRowLocked) {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);
@@ -276,19 +276,21 @@ export class OrdersComponent implements OnInit {
           this.orderStatusArr.push(orderStatus);
 
           //then save all orderRows on db
-          this.setOrderRowRec(newOrderRows, 0);
+          this.setOrderRowRec(newOrderRows, 0, newOrder, orderStatus);
 
-          //update grid
-          this.setOrderLocally(newOrder, orderStatus, true);
+          //update grid -> moved at the end of setOrderRowRec
+          //this.setOrderLocally(newOrder, orderStatus, true);
         }
       }
     );
   }
 
-  setOrderRowRec(newOrderRows: OrderRow[], index: number) {
+  setOrderRowRec(newOrderRows: OrderRow[], index: number, newOrder: Order, orderStatus: OrderStatus) {
     if(index >= newOrderRows.length) {
       //console.log("Exiting setOrderRowRec()");
-      this.snackbarService.onCreate();
+      //update grid
+      this.setOrderLocally(newOrder, orderStatus, true);
+      //this.snackbarService.onCreate();
       return;
     }
     else {
@@ -297,7 +299,7 @@ export class OrdersComponent implements OnInit {
           if(res[0] == "OK") {
             //console.log("You saved the following orderRow:");
             //console.log(newOrderRows[index]);
-            this.setOrderRowRec(newOrderRows, index + 1);
+            this.setOrderRowRec(newOrderRows, index + 1, newOrder, orderStatus);
           }
           else {
             console.error("Error saving orderRow!");

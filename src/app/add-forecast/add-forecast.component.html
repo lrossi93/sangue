@@ -74,12 +74,13 @@
 		</mat-form-field>
 	</div>
 
+	<p align="center"
+	*ngIf="isBadForecast"
+	style="color: red;">
+		{{ 'Some compulsory fields are either empty or invalid' | translate }}!
+	</p>
+
 	<div mat-dialog-actions align="center">
-		<p 
-		*ngIf="isBadForecast"
-		style="color: red;">
-			{{ 'Some compulsory fields are either empty or invalid' | translate }}!
-		</p>
 		<br>
 		<button 
 		mat-mini-fab 
