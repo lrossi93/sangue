@@ -43,6 +43,7 @@
 		[alwaysShowHorizontalScroll]="true"
 		[localeText]="localeText"
 		[animateRows]="true"
+		(gridReady)="onGridReady($event)"
 		><!--rimosso (gridReady)="onGridReady($event)"-->
 	</ag-grid-angular>
 </div>

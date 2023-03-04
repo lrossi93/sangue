@@ -10,7 +10,7 @@ import { LoginService } from './login.service';
 export class OrdersService {
   
   url = environment.basePath + 'order.php';
-  reportUrl = environment.reportPath + 'order.php';
+  //reportUrl = environment.reportPath + 'order.php';
   orders: any = [];
   orderRows: any = [];
   lastOrderId: string = "";
@@ -463,6 +463,26 @@ export class OrdersService {
         else {
           console.error("Error retrieving global orders!");
         }
+      }
+    );
+  }
+
+  /**
+   * 
+   * ORDER RESUME XLS
+   * 
+   */
+  getOrderResumePromise(startDate: string, endDate: string) {
+    let request = 'getOrderResume';
+    let id_session = localStorage.getItem('id_session');
+    let d_inizio = startDate;
+    let d_fine = endDate;
+    let path = this.url + '?request='+ request + '&id_session=' + id_session + '&d_inizio=' + d_inizio + '&d_fine=' + d_fine;
+    console.log(path)
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
       }
     );
   }

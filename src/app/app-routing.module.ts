@@ -4,6 +4,7 @@ import { ForecastReportComponent } from './forecast-report/forecast-report.compo
 import { ForecastComponent } from './forecast/forecast.component';
 import { LoansComponent } from './loans/loans.component';
 import { LoginComponent } from './login/login.component';
+import { OrderResumeComponent } from './order-resume/order-resume.component';
 import { OrderablePeriodComponent } from './orderable-period/orderable-period.component';
 import { OrdersComponent } from './orders/orders.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -19,7 +20,8 @@ const routes: Routes = [
   {path: 'pharma-registry', component: PharmaRegistryComponent},
   {path: 'forecast', component: ForecastComponent},
   {path: 'forecast-report', component: ForecastReportComponent},
-  {path: 'orders', component: OrdersComponent},
+  {path: 'orders', component: OrdersComponent,},
+  {path: 'orders/resume', component: OrderResumeComponent},
   {path: 'order-period', component: OrderablePeriodComponent},
   {path: 'supplies', component: SuppliesComponent},
   {path: 'loans', component: LoansComponent},

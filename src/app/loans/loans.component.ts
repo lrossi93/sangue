@@ -138,9 +138,9 @@ export class LoansComponent implements OnInit {
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
-    //console.log(this.api);
+    console.log(this.api);
     this.columnApi = params.columnApi;
-    this.api.setDomLayout('autoHeight');
+    //this.api.setDomLayout('autoHeight');
     this.api.sizeColumnsToFit();
     //this.autoSizeColumns(false);
   }
@@ -436,7 +436,7 @@ export class LoansComponent implements OnInit {
                   id_order: loanReq.id,
                   d_status: loanReq.d_ordine,           
                   status: "prestito",
-                  note: loanReq.username + " richiede prestito a " + loanRes.username,
+                  note: loanReq.username + " concede prestito a " + loanRes.username,
                   b_sto: false
                 }
 
@@ -446,7 +446,7 @@ export class LoansComponent implements OnInit {
                   id_order: loanRes.id,
                   d_status: loanRes.d_ordine,           
                   status: "prestito",
-                  note: loanRes.username + " riceve richiesta di prestito da " + loanReq.username,
+                  note: loanRes.username + " riceve prestito da " + loanReq.username,
                   b_sto: false
                 }
 
@@ -527,9 +527,10 @@ export class LoansComponent implements OnInit {
       this.dataCount = 0;
       this.loanGridRowData = [];
       //n_ordine, d_ordine, username_from, username_to?, note, buttonLoanDetails...
+      console.log(this.loans);
       for(var i = 0; i < this.loans.length; ++i) {
         if(this.loans[i].status == "prestito" && this.loans[i].anno.toString() == this.year) {
-          console.log(this.loans[i]);
+          //console.log(this.loans[i]);
           let newLoanGridRowData = {
             id: this.loans[i].id,
             anno: this.loans[i].anno,
@@ -546,14 +547,14 @@ export class LoansComponent implements OnInit {
         }
       }
       console.log(this.loanGridRowData);
-      this.api.setRowData(this.loanGridRowData);
+      //this.api.setRowData(this.loanGridRowData);
     }
   }
 
   getClientByUsername(username: string): string | null {
     for(var i = 0; i < this.users.length; ++i) {
       if(this.users[i].username == username) {
-        console.log(this.users[i].username);
+        //console.log(this.users[i].username);
         return this.users[i].client;
       }
     }

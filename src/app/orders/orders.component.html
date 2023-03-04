@@ -25,6 +25,16 @@
 		</button>
 
 		<button 
+		*ngIf="!loading"
+		mat-mini-fab
+		matTooltip="{{ 'Orders resume' | translate }}"
+		class="resume"
+		style="background-color: #1D6F42;"
+		routerLink="/orders/resume">
+			<i class="material-icons">grid_on</i>
+		</button>
+
+		<button 
 		mat-mini-fab
 		matTooltip="{{ 'Refresh' | translate }}" 
 		color="basic"

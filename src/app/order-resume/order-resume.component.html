@@ -1,0 +1,94 @@
+<div
+*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'">
+	<nav
+	class="second-nav">
+		<h1>
+			{{ "Orders resume" | translate }}
+		</h1>
+		
+		<button
+		mat-mini-fab
+		matTooltip="{{ 'Back to orders' | translate }}" 
+		routerLink="/orders"
+		color="primary">
+			<i class="material-icons">arrow_back</i>
+		</button>
+	</nav>
+
+	<div 
+align="center"
+class="container">
+    <p>
+		<mat-form-field>
+			<mat-date-range-input 
+			[formGroup]="range" 
+			[rangePicker]="picker">
+			  <input 
+			  matStartDate 
+			  formControlName="start" 
+			  placeholder="{{ 'Start date' | translate }}" 
+			  (dateChange)="onDateChange('start', $event)">
+	
+			  <input 
+			  matEndDate 
+			  formControlName="end" 
+			  placeholder="{{ 'End date' | translate }}" 
+			  (dateChange)="onDateChange('end', $event)">
+			</mat-date-range-input>
+			<mat-date-range-picker #picker>
+			  <mat-date-range-picker-actions>
+				<button 
+				mat-mini-fab
+				style="margin: 5px;"
+				color="primary"
+				matTooltip="{{'Submit' | translate}}" 
+				matDateRangePickerApply>
+				  <i class="material-icons">check</i>
+				</button>
+				
+				<button 
+				mat-mini-fab
+				style="margin: 5px;"
+				matTooltip="{{'Cancel' | translate}}" 
+				matDateRangePickerCancel>
+				  <i class="material-icons">close</i>
+				</button>
+			  </mat-date-range-picker-actions>
+			</mat-date-range-picker>
+		  
+			<mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">{{ 'Invalid start date' | translate }}</mat-error>
+			<mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">{{ 'Invalid end date' | translate }}</mat-error>
+		  </mat-form-field>
+		  <p>
+			<button 
+			mat-fab 
+			color="primary"
+			matTooltip="{{'Edit' | translate}}"
+			(click)="picker.open()">
+			  <i class="material-icons">edit</i>
+			</button>
+
+			<button
+			mat-fab
+			style="margin: 5px;background-color: #1D6F42;"
+			
+			(click)="getOrderResume()"
+			matTooltip="{{'Download resume' | translate}}">
+				<i class="material-icons">download</i>
+			</button>
+		  </p>
+</div>    
+
+</div>
+<footer>
+	<p 
+	*ngIf="loginService.getUsername() != null"
+	align="center">
+		{{ 'Logged as' | translate }} <b>{{ loginService.currentUser.client }}</b>.
+	</p>
+	<p 
+	*ngIf="loginService.getUsername() == null"
+	align="center">
+		{{ 'You\'re not logged!' | translate }} <a [routerLink]="['/login']">{{ 'Login' | translate }}</a>
+	</p>	
+</footer>

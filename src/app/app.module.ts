@@ -80,6 +80,7 @@ import { LoansComponent } from './loans/loans.component';
 import { AddLoanDialogComponent } from './add-loan-dialog/add-loan-dialog.component';
 import { ButtonLoanDetailsComponent } from './button-loan-details/button-loan-details.component';
 import { LoanDetailsDialogComponent } from './loan-details-dialog/loan-details-dialog.component';
+import { OrderResumeComponent } from './order-resume/order-resume.component';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { LoanDetailsDialogComponent } from './loan-details-dialog/loan-details-d
     AddLoanDialogComponent,
     ButtonLoanDetailsComponent,
     LoanDetailsDialogComponent,
+    OrderResumeComponent,
 
   ],
   providers: [
