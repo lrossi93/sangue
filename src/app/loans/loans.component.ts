@@ -188,7 +188,7 @@ export class LoansComponent implements OnInit {
       this.createLoanGridRowData();
     }
 
-    if(environment.globalOrders.length == 0) {
+    if(environment.globalOrders.length == 0 || environment.globalOrders.length != this.orders.length) {
       //console.log("Getting loans...");
       this.getLoansGlobally(this.year);
     }
@@ -294,7 +294,16 @@ export class LoansComponent implements OnInit {
     this.loans = [];
     for(var i = 0; i < this.orders.length; ++i) {      
       if(this.orders[i].status == "prestito") {
-        this.loans.push(this.orders[i]);
+        //if user 220 add all
+        //if user 210 add only given and received
+        if(this.loginService.getUserCode() == "220"){
+          this.loans.push(this.orders[i]);
+        }
+        if(this.loginService.getUserCode() == "210"){
+          if(this.orders[i].username == localStorage.getItem("sangue_username") || this.orders[i].username_prestito_a == localStorage.getItem("sangue_username")) {
+            this.loans.push(this.orders[i]);
+          }
+        }
       }
     }
     console.log(this.loans);
@@ -515,6 +524,7 @@ export class LoansComponent implements OnInit {
       id_ordine_prestito: loan.id_ordine_prestito
       }]
     });
+    this.orders.push(loan);
     //this.api.ensureIndexVisible(this.orderGridRowData.length - 1);
     //this.createOrderGridRowData();
     this.snackbarService.onCreate();
