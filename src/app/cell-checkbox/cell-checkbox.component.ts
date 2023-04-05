@@ -20,6 +20,7 @@ export class CellCheckboxComponent implements ICellRendererAngularComp {
 
   agInit(params: ICellRendererParams<any, any>): void {
     this.data = params.data;
+    //console.log(this.data.note);
     this.currentValue = params.value;
     this.headerName = params.colDef?.headerName;
     this.isLocked = params.data.isRowLocked;

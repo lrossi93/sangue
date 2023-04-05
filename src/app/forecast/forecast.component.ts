@@ -123,20 +123,18 @@ export class ForecastComponent implements OnInit {
           event.data.qta_approvata,
           event.data.costo_unitario
         );
-        //console.log("changed!");
-        
-        //this.updateGrid();
       }
     }
   }
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
-    console.log("log API:");
-    console.log(this.api);
-    //this.columnApi = params.columnApi;    
-    //this.getAllForecastData();
-    this.autoSizeColumns(false);
+    //console.log("log API:");
+    //console.log(this.api);
+    this.columnApi = params.columnApi;    
+    //this.autoSizeColumns(false);
+    console.log("forecastColumnState:");
+    console.log(localStorage.getItem("forecastColumnState"));
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -149,6 +147,22 @@ export class ForecastComponent implements OnInit {
     */
     this.api.sizeColumnsToFit();
     //this.columnApi.autoSizeAllColumns(skipHeader);
+  }
+
+  onFirstDataRendered = (event: any) => {
+    this.retrieveColumnState();
+  }
+  
+  retrieveColumnState() {
+    let localColumnState = localStorage.getItem("forecastColumnState");
+    if(localColumnState != null) {
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+    }
+  }
+
+  saveColumnState() {
+    console.log(this.columnApi.getColumnState());
+    localStorage.setItem("forecastColumnState", JSON.stringify(this.columnApi.getColumnState()));
   }
 
   ngOnInit(): void {

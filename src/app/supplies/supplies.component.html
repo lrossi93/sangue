@@ -34,8 +34,16 @@
 		[gridOptions]="gridOptions"
 		[localeText]="localeText"
 		(gridReady)="onGridReady($event)"
+		(columnResized)="saveColumnState()"
+		(columnVisible)="saveColumnState()"
+		(columnPivotChanged)="saveColumnState()"
+		(columnRowGroupChanged)="saveColumnState()"
+		(columnValueChanged)="saveColumnState()"
+		(columnMoved)="saveColumnState()"
+		(columnPinned)="saveColumnState()"
 		[getRowId]="getRowId"
-		[animateRows]="true">
+		[animateRows]="true"
+		(firstDataRendered)="onFirstDataRendered($event)">
 		<!--to see flashing cells, add [enableCellChangeFlash]="true"-->
 	</ag-grid-angular>
 </div>

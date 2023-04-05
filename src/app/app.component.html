@@ -59,6 +59,30 @@ style="display: flex; flex-direction: row;">
 		[routerLink]="['']">
 			{{ 'Logout' | translate }}
 		</button-->
+		<button
+		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '200'"
+		(click)="getManual(loginService.getUserCode()!)">
+			{{ 'Manual' | translate }}
+		</button>
+		<button
+		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '210'"
+		(click)="getManual(loginService.getUserCode()!)">
+			{{ 'Manual' | translate }}
+		</button>
+		<button
+		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '220'"
+		(click)="getManual(loginService.getUserCode()!)">
+			{{ 'Manual' | translate }}
+		</button>
+		<button
+		mat-menu-item 
+		*ngIf="loginService.getUserCode() == '230'"
+		(click)="getManual(loginService.getUserCode()!)">
+			{{ 'Manual' | translate }}
+		</button>
 	</mat-menu>	
 
 	<button 

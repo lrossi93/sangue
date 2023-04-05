@@ -60,7 +60,15 @@
 		[alwaysShowHorizontalScroll]="true"
 		[gridOptions]="gridOptions"
 		[localeText]="localeText"
+		(columnResized)="saveColumnState()"
+		(columnVisible)="saveColumnState()"
+		(columnPivotChanged)="saveColumnState()"
+		(columnRowGroupChanged)="saveColumnState()"
+		(columnValueChanged)="saveColumnState()"
+		(columnMoved)="saveColumnState()"
+		(columnPinned)="saveColumnState()"
 		(gridReady)="onGridReady($event)"
+		(firstDataRendered)="onFirstDataRendered($event)"
 		[getRowId]="getRowId"
 		[animateRows]="true">
 		<!--rimosso (gridReady)="onGridReady($event)"-->

@@ -200,6 +200,7 @@ export const translations = {
     DeleteSuccessful: "Elemento eliminato con successo!",
     ValidateSuccessful: "Elemento validato!",
     UrgentOrderAlert: "Dato che quest'ordine è urgente, si prega di avvertire il fornitore entro 24h.",
+    PleaseProvideNotes: "Si prega di fornire delle annotazioni valide!",
   },
   en: {
     ThresholdSurpassed: "Threshold surpassed! Please justify the exceeding quantity in the 'Reason' text box.",
@@ -207,7 +208,8 @@ export const translations = {
     UpdateSuccessful: "Updated successfully!",
     DeleteSuccessful: "Deleted successfully!",
     ValidateSuccessful: "Validated!",
-    UrgentOrderAlert: "Since this order is urgent, you are required to warn the supplier within 24h."
+    UrgentOrderAlert: "Since this order is urgent, you are required to warn the supplier within 24h.",
+    PleaseProvideNotes: "Please provide valid notes!"
   }
 }
 

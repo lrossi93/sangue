@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { OrdersService } from '../orders.service';
+import { environment, translations } from 'src/environments/environment';
+import { localeLang } from 'src/environments/grid-configs';
 
 @Component({
   selector: 'app-orders-urgent-checkbox',
@@ -23,6 +25,7 @@ export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent impleme
       this.isLocked = true;
     }
     */
+    //console.log(this.data.note);
     switch(localStorage.getItem("id_profile")) {
       case '220':
         this.isLocked = (this.data.status == "inviato al fornitore" || this.data.status == "inviato al cliente" || this.data.status == "ricevuto");
@@ -40,8 +43,11 @@ export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent impleme
 
   override toggleCheckbox(event: any): void {
     this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;
-    console.log("current checkbox value: " + this.currentValue);
-    
+    //console.log(navigator.language.split("-", 2)[0]);
+    if(this.currentValue == 1 && (this.data.note == "") || (this.data.note == null) || (this.data.note === undefined)) {
+      localeLang == 'it' ? alert(translations.it.PleaseProvideNotes) : alert(translations.en.PleaseProvideNotes);
+    }
+
     let orderUrgent = {
       id: this.data.id,
       anno: this.data.anno,

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, ColumnApi, GetRowIdFunc, GetRowIdParams, GridApi, ColumnMovedEvent, ColumnPinnedEvent, ColumnPivotChangedEvent, ColumnResizedEvent, ColumnRowGroupChangedEvent, ColumnValueChangedEvent, ColumnVisibleEvent, GridReadyEvent, SortChangedEvent} from 'ag-grid-community';
 import { environment, Forecast, Order, OrderGridRowData, OrderRow, OrderStatus } from 'src/environments/environment';
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigOrders210, gridConfigOrders210Locked, gridConfigOrders220, gridConfigOrders220Locked } from 'src/environments/grid-configs';
 import { AddOrderDialogComponent } from '../add-order-dialog/add-order-dialog.component';
@@ -70,7 +70,9 @@ export class OrdersComponent implements OnInit {
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
   gridApi!: GridApi;
   api: any;
-  columnApi: any;
+  columnApi!: ColumnApi;
+  columnState: any;
+  defaultColumnState: any;
 
   //spinner boolean
   loading: boolean = true;
@@ -117,7 +119,7 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        //console.log(event);
+        console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
         if(!event.node.data.isRowLocked) {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);
@@ -125,9 +127,10 @@ export class OrdersComponent implements OnInit {
           if(event.column.getColId() == "d_validato" && loginService.getUserCode() == "220") {
             this.openEditDateDialog(event);
           }
-          if(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210") {
-            this.openEditDateDialog(event);
-          }
+        }
+        if(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto") {
+          console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
+          this.openEditDateDialog(event);
         }
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {                
@@ -174,14 +177,13 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
     this.columnApi = params.columnApi;
+    console.log(this.columnApi);
     this.listForecasts(this.year);
     this.listProducts();
     this.autoSizeColumns(false);
-    //this.api.setDomLayout('autoHeight');
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -192,15 +194,30 @@ export class OrdersComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 
+  onFirstDataRendered = (event: any) => {
+    this.retrieveColumnState();
+  }
+  
+  retrieveColumnState() {
+    let localColumnState = localStorage.getItem("ordersColumnState");
+    if(localColumnState != null) {
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+    }
+  }
+
+  saveColumnState() {
+    localStorage.setItem("ordersColumnState", JSON.stringify(this.columnApi.getColumnState()));
+  }
+
   ngOnInit(): void {
     this.loginService.checkPromise().subscribe(
       res => {
         if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
           this.router.navigate(['login']);
         }
       }
-    );
-
+    );    
     this.getAllData();
   }
 
@@ -469,6 +486,7 @@ export class OrdersComponent implements OnInit {
           console.error("Error setting order status for order " + order.id);
         }
         else{
+          order.status = orderStatus.status;
           this.ordersService.setOrderPromise(order, isAdding).subscribe(
             res2 => {
               if(res2 == "KO"){
@@ -489,8 +507,10 @@ export class OrdersComponent implements OnInit {
 
   setOrderLocally(order: Order, orderStatus: OrderStatus, isAdding: boolean) {    
     if(!isAdding) {
-      for(let i = 0; i < this.orders.length; ++i) {
-        if(order.id == this.orders[i].id) {
+      for(let i = 0; i < this.orderGridRowData.length; ++i) {
+        if(order.id == this.orderGridRowData[i].id) {
+          //questa parte è inutile...
+          /*
           this.orders[i].anno = order.anno;
           this.orders[i].username = order.username;
           this.orders[i].d_ordine = order.d_ordine;
@@ -504,7 +524,7 @@ export class OrdersComponent implements OnInit {
           this.orders[i].d_consegna_prevista = order.d_consegna_prevista;
           this.orders[i].note_consegna = order.note_consegna;
           this.orderStatusArr[i].status = orderStatus.status;
-
+          */
           let isLockedCondition: boolean;
           if(this.loginService.getUserCode() == "210") {
             isLockedCondition = orderStatus.status != "inviato";
@@ -512,7 +532,8 @@ export class OrdersComponent implements OnInit {
           if(this.loginService.getUserCode() == "220") {
             isLockedCondition = !(orderStatus.status == "inviato" || orderStatus.status == "confermato");
           }
-
+          console.log("i: " + i);
+          console.log(this.orderGridRowData[i]);
           this.orderGridRowData[i].id = order.id;
           this.orderGridRowData[i].anno = order.anno;
           this.orderGridRowData[i].username = order.username;
@@ -563,7 +584,7 @@ export class OrdersComponent implements OnInit {
       }
 
       this.orderGridRowData.push(newOrderGridRowData);
-      this.orders.push(order);
+      
       this.api.applyTransaction({
         add: [{
           id: order.id,
@@ -693,7 +714,11 @@ export class OrdersComponent implements OnInit {
         this.visibleIndex = i;  
       }
     }
+    console.log(this.orders);
+    console.log(this.orderGridRowData);
     this.loading = false;
+    //console.log(this.columnApi.getColumnState());
+    //this.getColState();
   }
   
   /*
@@ -951,7 +976,7 @@ export class OrdersComponent implements OnInit {
           this.forecasts = res[1];
           environment.globalForecasts = res[1];
           //this.forecastService.getForecastsGlobally(year);
-          console.log(this.forecasts);
+          //console.log(this.forecasts);
         }
         else {
           console.error("Error retrieving forecasts!");
@@ -1073,6 +1098,21 @@ export class OrdersComponent implements OnInit {
       month = "0" + month;
     }
     return year + "-" + month + "-" + day;  
+  }
+
+  
+  getColState() {
+    this.columnState = this.columnApi.getColumnState();
+    //this.defaultColumnState = this.columnApi.getColumnState();
+    console.log(this.columnState);
+  }
+  
+  
+
+  resetColState() {
+    //console.log("resetColState");
+    //console.log(this.defaultColumnState);
+    this.columnApi.applyColumnState({state: this.defaultColumnState});
   }
 }
   

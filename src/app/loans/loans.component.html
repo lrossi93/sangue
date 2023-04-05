@@ -44,6 +44,14 @@
 		[localeText]="localeText"
 		[animateRows]="true"
 		(gridReady)="onGridReady($event)"
+		(columnResized)="saveColumnState()"
+		(columnVisible)="saveColumnState()"
+		(columnPivotChanged)="saveColumnState()"
+		(columnRowGroupChanged)="saveColumnState()"
+		(columnValueChanged)="saveColumnState()"
+		(columnMoved)="saveColumnState()"
+		(columnPinned)="saveColumnState()"
+		(firstDataRendered)="onFirstDataRendered($event)"
 		><!--rimosso (gridReady)="onGridReady($event)"-->
 	</ag-grid-angular>
 </div>

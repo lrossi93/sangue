@@ -151,11 +151,12 @@ class="typography">
             <th mat-header-cell *matHeaderCellDef ></th>
             <td mat-cell *matCellDef="let element"> 
                 <button
-                *ngIf="!isLocked"
+                *ngIf="this.data.status == 'inviato'"
                 mat-mini-fab
                 matTooltip="{{ 'Edit' | translate }}"
                 color="primary" 
                 (click)="openEditOrderRowDialog(element.id, false)">
+                <!--cambiata condizione *ngIf="!isLocked", anche sotto-->
                 <i class="material-icons">edit</i>
                 </button>
             </td>
@@ -165,7 +166,7 @@ class="typography">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element"> 
                 <button
-                *ngIf="!isLocked"
+                *ngIf="this.data.status == 'inviato'"
                 mat-mini-fab 
                 matTooltip="{{ 'Delete' | translate }}"
                 color="warn" 

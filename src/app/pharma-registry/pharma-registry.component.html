@@ -24,7 +24,15 @@
 		[animateRows]="true"
 		[alwaysShowHorizontalScroll]="true"
 		[alwaysShowVerticalScroll]="true"
-		[localeText]="localeText">
+		[localeText]="localeText"
+		(columnResized)="saveColumnState()"
+		(columnVisible)="saveColumnState()"
+		(columnPivotChanged)="saveColumnState()"
+		(columnRowGroupChanged)="saveColumnState()"
+		(columnValueChanged)="saveColumnState()"
+		(columnMoved)="saveColumnState()"
+		(columnPinned)="saveColumnState()"
+		(firstDataRendered)="onFirstDataRendered($event)">
 		<!--rimosso (gridReady)="onGridReady($event)"-->
 	</ag-grid-angular>
 </div>

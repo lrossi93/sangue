@@ -41,6 +41,14 @@
 		[gridOptions]="gridOptions"
 		[localeText]="localeText"
 		[animateRows]="true"
-		(gridReady)="onGridReady($event)">
+		(columnResized)="saveColumnState()"
+		(columnVisible)="saveColumnState()"
+		(columnPivotChanged)="saveColumnState()"
+		(columnRowGroupChanged)="saveColumnState()"
+		(columnValueChanged)="saveColumnState()"
+		(columnMoved)="saveColumnState()"
+		(columnPinned)="saveColumnState()"
+		(gridReady)="onGridReady($event)"
+		(firstDataRendered)="onFirstDataRendered($event)">
 	</ag-grid-angular>
 </div>

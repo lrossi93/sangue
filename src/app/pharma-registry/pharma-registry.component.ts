@@ -144,6 +144,21 @@ export class PharmaRegistryComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
   }
 
+  onFirstDataRendered = (event: any) => {
+    this.retrieveColumnState();
+  }
+  
+  retrieveColumnState() {
+    let localColumnState = localStorage.getItem("pharmaRegistryColumnState");
+    if(localColumnState != null) {
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+    }
+  }
+
+  saveColumnState() {
+    localStorage.setItem("pharmaRegistryColumnState", JSON.stringify(this.columnApi.getColumnState()));
+  }
+
   ngOnInit(): void {
     this.loginService.checkPromise().subscribe(
       res => {

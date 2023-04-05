@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment, User } from 'src/environments/environment';
 import { LoginService } from './login.service';
 import { UsersService } from './users.service';
+import { log } from 'console';
 
 
 @Component({
@@ -91,5 +92,11 @@ export class AppComponent implements OnInit {
   switchLanguage(lang: string) {
     this.translate.use(lang)
     environment.currentLanguage = lang;
+  }
+
+  getManual(userCode: string) {
+    let filename: string = "manual-" + userCode + ".pdf";
+    let docsPath: string = "assets/docs/";
+    window.open(docsPath + filename, "_blank");
   }
 }

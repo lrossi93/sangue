@@ -80,13 +80,12 @@ export class SuppliesComponent implements OnInit {
 
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        console.log(event);
-        if(event.column.getColId() == "d_consegna_prevista_1" && event.data.status != "ricevuto") {
+        if(event.column.getColId() == "d_consegna_prevista" && event.data.status == "inviato al fornitore") {
           this.openEditDateDialog(event);
         }
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {                
-        console.log("Changed from " + event.oldValue + " to " + event.newValue);
+        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         var order: Order = {
           id: event.data.id,
           anno: event.data.anno,
@@ -124,6 +123,23 @@ export class SuppliesComponent implements OnInit {
     }
   }
 
+  onFirstDataRendered = (event: any) => {
+    this.retrieveColumnState();
+  }
+  
+  retrieveColumnState() {
+    let localColumnState = localStorage.getItem("suppliesColumnState");
+    console.log(localStorage.getItem("suppliesColumnState"));
+    if(localColumnState != null) {
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+    }
+  }
+
+  saveColumnState() {
+    console.log("column state saved!")
+    localStorage.setItem("suppliesColumnState", JSON.stringify(this.columnApi.getColumnState()));
+  }
+
   ngOnInit(): void {}
 
   autoSizeColumns(skipHeader: boolean) {
@@ -141,7 +157,6 @@ export class SuppliesComponent implements OnInit {
     this.listProducts();
     this.listOrders(this.year);
     this.autoSizeColumns(false);
-    //this.columnApi.sizeColumnsToFit();
   }
 
   getAllData() {
@@ -259,8 +274,7 @@ export class SuppliesComponent implements OnInit {
       };
       this.supplyGridRowData.push(newSupplyGridRowData);
     }
-    console.log(this.supplyGridRowData);
-    
+    //console.log(this.supplyGridRowData);
     this.isLoading = false;
   }
 

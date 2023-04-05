@@ -152,6 +152,10 @@ export class AddForecastComponent implements OnInit{
         console.log(5);
         return true;
       }
+      if(this.qta.value == null){
+        console.log(5.1);
+        return true;
+      }
       if(this.qta.value == ""){
         console.log(6);
         return true;
@@ -164,12 +168,20 @@ export class AddForecastComponent implements OnInit{
         console.log(8);
         return true;
       }
+      if(this.qta_approvata.value == null){
+        console.log(8.1);
+        return true;
+      }
       if(this.costo_unitario.value == ""){
         console.log(9);
         return true;
       } 
       if(this.costo_unitario.value < 0){
         console.log(10);
+        return true;
+      }
+      if(this.costo_unitario.value == null){
+        console.log(10.1);
         return true;
       }
       if(!this.isAmongUsers(this.userFormControl.value)){
@@ -201,6 +213,10 @@ export class AddForecastComponent implements OnInit{
       }
       if(this.qta.value == ""){
         console.log(6);
+        return true;
+      } 
+      if(this.qta.value == null){
+        console.log(6.1);
         return true;
       } 
       if(!this.isAmongProducts(this.productFormControl.value)){

@@ -140,9 +140,7 @@ export class LoansComponent implements OnInit {
     this.api = params.api;
     console.log(this.api);
     this.columnApi = params.columnApi;
-    //this.api.setDomLayout('autoHeight');
     this.api.sizeColumnsToFit();
-    //this.autoSizeColumns(false);
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -151,6 +149,21 @@ export class LoansComponent implements OnInit {
       allColumnIds.push(column.getId());
     });
     this.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+  }
+
+  onFirstDataRendered = (event: any) => {
+    this.retrieveColumnState();
+  }
+  
+  retrieveColumnState() {
+    let localColumnState = localStorage.getItem("loansColumnState");
+    if(localColumnState != null) {
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+    }
+  }
+
+  saveColumnState() {
+    localStorage.setItem("loansColumnState", JSON.stringify(this.columnApi.getColumnState()));
   }
 
   ngOnInit(): void {
@@ -309,12 +322,8 @@ export class LoansComponent implements OnInit {
     console.log(this.loans);
   }
 
-  //TODO
   openAddLoanDialog() {
     const dialogConfig = new MatDialogConfig();
-    
-    //console.log(this.users);
-    
 
     dialogConfig.data = {
       users: this.users,

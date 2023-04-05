@@ -92,7 +92,7 @@ export class AddOrderDialogComponent implements OnInit {
     this.b_validato = _builder.control(false);
     this.d_validato = _builder.control("");
     this.n_ddt = _builder.control(0);
-    this.d_ddt = _builder.control(new Date());
+    this.d_ddt = _builder.control("");
     this.note = _builder.control("");
 
     if(loginService.getUserCode() == "210"){
@@ -148,7 +148,7 @@ export class AddOrderDialogComponent implements OnInit {
       note: this.note.value,
       status: "",
       username: this.username,
-      d_consegna_prevista: "",
+      d_consegna_prevista: "0000-00-00",
       n_ddt: this.n_ddt.value,
       d_ddt: this.formatDate(this.d_ddt.value.toLocaleString('it-IT').split(",", 2)[0]),
       note_consegna: "",
