@@ -32,6 +32,9 @@ export class WelcomeComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("sangue_client");
           this.loginService.logged = false;
           this.router.navigate(['login']);
         }

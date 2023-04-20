@@ -11,6 +11,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { PharmaRegistryComponent } from './pharma-registry/pharma-registry.component';
 import { SuppliesComponent } from './supplies/supplies.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
 
 const routes: Routes = [
   {path: 'login', redirectTo: '', pathMatch: 'full'},
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: 'order-period', component: OrderablePeriodComponent},
   {path: 'supplies', component: SuppliesComponent},
   {path: 'loans', component: LoansComponent},
+  {path: 'login_gateway', component: LoginGatewayComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

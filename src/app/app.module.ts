@@ -81,6 +81,7 @@ import { AddLoanDialogComponent } from './add-loan-dialog/add-loan-dialog.compon
 import { ButtonLoanDetailsComponent } from './button-loan-details/button-loan-details.component';
 import { LoanDetailsDialogComponent } from './loan-details-dialog/loan-details-dialog.component';
 import { OrderResumeComponent } from './order-resume/order-resume.component';
+import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
 
 @NgModule({
   declarations: [
@@ -138,6 +139,7 @@ import { OrderResumeComponent } from './order-resume/order-resume.component';
     ButtonLoanDetailsComponent,
     LoanDetailsDialogComponent,
     OrderResumeComponent,
+    LoginGatewayComponent,
 
   ],
   providers: [

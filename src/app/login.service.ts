@@ -119,6 +119,17 @@ export class LoginService {
       }
     )
   }
+
+  checkPromiseParams(id_profile: string, id_session: string): Observable<any> {
+    return this.http.post<String[]>(
+      environment.basePath + 'session.php',
+      {
+        request: "check",
+        id_session: id_session,
+        //id_profile: id_profile
+      }
+    )
+  }
   
   login(username: string, password: string){
     this.http.post<String[]>(

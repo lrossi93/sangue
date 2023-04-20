@@ -31,7 +31,8 @@ export class LoginComponent implements OnInit {
   constructor(
     loginService: LoginService, 
     router: Router,
-    private usersService: UsersService) {
+    private usersService: UsersService
+  ) {
     this.loginService = loginService;
     this.router = router;
   }
@@ -61,6 +62,9 @@ export class LoginComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("sangue_client");
           this.logged = false;
           this.router.navigate(['login']);
         }
@@ -70,8 +74,6 @@ export class LoginComponent implements OnInit {
 
   amILogged() {
     if(localStorage.getItem('id_session') != null) {
-      console.log("redirecting to welcome");
-      
       this.router.navigate(['home']);
     }
   }
