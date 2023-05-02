@@ -14,8 +14,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
 
 const routes: Routes = [
-  {path: 'login', redirectTo: '', pathMatch: 'full'},
-  {path: 'welcome', redirectTo: '', pathMatch: 'full'},
+  {path: 'login', redirectTo: ''},
+  //{path: 'welcome', redirectTo: '', pathMatch: 'full'},
   {path: '', component: LoginComponent},
   {path: 'home', component: WelcomeComponent},
   {path: 'pharma-registry', component: PharmaRegistryComponent},

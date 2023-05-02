@@ -26,6 +26,7 @@ export class LoginGatewayComponent implements OnInit {
   ngOnInit(): void {
     this.id_profile = this.route.snapshot.queryParams['id_profilo'];
     this.id_session = this.route.snapshot.queryParams['id_session'];
+    console.log("profile: " + this.id_profile + ", session: " + this.id_session)
 
     this.loginService.checkPromiseParams(this.id_profile!, this.id_session!).subscribe(
       res => {
