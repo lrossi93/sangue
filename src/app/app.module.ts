@@ -82,7 +82,7 @@ import { ButtonLoanDetailsComponent } from './button-loan-details/button-loan-de
 import { LoanDetailsDialogComponent } from './loan-details-dialog/loan-details-dialog.component';
 import { OrderResumeComponent } from './order-resume/order-resume.component';
 import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+//import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -158,10 +158,12 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
         duration: 3000
       }
     },
+    /*
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
+    */
   ],
   imports: [
     BrowserModule,
