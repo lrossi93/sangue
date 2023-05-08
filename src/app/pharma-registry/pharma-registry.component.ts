@@ -2,13 +2,13 @@ import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../login.service';
 import { environment, Product } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, RowDataUpdatedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi, RowDataUpdatedEvent } from 'ag-grid-community';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { AddProductComponent } from '../add-product/add-product.component';
 import { AreYouSureProductComponent } from '../are-you-sure-product/are-you-sure-product.component';
 import { AgGridAngular } from 'ag-grid-angular';
 import { DatepickerProductsDialogComponent } from '../datepicker-products-dialog/datepicker-products-dialog.component';
-import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, pharmaRegistryGridConfig } from 'src/environments/grid-configs';
+import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, pharmaRegistryGridConfig } from 'src/environments/grid-configs';
 import { Router } from '@angular/router';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { SnackbarService } from '../snackbar.service';
@@ -48,14 +48,14 @@ export class PharmaRegistryComponent implements OnInit {
   gridOptions: any;
   defaultColDef: any;
 
-  //agGrid API handle
+  //agGrid API handles
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
-
+  gridApi!: GridApi;
   api: any;
+  columnApi: any;
 
   //dialog reference
   dialogRef: any;
-  columnApi: any;
 
   isLoading: boolean = false;
   selectedRow: any;
@@ -118,22 +118,20 @@ export class PharmaRegistryComponent implements OnInit {
       },
 
       onRowDataUpdated: (event: RowDataUpdatedEvent) => {
-        console.log(event);
+        //console.log(event);
       }
     }
 
     //defaultColDef
-    this.defaultColDef = {
-      sortable: true,
-      filter: true,
-    };
+    this.defaultColDef = defaultColDef;
+
+    this.listProducts();
   }
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
     this.columnApi = params.columnApi;
-    this.autoSizeColumns(false);
-    this.api.setDomLayout('autoHeight');
+    //this.api.setDomLayout('autoHeight');
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -145,18 +143,46 @@ export class PharmaRegistryComponent implements OnInit {
   }
 
   onFirstDataRendered = (event: any) => {
+    this.autoSizeColumns(false);
     this.retrieveColumnState();
   }
   
   retrieveColumnState() {
     let localColumnState = localStorage.getItem("pharmaRegistryColumnState");
+    console.log("Column state:");
+    console.log(localColumnState);
     if(localColumnState != null) {
-      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+      console.log(JSON.parse(localColumnState));
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
     }
   }
 
   saveColumnState() {
-    localStorage.setItem("pharmaRegistryColumnState", JSON.stringify(this.columnApi.getColumnState()));
+    const allState = this.columnApi.getColumnState();
+    const localColumnState = allState.map((state: any) => ({
+      colId: state.colId,
+      sort: state.sort,
+      sortIndex: state.sortIndex,
+      aggFunc: state.aggFunc,
+      flex: state.flex,
+      pinned: state.pinned,
+      pivot: state.pivot,
+      pivotIndex: state.pivotIndex,
+      rowGroup: state.rowGroup,
+      rowGroupIndex: state.rowGroupIndex,
+      width: state.width
+    }));
+    var i = 0;
+    localColumnState.forEach((state: any) => {
+      console.log(state.colId + ": " + state.sortIndex);
+      state.sortIndex = ++i;
+    });
+
+    localColumnState.forEach((state: any) => {
+      console.log(state.colId + ": " + state.sortIndex);
+    });
+    console.log(localColumnState)
+    localStorage.setItem("pharmaRegistryColumnState", JSON.stringify(localColumnState));
   }
 
   ngOnInit(): void {
@@ -170,13 +196,12 @@ export class PharmaRegistryComponent implements OnInit {
         }
       }
     );
-
-    this.listProducts();
-
+/*
     setTimeout(
       () => {
         this.api = this.agGrid.api;
       }, 300);
+*/
   }
 
   setId(id: string) {

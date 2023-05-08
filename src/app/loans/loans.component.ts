@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, CellValueChangedEvent, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, ColumnState, ColumnStateParams, GetRowIdFunc, GetRowIdParams, GridApi } from 'ag-grid-community';
 import { environment, Forecast, LoanGridRowData, Order, OrderRow, OrderStatus, Product, User } from 'src/environments/environment';
 import { AG_GRID_LOCALE_EN, AG_GRID_LOCALE_IT, defaultColDef, gridConfigLoans210, gridConfigLoans220 } from 'src/environments/grid-configs';
 import { AddLoanDialogComponent } from '../add-loan-dialog/add-loan-dialog.component';
@@ -87,7 +87,7 @@ export class LoansComponent implements OnInit {
   ) { 
     this.loginService = loginService;
     this.dialog = dialog;
-    this.getData();
+    //this.getData();
     this.loginService.getCurrentUserSync();
 
     this.userCode = this.loginService.getUserCode()!;
@@ -138,9 +138,11 @@ export class LoansComponent implements OnInit {
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
-    console.log(this.api);
+    //console.log(this.api);
     this.columnApi = params.columnApi;
-    this.api.sizeColumnsToFit();
+    //this.api.sizeColumnsToFit();
+    //this.autoSizeColumns(false);
+    this.getData();
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -156,14 +158,40 @@ export class LoansComponent implements OnInit {
   }
   
   retrieveColumnState() {
-    let localColumnState = localStorage.getItem("loansColumnState");
+    const localColumnState = localStorage.getItem("loansColumnState");
+    //console.log("Column state:");
+    //console.log(localColumnState);
     if(localColumnState != null) {
-      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+      console.log(JSON.parse(localColumnState));
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
     }
   }
 
   saveColumnState() {
-    localStorage.setItem("loansColumnState", JSON.stringify(this.columnApi.getColumnState()));
+    const allState = this.columnApi.getColumnState();
+    const localColumnState = allState.map(
+      (state: any) => ({
+          colId: state.colId,
+          sort: state.sort,
+          sortIndex: state.sortIndex,
+          aggFunc: state.aggFunc,
+          flex: state.flex,
+          pinned: state.pinned,
+          pivot: state.pivot,
+          pivotIndex: state.pivotIndex,
+          rowGroup: state.rowGroup,
+          rowGroupIndex: state.rowGroupIndex,
+          width: state.width
+        }));
+    
+   /*
+    let localColumnState = this.columnApi.getColumnState();
+    for(let i = 0; i < localColumnState.length; ++i) {
+      localColumnState[i].sortIndex = i;
+    }
+    */
+    console.log(localColumnState);
+    localStorage.setItem("loansColumnState", JSON.stringify(localColumnState));
   }
 
   ngOnInit(): void {

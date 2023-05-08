@@ -128,16 +128,33 @@ export class SuppliesComponent implements OnInit {
   }
   
   retrieveColumnState() {
-    let localColumnState = localStorage.getItem("suppliesColumnState");
-    console.log(localStorage.getItem("suppliesColumnState"));
+    const localColumnState = localStorage.getItem("suppliesColumnState");
+    console.log("Column state:");
+    console.log(localColumnState);
     if(localColumnState != null) {
-      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+      console.log(JSON.parse(localColumnState));
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
     }
   }
 
   saveColumnState() {
-    console.log("column state saved!")
-    localStorage.setItem("suppliesColumnState", JSON.stringify(this.columnApi.getColumnState()));
+    const allState = this.columnApi.getColumnState();
+    const localColumnState = allState.map(
+      (state: any) => ({
+          colId: state.colId,
+          sort: state.sort,
+          sortIndex: state.sortIndex,
+          aggFunc: state.aggFunc,
+          flex: state.flex,
+          pinned: state.pinned,
+          pivot: state.pivot,
+          pivotIndex: state.pivotIndex,
+          rowGroup: state.rowGroup,
+          rowGroupIndex: state.rowGroupIndex,
+          width: state.width
+        }));
+    console.log(localColumnState)
+    localStorage.setItem("suppliesColumnState", JSON.stringify(localColumnState));
   }
 
   ngOnInit(): void {}

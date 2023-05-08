@@ -180,7 +180,7 @@ export class OrdersComponent implements OnInit {
   onGridReady = (params: { api: any; columnApi: any; }) => {
     this.api = params.api;
     this.columnApi = params.columnApi;
-    console.log(this.columnApi);
+    //console.log(this.columnApi);
     this.listForecasts(this.year);
     this.listProducts();
     this.autoSizeColumns(false);
@@ -199,14 +199,33 @@ export class OrdersComponent implements OnInit {
   }
   
   retrieveColumnState() {
-    let localColumnState = localStorage.getItem("ordersColumnState");
+    const localColumnState = localStorage.getItem("ordersColumnState");
+    //console.log("Column state:");
+    //console.log(localColumnState);
     if(localColumnState != null) {
-      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+      console.log(JSON.parse(localColumnState));
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
     }
   }
 
   saveColumnState() {
-    localStorage.setItem("ordersColumnState", JSON.stringify(this.columnApi.getColumnState()));
+    const allState = this.columnApi.getColumnState();
+    const localColumnState = allState.map(
+      (state) => ({
+        colId: state.colId,
+        sort: state.sort,
+        sortIndex: state.sortIndex,
+        aggFunc: state.aggFunc,
+        flex: state.flex,
+        pinned: state.pinned,
+        pivot: state.pivot,
+        pivotIndex: state.pivotIndex,
+        rowGroup: state.rowGroup,
+        rowGroupIndex: state.rowGroupIndex,
+        width: state.width
+      })
+    );
+    localStorage.setItem("ordersColumnState", JSON.stringify(localColumnState));
   }
 
   ngOnInit(): void {

@@ -16,23 +16,23 @@
 
 	<ag-grid-angular 
 		class="ag-theme-material ag-grid-table"
-		[getRowId]="getRowId"
 		[rowData]="this.products"
 		[columnDefs]="pharmaRegistryGridConfig"
 		[defaultColDef]="defaultColDef"
-		[gridOptions]="gridOptions"
-		[animateRows]="true"
 		[alwaysShowHorizontalScroll]="true"
-		[alwaysShowVerticalScroll]="true"
+		[gridOptions]="gridOptions"
 		[localeText]="localeText"
 		(columnResized)="saveColumnState()"
+		(columnMoved)="saveColumnState()"
 		(columnVisible)="saveColumnState()"
 		(columnPivotChanged)="saveColumnState()"
 		(columnRowGroupChanged)="saveColumnState()"
 		(columnValueChanged)="saveColumnState()"
-		(columnMoved)="saveColumnState()"
 		(columnPinned)="saveColumnState()"
-		(firstDataRendered)="onFirstDataRendered($event)">
+		(gridReady)="onGridReady($event)"
+		(firstDataRendered)="onFirstDataRendered($event)"
+		[getRowId]="getRowId"
+		[animateRows]="true">
 		<!--rimosso (gridReady)="onGridReady($event)"-->
 	</ag-grid-angular>
 </div>

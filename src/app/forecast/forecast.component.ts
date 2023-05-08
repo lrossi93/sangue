@@ -133,8 +133,6 @@ export class ForecastComponent implements OnInit {
     //console.log(this.api);
     this.columnApi = params.columnApi;    
     //this.autoSizeColumns(false);
-    console.log("forecastColumnState:");
-    console.log(localStorage.getItem("forecastColumnState"));
   }
 
   autoSizeColumns(skipHeader: boolean) {
@@ -155,14 +153,30 @@ export class ForecastComponent implements OnInit {
   
   retrieveColumnState() {
     let localColumnState = localStorage.getItem("forecastColumnState");
+    //console.log("Column state:");
+    //console.log(localColumnState);
     if(localColumnState != null) {
-      this.columnApi.applyColumnState({state: JSON.parse(localColumnState)});
+      //console.log(JSON.parse(localColumnState));
+      this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
     }
   }
 
   saveColumnState() {
-    console.log(this.columnApi.getColumnState());
-    localStorage.setItem("forecastColumnState", JSON.stringify(this.columnApi.getColumnState()));
+    const allState = this.columnApi.getColumnState();
+    const localColumnState = allState.map((state: any) => ({
+      colId: state.colId,
+      sort: state.sort,
+      sortIndex: state.sortIndex,
+      aggFunc: state.aggFunc,
+      flex: state.flex,
+      pinned: state.pinned,
+      pivot: state.pivot,
+      pivotIndex: state.pivotIndex,
+      rowGroup: state.rowGroup,
+      rowGroupIndex: state.rowGroupIndex,
+      width: state.width
+    }));
+    localStorage.setItem("forecastColumnState", JSON.stringify(localColumnState));
   }
 
   ngOnInit(): void {
