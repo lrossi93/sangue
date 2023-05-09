@@ -51,9 +51,30 @@ export class OrdersService {
     });
   }
 
-  listOrdersPromise(year: string): Observable<any> {
+  listOrdersPromise(year: string, month?: string): Observable<any> {
     let id_session = localStorage.getItem('id_session');
-    let path = this.url + '?request=listOrders&id_session=' + id_session + '&year=' + year;
+    let path = "";
+    
+    if(month == "" || month == null || month == undefined) {
+      month = undefined;
+    }
+    if(year == "" || year == null || year == undefined) {
+      year == undefined;
+    }
+
+    if(month == undefined) {
+      path = this.url + '?request=listOrders&id_session=' + id_session + '&year=' + year;
+    }
+    
+    if(year == undefined) {
+      path = this.url + '?request=listOrders&id_session=' + id_session;
+    }
+    
+    if(year != undefined && month != undefined) {
+      path = this.url + '?request=listOrders&id_session=' + id_session + '&year=' + year + "&month=" + month;
+    }
+
+    console.log(path);
     return this.http.get<String[]>(
       path,
       {

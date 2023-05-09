@@ -58,6 +58,7 @@ export class OrdersComponent implements OnInit {
   isDateLocked!: boolean;
 
   year: string = new Date().getFullYear().toString();
+  month: string = (new Date().getMonth() + 1).toString();
   dialogRef: any;
   dialog: any;
 
@@ -244,14 +245,23 @@ export class OrdersComponent implements OnInit {
     console.log(this.api);
   }
 
+  checkMonth() {
+    if(parseInt(this.month) < 1) {
+      this.month = "1";
+    }
+    if(parseInt(this.month) > 12) {
+      this.month = "12";
+    }
+  }
+
   /*
   
         ORDERS ===========================
 
   */  
-  listOrders(year: string) {
+  listOrders(year: string, month?: string) {
     this.loading = true;
-    this.ordersService.listOrdersPromise(year).subscribe(
+    this.ordersService.listOrdersPromise(year, month).subscribe(
       res => {
         if(res[0] != "KO") {
           this.orders = res[1];
@@ -269,8 +279,8 @@ export class OrdersComponent implements OnInit {
     );
   }
 
-  listOrdersAndForecasts(year: string) {
-    this.listOrders(year);
+  listOrdersAndForecasts(year: string, month?: string) {
+    this.listOrders(year, month);
     this.listForecasts(year);
   }
 
@@ -1043,7 +1053,7 @@ export class OrdersComponent implements OnInit {
   //big function to be called at the very beginning, to retrieve everything we need
   getAllData() {
     //listOrders, then
-    this.ordersService.listOrdersPromise(this.year).subscribe(
+    this.ordersService.listOrdersPromise(this.year, this.month).subscribe(
       res => {
         if(res[0] == "OK") {
           this.orders = res[1];

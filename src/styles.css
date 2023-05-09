@@ -47,6 +47,7 @@ nav{
 .second-nav{
 	display: flex; 
 	flex-direction: row; 
+	align-items: center;
 	background-color: #00BFB6;
 	top: 50px;
 }

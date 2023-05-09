@@ -38,17 +38,34 @@
 		mat-mini-fab
 		matTooltip="{{ 'Refresh' | translate }}" 
 		color="basic"
-		(click)="listOrders(year)">
+		(click)="listOrders(year, month)">
 			<i class="material-icons">refresh</i>
 		</button>
-
+		
+		<p
+		style="margin: 5px;">
+			{{ 'Reference year' | translate }}:
+		</p>
 		<input 
 		matInput 
 		type="number"
 		placeholder="{{ 'Reference year' | translate }}" 
 		[(ngModel)]="year" 
 		style="width: 50px;" 
-		(change)="listOrders(year)">
+		(change)="listOrders(year, month)">
+
+		<p
+		style="margin: 5px;">
+			{{ 'Reference month' | translate }}:
+		</p>
+		<input 
+		matInput 
+		type="number"
+		placeholder="{{ 'Reference month' | translate }}" 
+		[(ngModel)]="month" 
+		style="width: 50px;" 
+		(change)="listOrders(year, month)"
+		(keyup)="checkMonth()">
 	</nav>
 
 
