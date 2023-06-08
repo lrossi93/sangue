@@ -1031,6 +1031,7 @@ export const gridConfigLoans210 = [
     field: 'id', 
     editable: false,
   },
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
     field: 'anno', 
@@ -1040,7 +1041,7 @@ export const gridConfigLoans210 = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
     field: 'mese', 
     editable: false
-  },
+  },*/
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
     field: 'full_username_from', 
@@ -1079,6 +1080,7 @@ export const gridConfigLoans220 = [
     field: 'id', 
     editable: false,
   },
+  /*
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
     field: 'anno', 
@@ -1088,7 +1090,7 @@ export const gridConfigLoans220 = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
     field: 'mese', 
     editable: false
-  },
+  },*/
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
     field: 'full_username_from', 
