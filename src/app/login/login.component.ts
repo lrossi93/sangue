@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   constructor(
     loginService: LoginService, 
     router: Router,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {
     this.loginService = loginService;
     this.router = router;
@@ -92,8 +92,9 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("id_profile", res[2].toString());
           localStorage.setItem("sangue_username", username);
           this.loginService.logged = true;
-          this.router.navigate(['home']);
           this.getUsersGlobally();
+          
+          this.router.navigate(['home']);
           //this.loginService.getCurrentUser();
         }
       }
@@ -137,7 +138,8 @@ export class LoginComponent implements OnInit {
 
   logout(){
     this.loginService.logout();
-    this.router.navigate(['/login']);
+    //this.router.navigate(['https://servizi.regione.piemonte.it/catalogo/sistema-informativo-regionale-portale-medici-pediatri']);
+    document.location.href = environment.logoutPath;
   }
 
   onClick(){

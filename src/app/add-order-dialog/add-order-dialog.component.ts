@@ -11,7 +11,7 @@ import { OrdersService } from '../orders.service';
 @Component({
   selector: 'app-add-order-dialog',
   templateUrl: './add-order-dialog.component.html',
-  styleUrls: ['./add-order-dialog.component.css']
+  styleUrls: ['./add-order-dialog.component.css'],
 })
 export class AddOrderDialogComponent implements OnInit {
   dialog: any;
@@ -47,6 +47,13 @@ export class AddOrderDialogComponent implements OnInit {
   d_ddt!: UntypedFormControl;
   note!: UntypedFormControl;
   isExtra!: boolean;
+  yearFormControl!: UntypedFormControl;
+  selectedYear!: number;
+  monthFormControl!: UntypedFormControl;
+  selectedMonth!: number;
+
+  yearsArray: number[] = [];
+  monthsArray: number[] = [];
 
 
   //BEGIN: autocomplete - users
@@ -72,6 +79,8 @@ export class AddOrderDialogComponent implements OnInit {
       gg_min: string,
       gg_max: string,
       isExtra: boolean,
+      year: string,
+      month: string,
     },
     private thisDialogRef: MatDialogRef<AddOrderDialogComponent>,
     dialog: MatDialog,
@@ -83,8 +92,9 @@ export class AddOrderDialogComponent implements OnInit {
     this.dialog = dialog;
     this.loginService = loginService;
     this.isExtra = data.isExtra == undefined ? false : data.isExtra;
+    let date = new Date();
     //creation of formControls from _builder
-    this.d_ordine = _builder.control(new Date(), Validators.required);
+    this.d_ordine = _builder.control(date, Validators.required);
     this.n_ordine = _builder.control(0);
     this.b_urgente = _builder.control(false);
     this.b_extra = _builder.control(this.isExtra);
@@ -94,6 +104,23 @@ export class AddOrderDialogComponent implements OnInit {
     this.n_ddt = _builder.control(0);
     this.d_ddt = _builder.control("");
     this.note = _builder.control("");
+
+    this.initMonthsArray(date.getMonth() + 1);//+1 because months are counted from 0
+    
+    this.initYearsArray(date.getFullYear(), date.getMonth());
+    
+    if(this.yearsArray.length == 2) {
+      this.yearFormControl = _builder.control(this.yearsArray[1], Validators.required);
+      this.monthFormControl = _builder.control(this.monthsArray[1], Validators.required);
+    }
+    else {
+      this.yearFormControl = _builder.control(this.yearsArray[0], Validators.required);
+      this.monthFormControl = _builder.control(this.monthsArray[1], Validators.required);
+    }
+
+    //this.yearFormControl.setValue(this.yearsArray[0]); 
+    this.selectedYear = this.yearsArray[0];
+    this.selectedMonth = this.monthsArray[1];
 
     if(loginService.getUserCode() == "210"){
       this.userFormControl = _builder.control(loginService.getUsername(), Validators.required);
@@ -127,6 +154,53 @@ export class AddOrderDialogComponent implements OnInit {
     );
   }
 
+  initYearsArray(year: number, month: number) {
+    this.yearsArray = [];
+    this.yearsArray.push(year);
+    //this.yearsArray.push(year + 1);
+    if(month == 12) {
+      this.yearsArray.push(year + 1);
+    }
+  }
+
+  initMonthsArray(month: number) {
+    this.monthsArray = [];
+    this.monthsArray.push(month)
+    if(month == 12) {
+      this.monthsArray.push(1);
+    }
+    else{
+      this.monthsArray.push(month + 1);
+    }
+    console.log(this.monthsArray);
+  }
+
+  onYearValueChanged(event: Event) {
+    console.log(event);
+    console.log(this.yearFormControl.value);
+    //se viene scelto l'anno successivo, impostare il mese successivo (gennaio anno successivo)
+    if(this.yearsArray.length == 2 && this.yearsArray[1].toString() == event.toString()) {
+      this.monthFormControl.setValue(this.monthsArray[1]);
+    }
+    //se viene scelto l'anno precedente, impostare il primo mese (dicembre anno precedente)
+    if(this.yearsArray.length == 2 && this.yearsArray[0].toString() == event.toString()) {
+      this.monthFormControl.setValue(this.monthsArray[0]);
+    }
+  }
+
+  onMonthValueChanged(event: Event) {
+    console.log(event);
+    console.log(this.monthFormControl.value);
+    if(this.yearsArray.length == 2) {
+      if(parseInt(event.toString()) == 12 && this.monthsArray[0] == 12) {
+        this.yearFormControl.setValue(this.yearsArray[0])
+      }
+      if(parseInt(event.toString()) == 1 && this.monthsArray[1] == 1) {
+        this.yearFormControl.setValue(this.yearsArray[1]);
+      }
+    }
+  }
+
   pushOrderRow(newOrderRow: OrderRow){
     this.newOrderRows.push(newOrderRow);
   }
@@ -138,7 +212,8 @@ export class AddOrderDialogComponent implements OnInit {
   assignNewOrderValues() {
     this.newOrder = {
       id: "",
-      anno: this.d_ordine.value.getFullYear(),
+      anno: this.yearFormControl.value,
+      mese: this.monthFormControl.value,
       b_extra: this.b_extra.value,
       b_urgente:this.b_urgente.value,
       b_validato: this.b_validato.value,
@@ -345,6 +420,7 @@ export class AddOrderDialogComponent implements OnInit {
       console.log("OpenEditOrderRowDialog: ID = " + id);
 
       dialogConfig.data = {
+        year: this.data.year,
         orderRow: newOrderRow,
         products: this.products,
         forecasts: this.currentUserForecasts,

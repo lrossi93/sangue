@@ -74,7 +74,7 @@ export class OrdersService {
       path = this.url + '?request=listOrders&id_session=' + id_session + '&year=' + year + "&month=" + month;
     }
 
-    console.log(path);
+    //console.log(path);
     return this.http.get<String[]>(
       path,
       {
@@ -96,6 +96,7 @@ export class OrdersService {
           id_session: this.loginService.getSession(),
           id: order.id,
           anno: order.anno,
+          mese: order.mese,
           username: order.username,
           d_ordine: order.d_ordine,
           n_ordine: order.n_ordine,
@@ -129,6 +130,7 @@ export class OrdersService {
           id_session: this.loginService.getSession(),
           id: '-1',
           anno: order.anno,
+          mese: order.mese,
           username: order.username,
           d_ordine: order.d_ordine,
           n_ordine: order.n_ordine,
@@ -170,6 +172,7 @@ export class OrdersService {
           id_session: this.loginService.getSession(),
           id: order.id,
           anno: order.anno,
+          mese: order.mese,
           username: order.username,
           d_ordine: order.d_ordine,
           n_ordine: order.n_ordine,
@@ -200,6 +203,7 @@ export class OrdersService {
           id_session: this.loginService.getSession(),
           id: '-1',
           anno: order.anno,
+          mese: order.mese,
           username: order.username,
           d_ordine: order.d_ordine,
           n_ordine: order.n_ordine,

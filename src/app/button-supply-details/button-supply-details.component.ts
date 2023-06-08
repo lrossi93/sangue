@@ -27,6 +27,7 @@ export class ButtonSupplyDetailsComponent implements OnInit, ICellRendererAngula
   currentOrder: Order = {
     id: '',
     anno: 0,
+    mese: 0,
     username: '',
     d_ordine: '',
     n_ordine: 0,

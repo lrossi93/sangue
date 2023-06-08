@@ -302,6 +302,8 @@ export const orderGridHeaders = {
     UserFrom: "Effettuato da",
     Recipient: "Destinatario",
     LoanDate: "Data prestito",
+    ReferenceYear: "Anno di riferimento",
+    ReferenceMonth: "Mese di riferimento"
   },
   en: {
     ID: "ID",
@@ -329,7 +331,9 @@ export const orderGridHeaders = {
     DeliveryNotes: "Delivery notes",
     UserFrom: "Requested by",
     Recipient: "Recipient",
-    LoanDate: "Loan date"
+    LoanDate: "Loan date",
+    ReferenceYear: "Reference year",
+    ReferenceMonth: "Reference month"
   }
 }
 
@@ -345,6 +349,16 @@ export const gridConfigOrders210 = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
     editable: false
   },
   { 
@@ -466,6 +480,16 @@ export const gridConfigOrders210Locked = [
     editable: false
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
+    editable: false
+  },
+  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Status : orderGridHeaders.en.Status, 
     field: 'status', 
     editable: false,
@@ -577,6 +601,16 @@ export const gridConfigOrders220 = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
     cellRenderer: DropdownUsersOrdersComponent,
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
     editable: false
   },
   { 
@@ -695,6 +729,16 @@ export const gridConfigOrders220Locked = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.User : orderGridHeaders.en.User, 
     field: 'full_username', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
     editable: false
   },
   { 
@@ -877,6 +921,16 @@ export const gridConfigSupplies = [
     editable: false,
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
+    editable: false
+  },
+  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Year : orderGridHeaders.en.Year, 
     field: 'anno', 
     editable: false
@@ -978,6 +1032,16 @@ export const gridConfigLoans210 = [
     editable: false,
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
+    editable: false
+  },
+  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 
     field: 'full_username_from', 
     editable: false,
@@ -1014,6 +1078,16 @@ export const gridConfigLoans220 = [
     headerName: localeLang == 'it' ? orderGridHeaders.it.ID : orderGridHeaders.en.ID, 
     field: 'id', 
     editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceYear : orderGridHeaders.en.ReferenceYear, 
+    field: 'anno', 
+    editable: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.ReferenceMonth : orderGridHeaders.en.ReferenceMonth, 
+    field: 'mese', 
+    editable: false
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.UserFrom : orderGridHeaders.en.UserFrom, 

@@ -256,4 +256,21 @@ export class ForecastService {
       }
     );
   }
+
+  getForecastRemainderPromise(year: string, product_id: string): Observable<any>{
+    let request = 'getForecastRemainder';
+    let id_session = localStorage.getItem('id_session');
+    let username = localStorage.getItem('sangue_username');
+    product_id = product_id;
+    let path = this.url + '?request=' + request + '&id_session='+ id_session + '&year=' + year + '&id_prd=' + product_id + '&username=' + username;
+    
+    console.log(path);
+    
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    );
+  }
 }

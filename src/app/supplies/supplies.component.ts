@@ -89,6 +89,7 @@ export class SuppliesComponent implements OnInit {
         var order: Order = {
           id: event.data.id,
           anno: event.data.anno,
+          mese: event.data.mese,
           username: event.data.username,
           d_ordine: event.data.d_ordine,
           n_ordine: event.data.n_ordine,
@@ -271,6 +272,7 @@ export class SuppliesComponent implements OnInit {
       var newSupplyGridRowData = {
         id: this.orders[i].id,
         anno: this.orders[i].anno,
+        mese: this.orders[i].mese,
         username: this.orders[i].username,
         full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
         d_ordine: this.orders[i].d_ordine,
@@ -369,6 +371,7 @@ export class SuppliesComponent implements OnInit {
         let order = {
           id: event.data.id,
           anno: event.data.anno,
+          mese: event.data.mese,
           username: event.data.username,
           d_ordine: event.data.d_ordine,
           n_ordine: event.data.n_ordine,

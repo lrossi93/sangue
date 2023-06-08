@@ -22,6 +22,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   currentOrder: Order = {
     id: '',
     anno: 0,
+    mese: 0,
     username: '',
     d_ordine: '',
     n_ordine: 0,

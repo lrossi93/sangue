@@ -147,7 +147,7 @@ style="display: flex; flex-direction: row;">
 	*ngIf="loginService.getUsername() != null"
 	[matMenuTriggerFor]="loginMenu"
 	>
-		{{ 'Logged as' | translate }} <b>{{loginService.currentUser.client}}</b>
+		<em>{{ 'Logged as' | translate }} <b>{{loginService.currentUser.client}}</b> - username: <b>{{loginService.currentUser.username}}</b></em>
 	</button>
 	<button 
 	mat-button
@@ -165,11 +165,12 @@ style="display: flex; flex-direction: row;">
 		</button>
 	</mat-menu>	
 	<p
+	*ngIf="loginService.getUsername() != null"
 	style="
 	position: absolute;
 	right: 0; 
 	margin: 15px;">
-		v0.7
+		v{{ localStorage.getItem("version") }}
 	</p>
 </nav>
 

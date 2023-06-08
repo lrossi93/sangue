@@ -118,6 +118,7 @@ export class DropdownUsersOrdersComponent implements ICellRendererAngularComp, O
         let updatedOrder = {
           id: this.data.id,
           anno: this.data.anno,
+          mese: this.data.mese,
           username: userId,
           d_ordine: this.data.d_ordine,
           n_ordine: this.data.n_ordine,

@@ -33,6 +33,32 @@
         <mat-datepicker-toggle matSuffix [for]="pickerOrderDate"></mat-datepicker-toggle>
         <mat-datepicker #pickerOrderDate></mat-datepicker>
     </mat-form-field>
+
+    <!--Reference year-->
+    <mat-form-field>
+        <mat-label>{{'Reference year' | translate}}</mat-label>
+        <mat-select
+        [value]="yearsArray[0]"
+        [formControl]="yearFormControl"
+        (valueChange)="onYearValueChanged($event)">
+            <mat-option 
+            *ngFor="let year of yearsArray" 
+            [value]="year">{{year}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!--Reference month-->
+    <mat-form-field>
+        <mat-label>{{'Reference month' | translate}}</mat-label>
+        <mat-select
+        [value]="monthsArray[1]" 
+        [formControl]="monthFormControl"
+        (valueChange)="onMonthValueChanged($event)">
+            <mat-option 
+            *ngFor="let month of monthsArray" 
+            [value]="month">{{month}}</mat-option>
+        </mat-select>
+    </mat-form-field>
     
     <mat-form-field
     *ngIf="loginService.getUserCode() == '220'">

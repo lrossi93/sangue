@@ -51,6 +51,7 @@ export class OrdersUrgentCheckboxComponent extends CellCheckboxComponent impleme
     let orderUrgent = {
       id: this.data.id,
       anno: this.data.anno,
+      mese: this.data.mese,
       username: this.data.username,
       d_ordine: this.data.d_ordine,
       n_ordine: this.data.n_ordine,

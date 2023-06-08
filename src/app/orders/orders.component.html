@@ -16,7 +16,7 @@
 		</button>
 
 		<button 
-		*ngIf="!loading && isDateLocked && loginService.getUserCode() != '220'"
+		*ngIf="isDateLocked && loginService.getUserCode() != '220'"
 		mat-mini-fab
 		matTooltip="{{ 'Add extra order' | translate }}"
 		color="accent"
@@ -24,8 +24,7 @@
 			<i class="material-icons">playlist_add</i>
 		</button>
 
-		<button 
-		*ngIf="!loading"
+		<button
 		mat-mini-fab
 		matTooltip="{{ 'Orders resume' | translate }}"
 		class="resume"

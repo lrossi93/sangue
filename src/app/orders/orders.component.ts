@@ -25,6 +25,7 @@ export class OrdersComponent implements OnInit {
   order: Order = {
     id: "",
     anno: 0,
+    mese: 0,
     username: "",
     d_ordine: "", 
     n_ordine: 0,
@@ -176,6 +177,14 @@ export class OrdersComponent implements OnInit {
         }
       }
     }
+  }
+
+  periodicRefresh() {
+    setTimeout(() => {
+      // Your logic here
+      this.listOrders(this.year, this.month);
+      this.periodicRefresh();
+    }, 60000);
   }
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
@@ -722,6 +731,7 @@ export class OrdersComponent implements OnInit {
         var newOrderGridRowData = {
           id: this.orders[i].id,
           anno: this.orders[i].anno,
+          mese: this.orders[i].mese,
           username: this.orders[i].username,
           full_username: this.getFullUsernameById(this.orders[i].username), //per permettere di filtrare sullo username (client)
           d_ordine: this.orders[i].d_ordine,
@@ -743,8 +753,8 @@ export class OrdersComponent implements OnInit {
         this.visibleIndex = i;  
       }
     }
-    console.log(this.orders);
-    console.log(this.orderGridRowData);
+    //console.log(this.orders);
+    //console.log(this.orderGridRowData);
     this.loading = false;
     //console.log(this.columnApi.getColumnState());
     //this.getColState();
@@ -775,7 +785,9 @@ export class OrdersComponent implements OnInit {
       forecasts: this.forecasts,
       gg_min: this.gg_min,
       gg_max: this.gg_max,
-      isExtra: isExtra
+      isExtra: isExtra,
+      year: this.year,
+      month: this.month
     }
 
     dialogConfig.width = "95%";
@@ -1072,6 +1084,7 @@ export class OrdersComponent implements OnInit {
     //uscita
     if(i >= orders.length) {
       this.listUsersAndSetLock('210');
+      this.periodicRefresh();
       return;
     }
     this.ordersService.getOrderStatusPromise(orders[i].id).subscribe(

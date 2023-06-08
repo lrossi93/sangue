@@ -178,7 +178,8 @@ export class LoginService {
         localStorage.removeItem("sangue_client")
         console.log("Successfully logged out");
         this.logged = false;
-        this.router.navigate(['/']);
+        //this.router.navigate(['/']);
+        document.location.href = environment.logoutPath;
       }
       else{
         console.error("Error logging out!");
@@ -214,14 +215,17 @@ export class LoginService {
     switch(this.getUserCode()) {
       case "200":
         this.currentUser.client = "Amministratore Farmaci";
+        this.currentUser.username = "sangueadmin";
       break;
 
       case "220":
         this.currentUser.client = "ASL Amministratrice";
+        this.currentUser.username = "sangueaslno";
         break;
 
       case "230":
         this.currentUser.client = "Fornitore";
+        this.currentUser.username = "sanguefornitore";
         break;
 
       default: 

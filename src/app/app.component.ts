@@ -5,6 +5,7 @@ import { environment, User } from 'src/environments/environment';
 import { LoginService } from './login.service';
 import { UsersService } from './users.service';
 import { log } from 'console';
+import { VersionService } from './version.service';
 
 
 @Component({
@@ -18,16 +19,18 @@ export class AppComponent implements OnInit {
   currentUser!: User;
   localStorage: any;
   router!: Router;
-
+  
   constructor(
     public loginService: LoginService,
     public translate: TranslateService,
     router: Router,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private versionService: VersionService
   ){
     this.router = router;
     translate.addLangs(['en', 'it']);
     this.localStorage = localStorage;
+    //this.localStorage.setItem("version", environment.version);
     this.loginService.getCurrentUserSync();
     if(
       navigator.language.split("-", 2)[0] == 'it' ||
@@ -98,5 +101,13 @@ export class AppComponent implements OnInit {
     let filename: string = "manual-" + userCode + ".pdf";
     let docsPath: string = "assets/docs/";
     window.open(docsPath + filename, "_blank");
+  }
+
+  getVersion() {
+
+  }
+
+  setVersion() {
+
   }
 }

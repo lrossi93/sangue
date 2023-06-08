@@ -8,6 +8,7 @@ export const environment = {
   production: false,
   basePath: 'https://vm-portalmmg.sistemapiemonte.it/collector/modules/ws/sangue/',
   reportPath: 'https://vm-portalmmg.sistemapiemonte.it/collector/',
+  logoutPath: 'https://servizi.regione.piemonte.it/catalogo/sistema-informativo-regionale-portale-medici-pediatri',
   currentLanguage: 'it',
   globalUsers: [],
   globalProducts: [],
@@ -17,7 +18,8 @@ export const environment = {
     id: "",
     username: "",
     client: ""
-  }
+  },
+  version: "0.7",
 };
 
 export interface AreYouSureData {
@@ -74,6 +76,7 @@ export interface User {
 export interface Order {
   id: string;
   anno: number;
+  mese: number;
   username: string;
   d_ordine: string;
   n_ordine: number;

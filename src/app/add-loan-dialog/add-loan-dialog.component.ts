@@ -111,6 +111,7 @@ export class AddLoanDialogComponent implements OnInit {
     this.newLoanReq = {
       id: "", //to be assigned
       anno: new Date(this.d_ordine.value).getFullYear(),
+      mese: new Date(this.d_ordine.value).getMonth(),
       b_extra: false,
       b_urgente: false,
       b_validato: false,
@@ -133,6 +134,7 @@ export class AddLoanDialogComponent implements OnInit {
     this.newLoanRes = {
       id: "", //to be assigned
       anno: new Date(this.d_ordine.value).getFullYear(),
+      mese: new Date(this.d_ordine.value).getMonth(),
       b_extra: false,
       b_urgente: false,
       b_validato: false,

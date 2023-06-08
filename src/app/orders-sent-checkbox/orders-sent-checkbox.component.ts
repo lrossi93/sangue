@@ -68,6 +68,7 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
           let orderSent = {
             id: this.data.id,
             anno: this.data.anno,
+            mese: this.data.mese,
             username: this.data.username,
             d_ordine: this.data.d_ordine,
             n_ordine: this.data.n_ordine,

@@ -4,6 +4,7 @@ import { environment, User } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
+import { VersionService } from '../version.service';
 
 @Component({
   selector: 'app-welcome',
@@ -20,11 +21,12 @@ export class WelcomeComponent implements OnInit {
     public loginService: LoginService, 
     private usersService: UsersService,
     private ordersService: OrdersService,
+    private versionService: VersionService,
     private router: Router
   ) {
     this.getUsersGlobally();
-    
     this.ordersService.getOrdersGlobally();
+    this.versionService.checkVersion();
   }
 
   ngOnInit(): void {

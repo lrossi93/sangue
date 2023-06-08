@@ -23,6 +23,7 @@ export class LoansComponent implements OnInit {
   order: Order = {
     id: "",
     anno: 0,
+    mese: 0,
     username: "",
     d_ordine: "", 
     n_ordine: 0,
@@ -581,6 +582,7 @@ export class LoansComponent implements OnInit {
           let newLoanGridRowData = {
             id: this.loans[i].id,
             anno: this.loans[i].anno,
+            mese: this.loans[i].mese,
             username: this.loans[i].username,
             full_username_from: this.getClientByUsername(this.loans[i].username_prestito_da)!,
             full_username_to: this.getClientByUsername(this.loans[i].username_prestito_a)!,

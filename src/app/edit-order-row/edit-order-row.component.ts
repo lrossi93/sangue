@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { environment, Forecast, OrderRow, Product, User, translations } from 'src/environments/environment';
 import { LoginService } from '../login.service';
+import { ForecastService } from '../forecast.service';
 
 @Component({
   selector: 'app-edit-order-row',
@@ -19,6 +20,9 @@ export class EditOrderRowComponent implements OnInit {
 
   qtyThreshold!: number;
   qtyValue!: number;
+  qtyEstimated!: number;
+  qtyOrdered!: number;
+  qtyRemaining!: number;
 
   forecasts: Forecast[] = [];
   orderRows: OrderRow[] = [];
@@ -60,6 +64,7 @@ export class EditOrderRowComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { 
+      year: string,
       orderRow: OrderRow,
       users: any,
       products: Product[],
@@ -69,7 +74,8 @@ export class EditOrderRowComponent implements OnInit {
     },
     private dialogRef: MatDialogRef<EditOrderRowComponent>,
     private _builder: UntypedFormBuilder,
-    loginService: LoginService
+    loginService: LoginService,
+    private forecastService: ForecastService
   ) {
     this.loginService = loginService;
 
@@ -215,12 +221,29 @@ export class EditOrderRowComponent implements OnInit {
 
   onProductSelected(event: any) {
     if(event.source.selected){    
+      this.qtyEstimated = 0;
+      this.qtyOrdered = 0;
+      this.qtyRemaining = 0;
       let productId = this.productDesToId(event.source.value);
       this.productsFormControl.setValue(event.source.value);
       this.qtyThreshold = Math.floor(this.getQtaApprovataByProductId(productId) / 12);
       this.minQty = this.getMinOrdByProductId(productId);
       this.minQty = (this.minQty > this.step ? this.step : this.minQty); 
       this.checkFields(event);
+      this.forecastService.getForecastRemainderPromise(this.data.year, productId).subscribe(
+        res => {
+          console.log(res);
+          if(res[0] == "OK") {
+            this.qtyEstimated = res[1].tot_preventivato;
+            this.qtyOrdered = res[1].tot_ordinato;
+            this.qtyRemaining = res[1].rimanenza;
+            console.log(this.qtyEstimated + " " + this.qtyOrdered + " " + this.qtyRemaining);
+          }
+          else {
+            console.error("Error retrieving forecastRemainder!");
+          }
+        }
+      );
     }
   }
 
