@@ -33,6 +33,14 @@ export class AddLoanDialogComponent implements OnInit {
   newLoanRowReq!: OrderRow;
   newLoanRowRes!: OrderRow;
 
+  yearFormControl!: UntypedFormControl;
+  selectedYear!: number;
+  monthFormControl!: UntypedFormControl;
+  selectedMonth!: number;
+
+  yearsArray: number[] = [];
+  monthsArray: number[] = [];
+
   //BEGIN: autocomplete - users
   users: any = [];
   filteredUsers!: Observable<string[]>;
@@ -65,6 +73,8 @@ export class AddLoanDialogComponent implements OnInit {
     this.getProductNames();
     this.forecasts = this.data.forecasts;
 
+    let date = new Date();
+
     this.anno = _builder.control(new Date().getFullYear().toString(), Validators.required);
     this.userFormControl = _builder.control(this.userNames[0], Validators.required);
     this.productsFormControl = _builder.control(this.productNames[0], Validators.required);
@@ -85,6 +95,19 @@ export class AddLoanDialogComponent implements OnInit {
     this.b_prestito = _builder.control(true);
     this.id_ordine_prestito = _builder.control("");
     this.qta = _builder.control(0);
+
+    this.initMonthsArray(date.getMonth() + 1);//+1 because months are counted from 0
+    
+    this.initYearsArray(date.getFullYear(), date.getMonth());
+    
+    if(this.yearsArray.length == 2) {
+      this.yearFormControl = _builder.control(this.yearsArray[1], Validators.required);
+      this.monthFormControl = _builder.control(this.monthsArray[1], Validators.required);
+    }
+    else {
+      this.yearFormControl = _builder.control(this.yearsArray[0], Validators.required);
+      this.monthFormControl = _builder.control(this.monthsArray[1], Validators.required);
+    }
   }
 
   ngOnInit(): void {
@@ -103,6 +126,53 @@ export class AddLoanDialogComponent implements OnInit {
 
   onLoanDateChange() {
     console.log("onLoadDateChange");
+  }
+
+  initYearsArray(year: number, month: number) {
+    this.yearsArray = [];
+    this.yearsArray.push(year);
+    //this.yearsArray.push(year + 1);
+    if(month == 12) {
+      this.yearsArray.push(year + 1);
+    }
+  }
+
+  initMonthsArray(month: number) {
+    this.monthsArray = [];
+    this.monthsArray.push(month)
+    if(month == 12) {
+      this.monthsArray.push(1);
+    }
+    else{
+      this.monthsArray.push(month + 1);
+    }
+    console.log(this.monthsArray);
+  }
+
+  onYearValueChanged(event: Event) {
+    console.log(event);
+    console.log(this.yearFormControl.value);
+    //se viene scelto l'anno successivo, impostare il mese successivo (gennaio anno successivo)
+    if(this.yearsArray.length == 2 && this.yearsArray[1].toString() == event.toString()) {
+      this.monthFormControl.setValue(this.monthsArray[1]);
+    }
+    //se viene scelto l'anno precedente, impostare il primo mese (dicembre anno precedente)
+    if(this.yearsArray.length == 2 && this.yearsArray[0].toString() == event.toString()) {
+      this.monthFormControl.setValue(this.monthsArray[0]);
+    }
+  }
+
+  onMonthValueChanged(event: Event) {
+    console.log(event);
+    console.log(this.monthFormControl.value);
+    if(this.yearsArray.length == 2) {
+      if(parseInt(event.toString()) == 12 && this.monthsArray[0] == 12) {
+        this.yearFormControl.setValue(this.yearsArray[0])
+      }
+      if(parseInt(event.toString()) == 1 && this.monthsArray[1] == 1) {
+        this.yearFormControl.setValue(this.yearsArray[1]);
+      }
+    }
   }
 
   assignNewLoanValues() {
