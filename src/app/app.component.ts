@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
     setInterval(() => {
       this.loginService.checkPromise().subscribe(
         res => {
-          if(res[0] == "KO"){
+          if(localStorage.getItem("id_session") != null && res[0] == "KO"){
             localStorage.removeItem("id_session");
             localStorage.removeItem("id_profile");
             localStorage.removeItem("sangue_username");

@@ -177,13 +177,16 @@ export class OrdersComponent implements OnInit {
         }
       }
     }
+    setTimeout(() => {
+      console.log("refreshing...");
+      this.periodicRefresh()
+    }, 60000);
   }
 
   periodicRefresh() {
-    setTimeout(() => {
-      // Your logic here
+    setInterval(() => {
+      console.log("refreshing...")
       this.listOrders(this.year, this.month);
-      this.periodicRefresh();
     }, 60000);
   }
 
@@ -1084,7 +1087,6 @@ export class OrdersComponent implements OnInit {
     //uscita
     if(i >= orders.length) {
       this.listUsersAndSetLock('210');
-      this.periodicRefresh();
       return;
     }
     this.ordersService.getOrderStatusPromise(orders[i].id).subscribe(

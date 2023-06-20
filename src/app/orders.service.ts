@@ -161,8 +161,6 @@ export class OrdersService {
     order: Order,
     isAdding: boolean
   ): Observable<any> {
-    console.log("SET ORDER PROMISE:");
-    console.log(order);
     if(!isAdding){
       //SET
       return this.http.post<String[]>(
