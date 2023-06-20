@@ -19,7 +19,7 @@ export const environment = {
     username: "",
     client: ""
   },
-  version: "0.7",
+  version: "0.9",
 };
 
 export interface AreYouSureData {

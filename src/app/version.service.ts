@@ -24,21 +24,35 @@ export class VersionService {
   checkVersion() {
     this.getVersionPromise().subscribe(
       res => {
-        console.log("Checking version...");
-        console.log("Local version: " + localStorage.getItem("version"));
-        console.log("Local env version: " + environment.version);
         if(res[0] == "OK") {
+          /*
+          console.log(res);
+          console.log("Checking version...");
+          console.log("Local version: " + localStorage.getItem("version"));
+          console.log("Local env version: " + environment.version);
+          */
+
+          //if env version is higher than localstorage version, update localstorage
+          if(environment.version > localStorage.getItem("version")!) {
+            localStorage.setItem("version", environment.version);
+          } 
+
           let localVersion = localStorage.getItem("version");
-          if(localVersion == null || localVersion! < res[1]) {
-            console.log("Remote version: " + res[1]);
+
+          //if localstorage version is null or lower, update it with remote version
+          if(localVersion == null || parseFloat(localVersion!) < parseFloat(res[1])) {
+            //console.log("Local version lower than server saved one!");
+            //console.log("Remote version: " + res[1]);
             localStorage.setItem("version", res[1]);
-            console.log("New local version: " + localStorage.getItem("version"));
+            //console.log("New local version: " + localStorage.getItem("version"));
             environment.version = res[1];
-            console.log("New local env version: " + environment.version);
+            //console.log("New local env version: " + environment.version);
             window.location.reload();
           }
-          if(localVersion! > res[1]) {
-            console.log("Local version higher than server saved one!");
+
+          //if localstorage version is higher than remote version, update remote version
+          if(parseFloat(localVersion!) > parseFloat(res[1])) {
+            //console.log("Local version higher than server saved one!");
             this.setVersionPromise(localVersion!).subscribe(
               res => {
                 if(res[0] == "OK") {
