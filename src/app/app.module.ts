@@ -82,7 +82,11 @@ import { ButtonLoanDetailsComponent } from './button-loan-details/button-loan-de
 import { LoanDetailsDialogComponent } from './loan-details-dialog/loan-details-dialog.component';
 import { OrderResumeComponent } from './order-resume/order-resume.component';
 import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
+import { DdtOrderActionsComponent } from './ddt-order-actions/ddt-order-actions.component';
+import { OrderDdtUploadDialogComponent } from './order-ddt-upload-dialog/order-ddt-upload-dialog.component';
+import { DragNDropDirective } from './drag-n-drop.directive';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -141,6 +145,9 @@ import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
     LoanDetailsDialogComponent,
     OrderResumeComponent,
     LoginGatewayComponent,
+    DdtOrderActionsComponent,
+    OrderDdtUploadDialogComponent,
+    DragNDropDirective,
 
   ],
   providers: [

@@ -151,5 +151,15 @@
     "Supplier manual": "Manuale del fornitore",
     "Manual": "Manuale",
     "Redirecting": "Reindirizzamento in corso",
-    "Reference month": "Mese di riferimento"
+    "Reference month": "Mese di riferimento",
+    "Upload document": "Carica documento",
+    "Download document": "Scarica documento",
+    "Current file": "File corrente",
+    "No files associated to this order": "Nessun file è stato associato a questo ordine",
+    "Add file": "Aggiungi file",
+    "Upload": "Carica",
+    "Upload file": "Carica file",
+    "File upload": "Caricamento file",
+    "Ready for upload": "File pronto al caricamento",
+    "File upload for order": "Caricamento file per l'ordine"
 }

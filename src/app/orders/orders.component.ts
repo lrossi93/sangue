@@ -121,7 +121,7 @@ export class OrdersComponent implements OnInit {
     //gridOptions
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
+        //console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
         if(!event.node.data.isRowLocked) {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);

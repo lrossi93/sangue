@@ -195,6 +195,15 @@ export interface SupplyGridRowData {
   isRowLocked: boolean;
 }
 
+//to handle upload and download of pdf files
+export interface OrderDDT {
+  id: string;
+  username: string;
+  id_order: string;
+  filename: string;
+  filebase64: string;
+}
+
 export const translations = {
   it: {
     ThresholdSurpassed: "Soglia superata! Si prega di giustificare la quantità in eccesso nel box 'Motivazione'.",
@@ -204,6 +213,9 @@ export const translations = {
     ValidateSuccessful: "Elemento validato!",
     UrgentOrderAlert: "Dato che quest'ordine è urgente, si prega di avvertire il fornitore entro 24h.",
     PleaseProvideNotes: "Si prega di fornire delle annotazioni valide!",
+    FileDownloadHasStarted: "Il download del file è iniziato.",
+    FileUploadStarted: "Il caricamento del file è iniziato.",
+    FileUploadSuccessful: "Caricamento file completato!"
   },
   en: {
     ThresholdSurpassed: "Threshold surpassed! Please justify the exceeding quantity in the 'Reason' text box.",
@@ -212,7 +224,10 @@ export const translations = {
     DeleteSuccessful: "Deleted successfully!",
     ValidateSuccessful: "Validated!",
     UrgentOrderAlert: "Since this order is urgent, you are required to warn the supplier within 24h.",
-    PleaseProvideNotes: "Please provide valid notes!"
+    PleaseProvideNotes: "Please provide valid notes!",
+    FileDownloadHasStarted: "File download has started.",
+    FileUploadStarted: "File upload has started",
+    FileUploadSuccessful: "File upload completed!"
   }
 }
 

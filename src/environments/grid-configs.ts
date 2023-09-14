@@ -4,6 +4,7 @@ import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-
 import { ButtonLoanDetailsComponent } from "src/app/button-loan-details/button-loan-details.component";
 import { ButtonOrderReportComponent } from "src/app/button-order-report/button-order-report.component";
 import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/button-supply-details.component";
+import { DdtOrderActionsComponent } from "src/app/ddt-order-actions/ddt-order-actions.component";
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
 import { DropdownUsersOrdersComponent } from "src/app/dropdown-users-orders/dropdown-users-orders.component";
@@ -296,6 +297,7 @@ export const orderGridHeaders = {
     Report: "Report",
     PDF: "PDF",
     EstimatedDeliveryDate: "Data di consegna prevista",
+    DDTActions: "Azioni DDT",
     DDTDate: "Data DDT",
     DDTNumber: "n° DDT",
     DeliveryNotes: "Note di consegna",
@@ -326,6 +328,7 @@ export const orderGridHeaders = {
     Report: "Report",
     PDF: "PDF",
     EstimatedDeliveryDate: "Estimated delivery date",
+    DDTActions: "DDT Actions",
     DDTDate: "DDT date",
     DDTNumber: "DDT no.",
     DeliveryNotes: "Delivery notes",
@@ -420,6 +423,12 @@ export const gridConfigOrders210 = [
     editable: (params: { data: { isRowLocked: boolean; }; }) => {
       return !params.data.isRowLocked;
     }
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTActions : orderGridHeaders.en.DDTActions, 
+    field: 'ddt_actions', 
+    cellRenderer: DdtOrderActionsComponent,
+    editable: false,
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
@@ -543,6 +552,12 @@ export const gridConfigOrders210Locked = [
       headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
       field: 'note', 
       editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTActions : orderGridHeaders.en.DDTActions, 
+    field: 'ddt_actions', 
+    cellRenderer: DdtOrderActionsComponent,
+    editable: false,
   },
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
@@ -674,6 +689,12 @@ export const gridConfigOrders220 = [
     editable: true,
   },
   { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTActions : orderGridHeaders.en.DDTActions, 
+    field: 'ddt_actions', 
+    cellRenderer: DdtOrderActionsComponent,
+    editable: false,
+  },
+  { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.DDTNumber : orderGridHeaders.en.DDTNumber, 
     field: 'n_ddt', 
     editable: false,
@@ -802,6 +823,12 @@ export const gridConfigOrders220Locked = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
     field: 'note', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTActions : orderGridHeaders.en.DDTActions, 
+    field: 'ddt_actions', 
+    cellRenderer: DdtOrderActionsComponent,
     editable: false,
   },
   { 
@@ -981,6 +1008,12 @@ export const gridConfigSupplies = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Notes : orderGridHeaders.en.Notes, 
     field: 'note', 
+    editable: false,
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.DDTActions : orderGridHeaders.en.DDTActions, 
+    field: 'ddt_actions', 
+    cellRenderer: DdtOrderActionsComponent,
     editable: false,
   },
   { 

@@ -1,0 +1,41 @@
+
+<h2>{{ 'File upload for order' | translate }} no.{{data.orderNo}}</h2>
+<!--p>Uploading progress: {{this.progress}}%</p-->
+
+<input type="file" (change)="onFileSelected($event)" #fileInput style="display: none;" />
+<p *ngIf="loading">{{ 'Loading' | translate}}...</p>
+<p *ngIf="fileExists" style="color: green;">{{ 'Current file' | translate }}: {{onlineFilename}} ({{remoteFileSize}} B)</p>
+<p *ngIf="!fileExists && !loading" style="color: red;">{{ 'No files associated to this order' | translate }}.</p>
+<p *ngIf="errors" style="color: red;">{{errors}}</p>
+<p *ngIf="selectedFile && !errors">{{ 'Ready for upload' | translate }}: <b>{{ selectedFile.name }}</b></p>
+
+<div mat-dialog-actions align="center">
+    <button 
+    id="fileButton"
+    style="margin: 5px;"
+    mat-mini-fab 
+    color="basic"
+    (click)="fileInput.click()"
+    matTooltip="{{'Add file' | translate}}">
+        <i class="material-icons">add</i>
+    </button>
+    
+    <button 
+    style="margin: 5px;"
+    mat-mini-fab
+    matTooltip="{{'Upload file' | translate}}"
+    color="primary"
+    disabled="{{!filebase64}}"
+    (click)="uploadFile(data.orderID, filename, filebase64)">
+        <i class="material-icons">file_upload</i>
+    </button>
+
+    <button 
+    style="margin: 5px;"
+    mat-mini-fab
+    matTooltip="{{'Close' | translate}}"
+    mat-dialog-close 
+    color="accent">
+        <i class="material-icons">close</i>
+    </button>
+</div>

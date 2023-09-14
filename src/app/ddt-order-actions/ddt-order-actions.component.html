@@ -1,0 +1,35 @@
+<div>
+    <button 
+    *ngIf="loginService.getUserCode() == '220' || loginService.getUserCode() == '210'"
+    mat-mini-fab
+    style="margin-right: 5px;"
+    color="basic"
+    class="mat-elevation-z0"
+    matTooltip="{{ 'Upload document' | translate }}"
+    (click)="openEditOrderDialog($event)"
+    disabled="{{!uploadEnabled}}">
+        <i class="material-icons">file_upload</i>
+    </button>
+
+    <!--TODO: view file without downloading it -->
+    <!--button 
+    mat-mini-fab
+    style="margin-right: 5px;"
+    color="basic"
+    class="mat-elevation-z0"
+    matTooltip="{{ 'View' | translate }}"
+    (click)="print($event)">
+        <i class="material-icons">document_scanner</i>
+    </button-->
+
+    <button 
+    *ngIf="true"
+    mat-mini-fab
+    color="basic"
+    class="mat-elevation-z0"
+    matTooltip="{{ 'Download document' | translate }}"
+    (click)="getOrderDdt(this.data.id)"
+    disabled="{{!this.fileExists}}">
+        <i class="material-icons">download</i>
+    </button>
+</div>
