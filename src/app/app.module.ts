@@ -85,6 +85,7 @@ import { LoginGatewayComponent } from './login-gateway/login-gateway.component';
 import { DdtOrderActionsComponent } from './ddt-order-actions/ddt-order-actions.component';
 import { OrderDdtUploadDialogComponent } from './order-ddt-upload-dialog/order-ddt-upload-dialog.component';
 import { DragNDropDirective } from './drag-n-drop.directive';
+import { ButtonSupplyReportComponent } from './button-supply-report/button-supply-report.component';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 
@@ -148,6 +149,7 @@ import { DragNDropDirective } from './drag-n-drop.directive';
     DdtOrderActionsComponent,
     OrderDdtUploadDialogComponent,
     DragNDropDirective,
+    ButtonSupplyReportComponent,
 
   ],
   providers: [

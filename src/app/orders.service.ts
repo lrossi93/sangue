@@ -501,8 +501,26 @@ export class OrdersService {
     let d_inizio = startDate;
     let d_fine = endDate;
     let path = this.url + '?request='+ request + '&id_session=' + id_session + '&d_inizio=' + d_inizio + '&d_fine=' + d_fine;
-    console.log(path)
+    //console.log(path)
     return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    );
+  }
+
+  /**
+   * 
+   * SUPPLY RESUME
+   * 
+   */
+  getSupplyResumePromise(orderID: string) {
+    let request = 'getOrderXlsx';
+    let id_session = localStorage.getItem('id_session');
+    let path = this.url + '?request='+ request + '&id_session=' + id_session + '&id_order=' + orderID;
+    //console.log(path)
+    return this.http.get<any[]>(
       path,
       {
         responseType: "json"

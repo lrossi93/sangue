@@ -4,6 +4,7 @@ import { ButtonEditOrderComponent } from "src/app/button-edit-order/button-edit-
 import { ButtonLoanDetailsComponent } from "src/app/button-loan-details/button-loan-details.component";
 import { ButtonOrderReportComponent } from "src/app/button-order-report/button-order-report.component";
 import { ButtonSupplyDetailsComponent } from "src/app/button-supply-details/button-supply-details.component";
+import { ButtonSupplyReportComponent } from "src/app/button-supply-report/button-supply-report.component";
 import { DdtOrderActionsComponent } from "src/app/ddt-order-actions/ddt-order-actions.component";
 import { DropdownProductsForecastComponent } from "src/app/dropdown-products-forecast/dropdown-products-forecast.component";
 import { DropdownUsersForecastComponent } from "src/app/dropdown-users-forecast/dropdown-users-forecast.component";
@@ -305,7 +306,8 @@ export const orderGridHeaders = {
     Recipient: "Destinatario",
     LoanDate: "Data prestito",
     ReferenceYear: "Anno di riferimento",
-    ReferenceMonth: "Mese di riferimento"
+    ReferenceMonth: "Mese di riferimento",
+    OrderReport: "Report ordine"
   },
   en: {
     ID: "ID",
@@ -336,7 +338,8 @@ export const orderGridHeaders = {
     Recipient: "Recipient",
     LoanDate: "Loan date",
     ReferenceYear: "Reference year",
-    ReferenceMonth: "Reference month"
+    ReferenceMonth: "Reference month",
+    OrderReport: "Order report"
   }
 }
 
@@ -1051,6 +1054,11 @@ export const gridConfigSupplies = [
   { 
     headerName: localeLang == 'it' ? orderGridHeaders.it.Action : orderGridHeaders.en.Action, 
     cellRenderer: ButtonSupplyDetailsComponent,
+    autoHeight: false
+  },
+  { 
+    headerName: localeLang == 'it' ? orderGridHeaders.it.OrderReport : orderGridHeaders.en.OrderReport, 
+    cellRenderer: ButtonSupplyReportComponent,
     autoHeight: false
   }
 ];
