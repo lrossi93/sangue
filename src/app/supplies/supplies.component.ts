@@ -125,13 +125,11 @@ export class SuppliesComponent implements OnInit {
   }
 
   onFirstDataRendered = (event: any) => {
-    this.retrieveColumnState();
+    //this.retrieveColumnState(); //moved to onGridReady
   }
   
   retrieveColumnState() {
     const localColumnState = localStorage.getItem("suppliesColumnState");
-    console.log("Column state:");
-    console.log(localColumnState);
     if(localColumnState != null) {
       console.log(JSON.parse(localColumnState));
       this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
@@ -154,7 +152,8 @@ export class SuppliesComponent implements OnInit {
           rowGroupIndex: state.rowGroupIndex,
           width: state.width
         }));
-    console.log(localColumnState)
+    //console.log("saving: ");
+    //console.log(localColumnState[0].colId);
     localStorage.setItem("suppliesColumnState", JSON.stringify(localColumnState));
   }
 
@@ -175,6 +174,7 @@ export class SuppliesComponent implements OnInit {
     this.listProducts();
     this.listOrders(this.year);
     this.autoSizeColumns(false);
+    this.retrieveColumnState();
   }
 
   getAllData() {
