@@ -106,6 +106,7 @@ export class AddOrderDialogComponent implements OnInit {
     this.note = _builder.control("");
 
     this.initMonthsArray(date.getMonth() + 1);//+1 because months are counted from 0
+    console.log(this.monthsArray);
     
     this.initYearsArray(date.getFullYear(), date.getMonth());
     
@@ -161,16 +162,26 @@ export class AddOrderDialogComponent implements OnInit {
     if(month == 12) {
       this.yearsArray.push(year + 1);
     }
+    if(localStorage.getItem("id_profile") && localStorage.getItem("id_profile") == '220') {
+      this.yearsArray.push(year - 1);
+    }
   }
 
   initMonthsArray(month: number) {
     this.monthsArray = [];
-    this.monthsArray.push(month)
-    if(month == 12) {
-      this.monthsArray.push(1);
+    if(localStorage.getItem("id_profile") && localStorage.getItem("id_profile") == '220') {
+      for(var i = 1; i <= 12; ++i) {
+        this.monthsArray.push(i);
+      }
     }
-    else{
-      this.monthsArray.push(month + 1);
+    else {
+      this.monthsArray.push(month)
+      if(month == 12) {
+        this.monthsArray.push(1);
+      }
+      else{
+        this.monthsArray.push(month + 1);
+      }
     }
     console.log(this.monthsArray);
   }
