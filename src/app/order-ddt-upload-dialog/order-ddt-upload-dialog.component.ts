@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { OrderDdtService } from '../order-ddt.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnackbarService } from '../snackbar.service';
 import { environment, translations } from 'src/environments/environment';
 
@@ -19,6 +19,7 @@ export class OrderDdtUploadDialogComponent implements OnInit {
   fileInput!: HTMLInputElement;
   selectedFile: File | null = null;
   remoteFileSize: number = 0;
+  //dialogSelfRef: MatDialogRef;
 
   fileExists: boolean = false;      //there already is a file online
   isFileLoaded: boolean = false;    //success in uploading the file client-side 
@@ -35,6 +36,7 @@ export class OrderDdtUploadDialogComponent implements OnInit {
     },
     private orderDdtService: OrderDdtService,
     private snackbarService: SnackbarService,
+    private dialogRef: MatDialogRef<MatDialog>
   ) {
   }
 
@@ -112,8 +114,9 @@ export class OrderDdtUploadDialogComponent implements OnInit {
           this.isFileLoaded = false;
           this.filebase64 = "";
           this.selectedFile = null;
-          this.snackbarService.openSnackbar(environment.currentLanguage == "it" ? translations.it.FileUploadSuccessful : translations.en.FileUploadSuccessful);
+          this.snackbarService.openSnackbar((environment.currentLanguage == "it" ? translations.it.FileUploadSuccessful : translations.en.FileUploadSuccessful) + "\n(" + this.onlineFilename + ", " + this.remoteFileSize + " B)");
           //console.log(res);
+          this.dialogRef.close();
         }
         else {
           console.error("Error uploading file " + filename + "!");
