@@ -247,18 +247,24 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   assignOrderData() {
     this.currentOrder.id = this.data.id;
     this.currentOrder.anno = this.data.anno;
-    this.currentOrder.b_extra = this.data.b_extra;
-    this.currentOrder.b_urgente = this.data.b_urgente;
-    this.currentOrder.b_validato = this.data.b_validato;
-    this.currentOrder.d_ordine = this.data.d_ordine;
-    this.currentOrder.d_validato = this.data.d_validato;
-    this.currentOrder.n_ordine = this.data.n_ordine;
-    this.currentOrder.note = this.data.note;
+    this.currentOrder.mese = this.data.mese;
     this.currentOrder.username = this.data.username;
+    this.currentOrder.d_ordine = this.data.d_ordine;
+    this.currentOrder.n_ordine = this.data.n_ordine;
+    this.currentOrder.b_urgente = this.data.b_urgente;
+    this.currentOrder.b_extra = this.data.b_extra;
+    this.currentOrder.b_validato = this.data.b_validato;
+    this.currentOrder.d_validato = this.data.d_validato;
+    this.currentOrder.status = this.data.status;
+    this.currentOrder.note = this.data.note;
+    this.currentOrder.d_consegna_prevista = this.data.d_consegna_prevista;
     this.currentOrder.n_ddt = this.data.n_ddt;
     this.currentOrder.d_ddt = this.data.d_ddt;
-    this.currentOrder.d_consegna_prevista = this.data.d_consegna_prevista;
     this.currentOrder.note_consegna = this.data.note_consegna;
+    this.currentOrder.b_prestito = this.data.b_prestito;
+    this.currentOrder.id_ordine_prestito = this.data.id_ordine_prestito
+    this.currentOrder.username_prestito_da = this.data.username_prestito_da;
+    this.currentOrder.username_prestito_a = this.data.username_prestito_a;
     console.log(this.currentOrder);
   }
 

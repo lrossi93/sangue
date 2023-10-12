@@ -97,6 +97,7 @@ export interface Order {
 }
 
 export interface OrderGridRowData {
+  mese: any;
   id: string;
   anno: number;
   username: string;
@@ -177,6 +178,7 @@ export interface OrderStatus {
 export interface SupplyGridRowData {
   id: string;
   anno: number;
+  mese: number;
   username: string;
   full_username: string; //per permettere di filtrare sullo username (client)
   d_ordine: string;

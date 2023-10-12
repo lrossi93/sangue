@@ -80,12 +80,13 @@ export class SuppliesComponent implements OnInit {
 
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        if(event.column.getColId() == "d_consegna_prevista" && event.data.status == "inviato al fornitore") {
+        if(event.column.getColId() == "d_consegna_prevista" && (event.data.status == "inviato al fornitore" || event.data.status == "inviato al cliente")) {
           this.openEditDateDialog(event);
         }
       },
-      onCellValueChanged: (event: CellValueChangedEvent) => {                
-        //console.log("Changed from " + event.oldValue + " to " + event.newValue);
+      onCellValueChanged: (event: CellValueChangedEvent) => {          
+        console.log(event);      
+        console.log("Changed from " + event.oldValue + " to " + event.newValue);
         var order: Order = {
           id: event.data.id,
           anno: event.data.anno,
@@ -118,7 +119,10 @@ export class SuppliesComponent implements OnInit {
           note: "Fornitura modificata da " + localStorage.getItem('sangue_username'),
           b_sto: false
         }
-
+        //console.log("order value changed");
+        //console.log(order);
+        //console.log("status")
+        //console.log(orderStatus);
         this.setOrder(order, orderStatus);
       }
     }
@@ -260,14 +264,25 @@ export class SuppliesComponent implements OnInit {
       let toCustomerCondition = false;
 
       switch(this.orderStatusArr[i].status){
+        case "inviato":
+          toCustomerCondition = false;
+          break;
+        case "confermato":
+          toCustomerCondition = false;
+          break;
         case "inviato al fornitore":
           toCustomerCondition = false;
+          break;
+        case "inviato cliente":
+          toCustomerCondition = true;
           break;
         default:
           toCustomerCondition = true;
           lock = true;
         break;
       }
+
+      //console.log("n: " + this.orders[i].n_ordine+ ", toCustomerCondition: " + toCustomerCondition)
 
       var newSupplyGridRowData = {
         id: this.orders[i].id,
@@ -332,7 +347,7 @@ export class SuppliesComponent implements OnInit {
     return null;
   }
 
-  updateRow(id: string) {
+  updateRow(id: string, status: string) {
     const toBeUpdated: any = [];
     const rowNodes: any = [];
     const supply = this.getSupplyGridRowDataById(id)!;
@@ -342,7 +357,7 @@ export class SuppliesComponent implements OnInit {
       }
       const data = rowNode.data;
       data.b_to_customer = true;
-      data.status = "inviato al cliente";
+      data.status = status;
       data.isRowLocked = true;
       
       toBeUpdated.push(data);
@@ -358,7 +373,8 @@ export class SuppliesComponent implements OnInit {
     dialogConfig.autoFocus = true;
 
     dialogConfig.data = {
-      date: event.value//data.d_consegna_prevista,
+      date: event.value,
+      isEstimatedDeliveryDate: true,
     }
 
     this.dialogRef = this.dialog.open(
@@ -366,7 +382,7 @@ export class SuppliesComponent implements OnInit {
       dialogConfig
     );
 
-    this.dialogRef.afterClosed().subscribe( (result: {date: string, isOrderDate: boolean, isValidationDate: boolean, isSubmitted: boolean}) => {
+    this.dialogRef.afterClosed().subscribe( (result: {date: string, isEstimatedDeliveryDate: boolean, isSubmitted: boolean}) => {
       if(result !== undefined && result.isSubmitted){
         let order = {
           id: event.data.id,
@@ -402,10 +418,15 @@ export class SuppliesComponent implements OnInit {
         }
 
         //when setting order date, just set order date
-        order.d_consegna_prevista = result.date;
-        orderStatus.status = event.data.status; //keep existing status
-        orderStatus.note = "Data di consegna prevista impostata a " + order.d_consegna_prevista + " da " + localStorage.getItem('sangue_username');
-        this.setOrder(order, orderStatus);
+        if(result.isEstimatedDeliveryDate){
+          order.d_consegna_prevista = result.date;
+          orderStatus.status = event.data.status; //keep existing status
+          orderStatus.note = "Data di consegna prevista impostata a " + order.d_consegna_prevista + " da " + localStorage.getItem('sangue_username');
+          this.setOrder(order, orderStatus);
+          //console.log(order)
+          //console.log(orderStatus)
+          //this.setOrderLocally(order, orderStatus);
+        }
       }
     });
   }
@@ -433,11 +454,16 @@ export class SuppliesComponent implements OnInit {
   }
 
   setOrderLocally(order: Order, orderStatus: OrderStatus) {    
+    console.log("status")
+    console.log(orderStatus)
     for(let i = 0; i < this.orders.length; ++i) {
       if(order.id == this.orders[i].id) {
         this.orders[i].anno = order.anno;
+        this.orders[i].mese = order.mese;
         this.orders[i].username = order.username;
         this.orders[i].d_ordine = order.d_ordine;
+        this.orders[i].n_ordine = order.n_ordine;
+        this.orders[i].status = order.status;
         this.orders[i].b_urgente = order.b_urgente;
         this.orders[i].b_extra = order.b_extra;
         this.orders[i].b_validato = order.b_validato;
@@ -447,18 +473,32 @@ export class SuppliesComponent implements OnInit {
         this.orders[i].n_ddt = order.n_ddt;
         this.orders[i].d_ddt = order.d_ddt;
         this.orders[i].note_consegna = order.note_consegna;
+        this.orders[i].b_prestito = order.b_prestito;
+        this.orders[i].id_ordine_prestito = order.id_ordine_prestito;
+        this.orders[i].username_prestito_da = order.username_prestito_da;
+        this.orders[i].username_prestito_a = order.username_prestito_a;
+
         this.orderStatusArr[i].status = orderStatus.status;
 
-        let isLockedCondition: boolean;
+        let isLockedCondition: boolean = false;
+        /*
         if(this.loginService.getUserCode() == "210") {
           isLockedCondition = orderStatus.status != "inviato";
         }
         if(this.loginService.getUserCode() == "220") {
           isLockedCondition = !(orderStatus.status == "inviato" || orderStatus.status == "confermato");
         }
+        */
+        if(orderStatus.status == "inviato al cliente" || orderStatus.status == "ricevuto") {
+          isLockedCondition = true;
+        }
 
+        console.log("assigning status")
+        console.log(orderStatus.status)
+        console.log(this.orderStatusArr[i].status)
         this.supplyGridRowData[i].id = order.id;
         this.supplyGridRowData[i].anno = order.anno;
+        this.supplyGridRowData[i].mese = order.mese;
         this.supplyGridRowData[i].username = order.username;
         this.supplyGridRowData[i].full_username = this.getFullUsernameById(order.username);
         this.supplyGridRowData[i].d_ordine = order.d_ordine;
@@ -474,8 +514,10 @@ export class SuppliesComponent implements OnInit {
         this.supplyGridRowData[i].d_ddt = order.d_ddt;
         this.supplyGridRowData[i].note_consegna = order.note_consegna;
         this.supplyGridRowData[i].isRowLocked = isLockedCondition!; 
+
+        console.log("supplyGridRowData[i].status: " + this.supplyGridRowData[i].status);
         
-        this.updateRow(this.supplyGridRowData[i].id);
+        this.updateRow(this.supplyGridRowData[i].id, this.supplyGridRowData[i].status);
         this.snackbarService.onUpdate();
         return;
       }

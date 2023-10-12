@@ -22,6 +22,7 @@ export class DatepickerProductsDialogComponent {
       isValidoA: boolean,
       isOrderDate: boolean,
       isValidationDate: boolean,
+      isEstimatedDeliveryDate: boolean,
       isDDTDate: boolean,
       gg_min: string,
       gg_max: string
@@ -70,8 +71,8 @@ export class DatepickerProductsDialogComponent {
 
   onSubmit() {
     this.isSubmitted = true;
-    console.log("date: " + this.date.value);
-    console.log("formatted date: " + this.formattedDate);
+    //console.log("date: " + this.date.value);
+    //console.log("formatted date: " + this.formattedDate);
     
     this.dialogRef.close(
       {
@@ -80,6 +81,7 @@ export class DatepickerProductsDialogComponent {
         isValidoA: this.data.isValidoA,
         isOrderDate: this.data.isOrderDate,
         isValidationDate: this.data.isValidationDate,
+        isEstimatedDeliveryDate: this.data.isEstimatedDeliveryDate,
         isDDTDate: this.data.isDDTDate,
         isSubmitted: this.isSubmitted
       }

@@ -309,6 +309,8 @@ export class OrdersComponent implements OnInit {
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
+          console.log("ordersComponent->server response:");
+          console.log(res);
           newOrder.id = res[1][0];
           newOrder.n_ordine = res[1][1];
           
@@ -520,6 +522,7 @@ export class OrdersComponent implements OnInit {
   setOrder(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
     console.log("Order:");
     console.log(order);
+    console.log("month: " + order.mese);
 
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
@@ -606,6 +609,7 @@ export class OrdersComponent implements OnInit {
       let newOrderGridRowData = {
         id: order.id,
         anno: order.anno,
+        mese: order.mese,
         username: order.username,
         full_username: this.getFullUsernameById(order.username), //per permettere di filtrare sullo username (client)
         d_ordine: order.d_ordine,
@@ -630,6 +634,7 @@ export class OrdersComponent implements OnInit {
         add: [{
           id: order.id,
           anno: order.anno,
+          mese: order.mese,
           username: order.username,
           full_username: this.getFullUsernameById(order.username),
           d_ordine: order.d_ordine,
@@ -665,6 +670,7 @@ export class OrdersComponent implements OnInit {
       
       const data = rowNode.data;
       data.anno = order.anno;
+      data.mese = order.mese;
       data.username = order.username;
       data.full_username = order.full_username;
       data.d_ordine = order.d_ordine;
@@ -805,9 +811,8 @@ export class OrdersComponent implements OnInit {
       (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
         if(result !== undefined && result.isSubmitted){
           let newOrder = result.newOrder;
-          if(this.loginService.getUserCode() == "210") {
-            newOrder.username = this.loginService.getUsername()!;
-          }
+          console.log("ordersComponent->newOrder");
+          console.log(newOrder);
           this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
         }
       }
@@ -1054,9 +1059,7 @@ export class OrdersComponent implements OnInit {
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
         if(res[0] == "OK"){
-          console.log("set:");
-          console.log(orderStatus);
-          console.log(res);
+          console.log("status set:" + res[0]);
         }
         else {
           console.error("Error setting status for order with id " + orderStatus.id_order);
@@ -1144,15 +1147,12 @@ export class OrdersComponent implements OnInit {
     return year + "-" + month + "-" + day;  
   }
 
-  
   getColState() {
     this.columnState = this.columnApi.getColumnState();
     //this.defaultColumnState = this.columnApi.getColumnState();
     console.log(this.columnState);
   }
   
-  
-
   resetColState() {
     //console.log("resetColState");
     //console.log(this.defaultColumnState);

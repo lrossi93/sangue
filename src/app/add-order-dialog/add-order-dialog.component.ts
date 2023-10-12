@@ -105,9 +105,12 @@ export class AddOrderDialogComponent implements OnInit {
     this.d_ddt = _builder.control("");
     this.note = _builder.control("");
 
+    //assign username if not sangueaslno
+    if(loginService.getUserCode() != "220") {
+      this.username = loginService.getUsername()!;
+    }
+
     this.initMonthsArray(date.getMonth() + 1);//+1 because months are counted from 0
-    console.log(this.monthsArray);
-    
     this.initYearsArray(date.getFullYear(), date.getMonth());
     
     if(this.yearsArray.length == 2) {
@@ -243,6 +246,7 @@ export class AddOrderDialogComponent implements OnInit {
       username_prestito_da: "",
       username_prestito_a: ""
     }
+    //console.log(this.newOrder);
   }
 
   formatDate(date: string): string {
@@ -280,11 +284,12 @@ export class AddOrderDialogComponent implements OnInit {
   //checkbox toggles
   toggleUrgente() {
     this.b_urgente.value ? this.b_urgente = this._builder.control(false) : this.b_urgente = this._builder.control(true);
+    console.log("is urgente: " + this.b_urgente.value);
   }
 
   toggleExtra(): void {
     this.b_extra.value ? this.b_extra = this._builder.control(false) : this.b_extra = this._builder.control(true);
-    console.log(this.b_extra.value);
+    console.log("is extra: " + this.b_extra.value);
   }
 
   toggleValidato() {
@@ -296,6 +301,7 @@ export class AddOrderDialogComponent implements OnInit {
       this.b_validato = this._builder.control(true);
       this.d_validato = this._builder.control(new Date());
     }
+    console.log("is validato: " + this.b_validato.value);
   }
 
 //===================================================================================================================
@@ -317,8 +323,9 @@ export class AddOrderDialogComponent implements OnInit {
 
   onSubmit(event: any) {
     //TODO: check fields
+    //console.log("newOrder:");
     this.assignNewOrderValues();
-    console.log(this.newOrder);
+    //console.log(this.newOrder);
     let isSubmitted = true;
 
     for(var i = 0; i < this.newOrderRows.length; ++i) {

@@ -1,5 +1,6 @@
 <div>
-    <h1 align="center">{{ 'New order'| translate }}</h1>
+    <h1 *ngIf="!isExtra" align="center">{{ 'New order'| translate }}</h1>
+    <h1 *ngIf="isExtra" align="center">{{ 'New order'| translate }} [EXTRA]</h1>
     <h2 mat-dialog-title>{{ 'Details' | translate }}</h2>
 
     <!--autocomplete dropdown for USERS-->
@@ -90,7 +91,8 @@
         </mat-checkbox>
     </p>
 
-    <p>
+    <p
+    *ngIf="!isExtra">
         <mat-checkbox 
             labelPosition="before"
             (click)="toggleExtra()">
