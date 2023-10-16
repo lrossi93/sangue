@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CellCheckboxComponent } from '../cell-checkbox/cell-checkbox.component';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
+import { OrdersComponent } from '../orders/orders.component';
 
 @Component({
   selector: 'app-orders-validated-checkbox',
@@ -15,6 +16,7 @@ export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent impl
   userCode!: string;
   constructor(
     private ordersService: OrdersService,
+    private ordersComponent: OrdersComponent,
     private loginService: LoginService,
     snackbar: MatSnackBar
   ) {
@@ -25,9 +27,13 @@ export class OrdersValidatedCheckboxComponent extends CellCheckboxComponent impl
   ngOnInit(): void {
     this.userCode = this.loginService.getUserCode()!;
     //console.log(this.data);
+    /*
     if(this.data.b_to_supplier){
       this.isLocked = true;
     }
+    */
+   //ALWAYS LOCKED: you can change its value ONLY from the "edit orderRows" dialog
+   this.isLocked = true;
   }
 
   override toggleCheckbox(event: any): void {

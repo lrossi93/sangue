@@ -151,7 +151,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         isValidated: boolean,
         isQtaRicevutaConfirmed: boolean
     }) => {
-      //console.log(result.order);
+      //console.log(result);
+      
       if(result !== undefined && result.isSubmitted){
         let orderStatus: OrderStatus = {
           id: "0",

@@ -11,6 +11,7 @@ import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { SnackbarService } from '../snackbar.service';
 import { UsersService } from '../users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-supplies',
@@ -58,8 +59,8 @@ export class SuppliesComponent implements OnInit {
     private ordersService: OrdersService,
     private pharmaRegistryService: PharmaRegistryService,
     private usersService: UsersService,
-    private forecastService: ForecastService,
     private snackbarService: SnackbarService,
+    private router: Router,
     loginService: LoginService,
     dialog: MatDialog,
   ) { 
@@ -161,7 +162,16 @@ export class SuppliesComponent implements OnInit {
     localStorage.setItem("suppliesColumnState", JSON.stringify(localColumnState));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          this.router.navigate(['login']);
+        }
+      }
+    );
+  }
 
   autoSizeColumns(skipHeader: boolean) {
     const allColumnIds: string[] = [];

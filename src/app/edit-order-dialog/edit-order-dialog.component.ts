@@ -12,6 +12,7 @@ import { EditOrderRowComponent } from '../edit-order-row/edit-order-row.componen
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 import { SnackbarService } from '../snackbar.service';
+import { OrdersValidatedDialogComponent } from '../orders-validated-dialog/orders-validated-dialog.component';
 
 @Component({
   selector: 'app-edit-order-dialog',
@@ -438,16 +439,55 @@ export class EditOrderDialogComponent implements OnInit {
     );
   }
 
+  openAreYouSureValidate() {      
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      order: this.data.order,
+      status: this.data.status
+    }
+
+    dialogConfig.width = "95%";
+    dialogConfig.maxHeight = "500px";
+
+    if(this.data.status == "inviato")
+      dialogConfig.disableClose = true;
+    
+    //console.log(this.filteredForecasts);
+    
+    
+    this.dialogRef = this.dialog.open(
+      OrdersValidatedDialogComponent, 
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: {
+        order: Order,  
+        isValidated: boolean,
+      }) => {
+      //console.log(result.order);
+        if(result !== undefined && result.isValidated){
+          //console.log(result);
+          this.validateOrder();
+        }
+      }
+    );
+  }
+
   validateOrder(){
     console.log(this.order);
-    
+    //TODO: aprire qui dialogo di conferma di convalida dell'ordine
     this.isValidated = true;
        
-      this.thisDialogRef.close({
+    //TODO: lanciare quanto segue nella onClose del dialogo precedente
+    
+    this.thisDialogRef.close({
       order: this.order,
       orderRows: this.orderRows,
       isValidated: this.isValidated
     });
+    
   }
 
   confirmQtaRicevuta() {

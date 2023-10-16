@@ -1,0 +1,8 @@
+<div>
+    <h2 align="center">{{ 'Do you wish to validate order' | translate }} {{data.order.n_ordine}}?</h2>
+    <h3 align="center">{{ 'Once you confirm, the order cannot be edited' | translate}}.</h3>
+    <div mat-dialog-actions align="center">
+        <button mat-raised-button color="warn" (click)="onSubmit()">{{ 'Submit' | translate }}</button>
+        <button mat-raised-button matDialogClose="true" color="warn" (click)="onCancel()" color="primary">{{ 'Cancel' | translate }}</button>
+    </div>
+</div>

@@ -126,9 +126,12 @@ export class OrdersComponent implements OnInit {
           if(event.column.getColId() == "d_ordine") {
               this.openEditDateDialog(event);
           }
+          //validation date not editable
+          /*
           if(event.column.getColId() == "d_validato" && loginService.getUserCode() == "220") {
             this.openEditDateDialog(event);
           }
+          */
         }
         if(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto") {
           console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
@@ -188,6 +191,12 @@ export class OrdersComponent implements OnInit {
       console.log("refreshing...")
       this.listOrders(this.year, this.month);
     }, 60000);
+  }
+
+  refresh() {
+    console.log("refreshing...");
+    this.listOrders(this.year, this.month);
+    //this.getAllData();
   }
 
   onGridReady = (params: { api: any; columnApi: any; }) => {
@@ -277,7 +286,8 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] != "KO") {
           this.orders = res[1];
-          this.listUsersAndSetLock('210');
+          console.log(res[1]);
+          //this.listUsersAndSetLock('210');
           this.getAllOrderStatusRec(this.orders, 0);
         }
         else {
@@ -703,7 +713,6 @@ export class OrdersComponent implements OnInit {
     this.orderGridRowData = [];
     for(var i = 0; i < this.orders.length; ++i) {
       if(this.orders[i].status != "prestito") {
-        //if(this.orders[i].status != "prestito) {
         var lock: boolean = false;
 
         //lock cells ONLY if customer!
@@ -715,8 +724,13 @@ export class OrdersComponent implements OnInit {
           }
           //if d_validato is set and != epoch, and if d_validato >= d_ordine the lock has been set
           if(
-            (this.orders[i].d_validato != "0000-00-00" && this.orders[i].d_validato != "1970-01-01" && this.orders[i].d_validato >= this.orders[i].d_ordine) ||
-            this.orderStatusArr[i].status == "inviato al fornitore") {
+            (
+              this.orders[i].d_validato != "0000-00-00" 
+              && this.orders[i].d_validato != "1970-01-01" 
+              && this.orders[i].d_validato >= this.orders[i].d_ordine
+            )
+            || this.orderStatusArr[i].status == "inviato al fornitore") {
+
             lock = true;
           }
         }
@@ -1089,6 +1103,7 @@ export class OrdersComponent implements OnInit {
   getAllOrderStatusRec(orders: Order[], i: number) {
     //uscita
     if(i >= orders.length) {
+      console.log(this.orderStatusArr);
       this.listUsersAndSetLock('210');
       return;
     }
@@ -1097,6 +1112,10 @@ export class OrdersComponent implements OnInit {
         if(res[0] == "OK") {
           //console.log(res[1][res[1].length - 1]);
 
+          //if first call, orderStatusArr must be emptied
+          if(i == 0) {
+            this.orderStatusArr = []
+          }
           //check if all orders have a status
           if(res[1][res[1].length -1] === undefined) {
             let orderStatus = {

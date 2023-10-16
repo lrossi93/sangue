@@ -1,5 +1,5 @@
-<h2 align="center">{{ 'Send order' | translate }} {{ orderId }} {{ 'to customer' | translate }}?</h2>
-<h3 align="center">{{ 'This action cannot be undone' | translate}}.</h3>
+<h2 align="center">{{ 'Send order' | translate }} {{ orderId }} {{ 'to customer' | translate }} {{data.fullUsername}}?</h2>
+<h3 align="center">{{ 'Once you confirm, this action cannot be undone' | translate}}.</h3>
 <div mat-dialog-actions align="center">
     <button mat-raised-button (click)="onSubmit()" color="warn">{{ 'Submit' | translate }}</button>
     <button mat-raised-button matDialogClose="true" (click)="onCancel()" color="primary">{{ 'Cancel' | translate }}</button>

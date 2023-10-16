@@ -1,7 +1,7 @@
 <div
 *ngIf="isValidated">
     <h2 align="center">{{ 'Send order' | translate }} {{ orderId }} {{ 'to supplier' | translate }}?</h2>
-    <h3 align="center">{{ 'Once you confirm, the order cannot be edited' | translate}}.</h3>
+    <!--h3 align="center">{{ 'Once you confirm, the order cannot be edited' | translate}}.</h3-->
     <div mat-dialog-actions align="center">
         <button mat-raised-button (click)="onSubmit()" color="warn">{{ 'Submit' | translate }}</button>
         <button mat-raised-button matDialogClose="true" (click)="onCancel()" color="primary">{{ 'Cancel' | translate }}</button>
