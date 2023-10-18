@@ -14,7 +14,7 @@ align="center">
 class="typography">
     <p
     *ngIf="orderRows.length == 0"
-    align="center">
+    align="center" style="color: red;">
         {{ 'This order does not contain any orderRows and will thus be deleted' | translate }}.
     </p>
 
@@ -96,10 +96,10 @@ class="typography">
                 matInput
                 style="max-width: 50px;"
                 type="number"
-                disabled="{{isQtaRicevutaSetAND()}}"
+                disabled="{{this.isQtaRicevutaSetAND()}}"
                 [(ngModel)]="element.qta_ricevuta"
-                (keyup.enter)="onQtaRicevutaSet(element, element.qta_ricevuta)"
-                (keyup.tab_next)="onQtaRicevutaSet(element, element.qta_ricevuta)">
+                (keyup.enter)="confirmSingleQtaRicevuta(element, element.qta_ricevuta)"
+                (keyup.tab_next)="confirmSingleQtaRicevuta(element, element.qta_ricevuta)">
             </td>
         </ng-container>
 
@@ -134,7 +134,7 @@ class="typography">
                 matInput
                 style="max-width: 50px;"
                 type="number"
-                disabled="true"
+                disabled="{{this.isQtaRicevutaSetAND()}}"
                 [(ngModel)]="element.qta_ricevuta"
                 (keyup.enter)="onQtaRicevutaSet(element, element.qta_ricevuta)"
                 (keyup.tab_next)="onQtaRicevutaSet(element, element.qta_ricevuta)">
@@ -239,7 +239,13 @@ class="typography">
         </div>
     </mat-card--> 
 </mat-dialog-content>
-
+<br>
+<br>
+<h5
+    align="center"
+    *ngIf="!this.isQtaRicevutaSetAND() && this.data.status == 'ricevuto'">
+        {{ 'To confirm the received quantity of a single line, please type the received quantity in the box and press ENTER' | translate }}.
+</h5>
 <h5 
 *ngIf="this.data.status == 'ricevuto' && !this.isQtaRicevutaSetAND()"
 align="center" 
@@ -250,7 +256,7 @@ style="color: red">
 <div mat-dialog-actions align="center">
     <button 
     style="margin: 5px;"
-    *ngIf="!isLocked && orderRows.length > 0"
+    *ngIf="!isLocked && orderRows.length > 0 && this.data.status == 'inviato'"
     mat-mini-fab 
     color="basic"
     matTooltip="{{'Add row' | translate}}"
@@ -259,7 +265,7 @@ style="color: red">
     </button>
     <button 
     style="margin: 5px;"
-    *ngIf="!isLocked && orderRows.length > 0"
+    *ngIf="!isLocked && orderRows.length > 0 && this.data.status == 'inviato'"
     mat-mini-fab
     matTooltip="{{'Delete order' | translate}}"
     color="warn" 
@@ -269,7 +275,7 @@ style="color: red">
     
     <button 
     style="margin: 5px;"
-    *ngIf="userCode == '220' && !isValidated"
+    *ngIf="userCode == '220' && !isValidated && orderRows.length > 0"
     mat-mini-fab
     matTooltip="{{'Validate' | translate}}"
     color="primary"
@@ -313,7 +319,7 @@ style="color: red">
     <!--se non ci sono più orderRows-->
     <button 
     style="margin: 5px;"
-    *ngIf="orderRows.length == 0"
+    *ngIf="orderRows.length == 0 && order.status != 'ricevuto'"
     mat-mini-fab 
     matTooltip="{{'Close' | translate}}"
     color="accent" 

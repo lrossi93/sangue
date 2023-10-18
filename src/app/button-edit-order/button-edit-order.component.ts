@@ -9,6 +9,7 @@ import { OrdersService } from '../orders.service';
 import { OrdersComponent } from '../orders/orders.component';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { UsersService } from '../users.service';
+import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'app-button-edit-order',
@@ -51,6 +52,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
   dialogRef: any;
   dialog: MatDialog;
 
+  isDisabled = false;
 
   constructor(
     dialog: MatDialog,
@@ -58,7 +60,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     private usersService: UsersService,
     private pharmaRegistryService: PharmaRegistryService,
     private ordersComponent: OrdersComponent,
-    private forecastService: ForecastService
+    private forecastService: ForecastService,
+    private snackbarService: SnackbarService
   ) { 
     this.dialog = dialog;
     this.ordersService = ordersService; 
@@ -152,7 +155,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         isQtaRicevutaConfirmed: boolean
     }) => {
       //console.log(result);
-      
+      console.log(result) 
       if(result !== undefined && result.isSubmitted){
         let orderStatus: OrderStatus = {
           id: "0",
@@ -185,6 +188,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         this.ordersComponent.setOrderStatus(orderStatus);
       }
       if(result !== undefined && result.isValidated) {
+        this.isDisabled = true;
         let orderStatus: OrderStatus = {
           id: "0",
           username: localStorage.getItem('sangue_username')!,
@@ -204,6 +208,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
               order.b_validato = true;
               order.d_validato = this.getFormattedDate(new Date());
               this.ordersComponent.setOrder(order, orderStatus, false);
+              this.snackbarService.onUpdate();
+              this.isDisabled = false;
             }
             else {
               console.error("Error setting status for order " + this.data.id);
@@ -212,6 +218,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         );
       } 
       if(result !== undefined && result.isQtaRicevutaConfirmed) {
+        this.isDisabled = true;
         let orderStatus: OrderStatus = {
           id: "0",
           username: localStorage.getItem('sangue_username')!,
@@ -221,7 +228,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
           note: "quantità ricevuta aggiornata da " + localStorage.getItem('sangue_username'),
           b_sto: false
         }
-
+        
         this.ordersComponent.confirmQtaRicevutaOrderRowsRec(result.orderRows, 0);
 
         this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
@@ -231,6 +238,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
               order.b_validato = true;
               order.d_validato = this.getFormattedDate(new Date());
               this.ordersComponent.setOrder(order, orderStatus, false);
+              this.snackbarService.onUpdate();
+              this.isDisabled = false;
             }
             else {
               console.error("Error setting status for order " + this.data.id);

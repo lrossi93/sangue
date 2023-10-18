@@ -47,7 +47,6 @@ export class OrdersComponent implements OnInit {
 
   orders: any = [];
   orderGridRowData: OrderGridRowData[] = [];
-  orderRows: any = [];
   users: any = [];
   products: any = [];
   forecasts: Forecast[] = [];
@@ -408,9 +407,13 @@ export class OrdersComponent implements OnInit {
       return;
     }
     else {
+      console.log("orderID: " + orderRows[index].id_ordine)
+
       if(orderRows[index].qta_ricevuta == -1){
         orderRows[index].qta_ricevuta == orderRows[index].qta_validata;
       }
+      console.log(orderRows);
+
       this.ordersService.setOrderRowPromise(orderRows[index], false).subscribe(
         res => {
           if(res[0] == "OK") {

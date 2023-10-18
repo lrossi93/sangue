@@ -3,6 +3,7 @@
     color="primary"
     *ngIf="this.data.status == 'inviato'"
     class="mat-elevation-z0"
+    disabled="{{isDisabled}}"
     matTooltip="{{ 'Edit' | translate }}"
     (click)="openEditOrderDialog($event)">
         <i class="material-icons">edit</i>
@@ -12,6 +13,7 @@
     mat-mini-fab
     color="basic"
     *ngIf="this.data.status != 'inviato'" 
+    disabled="{{isDisabled}}"
     class="mat-elevation-z0"
     matTooltip="{{ 'View' | translate }}"
     (click)="openEditOrderDialog($event)">
