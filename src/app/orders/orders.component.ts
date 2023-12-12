@@ -14,6 +14,7 @@ import { OrdersService } from '../orders.service';
 import { PharmaRegistryService } from '../pharma-registry.service';
 import { SnackbarService } from '../snackbar.service';
 import { UsersService } from '../users.service';
+import { EditOrderDialogComponent } from '../edit-order-dialog/edit-order-dialog.component';
 
 @Component({
   selector: 'app-orders',
@@ -57,8 +58,8 @@ export class OrdersComponent implements OnInit {
   gg_max!: number;
   isDateLocked!: boolean;
 
-  year: string = new Date().getFullYear().toString();
-  month: string = (new Date().getMonth() + 1).toString();
+  year: string = new Date().getFullYear().toString();           //get current year
+  month: string = (new Date().getMonth() + 1).toString();       //get current month
   dialogRef: any;
   dialog: any;
 
@@ -224,7 +225,7 @@ export class OrdersComponent implements OnInit {
     //console.log("Column state:");
     //console.log(localColumnState);
     if(localColumnState != null) {
-      console.log(JSON.parse(localColumnState));
+      //console.log(JSON.parse(localColumnState));
       this.columnApi.applyColumnState({state: JSON.parse(localColumnState), applyOrder: true});
     }
   }
@@ -280,6 +281,7 @@ export class OrdersComponent implements OnInit {
 
   */  
   listOrders(year: string, month?: string) {
+    console.log("year: " + year + ", month: " + month);
     this.loading = true;
     this.ordersService.listOrdersPromise(year, month).subscribe(
       res => {
@@ -820,6 +822,7 @@ export class OrdersComponent implements OnInit {
     dialogConfig.maxHeight = "500px";
         
     this.dialogRef = this.dialog.open(
+      //EditOrderDialogComponent,
       AddOrderDialogComponent, 
       dialogConfig
     );
@@ -951,6 +954,7 @@ export class OrdersComponent implements OnInit {
         }
         else {
           this.users = res[1];
+          //console.log(this.users);
           this.setLock();
         }
       }

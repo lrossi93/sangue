@@ -74,7 +74,7 @@ export class OrdersService {
       path = this.url + '?request=listOrders&id_session=' + id_session + '&year=' + year + "&month=" + month;
     }
 
-    //console.log(path);
+    console.log(path);
     return this.http.get<String[]>(
       path,
       {
@@ -161,6 +161,9 @@ export class OrdersService {
     order: Order,
     isAdding: boolean
   ): Observable<any> {
+    console.log("order: ");
+    console.log(order);
+
     if(!isAdding){
       //SET
       return this.http.post<String[]>(
@@ -191,8 +194,8 @@ export class OrdersService {
       )
     }
     else{
-      //console.log("isAdding: " + isAdding);
-      //console.log(order);
+      console.log("isAdding: " + isAdding);
+      console.log(order);
       
       return this.http.post<String[]>(
         this.url, 

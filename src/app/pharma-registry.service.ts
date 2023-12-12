@@ -208,4 +208,18 @@ export class PharmaRegistryService {
       }
     );
   }
+
+  //ottiene quantità totale di prodotto "id_prd" ordinata nell'anno "year" 
+  getProductClientYearPromise(year: number, id_prd: string): Observable<any> {
+    let request = 'getPrdClientYear';
+    let user = localStorage.getItem('sangue_username');
+    let path = this.url + '?id_session='+localStorage.getItem('id_session') + '&request=' + request + '&user=' + user + '&id_prd=' + id_prd + '&year=' + year;
+    console.log(request + " path: " + path);
+    return this.http.get<String[]>(
+      path,
+      {
+        responseType: "json"
+      }
+    )
+  }
 }

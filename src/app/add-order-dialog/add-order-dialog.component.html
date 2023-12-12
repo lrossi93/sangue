@@ -4,20 +4,69 @@
     <h2 mat-dialog-title>{{ 'Details' | translate }}</h2>
 
     <!--autocomplete dropdown for USERS-->
-    <mat-form-field 
+   <!--mat-form-field 
     *ngIf="loginService.getUserCode()=='220'">
         <input 
         type="text"
         placeholder="{{ 'User' | translate }}"
         matInput
         [formControl]="userFormControl"
+        (keyup)="enableSubmit(userFormControl.value)"
+        [matAutocomplete]="auto"
+        >
+        
+        <mat-autocomplete 
+        autoActiveFirstOption 
+        #auto="matAutocomplete">
+
+            <mat-option 
+            *ngFor="let option of filteredUsers | async" 
+            [value]="option" 
+            (onSelectionChange)='onUserSelected($event)'>
+                {{ option }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field-->
+    <!--mat-form-field>
+        <input 
+        type="text" 
+        placeholder="{{ 'User' | translate }}" 
+        matInput [formControl]="userFormControl" 
         [matAutocomplete]="auto"
         (keyup)="enableSubmit(userFormControl.value)">
         <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredUsers | async" [value]="option" (onSelectionChange)='onUserSelected($event)' onchange="">
+          <mat-option *ngFor="let option of filteredUserOptions | async" [value]="option">
             {{ option }}
-        </mat-option>
+          </mat-option>
         </mat-autocomplete>
+      </mat-form-field-->
+      <!--mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Number</mat-label>
+        <input type="text"
+               placeholder="Pick one"
+               aria-label="Number"
+               matInput
+               [formControl]="myControl"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field-->
+    <mat-form-field 
+    *ngIf="loginService.getUserCode() == '220'"
+    appearance="fill">
+        <mat-label>{{'User' | translate}}</mat-label>
+        <mat-select
+         [(value)]="selectedUser"
+         (selectionChange)="enableSubmit($event.value)">
+            <mat-option 
+            *ngFor="let user of users" 
+            [value]="user.client">
+            {{user.client}}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
    
     <mat-form-field
@@ -39,7 +88,7 @@
     <mat-form-field>
         <mat-label>{{'Reference year' | translate}}</mat-label>
         <mat-select
-        [value]="yearsArray[0]"
+        [(ngModel)]="currentYear"
         [formControl]="yearFormControl"
         (valueChange)="onYearValueChanged($event)">
             <mat-option 

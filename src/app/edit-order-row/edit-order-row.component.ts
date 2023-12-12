@@ -59,6 +59,7 @@ export class EditOrderRowComponent implements OnInit {
   loginService: LoginService
   minQty: number = 0;
   isUrgent: boolean = false;
+  isExtra: boolean = false;
 
   step: number = 0;
 
@@ -70,7 +71,8 @@ export class EditOrderRowComponent implements OnInit {
       products: Product[],
       forecasts: Forecast[],
       orderRows: OrderRow[],
-      isUrgent: boolean
+      isUrgent: boolean,
+      isExtra: boolean,
     },
     private dialogRef: MatDialogRef<EditOrderRowComponent>,
     private _builder: UntypedFormBuilder,
@@ -88,6 +90,10 @@ export class EditOrderRowComponent implements OnInit {
     if(data.isUrgent){
       this.isUrgent = data.isUrgent;
       this.isMotivazioneVisible = true;
+    }
+
+    if(data.isExtra){
+      this.isExtra = data.isExtra;
     }
     
     //se sangueaslno

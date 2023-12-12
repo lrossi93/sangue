@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, UntypedFormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { environment, Forecast, Order, OrderRow, Product, translations, User } from 'src/environments/environment';
@@ -54,14 +54,29 @@ export class AddOrderDialogComponent implements OnInit {
 
   yearsArray: number[] = [];
   monthsArray: number[] = [];
-
+  currentYear: number = this.getCurrentYear();
 
   //BEGIN: autocomplete - users
   users: any = [];
-  filteredUsers!: Observable<string[]>;
-  userFormControl!: UntypedFormControl;
-  userNames: any = [];
+  userOptions: string[] = [];
+  filteredOptions!: Observable<string[]>;
+  userFormControl!: FormControl;
+  //userNames: string = [];
+  //filteredUserNames!: Observable<string[]>;
+  //userNameControl = new FormControl();
   //END: autocomplete - users
+
+
+  myControl = new FormControl();
+  options = ['Roma', 'Milano', 'Firenze'];
+
+
+  selectedUser: string = "";
+
+
+
+
+
 
   //BEGIN: autocomplete - products
   id_prd!: string;
@@ -140,34 +155,66 @@ export class AddOrderDialogComponent implements OnInit {
     this.minDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_min));
     this.maxDate = new Date(auxDate.getFullYear(), auxDate.getMonth(), parseInt(this.data.gg_max));
     this.forecasts = data.forecasts;
+    this.isExtra = data.isExtra;
   }
 
   ngOnInit(): void {
     if(this.loginService.getUserCode() == "220") {
       this.users = this.data.users;
+      //console.log("users");
+      //console.log(this.users);
+      
+      this.getUserNames();
+
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+      );
     }
+    
     if(this.loginService.getUserCode() == '210') {
       this.filterForecastsByUsername(this.loginService.getUsername()!);
     }
+    
     this.products = this.data.products;
-    //filter input for users
-    this.getUserNames();
-    this.filteredUsers = this.userFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterUsers(value || ''))
-    );
+  }
+  
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterUserNames(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.userOptions.filter(option => option.toLowerCase().includes(filterValue));  
   }
 
   initYearsArray(year: number, month: number) {
     this.yearsArray = [];
-    this.yearsArray.push(year);
-    //this.yearsArray.push(year + 1);
-    if(month == 12) {
-      this.yearsArray.push(year + 1);
-    }
+
     if(localStorage.getItem("id_profile") && localStorage.getItem("id_profile") == '220') {
       this.yearsArray.push(year - 1);
     }
+
+    this.yearsArray.push(year);
+    
+    //this.yearsArray.push(year + 1);
+    if((month + 1) == 12) {
+      this.yearsArray.push(year + 1);
+    }
+  }
+
+  getCurrentYear(): number {
+    /*
+    for(var i = 0; i < this.yearsArray.length; ++i) {
+      if(this.yearsArray[i] == year) {
+        return this.yearsArray[i];
+      } 
+    }
+    return -1;
+    */
+    return new Date().getFullYear();
   }
 
   initMonthsArray(month: number) {
@@ -186,7 +233,7 @@ export class AddOrderDialogComponent implements OnInit {
         this.monthsArray.push(month + 1);
       }
     }
-    console.log(this.monthsArray);
+    //console.log(this.monthsArray);
   }
 
   onYearValueChanged(event: Event) {
@@ -236,7 +283,7 @@ export class AddOrderDialogComponent implements OnInit {
       n_ordine: this.n_ordine.value,
       note: this.note.value,
       status: "",
-      username: this.username,
+      username: this.getUserIdByClient(this.selectedUser),//this.username,
       d_consegna_prevista: "0000-00-00",
       n_ddt: this.n_ddt.value,
       d_ddt: this.formatDate(this.d_ddt.value.toLocaleString('it-IT').split(",", 2)[0]),
@@ -322,9 +369,11 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   onSubmit(event: any) {
-    //TODO: check fields
+    //console.log(event);
     //console.log("newOrder:");
+    //console.log(this.selectedUser)
     this.assignNewOrderValues();
+    //console.log("new order: ");
     //console.log(this.newOrder);
     let isSubmitted = true;
 
@@ -339,12 +388,14 @@ export class AddOrderDialogComponent implements OnInit {
     if(this.b_urgente.value){
       alert(environment.currentLanguage == 'it' ? translations.it.UrgentOrderAlert : translations.en.UrgentOrderAlert);
     }  
-
+    
+    
     this.thisDialogRef.close({
       newOrder: this.newOrder,
       newOrderRows: this.newOrderRows,
       isSubmitted: isSubmitted
     });
+    
 
     return;
   }
@@ -352,10 +403,12 @@ export class AddOrderDialogComponent implements OnInit {
 //===================================================================================================================
 
   //BEGIN functions for autocomplete - USERS
+  /*
   private _filterUsers(value: string): string[] {
-    const filterValue = value.toLowerCase();    
-    return this.userNames.filter((option: string) => option.toLowerCase().includes(filterValue));
+    const filterValue = value.toLowerCase();
+    return this.userNames.filter((option: string) => {option.toLowerCase().includes(filterValue)});
   }
+  */
 
   getUserId(event: any){
     for(let i = 0; i < this.users.length; ++i){
@@ -365,16 +418,29 @@ export class AddOrderDialogComponent implements OnInit {
     }
   }
 
-  getUserNames(): void {
-    for(let i = 0; i < this.data.users.length; ++i){
-      this.userNames.push(this.data.users[i].client);
+  getUserIdByClient(client: string){
+    for(let i = 0; i < this.users.length; ++i){
+      if(this.users[i].client == client){
+        return this.users[i].id;
+      }
     }
+  }
+
+  getUserNames(): void {
+    for(let i = 0; i < this.users.length; ++i){
+      this.userOptions.push(this.users[i].client);
+    }
+    //OK
+    //console.log("usernames: ")
+    //console.log(this.userNames)
+    this.selectedUser = this.userOptions[0];
   }
 
   onUserSelected(event: any) {
     this.isInputAmongUsers = false;
     if(event.source._selected){
       this.username = this.getUserId(event);
+      console.log("username: " + this.username);
       this.enableSubmit(event.source.value);
       this.filterForecastsByUsername(this.username);
     }
@@ -443,7 +509,8 @@ export class AddOrderDialogComponent implements OnInit {
         products: this.products,
         forecasts: this.currentUserForecasts,
         orderRows: this.newOrderRows,
-        isUrgent: this.b_urgente.value
+        isUrgent: this.b_urgente.value,
+        isExtra: this.isExtra
       }
       console.log("OpenEditOrderRowDialog: ID = " + id);
     }
@@ -502,8 +569,8 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   isAmongUsers(inputValue: string): boolean {
-    for(var i = 0; i < this.userNames.length; ++i) {
-      if(inputValue == this.userNames[i]) {
+    for(var i = 0; i < this.userOptions.length; ++i) {
+      if(inputValue == this.userOptions[i]) {
         return true;
       }
     }
@@ -511,6 +578,7 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   enableSubmit(selectedUser: string) {
+    console.log(selectedUser)
     if(this.loginService.getUserCode() == '220') {
       this.isAddRowEnabled = false;
       this.isSubmitEnabled = false;
@@ -534,6 +602,7 @@ export class AddOrderDialogComponent implements OnInit {
         this.currentUserForecasts.push(this.forecasts[i]);
       }
     }
-    //console.log(this.currentUserForecasts);
+    console.log("current user forecasts");
+    console.log(this.currentUserForecasts);
   }
 }

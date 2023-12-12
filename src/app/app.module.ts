@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -87,6 +86,7 @@ import { OrderDdtUploadDialogComponent } from './order-ddt-upload-dialog/order-d
 import { DragNDropDirective } from './drag-n-drop.directive';
 import { ButtonSupplyReportComponent } from './button-supply-report/button-supply-report.component';
 import { OrdersValidatedDialogComponent } from './orders-validated-dialog/orders-validated-dialog.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 

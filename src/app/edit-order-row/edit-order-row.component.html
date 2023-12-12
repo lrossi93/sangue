@@ -27,7 +27,8 @@
 <form>
 	<mat-form-field class="example-full-width">
 		<mat-label>{{ 'Product' | translate }}</mat-label>
-		<input type="text"
+		<input 
+		type="text"
 		placeholder="{{'Choose a product' | translate}}"
 		matInput
 		[formControl]="productsFormControl"
@@ -57,7 +58,7 @@
 	<mat-form-field
 	*ngIf="qtyThreshold != -1 && minQty == 0">
 		<input
-		placeholder="{{ 'Quantity' | translate }} (max: {{qtyThreshold}}, preventivato: {{ qtyEstimated }}, ordinato: {{ qtyOrdered }}, rimanenza: {{ qtyRemaining }})"
+		placeholder="{{ 'Quantity' | translate }} (massimale mensile: {{qtyThreshold}}, preventivato totale: {{ qtyEstimated }}, ordinato totale: {{ qtyOrdered }}, rimanenza totale: {{ qtyRemaining }})"
 		[formControl]="qta"
 		step="{{step}}"
 		matInput
@@ -69,7 +70,7 @@
 	<mat-form-field
 	*ngIf="qtyThreshold != -1 && minQty > 0">
 		<input
-		placeholder="{{ 'Quantity' | translate }} (min: {{minQty}}, max: {{qtyThreshold}},  preventivato: {{ qtyEstimated }}, ordinato: {{ qtyOrdered }}, rimanenza: {{ qtyRemaining }})"
+		placeholder="{{ 'Quantity' | translate }} (massimale mensile: {{qtyThreshold}}, preventivato totale: {{ qtyEstimated }}, ordinato totale: {{ qtyOrdered }}, rimanenza totale: {{ qtyRemaining }})"
 		[formControl]="qta"
 		step="{{step}}"
 		matInput
@@ -81,7 +82,7 @@
 	<mat-form-field
 	*ngIf="qtyThreshold == -1">
 		<input
-		placeholder="{{ 'Quantity' | translate }} (min: {{minQty}},  preventivato: {{ qtyEstimated }}, ordinato: {{ qtyOrdered }}, rimanenza: {{ qtyRemaining }})"
+		placeholder="{{ 'Quantity' | translate }} (massimale mensile: {{qtyThreshold}}, preventivato totale: {{ qtyEstimated }}, ordinato totale: {{ qtyOrdered }}, rimanenza totale: {{ qtyRemaining }})"
 		[formControl]="qta"
 		step="{{step}}"
 		matInput

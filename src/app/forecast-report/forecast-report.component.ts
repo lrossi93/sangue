@@ -25,6 +25,8 @@ export class ForecastReportComponent implements OnInit {
   userNames: any = [];
   //END: autocomplete - users
 
+  selectedUser: string = "";
+
   constructor(
     private forecastService: ForecastService,
     private usersService: UsersService,
@@ -91,13 +93,14 @@ export class ForecastReportComponent implements OnInit {
     return this.userNames.filter((option: string) => option.toLowerCase().includes(filterValue));
   }
 
-  getUserId(event: any): string | void {
+  getUserId(event: any): string {
     for(let i = 0; i < this.users.length; ++i){
       if(this.users[i].client == event.source.value){
         //console.log(this.users[i].id);
         return this.users[i].id;
       }
     }
+    return "Not found!";
   }
 
   getUserNames(): void {
@@ -105,6 +108,7 @@ export class ForecastReportComponent implements OnInit {
       this.userNames.push(this.users[i].client);
     }
     //console.log(this.userNames);
+    this.selectedUser = this.userNames[0];
   }
 
   onUserSelected(event: any) {

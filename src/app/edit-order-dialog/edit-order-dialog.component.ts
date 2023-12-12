@@ -43,6 +43,7 @@ export class EditOrderDialogComponent implements OnInit {
   isLocked!: boolean;
   qtaRicevuta: number[] = [];
   isValidated!: boolean;
+  isExtra: boolean;
 
   userCode!: string;
 
@@ -71,7 +72,8 @@ export class EditOrderDialogComponent implements OnInit {
       products: Product[],
       isLocked: boolean,
       forecasts: Forecast[],
-      status: string
+      status: string,
+      isExtra: boolean
     },
     private _builder: UntypedFormBuilder,
     dialog: MatDialog,
@@ -100,6 +102,7 @@ export class EditOrderDialogComponent implements OnInit {
     //console.log(this.products);
     
     this.isLocked = data.isLocked;
+    this.isExtra = data.isExtra;
     this.isValidated = data.status != "inviato";
     //console.log("isvalidated?" + this.isValidated);
 
@@ -262,7 +265,8 @@ export class EditOrderDialogComponent implements OnInit {
         users: this.users,
         products: this.products,
         forecasts: this.forecasts,
-        orderRows: this.orderRows
+        orderRows: this.orderRows,
+        isExtra: this.isExtra,
       }
       console.log("Sending data: ")
       console.log(dialogConfig.data);
@@ -275,7 +279,8 @@ export class EditOrderDialogComponent implements OnInit {
         orderRow: this.getOrderRowById(id),
         users: this.users,
         products: this.products,
-        forecasts: this.forecasts
+        forecasts: this.forecasts,
+        isExtra: this.isExtra,
       }
       console.log("Sending data: ")
       console.log(dialogConfig.data);
@@ -592,10 +597,10 @@ export class EditOrderDialogComponent implements OnInit {
 
   isQtaRicevutaSetAND(): boolean {
     var auxBool: boolean = true;
-    console.log("isQtaRicevutaSetAND()")
+    //console.log("isQtaRicevutaSetAND()")
     for(var i = 0; i < this.orderRowGridRowData.length; ++i){
       auxBool = auxBool && this.orderRowGridRowData[i].isQtaRicevutaSet;
-      console.log(auxBool)
+      //console.log(auxBool)
     }
     return auxBool;
   }
