@@ -50,7 +50,7 @@ export class WelcomeComponent implements OnInit {
         if(res[0] == "OK") {
           this.users = res[1];
           environment.globalUsers = res[1]
-          console.log(environment.globalUsers);
+          //console.log(environment.globalUsers);
           //this.loginService.getCurrentUser(this.users);
           this.loginService.getCurrentUserSync();
         }

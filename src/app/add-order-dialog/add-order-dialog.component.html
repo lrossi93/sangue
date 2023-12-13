@@ -20,7 +20,7 @@
         #auto="matAutocomplete">
 
             <mat-option 
-            *ngFor="let option of filteredUsers | async" 
+            *ngFor="let option of filteredUserOptions | async" 
             [value]="option" 
             (onSelectionChange)='onUserSelected($event)'>
                 {{ option }}
@@ -40,6 +40,22 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field-->
+      <mat-form-field
+      *ngIf="loginService.getUserCode() == '220'"
+    style="width: 100%;">
+        <input 
+        type="text"
+        style="width: 100%;"
+        placeholder="{{ 'Recipient' | translate }}"
+        matInput
+        [formControl]="userFormControl"
+        [matAutocomplete]="autoUsers">
+        <mat-autocomplete #autoUsers="matAutocomplete">
+        <mat-option *ngFor="let option of filteredUserOptions | async" [value]="option" (onSelectionChange)='onUserSelected($event)' onchange="">
+            {{ option }}
+        </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
       <!--mat-form-field class="example-full-width" appearance="fill">
         <mat-label>Number</mat-label>
         <input type="text"
@@ -54,7 +70,7 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field-->
-    <mat-form-field 
+    <!--mat-form-field 
     *ngIf="loginService.getUserCode() == '220'"
     appearance="fill">
         <mat-label>{{'User' | translate}}</mat-label>
@@ -67,7 +83,7 @@
             {{user.client}}
             </mat-option>
         </mat-select>
-    </mat-form-field>
+    </mat-form-field-->
    
     <mat-form-field
     *ngIf="loginService.getUserCode() == '210'">

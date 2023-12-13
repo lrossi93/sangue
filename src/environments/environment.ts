@@ -19,7 +19,7 @@ export const environment = {
     username: "",
     client: ""
   },
-  version: "12",
+  version: "13",
 };
 
 export interface AreYouSureData {
@@ -50,6 +50,7 @@ export interface Forecast {
   qta: number;
   note: string;
   qta_approvata: number;
+  qta_approvata_mensile: number;
   costo_unitario: number;
 }
 

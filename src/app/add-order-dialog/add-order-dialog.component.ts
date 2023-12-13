@@ -59,8 +59,8 @@ export class AddOrderDialogComponent implements OnInit {
   //BEGIN: autocomplete - users
   users: any = [];
   userOptions: string[] = [];
-  filteredOptions!: Observable<string[]>;
-  userFormControl!: FormControl;
+  filteredUserOptions!: Observable<string[]>;
+  userFormControl = new FormControl();
   //userNames: string = [];
   //filteredUserNames!: Observable<string[]>;
   //userNameControl = new FormControl();
@@ -68,7 +68,7 @@ export class AddOrderDialogComponent implements OnInit {
 
 
   myControl = new FormControl();
-  options = ['Roma', 'Milano', 'Firenze'];
+  options: string[] = [];
 
 
   selectedUser: string = "";
@@ -166,12 +166,12 @@ export class AddOrderDialogComponent implements OnInit {
       
       this.getUserNames();
 
-      this.filteredOptions = this.myControl.valueChanges.pipe(
+      this.filteredUserOptions = this.userFormControl.valueChanges.pipe(
         startWith(''),
-        map(value => this._filter(value || '')),
+        map(value => this._filterUserOptions(value))
       );
     }
-    
+
     if(this.loginService.getUserCode() == '210') {
       this.filterForecastsByUsername(this.loginService.getUsername()!);
     }
@@ -179,15 +179,9 @@ export class AddOrderDialogComponent implements OnInit {
     this.products = this.data.products;
   }
   
-  private _filter(value: string): string[] {
+  private _filterUserOptions(value: string): string[] {
     const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  private _filterUserNames(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.userOptions.filter(option => option.toLowerCase().includes(filterValue));  
+    return this.userOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   initYearsArray(year: number, month: number) {
@@ -283,7 +277,7 @@ export class AddOrderDialogComponent implements OnInit {
       n_ordine: this.n_ordine.value,
       note: this.note.value,
       status: "",
-      username: this.getUserIdByClient(this.selectedUser),//this.username,
+      username: this.username,
       d_consegna_prevista: "0000-00-00",
       n_ddt: this.n_ddt.value,
       d_ddt: this.formatDate(this.d_ddt.value.toLocaleString('it-IT').split(",", 2)[0]),
@@ -403,14 +397,15 @@ export class AddOrderDialogComponent implements OnInit {
 //===================================================================================================================
 
   //BEGIN functions for autocomplete - USERS
-  /*
+  
   private _filterUsers(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.userNames.filter((option: string) => {option.toLowerCase().includes(filterValue)});
+    return this.userOptions.filter((option: string) => {option.toLowerCase().includes(filterValue)});
   }
-  */
+  
 
   getUserId(event: any){
+    console.log(event.source.value)
     for(let i = 0; i < this.users.length; ++i){
       if(this.users[i].client == event.source.value){
         return this.users[i].id;
@@ -427,12 +422,14 @@ export class AddOrderDialogComponent implements OnInit {
   }
 
   getUserNames(): void {
+    //console.log("users:");
+    //console.log(this.users);
     for(let i = 0; i < this.users.length; ++i){
       this.userOptions.push(this.users[i].client);
     }
     //OK
     //console.log("usernames: ")
-    //console.log(this.userNames)
+    //console.log(this.userOptions)
     this.selectedUser = this.userOptions[0];
   }
 

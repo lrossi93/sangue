@@ -48,7 +48,7 @@ export class ForecastReportComponent implements OnInit {
   ngOnInit(): void {
     //filter input for users
     this.getUserNames();
-    console.log(this.userFormControl);
+    //console.log(this.userFormControl);
     
     this.filteredUsers = this.userFormControl!.valueChanges.pipe(
       startWith(''),
