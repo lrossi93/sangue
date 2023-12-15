@@ -153,8 +153,6 @@ export class LoginService {
     });
   }
 
-
-
   loginPromise(username: string, password: string): Observable<any> {
     return this.http.post<String[]>(
       environment.basePath + 'session.php', {
@@ -163,6 +161,8 @@ export class LoginService {
       sangue_password: password
     })
   }
+
+  //TODO: chiamata http che passa username e session e restituisce una nuova sessione
 
   logout(){
     this.http.post<String[]>(
