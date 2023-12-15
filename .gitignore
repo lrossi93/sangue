@@ -5,7 +5,7 @@
 /tmp
 /out-tsc
 /bazel-out
-/secrets
+../src/environments/secrets/secret.ts
 
 # Node
 /node_modules
