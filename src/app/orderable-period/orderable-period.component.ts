@@ -15,12 +15,21 @@ export class OrderablePeriodComponent implements OnInit {
   date!: UntypedFormControl;
   formattedDate = "";
   formattedStartDate = "";
+  displayedStartDate = "";
   formattedEndDate = "";
+  displayedEndDate = "";
   isSubmitted = false;
   gg_min = "";
   gg_max = "";
   year = "";
   month = "";
+
+  dateFilter = (date: Date | null): boolean => {
+    //console.log("dateFilter month: " + date?.getMonth());
+    //console.log("date month: " + date?.getMonth());
+    var month = (date == null ? new Date().getMonth() : date.getMonth()); 
+    return month == new Date().getMonth();
+  }
 
   currentStartDate!: Date;
   currentEndDate!: Date;
@@ -51,13 +60,16 @@ export class OrderablePeriodComponent implements OnInit {
     this.orderablePeriodService.setOrderPeriodPromise(min, max).subscribe(
       res => {
         if(res[0] == "OK"){
-          //console.log("orderPeriod set!");
+          //console.log(res);
           let newDate = new Date();
           this.range.controls['start'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(min)));
           this.gg_min = min;
           this.range.controls['end'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(max)));
           this.gg_max = max;
           this.snackbarService.onUpdate();
+          //console.log("min: " + this.gg_min + "; max: " + this.gg_max)
+          this.displayedStartDate = (new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(this.gg_min))).toLocaleString('it-IT').split(",", 2)[0];
+          this.displayedEndDate = (new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(this.gg_max))).toLocaleString('it-IT').split(",", 2)[0];
         }
         else {
           console.error("Error setting orderPeriod!");
@@ -70,10 +82,13 @@ export class OrderablePeriodComponent implements OnInit {
     this.orderablePeriodService.getOrderPeriodPromise().subscribe(
       res => {
         if(res[0] == "OK") {
+          //console.log(res);
           let newDate = new Date();
-          //console.log(newDate); 
+          //console.log(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_min) + ", " + new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_max)); 
           this.range.controls['start'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_min));
+          this.displayedStartDate = (new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_min)).toLocaleString('it-IT').split(",", 2)[0];
           this.range.controls['end'].setValue(new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_max));
+          this.displayedEndDate = (new Date(newDate.getFullYear(), newDate.getMonth(), res[1].gg_max)).toLocaleString('it-IT').split(",", 2)[0];
         }
         else{
           console.error("Error getting orderPeriod!");
@@ -82,23 +97,37 @@ export class OrderablePeriodComponent implements OnInit {
     );
   }
 
+
+  //TODO: impostare la data giusta da visualizzare una volta che imposto il range di giorni
   onDateChange(type: string, event: any) {
-   let fullLocaleDate = "";
-    //here it's better to keep the date type as Date because it's handled well by the datepicker
-    switch(type) {
+    let fullLocaleDate = "";
+    //console.log(event);
+    //console.log("START: type: "+type + ", min: " + this.gg_min + "; max: " + this.gg_max)
+    //console.log("range: " + this.range.value['start']!.toLocaleString('it-IT').split("/")[0] + "-" + this.range.value['end']!.toLocaleString('it-IT').split("/")[0]);
+    this.gg_min = this.range.value['start']!.toLocaleString('it-IT').split("/")[0];
+    this.gg_max = this.range.value['end']!.toLocaleString('it-IT').split("/")[0];
+    //console.log("min: " + this.gg_min + "; max: " + this.gg_max)
+    this.setOrderPeriod(this.gg_min, this.gg_max);
+
+       //here it's better to keep the date type as Date because it's handled well by the datepicker
+    /*
+       switch(type) {
       case "start":
         this.range.controls['start'] = new FormControl(new Date(event.value), Validators.required);
-        fullLocaleDate = this.range.controls.start.value!.toLocaleString('it-IT').split(",", 2)[0];        
+        fullLocaleDate = this.range.controls.start.value!.toLocaleString('it-IT').split(",", 2)[0];   
+        this.displayedStartDate = fullLocaleDate; 
         break;
       case "end":
         if(event.value == null) {
           let newDate = new Date();
+          console.log("end date when event is null: " + new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(this.gg_max)))
           this.range.controls['end'] = new FormControl(new Date(newDate.getFullYear(), newDate.getMonth(), parseInt(this.gg_max)), Validators.required);
         }
         else
           this.range.controls['end'] = new FormControl(new Date(event.value), Validators.required);
-        fullLocaleDate = this.range.controls.end.value!.toLocaleString('it-IT').split(",", 2)[0];
-        break;
+          fullLocaleDate = this.range.controls.end.value!.toLocaleString('it-IT').split(",", 2)[0];
+          this.displayedEndDate = fullLocaleDate;
+          break;
     }
 
     //split where the separators "/" are
@@ -122,16 +151,23 @@ export class OrderablePeriodComponent implements OnInit {
     if(type == "start") {
       this.formattedStartDate = this.formattedDate;
       this.gg_min = this.formattedDate.split("-")[2];
-      if(this.gg_min > this.gg_max){
-        this.gg_max = this.gg_min;
-      }
+      
+      //if(this.gg_min > this.gg_max){
+      //  console.log("min: " + this.gg_min + "; max: " + this.gg_max)
+      //  this.gg_max = this.gg_min;
+      //  console.log("min: " + this.gg_min + "; max: " + this.gg_max)
+      //}
+      
+      console.log("type: "+type + ", min: " + this.gg_min + "; max: " + this.gg_max)
       this.setOrderPeriod(this.gg_min, this.gg_max);
     }
     else if(type == "end" && this.formattedDate != "1970-01-01") {
       this.formattedEndDate = this.formattedDate;
       this.gg_max = this.formattedDate.split("-")[2];
+      console.log("type: "+type + ", min: " + this.gg_min + "; max: " + this.gg_max)
       this.setOrderPeriod(this.gg_min, this.gg_max);
     }
+    */
   }
 
   checkDay(day: number): string {

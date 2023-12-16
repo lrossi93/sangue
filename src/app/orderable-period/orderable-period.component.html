@@ -7,10 +7,16 @@ layout="row"
 layout-align="center" 
 align="center" 
 style="min-height: 100px; margin: 10%;">
-    <mat-form-field>
+<h1>{{displayedStartDate}} - {{displayedEndDate}}</h1>
+
+
+    <mat-form-field
+    style="display: none;">
         <mat-date-range-input 
         [formGroup]="range" 
-        [rangePicker]="picker">
+        [rangePicker]="picker"
+        [dateFilter]="dateFilter"
+        >
           <input 
           matStartDate 
           formControlName="start" 
