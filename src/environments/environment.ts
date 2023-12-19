@@ -11,6 +11,7 @@ export const environment = {
   logoutPath: 'https://servizi.regione.piemonte.it/catalogo/sistema-informativo-regionale-portale-medici-pediatri',
   currentLanguage: 'it',
   globalUsers: [],
+  venues: [],
   globalProducts: [],
   globalForecasts: [],
   globalOrders: [],
@@ -19,8 +20,12 @@ export const environment = {
     username: "",
     client: ""
   },
-  version: "13",
+  version: "15",
 };
+
+export interface globalData {
+  venues: string[];
+}
 
 export interface AreYouSureData {
   id: string;
@@ -71,6 +76,7 @@ export interface User {
   id: string;
   username: string;
   client: string;
+  cf: string;
 }
 
 //

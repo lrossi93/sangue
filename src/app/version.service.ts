@@ -12,7 +12,7 @@ export class VersionService {
 
   getVersionPromise(): Observable<any>  {
     let path = environment.basePath + 'anag.php?request=getVersion&id_session=' + localStorage.getItem("id_session");
-    console.log(path);
+    //console.log(path);
     return this.http.get<String[]>(
       path,
       {
@@ -56,7 +56,7 @@ export class VersionService {
             this.setVersionPromise(localVersion!).subscribe(
               res => {
                 if(res[0] == "OK") {
-                  console.log("Version " + environment.version + " saved on server!");
+                  //console.log("Version " + environment.version + " saved on server!");
                 }
                 else {
                   console.error("Error setting version!");

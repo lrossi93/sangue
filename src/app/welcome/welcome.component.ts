@@ -5,6 +5,7 @@ import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
 import { VersionService } from '../version.service';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-welcome',
@@ -22,11 +23,13 @@ export class WelcomeComponent implements OnInit {
     private usersService: UsersService,
     private ordersService: OrdersService,
     private versionService: VersionService,
-    private router: Router
+    private router: Router,
+    private sharedService: SharedService
   ) {
     this.getUsersGlobally();
     this.ordersService.getOrdersGlobally();
     this.versionService.checkVersion();
+    //this.sharedService.printVenues();
   }
 
   ngOnInit(): void {
@@ -37,6 +40,7 @@ export class WelcomeComponent implements OnInit {
           localStorage.removeItem("id_profile");
           localStorage.removeItem("sangue_username");
           localStorage.removeItem("sangue_client");
+          localStorage.removeItem("cf");
           this.loginService.logged = false;
           this.router.navigate(['login']);
         }
@@ -51,6 +55,10 @@ export class WelcomeComponent implements OnInit {
           this.users = res[1];
           environment.globalUsers = res[1]
           //console.log(environment.globalUsers);
+          let venues: User[] = [];
+          //console.log("cf: " + localStorage.getItem("cf"));
+          this.filterVenues(venues);
+          this.sharedService.setVenues(venues);
           //this.loginService.getCurrentUser(this.users);
           this.loginService.getCurrentUserSync();
         }
@@ -59,5 +67,13 @@ export class WelcomeComponent implements OnInit {
         }
       }
     );
+  }
+
+  filterVenues(venues: User[]) {
+    for(var i = 0; i < this.users.length; ++i) {
+      if(localStorage.getItem("cf") != "" && localStorage.getItem("cf") == this.users[i].cf && this.users[i].id != localStorage.getItem("sangue_username")) {
+        venues.push(this.users[i]);
+      }
+    }
   }
 }

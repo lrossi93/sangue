@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { environment, User } from 'src/environments/environment';
 import { LoginService } from './login.service';
 import { UsersService } from './users.service';
-import { log } from 'console';
 import { VersionService } from './version.service';
+import { SharedService } from './shared.service';
 
 
 @Component({
@@ -19,13 +19,17 @@ export class AppComponent implements OnInit {
   currentUser!: User;
   localStorage: any;
   router!: Router;
+  venues: User[] = [];
   
   constructor(
     public loginService: LoginService,
     public translate: TranslateService,
     router: Router,
     private usersService: UsersService,
-    private versionService: VersionService
+    private versionService: VersionService,
+    public sharedService: SharedService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2
   ){
     this.router = router;
     translate.addLangs(['en', 'it']);
@@ -80,6 +84,7 @@ export class AppComponent implements OnInit {
             localStorage.removeItem("id_session");
             localStorage.removeItem("id_profile");
             localStorage.removeItem("sangue_username");
+            localStorage.removeItem("cf");
             this.router.navigate(['login']);
           }
         }
@@ -103,11 +108,46 @@ export class AppComponent implements OnInit {
     window.open(docsPath + filename, "_blank");
   }
 
-  getVersion() {
-
+  changeVenue(venue: string) {
+    //console.log("Changing venue to: " + venue);
+    //console.log("userId: " + this.getUserIdByClient(venue));
+    //console.log("id_session: " + this.localStorage.getItem("id_session"));
+    this.loginGateway(this.getUserIdByClient(venue)!);
   }
 
-  setVersion() {
+  getUserIdByClient(client: string): string | undefined {
+    let venues = this.sharedService.getVenues();
+    for(var i = 0; i < venues.length; ++i) {
+      //console.log(this.sharedService.getVenues()[i])
+      if(venues[i].client == client) {
+        return venues[i].id;
+      }
+    }
+    return undefined;
+  }
 
+  loginGateway(sangue_username: string) {
+    this.loginService.loginGatewayPromise(sangue_username).subscribe(
+      res => {
+        //console.log(res)
+        if(res[0] == "OK") {
+          let currentVenue: User;
+          let venues = this.sharedService.getVenues();
+          for(var i = 0; i < venues.length; ++i) {
+            if(venues[i].id == sangue_username){
+              currentVenue = venues[i];
+            }
+          }
+          this.localStorage.setItem("sangue_username", sangue_username);
+          this.localStorage.setItem("sangue_client", currentVenue!.client);
+          this.localStorage.setItem("id_session", res[1]);
+          this.localStorage.setItem("id_profile", res[2]);
+          this.router.navigate(['/login']);
+        }
+        else {
+          console.error("Error while changing venue!");
+        }
+      }
+    );
   }
 }

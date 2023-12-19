@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment, User } from 'src/environments/environment';
 import { UsersService } from './users.service';
+import { SharedService } from './shared.service';
+import { secret } from 'src/environments/vault/secret';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,8 @@ export class LoginService {
   currentUser: User = {
     id: "", 
     username: "", 
-    client: ""
+    client: "",
+    cf: "",
   };
   users: User[] = [];
 
@@ -26,7 +29,8 @@ export class LoginService {
   constructor(
     private http: HttpClient, 
     public router: Router,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private sharedService: SharedService
   ){ }
 
   //methods
@@ -44,6 +48,10 @@ export class LoginService {
 
   getUsername(){
     return localStorage.getItem('sangue_username');
+  }
+
+  getCF() {
+    return localStorage.getItem('cf');
   }
 
   getUserType(){
@@ -77,12 +85,18 @@ export class LoginService {
     this.checkPromise().subscribe(
       res => {
         if(res[0] == "KO"){
-          this.router.navigate(['login']);
+          localStorage.removeItem("id_session");
           localStorage.removeItem("sangue_username");
+          localStorage.removeItem("sangue_client");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("cf");
+          this.router.navigate(['login']);
         }
+        /*
         else {
           
         }
+        */
       }
     )
   }
@@ -96,15 +110,16 @@ export class LoginService {
       }
     ).subscribe(res  => {
       if(res[0] == "KO"){
-        console.log("CHECK: NOT logged!");
+        //("CHECK: NOT logged!");
         localStorage.removeItem("id_session");
         localStorage.removeItem("id_profile");
         localStorage.removeItem("sangue_username");
         localStorage.removeItem("sangue_client");
+        localStorage.removeItem("cf");
         this.logged = false;
       }
       else{
-        console.log("CHECK: logged with sessionID " + localStorage.getItem("id_session"));
+        //console.log("CHECK: logged with sessionID " + localStorage.getItem("id_session"));
         this.logged = true;
       }
     })
@@ -139,14 +154,15 @@ export class LoginService {
       sangue_password: password
     }).subscribe(res => {
       if(res[0] == "KO"){
-        console.log("Login KO!");
+        //console.log("Login KO!");
         console.error(res[1].toString());
         this.logged = false;
       }
       else{
-        console.log("Logged successfully!");
+        //console.log("Logged successfully!");
         localStorage.setItem("id_session", res[1].toString());
         localStorage.setItem("id_profile", res[2].toString());
+        localStorage.setItem("cf", res[3].toString());
         localStorage.setItem("sangue_username", username);
         this.logged = true;
       }
@@ -175,8 +191,9 @@ export class LoginService {
         localStorage.removeItem("id_session");
         localStorage.removeItem("id_profile");
         localStorage.removeItem("sangue_username");
-        localStorage.removeItem("sangue_client")
-        console.log("Successfully logged out");
+        localStorage.removeItem("sangue_client");
+        localStorage.removeItem("cf");
+        //console.log("Successfully logged out");
         this.logged = false;
         //this.router.navigate(['/']);
         document.location.href = environment.logoutPath;
@@ -200,11 +217,11 @@ export class LoginService {
     for(var i = 0; i < users.length; ++i) {
       
       if(users[i].id == localStorage.getItem("sangue_username")) {
-        console.log(users[i].client);
+        //console.log(users[i].client);
         this.currentUser.id = users[i].id;
         this.currentUser.username = users[i].username;
         this.currentUser.client = users[i].client;   
-        console.log(this.currentUser.client);
+        //console.log(this.currentUser.client);
         return;
       }
     }
@@ -235,17 +252,18 @@ export class LoginService {
               if(res[0] == "OK") {
                 this.users = res[1];
                 environment.globalUsers = res[1];
+                //this.sharedService.setVenues(this.filterVenues());
                 
                 for(var i = 0; i < this.users.length; ++i) {
                   if(this.users[i].id == localStorage.getItem("sangue_username")) {
-                    console.log(this.users[i].client);
+                    //console.log(this.users[i].client);
                     this.currentUser.id = this.users[i].id;
                     this.currentUser.username = this.users[i].username;
                     this.currentUser.client = this.users[i].client;   
                   }
                 }
 
-                console.log("client: " + this.currentUser.client);
+                //console.log("client: " + this.currentUser.client);
               }
               else {
                 console.error("Error retrieving users");
@@ -256,15 +274,39 @@ export class LoginService {
         else {
           for(var i = 0; i < this.users.length; ++i) {
             if(this.users[i].id == localStorage.getItem("sangue_username")) {
-              console.log(this.users[i].client);
+              //console.log(this.users[i].client);
               this.currentUser.id = this.users[i].id;
               this.currentUser.username = this.users[i].username;
               this.currentUser.client = this.users[i].client;   
             }
           }
-          console.log("client: " + this.currentUser.client);
+          //console.log("client: " + this.currentUser.client);
         }
       break;
     }
+  }
+
+  filterVenues() {
+    let venues: User[] = [];
+    for(var i = 0; i < this.users.length; ++i) {
+      if(localStorage.getItem("cf") == this.users[i].cf) {
+        //console.log("venue: " + this.users[i].client);
+        venues.push(this.users[i]);
+      }
+    }
+    //console.log(venues)
+    return venues;
+  }
+
+  loginGatewayPromise(sangue_username: string): Observable<any> {
+    return this.http.post<String[]>(
+      environment.basePath + 'session.php',
+      {
+        request: "login_gateway",
+        id_session: localStorage.getItem("id_session"),
+        sangue_username: sangue_username,
+        sangue_password: secret
+      }
+    )
   }
 }

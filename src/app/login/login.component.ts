@@ -121,13 +121,16 @@ export class LoginComponent implements OnInit {
     for(var i = 0; i < users.length; ++i) {
       
       if(users[i].id == localStorage.getItem("sangue_username")) {
-        console.log(users[i].client);
+        //console.log(users[i].client);
         this.loginService.currentUser.id = users[i].id;
         this.loginService.currentUser.username = users[i].username;
         this.loginService.currentUser.client = users[i].client;
+        this.loginService.currentUser.cf = users[i].cf;
         localStorage.setItem("sangue_client", this.loginService.currentUser.client);   
+        localStorage.setItem("cf", this.loginService.currentUser.cf);
         environment.currentUser = this.loginService.currentUser;
-        console.log(this.loginService.currentUser.client);
+        //console.log("current user:");
+        //console.log(this.loginService.currentUser);
         return;
       }
     }

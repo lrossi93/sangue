@@ -26,11 +26,11 @@ export class LoginGatewayComponent implements OnInit {
   ngOnInit(): void {
     this.id_profile = this.route.snapshot.queryParams['id_profilo'];
     this.id_session = this.route.snapshot.queryParams['id_session'];
-    console.log("profile: " + this.id_profile + ", session: " + this.id_session)
+    //console.log("profile: " + this.id_profile + ", session: " + this.id_session)
 
     this.loginService.checkPromiseParams(this.id_profile!, this.id_session!).subscribe(
       res => {
-        console.log(res)
+        //console.log(res)
         if(res[0] == "OK") {
           localStorage.setItem("id_session", this.id_session!);
           localStorage.setItem("id_profile", this.id_profile!);
@@ -68,7 +68,7 @@ export class LoginGatewayComponent implements OnInit {
                     for(var i = 0; i < environment.globalUsers.length; ++i) {
                       var auxUser: User = environment.globalUsers[i];
                       if(auxUser.id == localStorage.getItem("sangue_username")) {
-                        console.log("auxUser.id: " + auxUser.id);
+                        //console.log("auxUser.id: " + auxUser.id);
                         this.loginService.currentUser.id = auxUser.id;
                         this.loginService.currentUser.username = auxUser.username;
                         this.loginService.currentUser.client = auxUser.client;   

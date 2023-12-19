@@ -131,13 +131,14 @@ style="display: flex; flex-direction: row;">
 	<button 
 	*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'"
 	mat-button 
-	[matMenuTriggerFor]="extractions"
-	> {{ 'Extractions' | translate }}</button>
+	[matMenuTriggerFor]="extractions"> 
+		{{ 'Extractions' | translate }}
+	</button>
+
 	<mat-menu #extractions="matMenu">
 		<button 
 		mat-menu-item
-		routerLink="/orders/resume"
-		>
+		routerLink="/orders/resume">
 			{{ 'Report xls orders' | translate }}
 		</button>
 	</mat-menu>	
@@ -145,8 +146,7 @@ style="display: flex; flex-direction: row;">
 	<button
 	mat-button
 	*ngIf="loginService.getUsername() != null"
-	[matMenuTriggerFor]="loginMenu"
-	>
+	[matMenuTriggerFor]="loginMenu">
 		<em>{{ 'Logged as' | translate }} <b>{{loginService.currentUser.client}}</b> - username: <b>{{loginService.currentUser.username}}</b></em>
 	</button>
 	<button 
@@ -155,12 +155,29 @@ style="display: flex; flex-direction: row;">
 	(click)="router.navigate(['/login'])">
 		{{ 'Login' | translate }}
 	</button>
-	<mat-menu #loginMenu="matMenu">
+	<mat-menu #loginMenu="matMenu" class="venues-menu">
+		<button 
+		*ngIf="loginService.getUserCode() == '210' && (sharedService.getVenues().length > 0)"
+		mat-menu-item 
+		[matMenuTriggerFor]="venuesMenu"
+		class="venues-menu">
+			{{ 'Change venue' | translate }}
+		</button>
+
+		<mat-menu #venuesMenu="matMenu" class="venues-menu">
+			<button
+			*ngFor="let venue of sharedService.getVenues()"
+			mat-menu-item
+			(click)="changeVenue(venue.client)"
+			class="venues-menu" style="min-width: 100%;">
+				{{venue.client.split(" - ")[1]}}
+			</button>
+		</mat-menu>
+
 		<button 
 		*ngIf="loginService.getUsername() != null"
 		mat-menu-item 
-		(click)="loginService.logout()"
-		>
+		(click)="loginService.logout()">
 			{{ 'Logout' | translate }}
 		</button>
 	</mat-menu>	
