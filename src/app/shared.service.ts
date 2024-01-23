@@ -15,6 +15,7 @@ export class SharedService {
   }
 
   getVenues(): User[] {
+    console.log("Venues number: " + this.venues.length)
     return this.venues;
   }
 
