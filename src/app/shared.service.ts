@@ -11,7 +11,7 @@ export class SharedService {
   setVenues(venues: User[]) {
     this.venues = venues;
     //console.log("setting venues:");
-    //console.log(this.venues);
+    console.log(this.venues);
   }
 
   getVenues(): User[] {
