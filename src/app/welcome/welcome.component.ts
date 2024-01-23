@@ -70,8 +70,18 @@ export class WelcomeComponent implements OnInit {
   }
 
   filterVenues(venues: User[]) {
+    let storageCF= localStorage.getItem("cf");
+    let storageUsername = localStorage.getItem("sangue_username");
+    console.log("cf: " + storageCF + ", user: " + storageUsername);
     for(var i = 0; i < this.users.length; ++i) {
-      if(localStorage.getItem("cf") != "" && localStorage.getItem("cf") == this.users[i].cf && this.users[i].id != localStorage.getItem("sangue_username")) {
+      let userID = this.users[i].id;
+      let userCF = this.users[i].cf;
+      console.log("userID: " + userID + ", userCF: " + userCF);
+      if(
+        storageCF != "" && 
+        storageCF == userCF && 
+        userID != storageUsername
+        ) {
         venues.push(this.users[i]);
       }
     }
