@@ -64,7 +64,7 @@ export class LoginGatewayComponent implements OnInit {
                     localStorage.setItem("sangue_username", this.loginService.currentUser.id);
                     break;
             
-                  default: 
+                  default: //case 210
                     for(var i = 0; i < environment.globalUsers.length; ++i) {
                       var auxUser: User = environment.globalUsers[i];
                       if(auxUser.id == localStorage.getItem("sangue_username")) {
@@ -72,8 +72,10 @@ export class LoginGatewayComponent implements OnInit {
                         this.loginService.currentUser.id = auxUser.id;
                         this.loginService.currentUser.username = auxUser.username;
                         this.loginService.currentUser.client = auxUser.client;   
+                        this.loginService.currentUser.cf = auxUser.cf;
                         localStorage.setItem("sangue_client", this.loginService.currentUser.client);
                         localStorage.setItem("sangue_username", this.loginService.currentUser.id);
+                        localStorage.setItem("cf", this.loginService.currentUser.cf);
                       }
                     }
                     break;
