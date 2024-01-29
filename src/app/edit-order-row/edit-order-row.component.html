@@ -33,7 +33,8 @@
 		matInput
 		[formControl]="productsFormControl"
 		[matAutocomplete]="autoP"
-		(keyup)="checkFields($event)">
+		(keyup)="checkFields($event)"
+		[disabled]="true">
 		<mat-autocomplete 
 		autoActiveFirstOption
 		#autoP="matAutocomplete">

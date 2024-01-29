@@ -142,8 +142,8 @@ export class OrdersComponent implements OnInit {
         console.log("Changed from " + event.oldValue + " to " + event.newValue);
         //if row is not locked and an update is received, perform update
         //TODO: se imposto una data di validazione, deve essere MAGGIORE o UGUALE alla data dell'ordine
-        console.log("isRowLocked: " + event.node.data.isRowLocked);
-        console.log("isDateLocked: " + this.isDateLocked);
+        //console.log("isRowLocked: " + event.node.data.isRowLocked);
+        //console.log("isDateLocked: " + this.isDateLocked);
         
         if(!event.node.data.isRowLocked && !this.isDateLocked){
           console.log("the order was not locked, so I modify it!");
@@ -282,13 +282,13 @@ export class OrdersComponent implements OnInit {
 
   */  
   listOrders(year: string, month?: string) {
-    console.log("year: " + year + ", month: " + month);
+    //console.log("year: " + year + ", month: " + month);
     this.loading = true;
     this.ordersService.listOrdersPromise(year, month).subscribe(
       res => {
         if(res[0] != "KO") {
           this.orders = res[1];
-          console.log(res[1]);
+          //console.log(res[1]);
           //this.listUsersAndSetLock('210');
           this.getAllOrderStatusRec(this.orders, 0);
         }
@@ -890,6 +890,7 @@ export class OrdersComponent implements OnInit {
       if(result !== undefined && result.isSubmitted){
         this.order.id = event.data.id;
         this.order.anno = event.data.anno;
+        this.order.mese = event.data.mese;
         this.order.username = event.data.username;
         this.order.d_ordine = event.data.d_ordine;
         this.order.n_ordine = event.data.n_ordine;
@@ -1113,7 +1114,7 @@ export class OrdersComponent implements OnInit {
   getAllOrderStatusRec(orders: Order[], i: number) {
     //uscita
     if(i >= orders.length) {
-      console.log(this.orderStatusArr);
+      //console.log(this.orderStatusArr);
       this.listUsersAndSetLock('210');
       return;
     }

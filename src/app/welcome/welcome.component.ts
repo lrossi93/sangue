@@ -70,13 +70,13 @@ export class WelcomeComponent implements OnInit {
   }
 
   filterVenues(venues: User[]) {
-    let storageCF= localStorage.getItem("cf");
+    let storageCF = localStorage.getItem("cf");
     let storageUsername = localStorage.getItem("sangue_username");
-    console.log("cf: " + storageCF + ", user: " + storageUsername);
+    //sconsole.log("cf: " + storageCF + ", user: " + storageUsername);
     for(var i = 0; i < this.users.length; ++i) {
       let userID = this.users[i].id;
       let userCF = this.users[i].cf;
-      console.log("userID: " + userID + ", userCF: " + userCF);
+      //console.log("userID: " + userID + ", userCF: " + userCF);
       if(
         storageCF != "" && 
         storageCF == userCF && 
