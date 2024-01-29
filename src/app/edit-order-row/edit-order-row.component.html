@@ -25,7 +25,8 @@
 		</mat-autocomplete>
 	</mat-form-field-->
 <form>
-	<mat-form-field class="example-full-width">
+	<mat-form-field class="example-full-width"
+	*ngIf="isNewOrder == true">
 		<mat-label>{{ 'Product' | translate }}</mat-label>
 		<input 
 		type="text"
@@ -34,7 +35,7 @@
 		[formControl]="productsFormControl"
 		[matAutocomplete]="autoP"
 		(keyup)="checkFields($event)"
-		[disabled]="true">
+		>
 		<mat-autocomplete 
 		autoActiveFirstOption
 		#autoP="matAutocomplete">
@@ -45,6 +46,16 @@
 				{{optionP}}
 			</mat-option>
 		</mat-autocomplete>
+	</mat-form-field>
+
+	<mat-form-field
+	*ngIf="isNewOrder == false">
+		<mat-label>{{ 'Product' | translate}}</mat-label>
+		<input 
+		type="text"
+		matInput
+		value="{{productsFormControl.value}}"
+		disabled>
 	</mat-form-field>
 
 	<mat-form-field>

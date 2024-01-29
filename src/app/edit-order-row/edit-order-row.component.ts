@@ -60,6 +60,7 @@ export class EditOrderRowComponent implements OnInit {
   minQty: number = 0;
   isUrgent: boolean = false;
   isExtra: boolean = false;
+  isNewOrder: boolean = false;
 
   step: number = 0;
 
@@ -73,6 +74,7 @@ export class EditOrderRowComponent implements OnInit {
       orderRows: OrderRow[],
       isUrgent: boolean,
       isExtra: boolean,
+      isNewOrder: boolean
     },
     private dialogRef: MatDialogRef<EditOrderRowComponent>,
     private _builder: UntypedFormBuilder,
@@ -85,6 +87,8 @@ export class EditOrderRowComponent implements OnInit {
     this.orderRows = data.orderRows;
     this.users = data.users;    
     this.forecasts = data.forecasts;
+    this.isNewOrder = data.isNewOrder;
+    //console.log("isNewOrder: " + this.isNewOrder);
         
     this.isMotivazioneVisible = (this.orderRow.motivazione != "" && this.orderRow.motivazione != null);//TODO: sistemare qui
     if(data.isUrgent){

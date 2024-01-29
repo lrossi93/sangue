@@ -507,7 +507,8 @@ export class AddOrderDialogComponent implements OnInit {
         forecasts: this.currentUserForecasts,
         orderRows: this.newOrderRows,
         isUrgent: this.b_urgente.value,
-        isExtra: this.isExtra
+        isExtra: this.isExtra,
+        isNewOrder: true
       }
       console.log("OpenEditOrderRowDialog: ID = " + id);
     }

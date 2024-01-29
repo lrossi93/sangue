@@ -127,7 +127,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
       products: this.products,
       isLocked: this.isLocked,
       forecasts: this.filteredForecasts,
-      status: this.data.status
+      status: this.data.status,
+      isNewOrder: false
     }
 
     dialogConfig.width = "95%";

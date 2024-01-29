@@ -818,7 +818,8 @@ export class OrdersComponent implements OnInit {
       gg_max: this.gg_max,
       isExtra: isExtra,
       year: this.year,
-      month: this.month
+      month: this.month,
+      isNewOrder: true
     }
 
     dialogConfig.width = "95%";

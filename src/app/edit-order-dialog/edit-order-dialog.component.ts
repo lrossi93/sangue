@@ -267,9 +267,10 @@ export class EditOrderDialogComponent implements OnInit {
         forecasts: this.forecasts,
         orderRows: this.orderRows,
         isExtra: this.isExtra,
+        isNewOrder: false
       }
-      console.log("Sending data: ")
-      console.log(dialogConfig.data);
+      //console.log("Sending data: ")
+      //console.log(dialogConfig.data);
     }
     else {
       let editedOrderRow = this.getOrderRowById(id);
@@ -281,9 +282,10 @@ export class EditOrderDialogComponent implements OnInit {
         products: this.products,
         forecasts: this.forecasts,
         isExtra: this.isExtra,
+        isNewOrder: false
       }
-      console.log("Sending data: ")
-      console.log(dialogConfig.data);
+      //console.log("Sending data: ")
+      //console.log(dialogConfig.data);
     }
 
     
