@@ -579,9 +579,10 @@ export class EditOrderDialogComponent implements OnInit {
 
   getMaxMeseByProdIdAndUsername(id_prd: string, username: string): number {    
     for(var i = 0; i < this.forecasts.length; ++i) {
+      //console.log(this.forecasts[i]);
       if(this.forecasts[i].id_prd == id_prd) {
         if(this.forecasts[i].username == username) {
-          return Math.floor(this.forecasts[i].qta_approvata / 12);
+          return Math.floor(this.forecasts[i].qta_approvata/12);
         }
       }
     }

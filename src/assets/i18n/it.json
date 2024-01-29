@@ -166,5 +166,6 @@
     "Do you wish to validate order": "Desideri convalidare l'ordine",
     "Once you confirm, this action cannot be undone": "Dopo aver confermato, questa azione non può essere annullata",
     "To confirm the received quantity of a single line, please type the received quantity in the box and press ENTER": "Per confermare la quantità ricevuta di una singola riga, si prega di inserire la quantità ricevuta nel relativo spazio e premere INVIO",
-    "Change venue": "Cambia sede"
+    "Change venue": "Cambia sede",
+    "Monthly maximum": "Massimale mensile"
 }

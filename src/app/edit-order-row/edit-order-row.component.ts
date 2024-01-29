@@ -337,17 +337,22 @@ export class EditOrderRowComponent implements OnInit {
 
       this.qtyValue = this.qta.value;
       
+      //se l'ordine è urgente, è necessaria una motivazione
       if(this.isUrgent) {
         this.isMotivazioneVisible = true;
-        console.log(this.isMotivazioneVisible);
+        //console.log(this.isMotivazioneVisible);
       }
+
+      //se, invece, l'ordine non è urgente
       else {
+        //se il massimale mensile è -1 o maggiore della quantità selezionata, non mostrare box motivazione
         if(this.qtyThreshold == -1 || this.qtyValue <= this.qtyThreshold){
           this.isMotivazioneVisible = false;
           this.motivazione.setValue(null);
           return;
         }
         
+        //se si supera il massimale mensile, mostra alert e diventa necessario fornire motivazione
         if(this.qtyValue > this.qtyThreshold && (this.motivazione.value == "" || this.motivazione.value == null)){
           alert(environment.currentLanguage == 'it' ? translations.it.ThresholdSurpassed : translations.en.ThresholdSurpassed);
           this.isMotivazioneVisible = true;

@@ -20,7 +20,7 @@ export const environment = {
     username: "",
     client: ""
   },
-  version: "16",
+  version: "17",
 };
 
 export interface globalData {
