@@ -68,6 +68,17 @@ export class AddLoanDialogComponent implements OnInit {
     private thisDialogRef: MatDialogRef<AddLoanDialogComponent>,
   ) { 
     this.users = this.data.users;
+    for(var i = 0; i < this.users.length; ++i) {
+      if(localStorage.getItem("sangue_username") == this.users[i].id) {
+        console.log(this.users[i]);
+      }
+    }
+    this.removeCurrentUserFromUsers();
+    for(var i = 0; i < this.users.length; ++i) {
+      if(localStorage.getItem("sangue_username") == this.users[i].id) {
+        console.log(this.users[i]);
+      }
+    }
     this.getUserNames();
     this.products = this.data.products;
     this.getProductNames();
@@ -146,7 +157,7 @@ export class AddLoanDialogComponent implements OnInit {
     else{
       this.monthsArray.push(month + 1);
     }
-    console.log(this.monthsArray);
+    //console.log(this.monthsArray);
   }
 
   onYearValueChanged(event: Event) {
@@ -175,13 +186,20 @@ export class AddLoanDialogComponent implements OnInit {
     }
   }
 
+  removeCurrentUserFromUsers() {
+    for(var i = 0; i < this.users.length; ++i) {
+      if(this.users[i].id == localStorage.getItem("sangue_username")) {
+        this.users.splice(i, 1);
+      }
+    }
+  }
+
   assignNewLoanValues() {
     //console.log("this.username: " + this.username);
-    
     this.newLoanReq = {
       id: "", //to be assigned
       anno: new Date(this.d_ordine.value).getFullYear(),
-      mese: new Date(this.d_ordine.value).getMonth(),
+      mese: this.monthFormControl.value,//new Date(this.d_ordine.value).getMonth(),//TODO
       b_extra: false,
       b_urgente: false,
       b_validato: false,
@@ -201,10 +219,11 @@ export class AddLoanDialogComponent implements OnInit {
       username_prestito_a: this.username,//loan recipient
     }
 
+
     this.newLoanRes = {
       id: "", //to be assigned
       anno: new Date(this.d_ordine.value).getFullYear(),
-      mese: new Date(this.d_ordine.value).getMonth(),
+      mese: this.monthFormControl.value,
       b_extra: false,
       b_urgente: false,
       b_validato: false,
@@ -254,7 +273,8 @@ export class AddLoanDialogComponent implements OnInit {
   onSubmit(event: Event) {
     this.assignNewLoanValues();
     this.logData();
-
+    //console.log("ADD-LOAN")
+    //console.log(this.newLoanReq)
     this.thisDialogRef.close({
       newLoanReq: this.newLoanReq,
       newLoanRes: this.newLoanRes,

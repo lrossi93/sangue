@@ -221,7 +221,7 @@ export class LoginService {
         this.currentUser.id = users[i].id;
         this.currentUser.username = users[i].username;
         this.currentUser.client = users[i].client;   
-        //console.log(this.currentUser.client);
+        console.log(this.currentUser);
         return;
       }
     }

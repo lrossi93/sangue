@@ -272,12 +272,22 @@ export class LoansComponent implements OnInit {
           this.dataCount++;
           this.createLoanGridRowData();
           this.loginService.getCurrentUser(this.users);
+          //this.removeCurrentUserFromUsers();
         }
         else {
           console.error("Error retrieving users globally!");
         }
       }
     );
+  }
+
+  //useless here
+  removeCurrentUserFromUsers() {
+    for(var i = 0; i < this.users.length; ++i) {
+      if(this.users[i].id == this.loginService.currentUser.id) {
+        this.users.splice(i, 1);
+      }
+    }
   }
 
   getProductsGlobally() {
@@ -378,12 +388,12 @@ export class LoansComponent implements OnInit {
       }) => {
         if(result !== undefined){
           if(result.isSubmitted){
-            /*
+            
             //console.log(result.newLoanReq);
             //console.log(result.newLoanRowReq);
             //console.log(result.newLoanRes);
             //console.log(result.newLoanRowRes);
-            */
+            
             this.setLoan(result.newLoanReq, result.newLoanRowReq, result.newLoanRes, result.newLoanRowRes, true);
           }
         }
@@ -408,7 +418,7 @@ export class LoansComponent implements OnInit {
   }
 
   setLoan(loanReq: Order, loanRowReq: OrderRow, loanRes: Order, loanRowRes: OrderRow, isAdding: boolean) {
-    ////console.log(loanReq);
+    console.log(loanReq);
     //loanReq.b_prestito
     this.ordersService.setOrderPromise(loanReq, isAdding).subscribe(
       res1 => {
@@ -533,9 +543,12 @@ export class LoansComponent implements OnInit {
   }
 
   setLoanLocally(loan: Order){
+    console.log("sangue-username: " + loan.username_prestito_da)
+    console.log("full-username: " + this.getClientByUsername(loan.username_prestito_da))
     let newLoanGridRowData = {
       id: loan.id,
       anno: loan.anno,
+      mese: loan.mese,
       username: loan.username,
       full_username_from: this.getClientByUsername(loan.username_prestito_da)!,
       full_username_to: this.getClientByUsername(loan.username_prestito_a)!,
@@ -552,8 +565,9 @@ export class LoansComponent implements OnInit {
       add: [{
         id: loan.id,
       anno: loan.anno,
+      mese: loan.mese,
       username: loan.username,
-      full_username_from: this.getClientByUsername(loan.username_prestito_da)!,
+      full_username_from: localStorage.getItem("sangue_client")!,//this.getClientByUsername(loan.username_prestito_da)!,
       full_username_to: this.getClientByUsername(loan.username_prestito_a)!,
       d_ordine: loan.d_ordine,
       n_ordine: loan.n_ordine,
@@ -602,6 +616,7 @@ export class LoansComponent implements OnInit {
 
   getClientByUsername(username: string): string | null {
     for(var i = 0; i < this.users.length; ++i) {
+      console.log(this.users[i].username);
       if(this.users[i].username == username) {
         //console.log(this.users[i].username);
         return this.users[i].client;
