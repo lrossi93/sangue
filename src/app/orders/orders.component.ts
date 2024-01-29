@@ -150,6 +150,7 @@ export class OrdersComponent implements OnInit {
           
           this.order.id = event.data.id;
           this.order.anno = event.data.anno;
+          this.order.mese = event.data.mese;
           this.order.username = event.data.username;
           this.order.d_ordine = event.data.d_ordine;
           this.order.n_ordine = event.data.n_ordine;
@@ -643,31 +644,33 @@ export class OrdersComponent implements OnInit {
         isRowLocked: false,
       }
 
-      this.orderGridRowData.push(newOrderGridRowData);
-      
-      this.api.applyTransaction({
-        add: [{
-          id: order.id,
-          anno: order.anno,
-          mese: order.mese,
-          username: order.username,
-          full_username: this.getFullUsernameById(order.username),
-          d_ordine: order.d_ordine,
-          n_ordine: order.n_ordine,
-          b_urgente: order.b_urgente,
-          b_extra: order.b_extra,
-          b_validato: order.b_validato,
-          b_to_supplier: false,
-          d_validato: order.d_validato,
-          status: newOrderGridRowData.status,
-          note: order.note,
-          d_consegna_prevista: order.d_consegna_prevista,
-          n_ddt: order.n_ddt,
-          d_ddt: order.d_ddt,
-          note_consegna: order.note_consegna,
-          isRowLocked: false
-        }]
-      });
+      if(this.month == newOrderGridRowData.mese.toString()) {
+        this.orderGridRowData.push(newOrderGridRowData);
+        
+        this.api.applyTransaction({
+          add: [{
+            id: order.id,
+            anno: order.anno,
+            mese: order.mese,
+            username: order.username,
+            full_username: this.getFullUsernameById(order.username),
+            d_ordine: order.d_ordine,
+            n_ordine: order.n_ordine,
+            b_urgente: order.b_urgente,
+            b_extra: order.b_extra,
+            b_validato: order.b_validato,
+            b_to_supplier: false,
+            d_validato: order.d_validato,
+            status: newOrderGridRowData.status,
+            note: order.note,
+            d_consegna_prevista: order.d_consegna_prevista,
+            n_ddt: order.n_ddt,
+            d_ddt: order.d_ddt,
+            note_consegna: order.note_consegna,
+            isRowLocked: false
+          }]
+        });
+      }
       //this.api.ensureIndexVisible(this.orderGridRowData.length - 1);
       //this.createOrderGridRowData();
       this.snackbarService.onCreate();
