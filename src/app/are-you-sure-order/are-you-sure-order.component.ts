@@ -8,13 +8,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class AreYouSureOrderComponent implements OnInit {
   orderId!: string;
+  orderN!: string;
   isSubmitted: boolean = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: string },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { 
+      id: string,
+      n: string;  
+    },
     private dialogRef: MatDialogRef<AreYouSureOrderComponent>
   ) { 
     this.orderId = data.id;
+    this.orderN = data.n;
   }
 
   ngOnInit(): void {

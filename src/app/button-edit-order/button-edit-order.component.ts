@@ -330,6 +330,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         this.filteredForecasts.push(this.forecasts[i]);
       }
     }
+    console.log("filtered forecasts for user " + username)
+    console.log(this.filteredForecasts)
   }
 
   /**

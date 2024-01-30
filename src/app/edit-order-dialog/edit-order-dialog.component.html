@@ -15,7 +15,7 @@ class="typography">
     <p
     *ngIf="orderRows.length == 0"
     align="center" style="color: red;">
-        {{ 'This order does not contain any orderRows and will thus be deleted' | translate }}.
+        {{ 'This order does not contain any orderRows' | translate }}.
     </p>
 
     <!--table-->
@@ -254,6 +254,7 @@ style="color: red">
 </h5>
 
 <div mat-dialog-actions align="center">
+    <!--if order is not locked, has rows and is sent-->
     <button 
     style="margin: 5px;"
     *ngIf="!isLocked && orderRows.length > 0 && this.data.status == 'inviato'"
@@ -263,13 +264,14 @@ style="color: red">
     (click)="openEditOrderRowDialog('', true)">
         <i class="material-icons">add</i>
     </button>
+
     <button 
     style="margin: 5px;"
-    *ngIf="!isLocked && orderRows.length > 0 && this.data.status == 'inviato'"
+    *ngIf="!isLocked && orderRows.length >= 0 && this.data.status == 'inviato'"
     mat-mini-fab
     matTooltip="{{'Delete order' | translate}}"
     color="warn" 
-    (click)="openAreYouSureOrderDialog(data.order.id)">
+    (click)="openAreYouSureOrderDialog(data.order.id, data.order.n_ordine.toString())">
         <i class="material-icons">delete_forever</i>
     </button>
     
@@ -317,13 +319,27 @@ style="color: red">
     </button>
 
     <!--se non ci sono più orderRows-->
+    
+    <!--button 
+    style="margin: 5px;"
+    *ngIf="orderRows.length == 0 && order.status != 'ricevuto'"
+    mat-mini-fab 
+    mat-dialog-close
+    matTooltip="{{'Delete order' | translate}}"
+    color="warn"
+    (click)="onClose(data.order.id)">
+        <i class="material-icons">delete_forever</i>
+    </button-->
+    
+    
+    <!--rimosso (click)="onClose(data.order.id)"-->   
     <button 
     style="margin: 5px;"
     *ngIf="orderRows.length == 0 && order.status != 'ricevuto'"
     mat-mini-fab 
+    mat-dialog-close
     matTooltip="{{'Close' | translate}}"
-    color="accent" 
-    (click)="onClose(data.order.id)">
+    color="accent">
         <i class="material-icons">close</i>
     </button>
 </div>

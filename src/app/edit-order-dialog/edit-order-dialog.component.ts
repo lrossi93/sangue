@@ -98,8 +98,8 @@ export class EditOrderDialogComponent implements OnInit {
     this.users = data.users;
     this.products = data.products;
     this.forecasts = data.forecasts;
-    
-    //console.log(this.products);
+    console.log(data.forecasts)
+    console.log(this.forecasts);
     
     this.isLocked = data.isLocked;
     this.isExtra = data.isExtra;
@@ -367,9 +367,12 @@ export class EditOrderDialogComponent implements OnInit {
   }
   */
 
-  openAreYouSureOrderDialog(id: string) {
+  openAreYouSureOrderDialog(id: string, n: string) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = { id: id }
+    dialogConfig.data = { 
+      id: id,
+      n: n
+    }
         
     this.dialogRef = this.dialog.open(
       AreYouSureOrderComponent, 
@@ -408,6 +411,8 @@ export class EditOrderDialogComponent implements OnInit {
 
   onClose(id: string) {
     if(this.orderRows.length == 0){
+      //open delete confirmation dialog
+
       this.thisDialogRef.close({
         isClosing: true,
         deleteOrder: true
@@ -555,6 +560,7 @@ export class EditOrderDialogComponent implements OnInit {
   createOrderRowGridRowData() {
     this.orderRowGridRowData = [];
     for(var i = 0; i < this.orderRows.length; ++i) {
+      console.log("max mese: " + this.getMaxMeseByProdIdAndUsername(this.orderRows[i].id_prd, this.order.username));
       var newOrderRow = {
         id: this.orderRows[i].id,
         id_ordine: this.orderRows[i].id_ordine,
@@ -578,10 +584,17 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   getMaxMeseByProdIdAndUsername(id_prd: string, username: string): number {    
+    console.log("username: " + username)
+    console.log("id_prd: " + id_prd)
+    console.log("forecasts for user " + username);
+    console.log(this.forecasts);
     for(var i = 0; i < this.forecasts.length; ++i) {
-      //console.log(this.forecasts[i]);
+      console.log("approvata: " + this.forecasts[i].qta_approvata);
+      console.log("username: " + this.forecasts[i].username);
       if(this.forecasts[i].id_prd == id_prd) {
+          
         if(this.forecasts[i].username == username) {
+          
           return Math.floor(this.forecasts[i].qta_approvata/12);
         }
       }
