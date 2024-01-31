@@ -218,6 +218,7 @@ export class ForecastComponent implements OnInit {
         }
         else {
           this.forecasts = res1[1];
+          //console.log("ALL FORECASTS");
           //console.log(this.forecasts);
           this.usersService.listUsersPromise("210").subscribe(
             res2 => {
@@ -269,6 +270,7 @@ export class ForecastComponent implements OnInit {
   createForecastGridRowData() {
     this.forecastGridRowData = [];
     for(var i = 0; i < this.forecasts.length; ++i) {
+      //console.log("sangue_username: " + this.forecasts[i].username)
       var newForecastGridRowData = {
         id: this.forecasts[i].id,
         anno: this.forecasts[i].anno,
@@ -289,7 +291,11 @@ export class ForecastComponent implements OnInit {
 
   getFullUsernameById(id: string): string {
     for(var i = 0; i < this.users.length; ++i) {
+        //console.log("sangue_username: " + id);
+        //console.log("sangue full username: " + this.users[i].client);
       if(this.users[i].username == id) {
+        //console.log("sangue_username: " + id);
+        //console.log("sangue full username: " + this.users[i].client);
         return this.users[i].client;
       }
     }

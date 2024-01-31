@@ -165,8 +165,9 @@
     "Send order to supplier": "Inviare l'ordine al fornitore",
     "Do you wish to validate order": "Desideri convalidare l'ordine",
     "Once you confirm, this action cannot be undone": "Dopo aver confermato, questa azione non può essere annullata",
-    "To confirm the received quantity of a single line, please type the received quantity in the box and press ENTER": "Per confermare la quantità ricevuta di una singola riga, si prega di inserire la quantità ricevuta nel relativo spazio e premere INVIO",
+    "To confirm the received quantity of a single line, please type the received quantity in the box (instead of -1) and press ENTER": "Per confermare la quantità ricevuta di una singola riga, inserire la quantità ricevuta nel relativo spazio (al posto di -1) e premere INVIO",
     "Change venue": "Cambia sede",
     "Monthly maximum": "Massimale mensile",
-    "This order does not contain any orderRows": "Quest'ordine non contiene righe d'ordine"
+    "This order does not contain any orderRows": "Quest'ordine non contiene righe d'ordine",
+    "By confirming all received quantities, all values set to -1 will be automatically set to the validated quantities": "Confermando tutte le quantità ricevute, tutti i valori attualmente a -1 verranno impostati al valore delle quantità validate"
 }

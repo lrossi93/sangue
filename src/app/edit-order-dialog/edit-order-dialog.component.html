@@ -244,7 +244,12 @@ class="typography">
 <h5
     align="center"
     *ngIf="!this.isQtaRicevutaSetAND() && this.data.status == 'ricevuto'">
-        {{ 'To confirm the received quantity of a single line, please type the received quantity in the box and press ENTER' | translate }}.
+        {{ 'To confirm the received quantity of a single line, please type the received quantity in the box (instead of -1) and press ENTER' | translate }}.
+</h5>
+<h5 
+*ngIf="this.data.status == 'ricevuto' && !this.isQtaRicevutaSetAND()"
+align="center">
+    {{ 'By confirming all received quantities, all values set to -1 will be automatically set to the validated quantities' | translate}}.
 </h5>
 <h5 
 *ngIf="this.data.status == 'ricevuto' && !this.isQtaRicevutaSetAND()"
