@@ -44,6 +44,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
     
     dialogConfig.data = {
       orderId: this.data.id,
+      orderNo: this.data.n_ordine,
       fullUsername: this.data.full_username
     }
 

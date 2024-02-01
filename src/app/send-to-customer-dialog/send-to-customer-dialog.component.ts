@@ -9,12 +9,19 @@ import { SendToSupplierDialogComponent } from '../send-to-supplier-dialog/send-t
 })
 export class SendToCustomerDialogComponent implements OnInit {
   orderId!: string;
+  orderNo!: string;
   fullUsername!: string;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { orderId: string, fullUsername: string },
+    @Inject(MAT_DIALOG_DATA) 
+    public data: { 
+      orderId: string, 
+      orderNo: string, 
+      fullUsername: string 
+    },
     private dialogRef: MatDialogRef<SendToSupplierDialogComponent>
   ) {
     this.orderId = data.orderId;
+    this.orderNo = data.orderNo;
     this.fullUsername = data.fullUsername;
    }
 

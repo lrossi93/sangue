@@ -145,7 +145,7 @@ export class OrdersComponent implements OnInit {
         //console.log("isRowLocked: " + event.node.data.isRowLocked);
         //console.log("isDateLocked: " + this.isDateLocked);
         
-        if(!event.node.data.isRowLocked && !this.isDateLocked){
+        if(!event.node.data.isRowLocked && !this.isDateLocked || event.column.getColId() == "n_ddt" && event.data.status == "ricevuto"){
           console.log("the order was not locked, so I modify it!");
           
           this.order.id = event.data.id;
@@ -175,7 +175,9 @@ export class OrdersComponent implements OnInit {
             note: event.column.getColId() == 'd_validato' || event.column.getColId() == 'b_validato' ? "confermato da " + localStorage.getItem('sangue_username')! : "inviato",
             b_sto: false
           }
-
+          if(event.column.getColId() == 'n_ddt'){
+            orderStatus.status = event.data.status;
+          }
           this.setOrder(this.order, orderStatus, isAdding);
           //this.api.setFocusedCell(event.rowIndex, event.column.getColId(), "top");
         }
@@ -936,7 +938,7 @@ export class OrdersComponent implements OnInit {
 
         else if(result.isDDTDate){
           this.order.d_ddt = result.date;
-          orderStatus.status = "inviato"; //confirm status
+          orderStatus.status = event.data.status; //confirm status
           orderStatus.note = "Data DDT impostata da " + localStorage.getItem('sangue_username');
           //console.log("setting: " + this.order.d_ddt);
           this.setOrder(this.order, orderStatus, false);

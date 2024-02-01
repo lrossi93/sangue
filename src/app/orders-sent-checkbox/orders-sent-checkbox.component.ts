@@ -96,12 +96,11 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
             note: "ordine inviato al fornitore da " + localStorage.getItem('sangue_username'),
             b_sto: false
           }
-          
-          //this.isLocked = true;
 
           this.ordersComponent.setOrder(orderSent, orderStatus, false);
           this.checked = true;
           this.isLocked = true;
+          this.currentValue = true;
         }
         if(result.isCancelled !== undefined && result.isCancelled){
           this.currentValue == 1 ? this.currentValue = 0 : this.currentValue = 1;

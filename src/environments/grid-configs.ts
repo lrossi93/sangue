@@ -457,7 +457,7 @@ export const gridConfigOrders210 = [
     cellRenderer: (params: { value: string | number | Date; }) => {
       //if date is awaiting validation
       if(params.value == "0000-00-00")
-        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+        return '-';//localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
         return new Date(params.value).toLocaleDateString('it-IT');
     }
@@ -586,7 +586,7 @@ export const gridConfigOrders210Locked = [
     cellRenderer: (params: { value: string | number | Date; }) => {
       //if date is awaiting validation
       if(params.value == "0000-00-00")
-        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+        return '-';//localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
         return new Date(params.value).toLocaleDateString('it-IT');
     }
@@ -721,7 +721,7 @@ export const gridConfigOrders220 = [
     cellRenderer: (params: { value: string | number | Date; }) => {
       //if date is awaiting validation
       if(params.value == "0000-00-00")
-        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+        return '-';//localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
         return new Date(params.value).toLocaleDateString('it-IT');
     }
@@ -860,7 +860,7 @@ export const gridConfigOrders220Locked = [
       //if date is awaiting validation
       
       if(params.value == "0000-00-00")
-        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+        return '-';//localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
         return new Date(params.value).toLocaleDateString('it-IT');
     }
@@ -1041,7 +1041,7 @@ export const gridConfigSupplies = [
     editable: false,
     cellRenderer: (params: { value: string | number | Date; }) => {
       if(params.value == "0000-00-00" || params.value == "")
-        return localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
+        return '-';//localeLang == 'it' ? orderGridHeaders.it.Pending : orderGridHeaders.en.Pending;
       else
         return new Date(params.value).toLocaleDateString('it-IT');
     }
