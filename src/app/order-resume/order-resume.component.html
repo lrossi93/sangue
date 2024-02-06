@@ -1,5 +1,5 @@
 <div
-*ngIf="loginService.getUserCode() == '210' || loginService.getUserCode() == '220'">
+*ngIf="(loginService.getUserCode() != null || loginService.getUserCode() != '') && loginService.getUserCode() != '200'">
 	<nav
 	class="second-nav">
 		<h1>
@@ -7,9 +7,19 @@
 		</h1>
 		
 		<button
+		*ngIf="loginService.getUserCode() != '230'"
 		mat-mini-fab
 		matTooltip="{{ 'Back to orders' | translate }}" 
 		routerLink="/orders"
+		color="primary">
+			<i class="material-icons">arrow_back</i>
+		</button>
+
+		<button
+		*ngIf="loginService.getUserCode() == '230'"
+		mat-mini-fab
+		matTooltip="{{ 'Back to supplies' | translate }}" 
+		routerLink="/supplies"
 		color="primary">
 			<i class="material-icons">arrow_back</i>
 		</button>
@@ -18,8 +28,10 @@
 	<div 
 align="center"
 class="container">
+<h1>{{this.startFormattedDate}} - {{this.endFormattedDate}}</h1>
     <p>
-		<mat-form-field>
+		<mat-form-field
+		style="display: none;">
 			<mat-date-range-input 
 			[formGroup]="range" 
 			[rangePicker]="picker">
@@ -28,7 +40,6 @@ class="container">
 			  formControlName="start" 
 			  placeholder="{{ 'Start date' | translate }}" 
 			  (dateChange)="onDateChange('start', $event)">
-	
 			  <input 
 			  matEndDate 
 			  formControlName="end" 

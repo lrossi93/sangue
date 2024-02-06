@@ -30,7 +30,7 @@ import { DropdownUsersForecastComponent } from './dropdown-users-forecast/dropdo
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule} from '@angular/material/menu';
-import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CellCheckboxComponent } from './cell-checkbox/cell-checkbox.component';
 import { OrdersComponent } from './orders/orders.component';
@@ -88,7 +88,20 @@ import { ButtonSupplyReportComponent } from './button-supply-report/button-suppl
 import { OrdersValidatedDialogComponent } from './orders-validated-dialog/orders-validated-dialog.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
+// Define Italian date format
+export const ITALIAN_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -160,15 +173,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     AddForecastComponent,
     AreYouSureForecastComponent,
     {
-      provide: MAT_DATE_LOCALE,
-      useValue: 'it-IT'
-    },
-    {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: {
         duration: 3000
       }
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'it-IT' }, // Set Italian locale
+    { provide: MAT_DATE_FORMATS, useValue: ITALIAN_DATE_FORMATS }, // Use Italian date format
+
     /*
     {
       provide: LocationStrategy,

@@ -22,7 +22,7 @@ const routes: Routes = [
   {path: 'forecast', component: ForecastComponent},
   {path: 'forecast-report', component: ForecastReportComponent},
   {path: 'orders', component: OrdersComponent,},
-  {path: 'orders/resume', component: OrderResumeComponent},
+  {path: 'resume', component: OrderResumeComponent},
   {path: 'order-period', component: OrderablePeriodComponent},
   {path: 'supplies', component: SuppliesComponent},
   {path: 'loans', component: LoansComponent},

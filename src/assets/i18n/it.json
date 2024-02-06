@@ -169,5 +169,6 @@
     "Change venue": "Cambia sede",
     "Monthly maximum": "Massimale mensile",
     "This order does not contain any orderRows": "Quest'ordine non contiene righe d'ordine",
-    "By confirming all received quantities, all values set to -1 will be automatically set to the validated quantities": "Confermando tutte le quantità ricevute, tutti i valori attualmente a -1 verranno impostati al valore delle quantità validate"
+    "By confirming all received quantities, all values set to -1 will be automatically set to the validated quantities": "Confermando tutte le quantità ricevute, tutti i valori attualmente a -1 verranno impostati al valore delle quantità validate",
+    "Back to supplies": "Torna alle forniture"
 }

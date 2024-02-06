@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { LoginService } from '../login.service';
@@ -9,11 +9,14 @@ import { OrdersService } from '../orders.service';
   templateUrl: './order-resume.component.html',
   styleUrls: ['./order-resume.component.css']
 })
+
 export class OrderResumeComponent implements OnInit {
 
   loginService!: LoginService
   startDate!: string;
+  startFormattedDate!: string;
   endDate!: string;
+  endFormattedDate!: string;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -28,9 +31,11 @@ export class OrderResumeComponent implements OnInit {
     let date = new Date();
     this.range.controls['start'].setValue(date);
     this.startDate = this.getFormattedDate(date);
+    this.startFormattedDate = new Date(this.startDate).toLocaleString('it-IT').split(",", 2)[0];
     console.log(this.startDate);
     this.range.controls['end'].setValue(date);
     this.endDate = this.getFormattedDate(date);
+    this.endFormattedDate = new Date(this.endDate).toLocaleString('it-IT').split(",", 2)[0]
     console.log(this.endDate);
   }
 
@@ -54,11 +59,12 @@ export class OrderResumeComponent implements OnInit {
   }
 
   onDateChange(type: string, event: any) {
-    console.log(event);
+    //console.log(event);
     switch(type) {
       case "start":
         this.range.controls['start'] = new FormControl(new Date(event.value), Validators.required);
-        this.startDate = this.getFormattedDate(new Date(event.value));        
+        this.startDate = this.getFormattedDate(new Date(event.value));    
+        this.startFormattedDate = new Date(this.startDate).toLocaleString('it-IT').split(",", 2)[0]    
         break;
       case "end":
         if(event.value == null) {
@@ -69,6 +75,7 @@ export class OrderResumeComponent implements OnInit {
           this.range.controls['end'] = new FormControl(new Date(event.value), Validators.required);
         }
         this.endDate = this.getFormattedDate(new Date(event.value));
+        this.endFormattedDate = new Date(this.endDate).toLocaleString('it-IT').split(",", 2)[0]
         break;
     }
   }
