@@ -41,6 +41,7 @@ export class OrdersReceivedCheckboxComponent extends CellCheckboxComponent imple
     
     dialogConfig.data = {
       orderId: this.data.id,
+      orderNo: this.data.n_ordine
     }
 
     dialogConfig.disableClose = true;

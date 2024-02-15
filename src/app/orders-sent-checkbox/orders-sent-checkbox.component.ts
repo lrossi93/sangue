@@ -43,6 +43,7 @@ export class OrdersSentCheckboxComponent extends CellCheckboxComponent implement
     console.log(this.data);
     dialogConfig.data = {
       orderId: this.data.id,
+      orderNo: this.data.n_ordine,
       isValidated: this.data.b_validato
     }
     if(!this.data.b_validato)

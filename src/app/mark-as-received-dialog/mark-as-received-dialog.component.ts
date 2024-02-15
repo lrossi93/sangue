@@ -9,13 +9,20 @@ import { SendToSupplierDialogComponent } from '../send-to-supplier-dialog/send-t
 })
 export class MarkAsReceivedDialogComponent implements OnInit {
   orderId!: string;
+  orderNo!: string;
   isSubmitted: boolean = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { orderId: string, isValidated: boolean},
+    @Inject(MAT_DIALOG_DATA) 
+    public data: { 
+      orderId: string, 
+      orderNo: string,
+      isValidated: boolean
+    },
     private dialogRef: MatDialogRef<SendToSupplierDialogComponent>
   ) { 
-    this.orderId = this.data.orderId 
+    this.orderId = this.data.orderId
+    this.orderNo = this.data.orderNo 
   }
 
   ngOnInit(): void {
