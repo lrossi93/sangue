@@ -89,6 +89,8 @@ import { OrdersValidatedDialogComponent } from './orders-validated-dialog/orders
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 
 // Define Italian date format
 export const ITALIAN_DATE_FORMATS = {
@@ -220,7 +222,8 @@ export const ITALIAN_DATE_FORMATS = {
     MatToolbarModule,
     MatIconModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   bootstrap: [AppComponent]
 })

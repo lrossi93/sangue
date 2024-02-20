@@ -14,6 +14,10 @@
 		</button>
 	</nav>
 
+	<mat-progress-bar 
+	*ngIf="isLoading" 
+	mode="indeterminate"></mat-progress-bar>
+
 	<ag-grid-angular 
 		class="ag-theme-material ag-grid-table"
 		[rowData]="this.products"

@@ -5,6 +5,7 @@ import { environment, translations } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 import { OrderablePeriodService } from '../orderable-period.service';
 import { SnackbarService } from '../snackbar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orderable-period',
@@ -39,7 +40,8 @@ export class OrderablePeriodComponent implements OnInit {
   constructor(
     private orderablePeriodService: OrderablePeriodService,
     private snackbarService: SnackbarService,
-    loginService: LoginService
+    loginService: LoginService,
+    private router: Router
   ) { 
     this.year = new Date().getFullYear().toString();
     this.month = new Date().getMonth().toString();
@@ -48,6 +50,18 @@ export class OrderablePeriodComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("cf");
+          this.router.navigate(['login']);
+        }
+      }
+    );
+
     this.getDates();
   }
 

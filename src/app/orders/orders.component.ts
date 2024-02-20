@@ -258,6 +258,10 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("cf");
           this.router.navigate(['login']);
         }
       }
@@ -789,6 +793,7 @@ export class OrdersComponent implements OnInit {
     //console.log(this.orders);
     //console.log(this.orderGridRowData);
     this.loading = false;
+    //console.log("LOADING: " + this.loading);
     //console.log(this.columnApi.getColumnState());
     //this.getColState();
   }
@@ -1099,6 +1104,7 @@ export class OrdersComponent implements OnInit {
   //big function to be called at the very beginning, to retrieve everything we need
   getAllData() {
     //listOrders, then
+    //console.log("LOADING: " + this.loading);
     this.ordersService.listOrdersPromise(this.year, this.month).subscribe(
       res => {
         if(res[0] == "OK") {

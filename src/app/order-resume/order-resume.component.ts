@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 import { OrdersService } from '../orders.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-resume',
@@ -25,7 +26,8 @@ export class OrderResumeComponent implements OnInit {
   
   constructor(
     loginService: LoginService,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private router: Router
   ) { 
     this.loginService = loginService;
     let date = new Date();
@@ -40,6 +42,17 @@ export class OrderResumeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loginService.checkPromise().subscribe(
+      res => {
+        if(res[0] == "KO"){
+          localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("cf");
+          this.router.navigate(['login']);
+        }
+      }
+    );
   }
 
   getFormattedDate(date: Date): string {

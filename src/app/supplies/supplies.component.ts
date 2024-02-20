@@ -167,6 +167,9 @@ export class SuppliesComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("cf");
           this.router.navigate(['login']);
         }
       }
@@ -192,6 +195,7 @@ export class SuppliesComponent implements OnInit {
   }
 
   getAllData() {
+    this.isLoading = true;
     this.ordersService.listOrdersPromise(this.year).subscribe(
       res => {
         if(res[0] == "OK") {
@@ -251,7 +255,6 @@ export class SuppliesComponent implements OnInit {
   }
 
   listUsers() {
-    //this.isLoading = true;//qui continua a scaricare dati
     this.usersService.listUsersPromise('210').subscribe(
       res => {
         this.isLoading = true;//QUI FUNZIONAAAAAAAAAAAAAAAAAAAAAA

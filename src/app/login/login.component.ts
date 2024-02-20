@@ -105,7 +105,7 @@ export class LoginComponent implements OnInit {
     this.usersService.listUsersPromise('210').subscribe(
       res => {
         if(res[0] == "OK") {
-          console.log(res[1]);
+          //console.log(res[1]);
           this.users = res[1];
           environment.globalUsers = res[1];
           this.getCurrentUser(this.users);

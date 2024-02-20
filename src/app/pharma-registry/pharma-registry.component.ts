@@ -174,14 +174,14 @@ export class PharmaRegistryComponent implements OnInit {
     }));
     var i = 0;
     localColumnState.forEach((state: any) => {
-      console.log(state.colId + ": " + state.sortIndex);
+      //console.log(state.colId + ": " + state.sortIndex);
       state.sortIndex = ++i;
     });
 
     localColumnState.forEach((state: any) => {
-      console.log(state.colId + ": " + state.sortIndex);
+      //console.log(state.colId + ": " + state.sortIndex);
     });
-    console.log(localColumnState)
+    //console.log(localColumnState)
     localStorage.setItem("pharmaRegistryColumnState", JSON.stringify(localColumnState));
   }
 
@@ -190,8 +190,9 @@ export class PharmaRegistryComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
           localStorage.removeItem("sangue_username");
-          this.loginService.logged = false;
+          localStorage.removeItem("cf");
           this.router.navigate(['login']);
         }
       }
@@ -237,7 +238,7 @@ export class PharmaRegistryComponent implements OnInit {
       res => {
         if(res[0] == "OK"){
           if(isAdding){
-            console.log("aaaaaaa");
+            //console.log("aaaaaaa");
             
             let newProduct = product;
             newProduct.id = res[1];

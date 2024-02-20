@@ -425,6 +425,7 @@ export class AddOrderDialogComponent implements OnInit {
     //console.log("users:");
     //console.log(this.users);
     for(let i = 0; i < this.users.length; ++i){
+      console.log(this.users[i].client + ", " + this.users[i].username);
       this.userOptions.push(this.users[i].client);
     }
     //OK

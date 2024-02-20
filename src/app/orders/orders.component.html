@@ -69,6 +69,8 @@
 		(keyup)="checkMonth()">
 	</nav>
 
+	<mat-progress-bar 
+	*ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
 	<ag-grid-angular
 		class="ag-theme-material ag-grid-table"

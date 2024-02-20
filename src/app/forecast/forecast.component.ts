@@ -184,10 +184,14 @@ export class ForecastComponent implements OnInit {
       res => {
         if(res[0] == "KO"){
           localStorage.removeItem("id_session");
+          localStorage.removeItem("id_profile");
+          localStorage.removeItem("sangue_username");
+          localStorage.removeItem("cf");
           this.router.navigate(['login']);
         }
       }
     );
+
 
 
     //retrieve data from db
@@ -205,8 +209,18 @@ export class ForecastComponent implements OnInit {
     console.log(this.api);
   }
 
-  setId(id: string){
-    this.id = id;
+  setId(id: string){    this.loginService.checkPromise().subscribe(
+    res => {
+      if(res[0] == "KO"){
+        localStorage.removeItem("id_session");
+        localStorage.removeItem("id_profile");
+        localStorage.removeItem("sangue_username");
+        localStorage.removeItem("cf");
+        this.router.navigate(['login']);
+      }
+    }
+  );
+
   }
 
   getAllForecastData() {
