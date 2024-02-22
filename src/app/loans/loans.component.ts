@@ -56,6 +56,8 @@ export class LoansComponent implements OnInit {
   dialogRef: any;
   dialog: any;
 
+  isLoading: boolean = false;
+
   userCode = "";
 
   localeText = (environment.currentLanguage == 'it' ? AG_GRID_LOCALE_IT : AG_GRID_LOCALE_EN);
@@ -199,6 +201,7 @@ export class LoansComponent implements OnInit {
   }
 
   getData() {
+    this.isLoading = true;
     this.dataCount = 0;
     if(environment.globalUsers.length == 0) {
       //console.log("Getting users...");
@@ -609,6 +612,7 @@ export class LoansComponent implements OnInit {
           this.loanGridRowData.push(newLoanGridRowData);
         }
       }
+      this.isLoading = false;
       console.log(this.loanGridRowData);
       //this.api.setRowData(this.loanGridRowData);
     }

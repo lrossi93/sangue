@@ -267,6 +267,7 @@ export class ForecastComponent implements OnInit {
  
 
   listForecasts(year: string): void {    
+    this.isLoading = true;
     this.forecastService.listForecastsPromise(year).subscribe(
       res => {
         //console.log(res);
@@ -276,6 +277,7 @@ export class ForecastComponent implements OnInit {
         else{ 
           this.forecasts = res[1];
           this.createForecastGridRowData();
+          this.isLoading = false;
         }
       }
     );

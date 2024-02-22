@@ -10,7 +10,7 @@
 		mat-mini-fab
 		matTooltip="{{ 'Refresh' | translate }}" 
 		color="basic"
-		(click)="listOrders(year)">
+		(click)="getAllData()">
 			<i class="material-icons">refresh</i>
 		</button>
 
@@ -29,9 +29,11 @@
 		placeholder="{{ 'Reference year' | translate }}" 
 		[(ngModel)]="year" 
 		style="width: 50px;" 
-		(change)="listOrders(year)">
+		(change)="getAllData(year)">
 	</nav>
 
+	<mat-progress-bar 
+	*ngIf="!isLoading" mode="determinate" value="0"></mat-progress-bar>
 	<mat-progress-bar 
 	*ngIf="isLoading" 
 	mode="indeterminate"></mat-progress-bar>

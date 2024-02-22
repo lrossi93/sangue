@@ -60,7 +60,7 @@
 		<input 
 		matInput 
 		type="number"
-		min="0"
+		min="1"
 		max="12"
 		placeholder="{{ 'Reference month' | translate }}" 
 		[(ngModel)]="month" 
@@ -69,6 +69,8 @@
 		(keyup)="checkMonth()">
 	</nav>
 
+	<mat-progress-bar 
+	*ngIf="!loading" mode="determinate" value="0"></mat-progress-bar>
 	<mat-progress-bar 
 	*ngIf="loading" mode="indeterminate"></mat-progress-bar>
 

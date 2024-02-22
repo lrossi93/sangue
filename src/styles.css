@@ -99,7 +99,7 @@ a {
 .ag-grid-table {
 	top: 120px;
 	position: sticky;
-	height: calc(100vh - 100px);
+	height: calc(100vh - 105px);
 	z-index: 100;
 }
 

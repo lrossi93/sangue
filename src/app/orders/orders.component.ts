@@ -192,6 +192,7 @@ export class OrdersComponent implements OnInit {
   periodicRefresh() {
     setInterval(() => {
       console.log("refreshing...")
+      //this.getAllData();
       this.listOrders(this.year, this.month);
     }, 60000);
   }
@@ -295,8 +296,8 @@ export class OrdersComponent implements OnInit {
         if(res[0] != "KO") {
           this.orders = res[1];
           //console.log(res[1]);
-          //this.listUsersAndSetLock('210');
-          this.getAllOrderStatusRec(this.orders, 0);
+          this.listUsersAndSetLock('210');
+          //this.getAllOrderStatusRec(this.orders, 0);
         }
         else {
           this.loginService.logoutPromise().subscribe(
@@ -751,7 +752,8 @@ export class OrdersComponent implements OnInit {
 
         let toSupplierCondition = false;
 
-        switch(this.orderStatusArr[i].status){
+        //switch(this.orderStatusArr[i].status){
+        switch(this.orders[i].status){
           case "inviato":
             toSupplierCondition = false;
             break;
@@ -778,7 +780,7 @@ export class OrdersComponent implements OnInit {
           b_validato: this.orders[i].b_validato,
           b_to_supplier: toSupplierCondition,
           d_validato: this.orders[i].d_validato,
-          status: this.orderStatusArr[i].status,
+          status: this.orders[i].status,//this.orderStatusArr[i].status,
           note: this.orders[i].note,
           d_consegna_prevista: this.orders[i].d_consegna_prevista,
           n_ddt: this.orders[i].n_ddt == "" ? "0" : this.orders[i].n_ddt,
@@ -1109,7 +1111,10 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           this.orders = res[1];
-          this.getAllOrderStatusRec(this.orders, 0); 
+          console.log(res[1]);
+          //this.getAllOrderStatusRec(this.orders, 0); 
+          //get all users with userlevel = 210
+          this.listUsersAndSetLock('210');
         }
         else {
           console.error("Error retrieving orders!");

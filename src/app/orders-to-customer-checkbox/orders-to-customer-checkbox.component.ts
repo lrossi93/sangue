@@ -102,7 +102,7 @@ export class OrdersToCustomerCheckboxComponent extends CellCheckboxComponent imp
                     break;
                   }
                 }
-                this.suppliesComponent.updateRow(this.data.id, this.suppliesComponent.orderStatusArr[i].status);
+                this.suppliesComponent.updateRow(this.data.id, this.suppliesComponent.orders[i].status/*this.suppliesComponent.orderStatusArr[i].status*/);
               }
               else {
                 console.error("Error setting orderStatus!");

@@ -189,19 +189,20 @@ export class SuppliesComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.getAllData();
     this.listProducts();
-    this.listOrders(this.year);
+    //this.listOrders(this.year);
     this.autoSizeColumns(false);
     this.retrieveColumnState();
   }
 
-  getAllData() {
+  getAllData(year?: string, month?: string) {
     this.isLoading = true;
     this.ordersService.listOrdersPromise(this.year).subscribe(
       res => {
         if(res[0] == "OK") {
           this.orders = res[1];
           this.orderStatusArr = [];
-          this.getAllOrderStatusRec(this.orders, 0);
+          this.listUsers();
+          //this.getAllOrderStatusRec(this.orders, 0);
         }
         else {
           console.error("Error retrieving orders!");
@@ -257,7 +258,7 @@ export class SuppliesComponent implements OnInit {
   listUsers() {
     this.usersService.listUsersPromise('210').subscribe(
       res => {
-        this.isLoading = true;//QUI FUNZIONAAAAAAAAAAAAAAAAAAAAAA
+        this.isLoading = true;
         if(res[0] == "OK") {
           this.users = res[1];
           this.createSupplyGridRowData();
@@ -276,7 +277,8 @@ export class SuppliesComponent implements OnInit {
       var lock: boolean = false;
       let toCustomerCondition = false;
 
-      switch(this.orderStatusArr[i].status){
+      //switch(this.orderStatusArr[i].status){
+      switch(this.orders[i].status){ 
         case "inviato":
           toCustomerCondition = false;
           break;
@@ -311,7 +313,7 @@ export class SuppliesComponent implements OnInit {
         //prossimo campo non presente in orderGridRowData... sistemare
         b_to_customer: toCustomerCondition,
         d_validato: this.orders[i].d_validato,
-        status: this.orderStatusArr[i].status,
+        status: this.orders[i].status,//this.orderStatusArr[i].status,
         note: this.orders[i].note,
         d_consegna_prevista: this.orders[i].d_consegna_prevista,
         n_ddt: this.orders[i].n_ddt,
