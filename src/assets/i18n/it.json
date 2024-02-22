@@ -161,7 +161,7 @@
     "Upload file": "Carica file",
     "File upload": "Caricamento file",
     "Ready for upload": "File pronto al caricamento",
-    "File upload for order": "Caricamento file per l'ordine",
+    "DDT file upload for order": "Caricamento di file DDT per l'ordine",
     "Send order to supplier": "Inviare l'ordine al fornitore",
     "Do you wish to validate order": "Desideri convalidare l'ordine",
     "Once you confirm, this action cannot be undone": "Dopo aver confermato, questa azione non può essere annullata",
@@ -170,5 +170,10 @@
     "Monthly maximum": "Massimale mensile",
     "This order does not contain any orderRows": "Quest'ordine non contiene righe d'ordine",
     "By confirming all received quantities, all values set to -1 will be automatically set to the validated quantities": "Confermando tutte le quantità ricevute, tutti i valori attualmente a -1 verranno impostati al valore delle quantità validate",
-    "Back to supplies": "Torna alle forniture"
+    "Back to supplies": "Torna alle forniture",
+    "Do you want to delete": "Vuoi eliminare",
+    "Filename": "Nome file",
+    "Size": "Dimensione",
+    "Attach DDT documents": "Allega documenti DDT",
+    "Download": "Scarica"
 }

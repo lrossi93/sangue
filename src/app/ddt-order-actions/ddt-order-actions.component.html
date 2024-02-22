@@ -5,24 +5,15 @@
     style="margin-right: 5px;"
     color="basic"
     class="mat-elevation-z0"
-    matTooltip="{{ 'Upload document' | translate }}"
+    matTooltip="{{ 'Attach DDT documents' | translate }}"
     (click)="openEditOrderDialog($event)"
     disabled="{{!uploadEnabled}}">
-        <i class="material-icons">file_upload</i>
+    <i class="material-icons">attach_file</i>
+        <!--i class="material-icons">file_upload</i-->
     </button>
 
-    <!--TODO: view file without downloading it -->
+    <!-- INCLUDED IN order-ddt-upload-dialog.component.ts -->
     <!--button 
-    mat-mini-fab
-    style="margin-right: 5px;"
-    color="basic"
-    class="mat-elevation-z0"
-    matTooltip="{{ 'View' | translate }}"
-    (click)="print($event)">
-        <i class="material-icons">document_scanner</i>
-    </button-->
-
-    <button 
     *ngIf="true"
     mat-mini-fab
     color="basic"
@@ -31,5 +22,5 @@
     (click)="getOrderDdt(this.data.id)"
     disabled="{{!this.fileExists}}">
         <i class="material-icons">download</i>
-    </button>
+    </button-->
 </div>

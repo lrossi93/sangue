@@ -90,6 +90,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { AreYouSureOrderDdtDialogComponent } from './are-you-sure-order-ddt-dialog/are-you-sure-order-ddt-dialog.component';
 
 
 // Define Italian date format
@@ -167,6 +168,7 @@ export const ITALIAN_DATE_FORMATS = {
     DragNDropDirective,
     ButtonSupplyReportComponent,
     OrdersValidatedDialogComponent,
+    AreYouSureOrderDdtDialogComponent,
 
   ],
   providers: [

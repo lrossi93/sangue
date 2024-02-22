@@ -1,8 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { OrderDdtService } from '../order-ddt.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { SnackbarService } from '../snackbar.service';
 import { environment, translations } from 'src/environments/environment';
+import { DialogConfig } from '@angular/cdk/dialog';
+import { AreYouSureOrderDdtDialogComponent } from '../are-you-sure-order-ddt-dialog/are-you-sure-order-ddt-dialog.component';
+import { FileDownloadService } from '../file-download.service';
 
 @Component({
   selector: 'app-order-ddt-upload-dialog',
@@ -26,18 +29,30 @@ export class OrderDdtUploadDialogComponent implements OnInit {
   isFileUploaded: boolean = false;  //success in uploading the file on the server
   loading: boolean = false;
 
+  files: any[] = [];
   filebase64: string = "";
   maxFileSize: number = 20 * 1024 * 1024; //max file size is 20 MB
+
+  //table
+                                //filename, size, action: download, action: delete
+  displayedColumns: string[] = ['filename', 'size', 'download', 'delete'];
+  dataSource: any[] = [];
+
+  dialogRef!: any;
+  dialog!: MatDialog;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       orderID: string,
       orderNo: string,
+      files: any[]
     },
     private orderDdtService: OrderDdtService,
     private snackbarService: SnackbarService,
-    private dialogRef: MatDialogRef<MatDialog>
+    private fileDownloadService: FileDownloadService,
+    dialog: MatDialog
   ) {
+    this.dialog = dialog;
   }
 
   ngOnInit(): void {
@@ -53,10 +68,22 @@ export class OrderDdtUploadDialogComponent implements OnInit {
 
   async onFileSelected(event: any): Promise<void> {
     const fileInput = event.target;
+    let filenames = [];
+    this.errors = "";
+
+    for(var i = 0; i < this.files.length; ++i) {
+      filenames.push(this.files[i].filename);
+    }
+
     if (fileInput.files.length > 0) {
       this.selectedFile = fileInput.files[0];
       if(this.selectedFile && this.selectedFile.size > this.maxFileSize) {
-        this.errors = "The file you tried to upload exceeds the size limit by " + (this.selectedFile.size - this.maxFileSize) + " B.";
+        this.errors += "The file you tried to upload exceeds the size limit by " + (this.selectedFile.size - this.maxFileSize) + " B.\n";
+        return;
+      }
+
+      if(filenames.includes(this.selectedFile!.name)) {
+        this.errors += "Another file with the same name exists. Upload failed!\n";
         return;
       }
 
@@ -65,11 +92,9 @@ export class OrderDdtUploadDialogComponent implements OnInit {
         //encode in filebase64
         try {
           const base64String = await this.toBase64(this.selectedFile!);
-          
           this.filename = this.selectedFile!.name;
           this.filebase64 = base64String;
-
-          //console.log("Base64 Encoded File:", this.filebase64);
+          this.uploadFile(this.data.orderID, this.filename, this.filebase64);
         } catch (error) {
           console.error("Error encoding file:", error);
         }
@@ -104,6 +129,7 @@ export class OrderDdtUploadDialogComponent implements OnInit {
   }
 
   uploadFile(orderID: string, filename: string, filebase64: string): void {
+    this.loading = true;
     //console.log("orderID: " + orderID + ", filename: "+ filename + ", filebase64: " + filebase64);
     this.snackbarService.openSnackbar(environment.currentLanguage == "it" ? translations.it.FileUploadStarted : translations.en.FileUploadStarted);
     this.orderDdtService.setOrderDdtPromise(orderID, filename, filebase64).subscribe(
@@ -114,9 +140,12 @@ export class OrderDdtUploadDialogComponent implements OnInit {
           this.isFileLoaded = false;
           this.filebase64 = "";
           this.selectedFile = null;
+          this.files.push({filename: this.filename, filebase64: this.filebase64});
+          this.createFileTable();
           this.snackbarService.openSnackbar((environment.currentLanguage == "it" ? translations.it.FileUploadSuccessful : translations.en.FileUploadSuccessful) + "\n(" + this.onlineFilename + ", " + this.remoteFileSize + " B)");
           //console.log(res);
-          this.dialogRef.close();
+          this.loading = false;
+          //this.dialogRef.close();
         }
         else {
           console.error("Error uploading file " + filename + "!");
@@ -127,6 +156,7 @@ export class OrderDdtUploadDialogComponent implements OnInit {
 
   doesFileExist(orderID: string) {
     this.loading = true;
+    this.files = [];
     this.orderDdtService.getOrderDdtPromise(orderID).subscribe(
       res => {
         if(res[0] == "OK") {
@@ -136,6 +166,8 @@ export class OrderDdtUploadDialogComponent implements OnInit {
             this.fileExists = true;
             this.onlineFilename = res[1][res[1].length - 1].filename;
             this.loading = false;
+            this.files = res[1]; //TODO: questo posso passarglielo qui, altrimenti faccio due volte il download dei file
+            this.createFileTable();
           }
           else {
             this.fileExists = false;
@@ -149,40 +181,88 @@ export class OrderDdtUploadDialogComponent implements OnInit {
     )
   }
 
+  deleteFile(id: string) {
+    this.loading = true;
+    this.orderDdtService.rmOrderDdtPromise(id).subscribe(
+      res => {
+        if(res[0] == "OK") {
+          //console.log(res);
+          for(var i = 0; i < this.files.length; ++i) {
+            if(this.files[i].id == id) {
+              this.files.splice(i, 1);
+              this.createFileTable();
+              this.loading = false;
+            }
+          }
+        }
+        else {
+          console.error("Error deleting orderDDT file with id " + id + "!");
+        }
+      }
+    );
+  }
+
+  createFileTable() {
+    this.dataSource = [];
+    //console.log(this.files)
+    for(var i = 0; i < this.files.length; ++i) {
+      let fileTableElement = {
+        id: this.files[i].id,
+        filename: this.files[i].filename,
+        size: this.formatBytes(this.getFileSize(this.files[i].filebase64)),
+      }
+      this.dataSource.push(fileTableElement)
+    }
+    //console.log(this.dataSource);
+  }
+
+  downloadFile(id: string) {
+    for(var i = 0; i < this.files.length; ++i) {
+      if(this.files[i].id == id) {
+        this.fileDownloadService.downloadPdfFromBase64(this.files[i].filename, this.files[i].filebase64);
+        this.snackbarService.openSnackbar(environment.currentLanguage == "it" ? translations.it.FileDownloadHasStarted : translations.en.FileDownloadHasStarted);
+      }
+    }
+  }
+
+  openAreYouSureDialog(id: string, filename: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      id: id,
+      filename: filename
+    }
+    this.dialogRef = this.dialog.open(
+      AreYouSureOrderDdtDialogComponent,
+      dialogConfig
+    );
+
+    this.dialogRef.afterClosed().subscribe(
+      (result: { isSubmitted: boolean }) => {
+      if(result !== undefined && result.isSubmitted){
+        this.deleteFile(id);
+      }
+    });
+  }
+
   getFileSize(base64String: string): number {
     if(base64String != "")
       return atob(base64String).length;
     return -1;
   }
-/*
-  getNormalizedFileSizeString(size: number): string {
-    let multiplier = "";
-    let b = 1;
-    let kb = 1024;
-    let mb = 1024 * 1024;
-    let gb = 1024 * 1024 * 1024;
-    if(size < kb){
 
-    }
-    if(size)
+  formatBytes(bytes: number, decimals: number = 2): string {
+    if (bytes === 0) return '0 Bytes';
 
-    let result = -1;
-    switch(multiplier) {
-      case "b":
-        result = size;
-        break;
-      case "kb":
-        result = Math.ceil(size/kb);
-        break;
-      case "mb":
-        result = Math.ceil(size/mb);
-        break;
-      case"gb":
-        result = Math.ceil(size/gb);
-        break;
-      default:
-        break;
-    }
-    return result + " "+ unit.toUpperCase();
-  }*/
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+  print(string: string) {
+    console.log(string);
+  }
 }

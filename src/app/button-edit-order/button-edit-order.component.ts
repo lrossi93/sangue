@@ -115,8 +115,8 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
 
   openEditOrderDialog(event: any) {  
     this.assignOrderData();
-    console.log("orderRows");
-    console.log(this.orderRows);
+   //console.log("orderRows");
+   //console.log(this.orderRows);
     
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
@@ -156,7 +156,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
         isQtaRicevutaConfirmed: boolean
     }) => {
       //console.log(result);
-      console.log(result) 
+     //console.log(result) 
       if(result !== undefined && result.isSubmitted){
         let orderStatus: OrderStatus = {
           id: "0",
@@ -276,7 +276,7 @@ export class ButtonEditOrderComponent implements OnInit, ICellRendererAngularCom
     this.currentOrder.id_ordine_prestito = this.data.id_ordine_prestito
     this.currentOrder.username_prestito_da = this.data.username_prestito_da;
     this.currentOrder.username_prestito_a = this.data.username_prestito_a;
-    console.log(this.currentOrder);
+   //console.log(this.currentOrder);
   }
 
   listUsers() {

@@ -41,4 +41,15 @@ export class OrderDdtService {
       }
     )
   }
+
+  rmOrderDdtPromise(id: string): Observable<any> {
+    return this.http.post<String[]>(
+      this.url, 
+      {
+        request: 'rmOrderDDT',
+        id_session: localStorage.getItem("id_session"),
+        id_order: id,
+      }
+    )
+  }
 }

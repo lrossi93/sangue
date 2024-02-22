@@ -20,6 +20,7 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
   stateIsValid: boolean = false;
   fileExists: boolean = false;
   uploadEnabled: boolean = false;
+  files: any[] = [];
 
   dialogRef: any;
   dialog: MatDialog;
@@ -38,7 +39,7 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
     this.data = params.data;
     //this.print(this.data);
     this.isStateValid();
-    this.doesFileExist(this.data.id);
+    //this.doesFileExist(this.data.id);
   }
   
   refresh(params: ICellRendererParams<any, any>): boolean {
@@ -48,6 +49,7 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
   ngOnInit(): void {
   }
 
+  //TODO: useless here, delete
   getOrderDdt(orderID: string) {
     this.orderDdtService.getOrderDdtPromise(orderID).subscribe(
       res => {
@@ -56,7 +58,6 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
           let filename = res[1][res[1].length -1].filename;
           let filebase64 = res[1][res[1].length -1].filebase64;
           //console.log("filename: " + filename);
-          //console.log("filebase64: " + filebase64);
           this.fileDownloadService.downloadPdfFromBase64(filename, filebase64);
           this.snackbarService.openSnackbar(environment.currentLanguage == "it" ? translations.it.FileDownloadHasStarted : translations.en.FileDownloadHasStarted);
         }
@@ -67,12 +68,15 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
     );
   }
 
+  //TODO: useless here, delete
   doesFileExist(orderID: string) {
     this.orderDdtService.getOrderDdtPromise(orderID).subscribe(
       res => {
         if(res[0] == "OK") {
           if(res[1].length > 0) {
             this.fileExists = true;
+            //console.log(res[1])
+            this.files = res[1];
           }
         }
         else {
@@ -116,6 +120,7 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
     dialogConfig.data = {
       orderID: this.data.id,
       orderNo: this.data.n_ordine,
+      //files: this.files
     }
 
     dialogConfig.maxWidth = "50%";

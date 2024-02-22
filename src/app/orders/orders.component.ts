@@ -134,19 +134,19 @@ export class OrdersComponent implements OnInit {
           */
         }
         if(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto") {
-          console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
+         //console.log(event.column.getColId() == "d_ddt" && loginService.getUserCode() == "210" && event.data.status == "ricevuto");
           this.openEditDateDialog(event);
         }
       },
       onCellValueChanged: (event: CellValueChangedEvent) => {                
-        console.log("Changed from " + event.oldValue + " to " + event.newValue);
+       //console.log("Changed from " + event.oldValue + " to " + event.newValue);
         //if row is not locked and an update is received, perform update
         //TODO: se imposto una data di validazione, deve essere MAGGIORE o UGUALE alla data dell'ordine
         //console.log("isRowLocked: " + event.node.data.isRowLocked);
         //console.log("isDateLocked: " + this.isDateLocked);
         
         if(!event.node.data.isRowLocked && !this.isDateLocked || event.column.getColId() == "n_ddt" && event.data.status == "ricevuto"){
-          console.log("the order was not locked, so I modify it!");
+         //console.log("the order was not locked, so I modify it!");
           
           this.order.id = event.data.id;
           this.order.anno = event.data.anno;
@@ -184,21 +184,21 @@ export class OrdersComponent implements OnInit {
       }
     }
     setTimeout(() => {
-      console.log("refreshing...");
+     //console.log("refreshing...");
       this.periodicRefresh()
     }, 60000);
   }
 
   periodicRefresh() {
     setInterval(() => {
-      console.log("refreshing...")
+     //console.log("refreshing...")
       //this.getAllData();
       this.listOrders(this.year, this.month);
     }, 60000);
   }
 
   refresh() {
-    console.log("refreshing...");
+   //console.log("refreshing...");
     this.listOrders(this.year, this.month);
     //this.getAllData();
   }
@@ -271,7 +271,7 @@ export class OrdersComponent implements OnInit {
   }
 
   logAPI(){
-    console.log(this.api);
+   //console.log(this.api);
   }
 
   checkMonth() {
@@ -328,8 +328,8 @@ export class OrdersComponent implements OnInit {
     this.ordersService.setOrderPromise(newOrder, true).subscribe(
       res => {
         if(res[0] == "OK") {
-          console.log("ordersComponent->server response:");
-          console.log(res);
+         //console.log("ordersComponent->server response:");
+         //console.log(res);
           newOrder.id = res[1][0];
           newOrder.n_ordine = res[1][1];
           
@@ -417,12 +417,12 @@ export class OrdersComponent implements OnInit {
       return;
     }
     else {
-      console.log("orderID: " + orderRows[index].id_ordine)
+     //console.log("orderID: " + orderRows[index].id_ordine)
 
       if(orderRows[index].qta_ricevuta == -1){
         orderRows[index].qta_ricevuta == orderRows[index].qta_validata;
       }
-      console.log(orderRows);
+     //console.log(orderRows);
 
       this.ordersService.setOrderRowPromise(orderRows[index], false).subscribe(
         res => {
@@ -535,7 +535,7 @@ export class OrdersComponent implements OnInit {
 
     const res = this.api.applyTransaction({ remove: toBeRemoved})!;
     //this.api.redrawRows(rowNodes);
-    console.log(res);
+   //console.log(res);
   }
 
   rmOrderRow(id: string){
@@ -543,9 +543,9 @@ export class OrdersComponent implements OnInit {
   }
 
   setOrder(order: Order, orderStatus: OrderStatus, isAdding: boolean) {
-    console.log("Order:");
-    console.log(order);
-    console.log("month: " + order.mese);
+   //console.log("Order:");
+   //console.log(order);
+   //console.log("month: " + order.mese);
 
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
@@ -599,8 +599,8 @@ export class OrdersComponent implements OnInit {
           if(this.loginService.getUserCode() == "220") {
             isLockedCondition = !(orderStatus.status == "inviato" || orderStatus.status == "confermato");
           }
-          console.log("i: " + i);
-          console.log(this.orderGridRowData[i]);
+         //console.log("i: " + i);
+         //console.log(this.orderGridRowData[i]);
           this.orderGridRowData[i].id = order.id;
           this.orderGridRowData[i].anno = order.anno;
           this.orderGridRowData[i].username = order.username;
@@ -810,7 +810,7 @@ export class OrdersComponent implements OnInit {
     this.ordersService.listOrderRowsPromise(orderId).subscribe(
       res => {
         if(res[0] == "OK") {
-          console.log(res[1][0]);
+         //console.log(res[1][0]);
         }
       }
     );
@@ -844,8 +844,8 @@ export class OrdersComponent implements OnInit {
       (result: { newOrder: Order, newOrderRows: OrderRow[], isSubmitted: boolean }) => {
         if(result !== undefined && result.isSubmitted){
           let newOrder = result.newOrder;
-          console.log("ordersComponent->newOrder");
-          console.log(newOrder);
+         //console.log("ordersComponent->newOrder");
+         //console.log(newOrder);
           this.addOrderAndOrderRows(result.newOrder, result.newOrderRows);
         }
       }
@@ -856,8 +856,8 @@ export class OrdersComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
-    console.log(this.gg_min);
-    console.log(this.gg_max);
+   //console.log(this.gg_min);
+   //console.log(this.gg_max);
     
 
     switch(event.colDef.field){
@@ -1006,7 +1006,7 @@ export class OrdersComponent implements OnInit {
   }
 
   makeRowVisible(index: number, position: string) {
-    console.log("index: " + index);
+   //console.log("index: " + index);
     
     this.api.ensureIndexVisible(index, position);
   }
@@ -1079,8 +1079,8 @@ export class OrdersComponent implements OnInit {
     this.ordersService.getOrderStatusPromise(orderId).subscribe(
       res => {        
         if(res[0] == "OK"){
-          console.log("WS response:");
-          console.log(res);
+         //console.log("WS response:");
+         //console.log(res);
         }
         else{
           console.error("Error retrieving orderStatus for order " + orderId);
@@ -1094,7 +1094,7 @@ export class OrdersComponent implements OnInit {
     this.ordersService.setOrderStatusPromise(orderStatus).subscribe(
       res => {
         if(res[0] == "OK"){
-          console.log("status set:" + res[0]);
+         //console.log("status set:" + res[0]);
         }
         else {
           console.error("Error setting status for order with id " + orderStatus.id_order);
@@ -1111,7 +1111,7 @@ export class OrdersComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           this.orders = res[1];
-          console.log(res[1]);
+          //console.log(res[1]);
           //this.getAllOrderStatusRec(this.orders, 0); 
           //get all users with userlevel = 210
           this.listUsersAndSetLock('210');
@@ -1194,7 +1194,7 @@ export class OrdersComponent implements OnInit {
   getColState() {
     this.columnState = this.columnApi.getColumnState();
     //this.defaultColumnState = this.columnApi.getColumnState();
-    console.log(this.columnState);
+   //console.log(this.columnState);
   }
   
   resetColState() {

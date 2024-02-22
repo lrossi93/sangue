@@ -1,0 +1,5 @@
+<h2>{{ 'Do you want to delete' | translate }} <b>{{ this.filename }}</b> ?</h2>
+<div mat-dialog-actions align="center">
+    <button mat-raised-button (click)="onSubmit()" color="warn">{{ 'Delete' | translate }}</button>
+    <button mat-raised-button matDialogClose="true" color="primary">{{ 'Cancel' | translate }}</button>
+</div>

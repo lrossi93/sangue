@@ -98,8 +98,8 @@ export class EditOrderDialogComponent implements OnInit {
     this.users = data.users;
     this.products = data.products;
     this.forecasts = data.forecasts;
-    console.log(data.forecasts)
-    console.log(this.forecasts);
+   //console.log(data.forecasts)
+   //console.log(this.forecasts);
     
     this.isLocked = data.isLocked;
     this.isExtra = data.isExtra;
@@ -113,7 +113,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.orderRowsGridConfig = gridConfigOrderRows;
     this.gridOptions = {
       onCellClicked: (event: CellClickedEvent) => {
-        console.log(event);
+       //console.log(event);
       },
     }
   }
@@ -161,9 +161,9 @@ export class EditOrderDialogComponent implements OnInit {
 
   onQtaRicevutaSet(orderRow: OrderRow, qtaRicevuta: number) {
     if(qtaRicevuta >= 0){
-      console.log(orderRow);
+     //console.log(orderRow);
       orderRow.qta_ricevuta = qtaRicevuta;
-      console.log("new qta_ricevuta: " + orderRow.qta_ricevuta);
+     //console.log("new qta_ricevuta: " + orderRow.qta_ricevuta);
       this.setQtaRicevutaInOrderRowGridRowData(orderRow);
       this.ordersService.setOrderRowPromise(orderRow, false).subscribe(
         res => {
@@ -204,7 +204,7 @@ export class EditOrderDialogComponent implements OnInit {
   getOrderRowById(id: string): OrderRow | undefined {
     for(var i = 0; i < this.orderRows.length; ++i){
       if(id == this.orderRows[i].id){
-        console.log(this.orderRows[i]);
+       //console.log(this.orderRows[i]);
         return this.orderRows[i];
       }
     }
@@ -304,7 +304,7 @@ export class EditOrderDialogComponent implements OnInit {
         //console.log(result);
         
         if(result !== undefined && result.isSubmitted){
-          console.log(result);
+         //console.log(result);
           this.ordersService
             .setOrderRowPromise(result.orderRow, isAdding)
             .subscribe(
@@ -361,7 +361,7 @@ export class EditOrderDialogComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(
       (result: { isSubmitted: boolean }) => {
       if(result !== undefined && result.isSubmitted){
-        console.log(result);
+       //console.log(result);
       }
     });
   }
@@ -419,7 +419,7 @@ export class EditOrderDialogComponent implements OnInit {
       });
     }
     else {
-      console.log(this.orderRows)
+     //console.log(this.orderRows)
       this.thisDialogRef.close({
         orderRows: this.orderRows,
         isClosing: true
@@ -448,7 +448,7 @@ export class EditOrderDialogComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           this.snackbarService.onUpdate();
-          console.log("Status for order " + orderStatus.id_order + " successfully set!");
+         //console.log("Status for order " + orderStatus.id_order + " successfully set!");
         }
         else {
           console.error("Error setting status for order " + orderStatus.id_order);
@@ -494,8 +494,8 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   validateOrder(){
-    console.log("validateOrder()")
-    console.log(this.order);
+   //console.log("validateOrder()")
+   //console.log(this.order);
     //TODO: aprire qui dialogo di conferma di convalida dell'ordine
     this.isValidated = true;
        
@@ -560,7 +560,7 @@ export class EditOrderDialogComponent implements OnInit {
   createOrderRowGridRowData() {
     this.orderRowGridRowData = [];
     for(var i = 0; i < this.orderRows.length; ++i) {
-      console.log("max mese: " + this.getMaxMeseByProdIdAndUsername(this.orderRows[i].id_prd, this.order.username));
+     //console.log("max mese: " + this.getMaxMeseByProdIdAndUsername(this.orderRows[i].id_prd, this.order.username));
       var newOrderRow = {
         id: this.orderRows[i].id,
         id_ordine: this.orderRows[i].id_ordine,
@@ -584,13 +584,13 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   getMaxMeseByProdIdAndUsername(id_prd: string, username: string): number {    
-    console.log("username: " + username)
-    console.log("id_prd: " + id_prd)
-    console.log("forecasts for user " + username);
-    console.log(this.forecasts);
+   //console.log("username: " + username)
+   //console.log("id_prd: " + id_prd)
+   //console.log("forecasts for user " + username);
+   //console.log(this.forecasts);
     for(var i = 0; i < this.forecasts.length; ++i) {
-      console.log("approvata: " + this.forecasts[i].qta_approvata);
-      console.log("username: " + this.forecasts[i].username);
+     //console.log("approvata: " + this.forecasts[i].qta_approvata);
+     //console.log("username: " + this.forecasts[i].username);
       if(this.forecasts[i].id_prd == id_prd) {
           
         if(this.forecasts[i].username == username) {

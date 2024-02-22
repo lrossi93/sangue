@@ -1,26 +1,73 @@
 
-<h2>{{ 'File upload for order' | translate }} no.{{data.orderNo}}</h2>
-<!--p>Uploading progress: {{this.progress}}%</p-->
+<h2>{{ 'DDT file upload for order' | translate }} no.{{data.orderNo}}</h2>
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
 <input type="file" (change)="onFileSelected($event)" #fileInput style="display: none;" />
-<p *ngIf="loading">{{ 'Loading' | translate}}...</p>
-<p *ngIf="fileExists" style="color: green;">{{ 'Current file' | translate }}: {{onlineFilename}} ({{remoteFileSize}} B)</p>
+
 <p *ngIf="!fileExists && !loading" style="color: red;">{{ 'No files associated to this order' | translate }}.</p>
 <p *ngIf="errors" style="color: red;">{{errors}}</p>
 <p *ngIf="selectedFile && !errors">{{ 'Ready for upload' | translate }}: <b>{{ selectedFile.name }}</b></p>
 
+<table 
+*ngIf="!loading && dataSource.length > 0"
+mat-table [dataSource]="dataSource" class="mat-elevation-z0" style="width: 100%;">
+
+    <ng-container matColumnDef="filename">
+      <th mat-header-cell *matHeaderCellDef> {{ 'Filename' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.filename}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="size">
+      <th mat-header-cell *matHeaderCellDef> {{ 'Size' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.size}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="download">
+        <th mat-header-cell *matHeaderCellDef ></th>
+        <td mat-cell *matCellDef="let element"> 
+            <button
+            style="margin: 5px;"
+            mat-mini-fab
+            matTooltip="{{ 'Download' | translate }}"
+            color="primary" 
+            (click)="downloadFile(element.id)">
+            <i class="material-icons">download</i>
+            </button>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef ></th>
+        <td mat-cell *matCellDef="let element"> 
+            <button
+            style="margin: 5px;"
+            mat-mini-fab
+            matTooltip="{{ 'Delete' | translate }}"
+            color="warn" 
+            (click)="openAreYouSureDialog(element.id, element.filename)">
+            <!--cambiata condizione *ngIf="!isLocked", anche sotto-->
+            <i class="material-icons">delete</i>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
 <div mat-dialog-actions align="center">
     <button 
+    *ngIf="!loading"
     id="fileButton"
     style="margin: 5px;"
     mat-mini-fab 
     color="basic"
     (click)="fileInput.click()"
-    matTooltip="{{'Add file' | translate}}">
-        <i class="material-icons">add</i>
+    matTooltip="{{'Upload' | translate}}">
+        <i class="material-icons">file_upload</i>
     </button>
     
-    <button 
+    <!--button 
     style="margin: 5px;"
     mat-mini-fab
     matTooltip="{{'Upload file' | translate}}"
@@ -28,9 +75,9 @@
     disabled="{{!filebase64}}"
     (click)="uploadFile(data.orderID, filename, filebase64)">
         <i class="material-icons">file_upload</i>
-    </button>
+    </button-->
 
-    <button 
+    <button
     style="margin: 5px;"
     mat-mini-fab
     matTooltip="{{'Close' | translate}}"
