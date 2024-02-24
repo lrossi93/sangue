@@ -114,7 +114,7 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
     }
   }
 
-  openEditOrderDialog(event: Event) {
+  openEditDdtDialog(event: Event) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
@@ -123,8 +123,9 @@ export class DdtOrderActionsComponent implements OnInit, ICellRendererAngularCom
       //files: this.files
     }
 
-    dialogConfig.maxWidth = "50%";
-    dialogConfig.maxHeight = "50%";
+    dialogConfig.maxWidth = "80%";
+    dialogConfig.width = "70%";
+    dialogConfig.maxHeight = "80%";
 
     dialogConfig.disableClose = false;
     this.dialogRef = this.dialog.open(

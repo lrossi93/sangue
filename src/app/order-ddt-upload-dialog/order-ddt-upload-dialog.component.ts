@@ -130,22 +130,18 @@ export class OrderDdtUploadDialogComponent implements OnInit {
 
   uploadFile(orderID: string, filename: string, filebase64: string): void {
     this.loading = true;
-    //console.log("orderID: " + orderID + ", filename: "+ filename + ", filebase64: " + filebase64);
+    console.log("orderID: " + orderID + ", filename: "+ filename + ", filebase64: " + filebase64);
     this.snackbarService.openSnackbar(environment.currentLanguage == "it" ? translations.it.FileUploadStarted : translations.en.FileUploadStarted);
     this.orderDdtService.setOrderDdtPromise(orderID, filename, filebase64).subscribe(
       res => {
         if(res[0] == "OK") {
           this.onlineFilename = filename;
-          this.remoteFileSize = atob(filebase64).length;
           this.isFileLoaded = false;
-          this.filebase64 = "";
+          this.filebase64 = filebase64;
           this.selectedFile = null;
           this.files.push({filename: this.filename, filebase64: this.filebase64});
           this.createFileTable();
-          this.snackbarService.openSnackbar((environment.currentLanguage == "it" ? translations.it.FileUploadSuccessful : translations.en.FileUploadSuccessful) + "\n(" + this.onlineFilename + ", " + this.remoteFileSize + " B)");
-          //console.log(res);
           this.loading = false;
-          //this.dialogRef.close();
         }
         else {
           console.error("Error uploading file " + filename + "!");
@@ -161,12 +157,11 @@ export class OrderDdtUploadDialogComponent implements OnInit {
       res => {
         if(res[0] == "OK") {
           if(res[1].length > 0) {
-            //console.log(res[1][res[1].length - 1]);
             this.remoteFileSize = this.getFileSize(res[1][res[1].length - 1].filebase64);
             this.fileExists = true;
             this.onlineFilename = res[1][res[1].length - 1].filename;
             this.loading = false;
-            this.files = res[1]; //TODO: questo posso passarglielo qui, altrimenti faccio due volte il download dei file
+            this.files = res[1];
             this.createFileTable();
           }
           else {

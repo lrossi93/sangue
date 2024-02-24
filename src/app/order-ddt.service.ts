@@ -48,7 +48,7 @@ export class OrderDdtService {
       {
         request: 'rmOrderDDT',
         id_session: localStorage.getItem("id_session"),
-        id_order: id,
+        id: id,
       }
     )
   }
