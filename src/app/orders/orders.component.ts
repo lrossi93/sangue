@@ -744,7 +744,7 @@ export class OrdersComponent implements OnInit {
               && this.orders[i].d_validato != "1970-01-01" 
               && this.orders[i].d_validato >= this.orders[i].d_ordine
             )
-            || this.orderStatusArr[i].status == "inviato al fornitore") {
+            || this.orders[i].status == "inviato al fornitore") {
 
             lock = true;
           }
