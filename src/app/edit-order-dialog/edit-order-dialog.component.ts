@@ -163,7 +163,7 @@ export class EditOrderDialogComponent implements OnInit {
     if(qtaRicevuta >= 0){
      //console.log(orderRow);
       orderRow.qta_ricevuta = qtaRicevuta;
-     //console.log("new qta_ricevuta: " + orderRow.qta_ricevuta);
+     console.log("new qta_ricevuta: " + orderRow.qta_ricevuta);
       this.setQtaRicevutaInOrderRowGridRowData(orderRow);
       this.ordersService.setOrderRowPromise(orderRow, false).subscribe(
         res => {
@@ -527,32 +527,33 @@ export class EditOrderDialogComponent implements OnInit {
   }
 
   confirmSingleQtaRicevuta(orderRow: OrderRow, qtaRicevuta: number) {
-    if(qtaRicevuta > 0)
-    for(var i = 0; i < this.orderRows.length; ++i) {
-      if(this.orderRowGridRowData[i].id == orderRow.id) {
-        this.orderRowGridRowData[i].qta_ricevuta = qtaRicevuta;
-        this.orderRowGridRowData[i].isQtaRicevutaSet = true;
-        this.orderRows[i].qta_ricevuta = qtaRicevuta;
-        this.ordersService.setOrderRowPromise(orderRow, false).subscribe(
-          res => {
-            if(res[0] == "OK"){
-              let orderStatus: OrderStatus = {
-                id: "0",
-                username: localStorage.getItem('sangue_username')!,
-                id_order: orderRow.id_ordine,
-                d_status: this.getFormattedDate(new Date()),
-                status: "ricevuto",
-                note: "Quantità ricevuta impostata a " + orderRow.qta_ricevuta,
-                b_sto: false
+    if(qtaRicevuta >= 0){
+      for(var i = 0; i < this.orderRows.length; ++i) {
+        if(this.orderRowGridRowData[i].id == orderRow.id) {
+          this.orderRowGridRowData[i].qta_ricevuta = qtaRicevuta;
+          this.orderRowGridRowData[i].isQtaRicevutaSet = true;
+          this.orderRows[i].qta_ricevuta = qtaRicevuta;
+          this.ordersService.setOrderRowPromise(orderRow, false).subscribe(
+            res => {
+              if(res[0] == "OK"){
+                let orderStatus: OrderStatus = {
+                  id: "0",
+                  username: localStorage.getItem('sangue_username')!,
+                  id_order: orderRow.id_ordine,
+                  d_status: this.getFormattedDate(new Date()),
+                  status: "ricevuto",
+                  note: "Quantità ricevuta impostata a " + orderRow.qta_ricevuta,
+                  b_sto: false
+                }
+        
+                this.setOrderStatus(orderStatus);
               }
-      
-              this.setOrderStatus(orderStatus);
+              else {
+                console.error("Error setting orderRow!");
+              }
             }
-            else {
-              console.error("Error setting orderRow!");
-            }
-          }
-        );
+          );
+        }
       }
     }
   }
